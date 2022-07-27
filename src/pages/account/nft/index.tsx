@@ -100,8 +100,8 @@ const NFTInfoContent = styled.div`
   grid-gap: 24px;
 `
 
-const NFTInfoContentField = styled.section``
-const NFTInfoContentFieldTitle = styled.p`
+const NFTInfoIntroduction = styled.section``
+const NFTInfoIntroductionTitle = styled.p`
   font-family: 'Montserrat', sans-serif;
   font-style: normal;
   font-weight: 400;
@@ -112,7 +112,7 @@ const NFTInfoContentFieldTitle = styled.p`
   padding: 0;
   margin: 0;
 `
-const NFTInfoContentFieldValue = styled.p`
+const NFTInfoIntroductionContent = styled.p`
   font-family: 'Montserrat', sans-serif;
   font-style: normal;
   font-weight: 700;
@@ -127,88 +127,151 @@ const NFTInfoFooter = styled.div`
   margin-top: auto;
 `
 
+const NFTInfoButton = styled.button`
+  padding: 20px;
+  background: #ff4125;
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  color: #ffffff;
+  border: none;
+  outline: none;
+`
+
 const NFTs = [
   {
-    field: [
+    title: 'E4C Rangers',
+    subtitle: 'Series 1',
+    id: '#537',
+    tag: 'Gold Edition',
+    tagStatus: '+',
+    introduction: [
       {
         title: 'Character',
-        value: 'Rin',
+        content: 'Rin',
       },
       {
         title: 'Background',
-        value: 'Off-white 1',
+        content: 'Off-white 1',
       },
       {
         title: 'Hair',
-        value: 'Off-white 1',
+        content: 'Off-white 1',
       },
       {
         title: 'HeadGear',
-        value: 'Off-white 1',
+        content: 'Off-white 1',
       },
       {
         title: 'Makeup',
-        value: 'Off-white 1',
+        content: 'Off-white 1',
       },
       {
         title: 'Earrings',
-        value: 'Off-white 1',
+        content: 'Off-white 1',
       },
     ],
   },
   {
-    field: [
+    title: 'E4C Rangers',
+    subtitle: 'Series 1',
+    id: '#537',
+    tag: 'Gold Edition',
+    tagStatus: '+',
+    introduction: [
       {
         title: 'Character',
-        value: 'Rin',
+        content: 'Rin',
       },
       {
         title: 'Background',
-        value: 'Off-white 1',
+        content: 'Off-white 1',
       },
       {
         title: 'Hair',
-        value: 'Off-white 1',
+        content: 'Off-white 1',
       },
       {
         title: 'HeadGear',
-        value: 'Off-white 1',
+        content: 'Off-white 1',
       },
       {
         title: 'Makeup',
-        value: 'Off-white 1',
+        content: 'Off-white 1',
       },
       {
         title: 'Earrings',
-        value: 'Off-white 1',
+        content: 'Off-white 1',
       },
     ],
   },
   {
-    field: [
+    title: 'E4C Rangers',
+    subtitle: 'Series 1',
+    id: '#537',
+    tag: 'Gold Edition',
+    tagStatus: '+',
+    introduction: [
       {
         title: 'Character',
-        value: 'Rin',
+        content: 'Rin',
       },
       {
         title: 'Background',
-        value: 'Off-white 1',
+        content: 'Off-white 1',
       },
       {
         title: 'Hair',
-        value: 'Off-white 1',
+        content: 'Off-white 1',
       },
       {
         title: 'HeadGear',
-        value: 'Off-white 1',
+        content: 'Off-white 1',
       },
       {
         title: 'Makeup',
-        value: 'Off-white 1',
+        content: 'Off-white 1',
       },
       {
         title: 'Earrings',
-        value: 'Off-white 1',
+        content: 'Off-white 1',
+      },
+    ],
+  },
+  {
+    title: 'E4C Rangers',
+    subtitle: 'Series 1',
+    id: '#537',
+    tag: 'Gold Edition',
+    tagStatus: '+',
+    introduction: [
+      {
+        title: 'Character',
+        content: 'Rin',
+      },
+      {
+        title: 'Background',
+        content: 'Off-white 1',
+      },
+      {
+        title: 'Hair',
+        content: 'Off-white 1',
+      },
+      {
+        title: 'HeadGear',
+        content: 'Off-white 1',
+      },
+      {
+        title: 'Makeup',
+        content: 'Off-white 1',
+      },
+      {
+        title: 'Earrings',
+        content: 'Off-white 1',
       },
     ],
   },
@@ -230,25 +293,28 @@ function AccountNFT() {
             <NFTInfo>
               <NFTInfoHead>
                 <section>
-                  <NFTInfoHeadTitle>E4C Rangers</NFTInfoHeadTitle>
-                  <NFTInfoHeadSubtitle>Series 1</NFTInfoHeadSubtitle>
-                  <NFTInfoHeadId>#537</NFTInfoHeadId>
+                  <NFTInfoHeadTitle>{i.title}</NFTInfoHeadTitle>
+                  <NFTInfoHeadSubtitle>{i.subtitle}</NFTInfoHeadSubtitle>
+                  <NFTInfoHeadId>{i.id}</NFTInfoHeadId>
                 </section>
-                <NFTInfoHeadTag>Gold Edition</NFTInfoHeadTag>
+                <NFTInfoHeadTag>
+                  <span>{i.tag}</span>
+                  <span>{i.tagStatus}</span>
+                </NFTInfoHeadTag>
               </NFTInfoHead>
 
               <NFTInfoContent>
-                {i.field.map((j, indexJ) => (
-                  <NFTInfoContentField key={indexJ}>
-                    <NFTInfoContentFieldTitle>{j.title}</NFTInfoContentFieldTitle>
-                    <NFTInfoContentFieldValue>{j.value}</NFTInfoContentFieldValue>
-                  </NFTInfoContentField>
+                {i.introduction.map((j, indexJ) => (
+                  <NFTInfoIntroduction key={indexJ}>
+                    <NFTInfoIntroductionTitle>{j.title}</NFTInfoIntroductionTitle>
+                    <NFTInfoIntroductionContent>{j.content}</NFTInfoIntroductionContent>
+                  </NFTInfoIntroduction>
                 ))}
               </NFTInfoContent>
 
               <NFTInfoFooter>
-                <div>New</div>
-                <div>Upgrade</div>
+                <NFTInfoButton>New</NFTInfoButton>
+                <NFTInfoButton>Upgrade</NFTInfoButton>
               </NFTInfoFooter>
             </NFTInfo>
           </NFTItem>
