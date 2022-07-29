@@ -3,9 +3,15 @@ export type NFTIntroduction = {
   content: string
 }
 
-export enum NFTState {
+export enum NFTTagState {
   Cold = 'Cold',
   ColdAdd = 'ColdAdd',
+  Ultimate = 'Ultimate',
+}
+
+export enum NFTStarState {
+  Default = 'Default',
+  New = 'New',
   Ultimate = 'Ultimate',
 }
 
@@ -14,6 +20,8 @@ export type NFT = {
   subtitle: string
   id: number
   tag: string
-  tagState: NFTState
+  tagState: NFTTagState
   introduction: NFTIntroduction[]
+  star: number
+  starState: NFTStarState
 }

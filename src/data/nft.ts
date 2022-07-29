@@ -1,4 +1,4 @@
-import { NFT, NFTState } from '../types'
+import { NFT, NFTStarState, NFTTagState } from '../types'
 
 export const NFTs: NFT[] = [
   {
@@ -6,7 +6,7 @@ export const NFTs: NFT[] = [
     subtitle: 'Series 1',
     id: 537,
     tag: 'Gold Edition',
-    tagState: NFTState.Cold,
+    tagState: NFTTagState.Cold,
     introduction: [
       {
         title: 'Character',
@@ -33,13 +33,15 @@ export const NFTs: NFT[] = [
         content: 'Off-white 1',
       },
     ],
+    star: 12,
+    starState: NFTStarState.Default,
   },
   {
     title: 'E4C Rangers',
     subtitle: 'Series 1',
     id: 537,
     tag: 'Gold Edition',
-    tagState: NFTState.Cold,
+    tagState: NFTTagState.Cold,
     introduction: [
       {
         title: 'Character',
@@ -66,13 +68,15 @@ export const NFTs: NFT[] = [
         content: 'Off-white 1',
       },
     ],
+    star: 5,
+    starState: NFTStarState.New,
   },
   {
     title: 'E4C Rangers',
     subtitle: 'Series 1',
     id: 537,
     tag: 'Gold Edition',
-    tagState: NFTState.ColdAdd,
+    tagState: NFTTagState.ColdAdd,
     introduction: [
       {
         title: 'Character',
@@ -99,13 +103,15 @@ export const NFTs: NFT[] = [
         content: 'Off-white 1',
       },
     ],
+    star: 150,
+    starState: NFTStarState.Default,
   },
   {
     title: 'E4C Rangers',
     subtitle: 'Series 1',
     id: 537,
     tag: 'Ultimate Edition',
-    tagState: NFTState.Ultimate,
+    tagState: NFTTagState.Ultimate,
     introduction: [
       {
         title: 'Character',
@@ -132,5 +138,7 @@ export const NFTs: NFT[] = [
         content: 'Off-white 1',
       },
     ],
+    star: 0,
+    starState: NFTStarState.Ultimate,
   },
 ]

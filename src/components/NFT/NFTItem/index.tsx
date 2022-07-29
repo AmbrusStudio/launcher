@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 import { Box, Stack } from '@mui/material'
 import { FC } from 'react'
 
-import Star from '../../../components/Icon/Star'
 import { NFT } from '../../../types'
+import NFTStar from '../NFTStar'
 import NFTTag from '../NFTTag'
 
 const Item = styled.div`
@@ -96,63 +96,6 @@ const NFTInfoButtonUpgrade = styled(NFTInfoButton)`
   font-size: 16px;
   line-height: 20px;
 `
-const NFTInfoButtonTag = styled.div`
-  padding: 2px 6px;
-  position: absolute;
-  right: 8px;
-  top: 0;
-  transform: translateY(-50%);
-  background: #ffffff;
-  border-radius: 4px;
-  font-family: 'Montserrat', sans-serif;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 12px;
-  line-height: 15px;
-  text-align: center;
-  text-transform: uppercase;
-  color: #ff4125;
-`
-const NFTInfoButtonTagNew = styled.div`
-  position: absolute;
-  right: 8px;
-  top: 0;
-  transform: translateY(-50%);
-  background: #ffffff;
-  border-radius: 4px;
-  font-family: 'Montserrat', sans-serif;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 12px;
-  line-height: 15px;
-  text-align: center;
-  text-transform: uppercase;
-  color: #ff4125;
-  overflow: hidden;
-  display: flex;
-`
-const NFTInfoButtonTagNewText = styled.div`
-  padding: 2px 6px;
-  background: linear-gradient(112.63deg, #ec651a 0%, #e99e58 91.57%);
-  font-style: normal;
-  font-weight: 700;
-  font-size: 12px;
-  line-height: 15px;
-  text-align: center;
-  text-transform: uppercase;
-  color: #ffffff;
-`
-const NFTInfoButtonTagNewNumber = styled.div`
-  padding: 2px 6px;
-  background: #ffffff;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 12px;
-  line-height: 15px;
-  text-align: center;
-  text-transform: uppercase;
-  color: #ff4125;
-`
 
 interface NFTItemProps {
   nft: NFT
@@ -192,14 +135,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft }) => {
         </NFTInfoContent>
 
         <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
-          <NFTInfoButtonStar>
-            <Star sx={{ fontSize: '36px' }} />
-            {/* <NFTInfoButtonTag>12</NFTInfoButtonTag> */}
-            <NFTInfoButtonTagNew>
-              <NFTInfoButtonTagNewText>NEW</NFTInfoButtonTagNewText>
-              <NFTInfoButtonTagNewNumber>5</NFTInfoButtonTagNewNumber>
-            </NFTInfoButtonTagNew>
-          </NFTInfoButtonStar>
+          <NFTStar nft={nft} />
           <NFTInfoButtonUpgrade>Upgrade</NFTInfoButtonUpgrade>
         </Stack>
       </NFTInfo>
