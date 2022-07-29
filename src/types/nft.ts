@@ -3,6 +3,18 @@ export type NFTIntroduction = {
   content: string
 }
 
+export type NFTUpgradeInfo = {
+  introduction: {
+    first: string
+    second: string
+    list: {
+      text: string
+    }[]
+  }[]
+  title: string
+  description: string
+}
+
 export enum NFTTagState {
   Cold = 'Cold',
   ColdAdd = 'ColdAdd',
@@ -33,4 +45,5 @@ export type NFT = {
   starState: NFTStarState
   upgrade: NFTUpgradeState
   remainingDays: Date
+  upgradeInfo: NFTUpgradeInfo
 }

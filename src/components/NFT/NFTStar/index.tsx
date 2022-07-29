@@ -22,6 +22,7 @@ const NFTInfoButton = styled.button<{ state: NFTStarState }>`
   outline: none;
   width: 100%;
   min-height: 60px;
+  cursor: pointer;
 `
 const NFTInfoButtonStar = styled(NFTInfoButton)`
   max-width: 120px;

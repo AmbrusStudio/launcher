@@ -38,6 +38,33 @@ export const NFTs: NFT[] = [
     starState: NFTStarState.Default,
     upgrade: NFTUpgradeState.Upgrade,
     remainingDays: new Date('2022,8,30'),
+    upgradeInfo: {
+      introduction: [
+        {
+          first: 'Upgrade to Legendary Edition +',
+          second: 'And You’ll Get',
+          list: [
+            {
+              text: '12 more in-game loots',
+            },
+            {
+              text: '1 legendary skin for Rin in our game: E4C Final Salvation',
+            },
+          ],
+        },
+        {
+          first: 'Once the NFT is staked',
+          second: 'You’ll Get',
+          list: [
+            {
+              text: 'NFT Airdrop (Rangers Edition) from our upcoming E4C Rangers Series',
+            },
+          ],
+        },
+      ],
+      title: 'Stake to Upgrade',
+      description: 'Staking Descriptions',
+    },
   },
   {
     cover: 'https://ambrus.s3.amazonaws.com/1657877346199_0.09_204.jpg',
@@ -76,6 +103,33 @@ export const NFTs: NFT[] = [
     starState: NFTStarState.New,
     upgrade: NFTUpgradeState.Upgrading,
     remainingDays: new Date('2022,8,30'),
+    upgradeInfo: {
+      introduction: [
+        {
+          first: 'Upgrade to Legendary Edition +',
+          second: 'And You’ll Get',
+          list: [
+            {
+              text: '12 more in-game loots',
+            },
+            {
+              text: '1 legendary skin for Rin in our game: E4C Final Salvation',
+            },
+          ],
+        },
+        {
+          first: 'Once the NFT is staked',
+          second: 'You’ll Get',
+          list: [
+            {
+              text: 'NFT Airdrop (Rangers Edition) from our upcoming E4C Rangers Series',
+            },
+          ],
+        },
+      ],
+      title: 'Stake to Upgrade',
+      description: 'Staking Descriptions',
+    },
   },
   {
     cover: 'https://ambrus.s3.amazonaws.com/1657877346191_0.92_107.jpg',
@@ -114,6 +168,33 @@ export const NFTs: NFT[] = [
     starState: NFTStarState.Default,
     upgrade: NFTUpgradeState.Default,
     remainingDays: new Date(),
+    upgradeInfo: {
+      introduction: [
+        {
+          first: 'Upgrade to Legendary Edition +',
+          second: 'And You’ll Get',
+          list: [
+            {
+              text: '12 more in-game loots',
+            },
+            {
+              text: '1 legendary skin for Rin in our game: E4C Final Salvation',
+            },
+          ],
+        },
+        {
+          first: 'Once the NFT is staked',
+          second: 'You’ll Get',
+          list: [
+            {
+              text: 'NFT Airdrop (Rangers Edition) from our upcoming E4C Rangers Series',
+            },
+          ],
+        },
+      ],
+      title: 'Stake to Upgrade',
+      description: 'Staking Descriptions',
+    },
   },
   {
     cover: 'https://ambrus.s3.amazonaws.com/1657877346186_0.34_105.jpg',
@@ -152,5 +233,32 @@ export const NFTs: NFT[] = [
     starState: NFTStarState.Ultimate,
     upgrade: NFTUpgradeState.Default,
     remainingDays: new Date(),
+    upgradeInfo: {
+      introduction: [
+        {
+          first: 'Upgrade to Legendary Edition +',
+          second: 'And You’ll Get',
+          list: [
+            {
+              text: '12 more in-game loots',
+            },
+            {
+              text: '1 legendary skin for Rin in our game: E4C Final Salvation',
+            },
+          ],
+        },
+        {
+          first: 'Once the NFT is staked',
+          second: 'You’ll Get',
+          list: [
+            {
+              text: 'NFT Airdrop (Rangers Edition) from our upcoming E4C Rangers Series',
+            },
+          ],
+        },
+      ],
+      title: 'Stake to Upgrade',
+      description: 'Staking Descriptions',
+    },
   },
 ]

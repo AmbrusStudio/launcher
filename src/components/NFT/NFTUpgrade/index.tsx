@@ -17,6 +17,7 @@ const NFTInfoButton = styled.button<{ state: NFTUpgradeState }>`
   outline: none;
   width: 100%;
   min-height: 60px;
+  cursor: pointer;
 `
 
 const NFTInfoButtonUpgrade = styled(NFTInfoButton)`
@@ -36,13 +37,16 @@ const NFTInfoButtonUpgradeDay = styled.span`
 
 interface NFTUpgradeProps {
   nft: NFT
+  toggle: (value: boolean) => void
 }
 
-const NFTUpgrade: FC<NFTUpgradeProps> = ({ nft }) => {
+const NFTUpgrade: FC<NFTUpgradeProps> = ({ nft, toggle }) => {
   return (
     <>
       {nft.upgrade === NFTUpgradeState.Upgrade ? (
-        <NFTInfoButtonUpgrade state={nft.upgrade}>Upgrade</NFTInfoButtonUpgrade>
+        <NFTInfoButtonUpgrade onClick={() => toggle(true)} state={nft.upgrade}>
+          Upgrade
+        </NFTInfoButtonUpgrade>
       ) : nft.upgrade === NFTUpgradeState.Upgrading ? (
         <NFTInfoButtonUpgrade state={nft.upgrade}>
           <span>Upgrading...</span>

@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 import { Box, Stack } from '@mui/material'
-import { FC } from 'react'
+import { FC, useState } from 'react'
 
 import { NFT } from '../../../types'
+import NFTInfo from '../NFTInfo'
 import NFTStar from '../NFTStar'
 import NFTTag from '../NFTTag'
 import NFTUpgrade from '../NFTUpgrade'
@@ -11,13 +12,14 @@ const Item = styled.div`
   display: flex;
   height: 600px;
   background: #000000;
+  position: relative;
 `
 const NFTCover = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
 `
-const NFTInfo = styled.div`
+const WrapperInfo = styled.div`
   color: #fff;
   padding: 24px;
   flex: 1;
@@ -25,10 +27,6 @@ const NFTInfo = styled.div`
   flex-direction: column;
 `
 
-const NFTInfoHead = styled.div`
-  display: flex;
-  justify-content: space-between;
-`
 const NFTInfoHeadText = styled.span`
   font-family: 'Montserrat', sans-serif;
   font-style: normal;
@@ -52,7 +50,6 @@ const NFTInfoContent = styled.div`
   grid-gap: 24px;
 `
 
-const NFTInfoIntroduction = styled.section``
 const NFTInfoIntroductionTitle = styled.p`
   font-family: 'Montserrat', sans-serif;
   font-style: normal;
@@ -80,6 +77,8 @@ interface NFTItemProps {
 }
 
 const NFTItem: FC<NFTItemProps> = ({ nft }) => {
+  const [toggleInfo, setToggleInfo] = useState<boolean>(false)
+
   return (
     <Item>
       <Box
@@ -91,8 +90,13 @@ const NFTItem: FC<NFTItemProps> = ({ nft }) => {
       >
         <NFTCover src={nft.cover} alt={nft.title} />
       </Box>
-      <NFTInfo>
-        <NFTInfoHead>
+      <WrapperInfo>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
           <section>
             <NFTInfoHeadTitle>{nft.title}</NFTInfoHeadTitle>
             <Stack spacing={2} direction="row">
@@ -101,22 +105,24 @@ const NFTItem: FC<NFTItemProps> = ({ nft }) => {
             </Stack>
           </section>
           <NFTTag nft={nft} />
-        </NFTInfoHead>
+        </Box>
 
         <NFTInfoContent>
           {nft.introduction.map((j, indexJ: number) => (
-            <NFTInfoIntroduction key={indexJ}>
+            <section key={indexJ}>
               <NFTInfoIntroductionTitle>{j.title}</NFTInfoIntroductionTitle>
               <NFTInfoIntroductionContent>{j.content}</NFTInfoIntroductionContent>
-            </NFTInfoIntroduction>
+            </section>
           ))}
         </NFTInfoContent>
 
         <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
           <NFTStar nft={nft} />
-          <NFTUpgrade nft={nft} />
+          <NFTUpgrade toggle={(value) => setToggleInfo(value)} nft={nft} />
         </Stack>
-      </NFTInfo>
+      </WrapperInfo>
+
+      {toggleInfo && <NFTInfo toggle={(value) => setToggleInfo(value)} upgradeInfo={nft.upgradeInfo} />}
     </Item>
   )
 }
