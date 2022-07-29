@@ -15,7 +15,14 @@ export enum NFTStarState {
   Ultimate = 'Ultimate',
 }
 
+export enum NFTUpgradeState {
+  Default = 'Default',
+  Upgrade = 'Upgrade',
+  Upgrading = 'Upgrading',
+}
+
 export type NFT = {
+  cover: string
   title: string
   subtitle: string
   id: number
@@ -24,4 +31,6 @@ export type NFT = {
   introduction: NFTIntroduction[]
   star: number
   starState: NFTStarState
+  upgrade: NFTUpgradeState
+  remainingDays: Date
 }

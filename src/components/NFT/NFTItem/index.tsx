@@ -5,6 +5,7 @@ import { FC } from 'react'
 import { NFT } from '../../../types'
 import NFTStar from '../NFTStar'
 import NFTTag from '../NFTTag'
+import NFTUpgrade from '../NFTUpgrade'
 
 const Item = styled.div`
   display: flex;
@@ -74,29 +75,6 @@ const NFTInfoIntroductionContent = styled.p`
   margin: 4px 0 0 0;
 `
 
-const NFTInfoButton = styled.button`
-  padding: 0 20px;
-  background: #ff4125;
-  font-family: 'Montserrat', sans-serif;
-  font-style: normal;
-  font-weight: 600;
-  text-align: center;
-  text-transform: uppercase;
-  color: #ffffff;
-  border: none;
-  outline: none;
-  width: 100%;
-  min-height: 60px;
-`
-const NFTInfoButtonStar = styled(NFTInfoButton)`
-  max-width: 120px;
-  position: relative;
-`
-const NFTInfoButtonUpgrade = styled(NFTInfoButton)`
-  font-size: 16px;
-  line-height: 20px;
-`
-
 interface NFTItemProps {
   nft: NFT
 }
@@ -111,7 +89,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft }) => {
           overflow: 'hidden',
         }}
       >
-        <NFTCover src="https://i.imgur.com/n29yuRi.jpg" alt="NFT" />
+        <NFTCover src={nft.cover} alt={nft.title} />
       </Box>
       <NFTInfo>
         <NFTInfoHead>
@@ -136,7 +114,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft }) => {
 
         <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
           <NFTStar nft={nft} />
-          <NFTInfoButtonUpgrade>Upgrade</NFTInfoButtonUpgrade>
+          <NFTUpgrade nft={nft} />
         </Stack>
       </NFTInfo>
     </Item>

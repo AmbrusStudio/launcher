@@ -1,7 +1,8 @@
-import { NFT, NFTStarState, NFTTagState } from '../types'
+import { NFT, NFTStarState, NFTTagState, NFTUpgradeState } from '../types'
 
 export const NFTs: NFT[] = [
   {
+    cover: 'https://ambrus.s3.amazonaws.com/1657877346203_0.92_206.jpg',
     title: 'E4C Rangers',
     subtitle: 'Series 1',
     id: 537,
@@ -35,8 +36,11 @@ export const NFTs: NFT[] = [
     ],
     star: 12,
     starState: NFTStarState.Default,
+    upgrade: NFTUpgradeState.Upgrade,
+    remainingDays: new Date('2022,8,30'),
   },
   {
+    cover: 'https://ambrus.s3.amazonaws.com/1657877346199_0.09_204.jpg',
     title: 'E4C Rangers',
     subtitle: 'Series 1',
     id: 537,
@@ -70,8 +74,11 @@ export const NFTs: NFT[] = [
     ],
     star: 5,
     starState: NFTStarState.New,
+    upgrade: NFTUpgradeState.Upgrading,
+    remainingDays: new Date('2022,8,30'),
   },
   {
+    cover: 'https://ambrus.s3.amazonaws.com/1657877346191_0.92_107.jpg',
     title: 'E4C Rangers',
     subtitle: 'Series 1',
     id: 537,
@@ -105,8 +112,11 @@ export const NFTs: NFT[] = [
     ],
     star: 150,
     starState: NFTStarState.Default,
+    upgrade: NFTUpgradeState.Default,
+    remainingDays: new Date(),
   },
   {
+    cover: 'https://ambrus.s3.amazonaws.com/1657877346186_0.34_105.jpg',
     title: 'E4C Rangers',
     subtitle: 'Series 1',
     id: 537,
@@ -140,5 +150,7 @@ export const NFTs: NFT[] = [
     ],
     star: 0,
     starState: NFTStarState.Ultimate,
+    upgrade: NFTUpgradeState.Default,
+    remainingDays: new Date(),
   },
 ]
