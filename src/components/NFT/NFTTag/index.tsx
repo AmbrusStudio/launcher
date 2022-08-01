@@ -29,7 +29,7 @@ const Wrapper = styled.div<{ state: NFTTagState }>`
 `
 
 interface NFTTagProps {
-  nft: NFT
+  readonly nft: NFT
 }
 
 const NFTTag: FC<NFTTagProps> = ({ nft }) => {

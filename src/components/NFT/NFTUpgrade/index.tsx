@@ -36,7 +36,7 @@ const NFTInfoButtonUpgradeDay = styled.span`
 `
 
 interface NFTUpgradeProps {
-  nft: NFT
+  readonly nft: NFT
   toggle: (value: boolean) => void
 }
 

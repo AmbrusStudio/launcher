@@ -47,3 +47,22 @@ export type NFT = {
   remainingDays: Date
   upgradeInfo: NFTUpgradeInfo
 }
+
+export enum PERKState {
+  Default = 'Default',
+  Redeem = 'Redeem',
+  Redeemed = 'Redeemed',
+  ComingSoon = 'Coming Soon',
+  Share = 'Share',
+}
+export enum PERKTag {
+  Default = 'Default',
+  New = 'New',
+}
+
+export type PERK = {
+  title: string
+  description: string
+  state: PERKState
+  tag: PERKTag
+}

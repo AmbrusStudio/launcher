@@ -88,12 +88,13 @@ const NFTInfoButtonTagNewNumber = styled.div`
   color: #ff4125;
 `
 interface NFTStarProps {
-  nft: NFT
+  readonly nft: NFT
+  toggle: (value: boolean) => void
 }
 
-const NFTStar: FC<NFTStarProps> = ({ nft }) => {
+const NFTStar: FC<NFTStarProps> = ({ nft, toggle }) => {
   return (
-    <NFTInfoButtonStar state={nft.starState}>
+    <NFTInfoButtonStar state={nft.starState} onClick={() => toggle(true)}>
       <Star sx={{ fontSize: '36px' }} />
       {nft.starState === NFTStarState.Default ? (
         <NFTInfoButtonTag>{nft.star}</NFTInfoButtonTag>

@@ -84,7 +84,7 @@ const Description = styled.p`
 `
 
 interface NFTInfoProps {
-  upgradeInfo: NFTUpgradeInfo
+  readonly upgradeInfo: NFTUpgradeInfo
   toggle: (value: boolean) => void
 }
 

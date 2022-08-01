@@ -4,6 +4,7 @@ import { FC, useState } from 'react'
 
 import { NFT } from '../../../types'
 import NFTInfo from '../NFTInfo'
+import NFTPerk from '../NFTPerk'
 import NFTStar from '../NFTStar'
 import NFTTag from '../NFTTag'
 import NFTUpgrade from '../NFTUpgrade'
@@ -73,11 +74,12 @@ const NFTInfoIntroductionContent = styled.p`
 `
 
 interface NFTItemProps {
-  nft: NFT
+  readonly nft: NFT
 }
 
 const NFTItem: FC<NFTItemProps> = ({ nft }) => {
   const [toggleInfo, setToggleInfo] = useState<boolean>(false)
+  const [togglePerk, setTogglePerk] = useState<boolean>(false)
 
   return (
     <Item>
@@ -117,12 +119,13 @@ const NFTItem: FC<NFTItemProps> = ({ nft }) => {
         </NFTInfoContent>
 
         <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
-          <NFTStar nft={nft} />
+          <NFTStar nft={nft} toggle={(value) => setTogglePerk(value)} />
           <NFTUpgrade toggle={(value) => setToggleInfo(value)} nft={nft} />
         </Stack>
       </WrapperInfo>
 
       {toggleInfo && <NFTInfo toggle={(value) => setToggleInfo(value)} upgradeInfo={nft.upgradeInfo} />}
+      <NFTPerk nft={nft} visible={togglePerk} toggle={(value) => setTogglePerk(value)} />
     </Item>
   )
 }

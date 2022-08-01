@@ -1,4 +1,4 @@
-import { NFT, NFTStarState, NFTTagState, NFTUpgradeState } from '../types'
+import { NFT, NFTStarState, NFTTagState, NFTUpgradeState, PERK, PERKState, PERKTag } from '../types'
 
 export const NFTs: NFT[] = [
   {
@@ -260,5 +260,44 @@ export const NFTs: NFT[] = [
       title: 'Stake to Upgrade',
       description: 'Staking Descriptions',
     },
+  },
+]
+
+export const PERKS: PERK[] = [
+  {
+    title: 'Perk Title',
+    description: 'Descriptions',
+    state: PERKState.ComingSoon,
+    tag: PERKTag.Default,
+  },
+  {
+    title: 'Perk Title',
+    description: 'Descriptions',
+    state: PERKState.Redeem,
+    tag: PERKTag.Default,
+  },
+  {
+    title: 'Perk Title',
+    description: 'Descriptions',
+    state: PERKState.Redeemed,
+    tag: PERKTag.Default,
+  },
+  {
+    title: 'Perk Title',
+    description: 'Descriptions',
+    state: PERKState.Default,
+    tag: PERKTag.Default,
+  },
+  {
+    title: 'Perk Title',
+    description: 'Descriptions',
+    state: PERKState.ComingSoon,
+    tag: PERKTag.New,
+  },
+  {
+    title: 'Perk Title (3 left)',
+    description: 'Descriptions',
+    state: PERKState.Share,
+    tag: PERKTag.Default,
   },
 ]
