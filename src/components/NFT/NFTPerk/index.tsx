@@ -48,7 +48,7 @@ const ItemDescription = styled.p`
   margin: 0;
 `
 const InfoButton = styled.button<{ color: string }>`
-  padding: 8px 17px;
+  padding: 8px 0;
   background: ${(p) => p.color || '#ff4125'};
   font-family: 'Montserrat', sans-serif;
   font-style: normal;
@@ -61,6 +61,7 @@ const InfoButton = styled.button<{ color: string }>`
   border: none;
   outline: none;
   min-height: 46px;
+  min-width: 160px;
   display: inline-block;
   cursor: pointer;
 `
@@ -105,8 +106,8 @@ const NFTPerk: FC<NFTPerkProps> = ({ nft, visible, toggle }) => {
           },
         },
         '.MuiBackdrop-root': {
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          // backdropFilter: 'blur(2px)',
+          backgroundColor: 'rgba(255, 255, 255, 0.7)',
+          backdropFilter: 'blur(12px)',
         },
       }}
     >
