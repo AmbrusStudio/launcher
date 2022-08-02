@@ -2,10 +2,10 @@ import styled from '@emotion/styled'
 import { Box, Stack } from '@mui/material'
 import { FC } from 'react'
 
-import { NFTUpgradeInfo } from '../../../types'
+import { NFT, NFTUpgradeState } from '../../../types'
+import CloseCheck from '../../Icon/CloseCheck'
 
 const InfoButton = styled.button<{ color: string }>`
-  padding: 0 20px;
   background: ${(p) => p.color || '#ff4125'};
   font-family: 'Montserrat', sans-serif;
   font-style: normal;
@@ -73,7 +73,8 @@ const Title = styled.h3`
   margin: 0;
 `
 const Description = styled.p`
-  font-family: 'Montserrat';
+  font-family: 'Montserrat', sans-serif;
+
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
@@ -82,13 +83,58 @@ const Description = styled.p`
   padding: 0;
   margin: 12px 0 auto 0;
 `
+const CheckCard = styled(Stack)`
+  background: #2a2a2a;
+  width: 100%;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`
+
+const CheckDescription = styled.p`
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  text-align: center;
+  color: #ffffff;
+  padding: 0;
+  margin: 0;
+`
+const CheckDescriptionDay = styled.p`
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
+  text-align: center;
+  color: #ff4125;
+  padding: 0;
+  margin: 0;
+`
+
+const CheckFail = styled(Box)`
+  width: 108px;
+  height: 108px;
+  background: #465358;
+  border: 1px solid #4a4a4a;
+  border-radius: 100%;
+  box-shadow: inset 0px 2px 8px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a0a4b0;
+`
 
 interface NFTInfoProps {
-  readonly upgradeInfo: NFTUpgradeInfo
+  readonly nft: NFT
   toggle: (value: boolean) => void
 }
 
-const NFTInfo: FC<NFTInfoProps> = ({ upgradeInfo, toggle }) => {
+const NFTInfo: FC<NFTInfoProps> = ({ nft, toggle }) => {
   return (
     <Box
       sx={{
@@ -109,7 +155,7 @@ const NFTInfo: FC<NFTInfoProps> = ({ upgradeInfo, toggle }) => {
           p: 3,
         }}
       >
-        {upgradeInfo.introduction.map((info, index) => (
+        {nft.upgradeInfo.introduction.map((info, index) => (
           <div key={index}>
             <InfoTieleFirst>{info.first}</InfoTieleFirst>
             <InfoTieleSecond>{info.second}</InfoTieleSecond>
@@ -122,16 +168,49 @@ const NFTInfo: FC<NFTInfoProps> = ({ upgradeInfo, toggle }) => {
         ))}
       </Stack>
       <WrapperInfo>
-        <Title>{upgradeInfo.title}</Title>
-        <Description>{upgradeInfo.description}</Description>
-        <Stack spacing={1.5}>
-          <InfoButton color="#FF4125" onClick={() => alert('Up....')}>
-            Start Staking Now
-          </InfoButton>
-          <InfoButton color="#A0A4B0" onClick={() => toggle(false)}>
-            Cancel
-          </InfoButton>
-        </Stack>
+        <Title>{nft.upgradeInfo.title}</Title>
+        <Description>{nft.upgradeInfo.description}</Description>
+        {nft.upgrade === NFTUpgradeState.Upgrade ? (
+          <Stack spacing={1.5}>
+            <InfoButton color="#FF4125" onClick={() => alert('Up....')}>
+              Start Staking Now
+            </InfoButton>
+            <InfoButton color="#A0A4B0" onClick={() => toggle(false)}>
+              Cancel
+            </InfoButton>
+          </Stack>
+        ) : nft.upgrade === NFTUpgradeState.CheckUpgradingStatus ? (
+          <>
+            <Stack spacing={1.5} direction="row">
+              <CheckCard spacing={1.625}>
+                <div>1</div>
+                <CheckDescription>It has been staked for at least 90 days</CheckDescription>
+                <CheckDescriptionDay>(24 days left)</CheckDescriptionDay>
+              </CheckCard>
+              <CheckCard spacing={1.625}>
+                <CheckFail>
+                  <CloseCheck
+                    sx={{
+                      fontSize: '50px',
+                    }}
+                  />
+                </CheckFail>
+                <CheckDescription>You have claimed the “xxx” Soulbound Badge in our Discord</CheckDescription>
+              </CheckCard>
+            </Stack>
+
+            <Stack
+              spacing={1.5}
+              sx={{
+                mt: 3,
+              }}
+            >
+              <InfoButton color="#A0A4B0">Upgrade</InfoButton>
+              <InfoButton color="#2A2A2A">Unstake</InfoButton>
+              <InfoButton color="#2A2A2A">Cancel</InfoButton>
+            </Stack>
+          </>
+        ) : null}
       </WrapperInfo>
     </Box>
   )

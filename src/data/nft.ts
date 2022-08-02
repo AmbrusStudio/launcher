@@ -101,7 +101,7 @@ export const NFTs: NFT[] = [
     ],
     star: 5,
     starState: NFTStarState.New,
-    upgrade: NFTUpgradeState.Upgrading,
+    upgrade: NFTUpgradeState.CheckUpgradingStatus,
     remainingDays: new Date('2022,8,30'),
     upgradeInfo: {
       introduction: [
@@ -127,8 +127,8 @@ export const NFTs: NFT[] = [
           ],
         },
       ],
-      title: 'Stake to Upgrade',
-      description: 'Staking Descriptions',
+      title: 'Upgrading Status Check',
+      description: 'You can upgrade this NFT when:',
     },
   },
   {

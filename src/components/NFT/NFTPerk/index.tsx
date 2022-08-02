@@ -6,7 +6,7 @@ import { FC } from 'react'
 
 import { PERKS } from '../../../data'
 import { NFT, PERKState, PERKTag } from '../../../types'
-import Close from '../../Icon/close'
+import Close from '../../Icon/Close'
 
 const Head = styled.div`
   width: 100%;
