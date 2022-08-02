@@ -1,5 +1,7 @@
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
+import { useEthers } from '@usedapp/core'
+import { useEffect } from 'react'
 
 import NFTItem from '../../../components/NFT/NFTItem'
 import { NFTs } from '../../../data'
@@ -27,6 +29,14 @@ const Title = styled.h1`
 `
 
 function AccountNFT() {
+  const { account, activateBrowserWallet } = useEthers()
+  console.log('account', account)
+
+  useEffect(() => {
+    // TODO: Porting “website repo” wallet function or redefining
+    ;(window as any).activateBrowserWallet = activateBrowserWallet
+  }, [activateBrowserWallet])
+
   return (
     <Wrapper>
       <Title>
