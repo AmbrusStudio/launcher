@@ -6,7 +6,7 @@ import { NFT, NFTUpgradeState } from '../../../types'
 const NFTInfoButton = styled.button<{ state: NFTUpgradeState }>`
   padding: 0 20px;
   background: ${(p) =>
-    p.state === NFTUpgradeState.Upgrade ? '#ff4125' : p.state === NFTUpgradeState.Upgrading ? '#A0A4B0' : '#ff4125'};
+    p.state === NFTUpgradeState.Upgrade || p.state === NFTUpgradeState.CheckUpgradingStatus ? '#ff4125' : '#A0A4B0'};
   font-family: 'Montserrat', sans-serif;
   font-style: normal;
   font-weight: 600;
@@ -25,16 +25,6 @@ const NFTInfoButtonUpgrade = styled(NFTInfoButton)`
   line-height: 20px;
 `
 
-const NFTInfoButtonUpgradeDay = styled.span`
-  font-style: normal;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 15px;
-  text-transform: uppercase;
-  color: #ffffff;
-  margin-left: 12px;
-`
-
 interface NFTUpgradeProps {
   readonly nft: NFT
   toggle: (value: boolean) => void
@@ -47,10 +37,9 @@ const NFTUpgrade: FC<NFTUpgradeProps> = ({ nft, toggle }) => {
         <NFTInfoButtonUpgrade onClick={() => toggle(true)} state={nft.upgrade}>
           Upgrade
         </NFTInfoButtonUpgrade>
-      ) : nft.upgrade === NFTUpgradeState.Upgrading ? (
-        <NFTInfoButtonUpgrade state={nft.upgrade}>
-          <span>Upgrading...</span>
-          <NFTInfoButtonUpgradeDay>(48 days left)</NFTInfoButtonUpgradeDay>
+      ) : nft.upgrade === NFTUpgradeState.CheckUpgradingStatus ? (
+        <NFTInfoButtonUpgrade onClick={() => toggle(true)} state={nft.upgrade}>
+          Check upgrading status
         </NFTInfoButtonUpgrade>
       ) : null}
     </>

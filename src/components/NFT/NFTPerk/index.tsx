@@ -1,30 +1,11 @@
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
-import Dialog from '@mui/material/Dialog'
 import { Box } from '@mui/system'
 import { FC } from 'react'
 
 import { PERKS } from '../../../data'
-import { NFT, PERKState, PERKTag } from '../../../types'
-import Close from '../../Icon/close'
-
-const Head = styled.div`
-  width: 100%;
-  background: rgba(42, 42, 42, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 24px;
-  color: #ffffff;
-  span {
-    font-family: 'Montserrat', sans-serif;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 36px;
-    line-height: 44px;
-    text-transform: uppercase;
-  }
-`
+import { PERKState, PERKTag } from '../../../types'
+import ModalCustom from '../../ModalCustom'
 
 const ItemTitle = styled.h3`
   font-family: 'Montserrat', sans-serif;
@@ -86,41 +67,13 @@ const Tag = styled.div`
 `
 
 interface NFTPerkProps {
-  readonly nft: NFT
   readonly visible: boolean
   toggle: (value: boolean) => void
 }
 
-const NFTPerk: FC<NFTPerkProps> = ({ nft, visible, toggle }) => {
+const NFTPerk: FC<NFTPerkProps> = ({ visible, toggle }) => {
   return (
-    <Dialog
-      open={visible}
-      onClose={() => toggle(false)}
-      sx={{
-        '.MuiDialog-container': {
-          '.MuiPaper-root': {
-            width: '100%',
-            maxWidth: '600px',
-            boxShadow: 'none',
-            borderRadius: 0,
-          },
-        },
-        '.MuiBackdrop-root': {
-          backgroundColor: 'rgba(255, 255, 255, 0.7)',
-          backdropFilter: 'blur(12px)',
-        },
-      }}
-    >
-      <Head>
-        <span>Your Gifts</span>
-        <Close
-          onClick={() => toggle(false)}
-          sx={{
-            fontSize: '36px',
-            cursor: 'pointer',
-          }}
-        />
-      </Head>
+    <ModalCustom title={'Your Gifts'} visible={visible} toggle={toggle}>
       <Stack
         spacing={2}
         sx={{
@@ -166,7 +119,7 @@ const NFTPerk: FC<NFTPerkProps> = ({ nft, visible, toggle }) => {
           </Box>
         ))}
       </Stack>
-    </Dialog>
+    </ModalCustom>
   )
 }
 

@@ -3,6 +3,10 @@ export type NFTIntroduction = {
   content: string
 }
 
+export enum NFTUpgradeInfoState {
+  Cold = 'Cold',
+}
+
 export type NFTUpgradeInfo = {
   introduction: {
     first: string
@@ -13,6 +17,14 @@ export type NFTUpgradeInfo = {
   }[]
   title: string
   description: string
+  upgradingStatusInfo: {
+    stakeStatus: boolean
+    stakeDescription: string
+    stakeDay: Date
+    stakeValue: number
+    badgeStatus: boolean
+    badgeDescription: string
+  } | null
 }
 
 export enum NFTTagState {
@@ -30,7 +42,7 @@ export enum NFTStarState {
 export enum NFTUpgradeState {
   Default = 'Default',
   Upgrade = 'Upgrade',
-  Upgrading = 'Upgrading',
+  CheckUpgradingStatus = 'Check upgrading status',
 }
 
 export type NFT = {

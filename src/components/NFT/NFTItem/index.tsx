@@ -124,8 +124,8 @@ const NFTItem: FC<NFTItemProps> = ({ nft }) => {
         </Stack>
       </WrapperInfo>
 
-      {toggleInfo && <NFTInfo toggle={(value) => setToggleInfo(value)} upgradeInfo={nft.upgradeInfo} />}
-      <NFTPerk nft={nft} visible={togglePerk} toggle={(value) => setTogglePerk(value)} />
+      {toggleInfo && <NFTInfo toggle={(value) => setToggleInfo(value)} nft={nft} />}
+      <NFTPerk visible={togglePerk} toggle={(value) => setTogglePerk(value)} />
     </Item>
   )
 }
