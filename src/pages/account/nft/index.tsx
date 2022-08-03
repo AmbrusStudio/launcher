@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   font-family: 'Montserrat', sans-serif;
   max-width: 1140px;
   width: 1140px;
-  padding: 0 10px;
+  padding: 130px 10px;
   margin: 0 auto;
 `
 const Title = styled.h1`
