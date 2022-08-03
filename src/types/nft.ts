@@ -17,6 +17,14 @@ export type NFTUpgradeInfo = {
   }[]
   title: string
   description: string
+  upgradingStatusInfo: {
+    stakeStatus: boolean
+    stakeDescription: string
+    stakeDay: Date
+    stakeValue: number
+    badgeStatus: boolean
+    badgeDescription: string
+  } | null
 }
 
 export enum NFTTagState {

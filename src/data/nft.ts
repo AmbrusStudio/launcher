@@ -64,6 +64,7 @@ export const NFTs: NFT[] = [
       ],
       title: 'Stake to Upgrade',
       description: 'Staking Descriptions',
+      upgradingStatusInfo: null,
     },
   },
   {
@@ -129,6 +130,87 @@ export const NFTs: NFT[] = [
       ],
       title: 'Upgrading Status Check',
       description: 'You can upgrade this NFT when:',
+      upgradingStatusInfo: {
+        stakeStatus: false,
+        stakeDescription: 'It has been staked for at least 90 days',
+        stakeDay: new Date('2022,8,30'),
+        stakeValue: 73, // 0 - 90
+        badgeStatus: false,
+        badgeDescription: 'You have claimed the “xxx” Soulbound Badge in our Discord',
+      },
+    },
+  },
+  {
+    cover: 'https://ambrus.s3.amazonaws.com/1657877346199_0.09_204.jpg',
+    title: 'E4C Rangers',
+    subtitle: 'Series 1',
+    id: 537,
+    tag: 'Gold Edition',
+    tagState: NFTTagState.Cold,
+    introduction: [
+      {
+        title: 'Character',
+        content: 'Rin',
+      },
+      {
+        title: 'Background',
+        content: 'Off-white 1',
+      },
+      {
+        title: 'Hair',
+        content: 'Off-white 1',
+      },
+      {
+        title: 'HeadGear',
+        content: 'Off-white 1',
+      },
+      {
+        title: 'Makeup',
+        content: 'Off-white 1',
+      },
+      {
+        title: 'Earrings',
+        content: 'Off-white 1',
+      },
+    ],
+    star: 5,
+    starState: NFTStarState.New,
+    upgrade: NFTUpgradeState.CheckUpgradingStatus,
+    remainingDays: new Date('2022,8,30'),
+    upgradeInfo: {
+      introduction: [
+        {
+          first: 'Upgrade to Legendary Edition +',
+          second: 'And You’ll Get',
+          list: [
+            {
+              text: '12 more in-game loots',
+            },
+            {
+              text: '1 legendary skin for Rin in our game: E4C Final Salvation',
+            },
+          ],
+        },
+        {
+          first: 'Once the NFT is staked',
+          second: 'You’ll Get',
+          list: [
+            {
+              text: 'NFT Airdrop (Rangers Edition) from our upcoming E4C Rangers Series',
+            },
+          ],
+        },
+      ],
+      title: 'Upgrading Status Check',
+      description: 'You can upgrade this NFT when:',
+      upgradingStatusInfo: {
+        stakeStatus: true,
+        stakeDescription: 'It has been staked for at least 90 days',
+        stakeDay: new Date('2022,8,30'),
+        stakeValue: 100, // 0 - 90
+        badgeStatus: true,
+        badgeDescription: 'You have claimed the “xxx” Soulbound Badge in our Discord',
+      },
     },
   },
   {
@@ -194,6 +276,7 @@ export const NFTs: NFT[] = [
       ],
       title: 'Stake to Upgrade',
       description: 'Staking Descriptions',
+      upgradingStatusInfo: null,
     },
   },
   {
@@ -259,6 +342,7 @@ export const NFTs: NFT[] = [
       ],
       title: 'Stake to Upgrade',
       description: 'Staking Descriptions',
+      upgradingStatusInfo: null,
     },
   },
 ]

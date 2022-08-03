@@ -1,9 +1,13 @@
+import 'react-circular-progressbar/dist/styles.css'
+
 import styled from '@emotion/styled'
 import { Box, Stack } from '@mui/material'
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
+import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
 
 import { NFT, NFTUpgradeState } from '../../../types'
 import CloseCheck from '../../Icon/CloseCheck'
+import SuccessCheck from '../../Icon/SuccessCheck'
 
 const InfoButton = styled.button<{ color: string }>`
   background: ${(p) => p.color || '#ff4125'};
@@ -129,12 +133,32 @@ const CheckFail = styled(Box)`
   color: #a0a4b0;
 `
 
+const CheckSuccess = styled(Box)`
+  width: 108px;
+  height: 108px;
+  background: #88a70d;
+  border: 1px solid #4a4a4a;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+`
+const CircularProgressbarWrap = styled.div`
+  width: 108px;
+  height: 108px;
+`
+
 interface NFTInfoProps {
   readonly nft: NFT
   toggle: (value: boolean) => void
 }
 
 const NFTInfo: FC<NFTInfoProps> = ({ nft, toggle }) => {
+  const status = useMemo(() => {
+    return nft.upgradeInfo.upgradingStatusInfo?.stakeStatus && nft.upgradeInfo.upgradingStatusInfo?.badgeStatus
+  }, [nft])
+
   return (
     <Box
       sx={{
@@ -179,23 +203,54 @@ const NFTInfo: FC<NFTInfoProps> = ({ nft, toggle }) => {
               Cancel
             </InfoButton>
           </Stack>
-        ) : nft.upgrade === NFTUpgradeState.CheckUpgradingStatus ? (
+        ) : nft.upgrade === NFTUpgradeState.CheckUpgradingStatus && nft.upgradeInfo.upgradingStatusInfo ? (
           <>
             <Stack spacing={1.5} direction="row">
               <CheckCard spacing={1.625}>
-                <div>1</div>
-                <CheckDescription>It has been staked for at least 90 days</CheckDescription>
-                <CheckDescriptionDay>(24 days left)</CheckDescriptionDay>
+                <CircularProgressbarWrap>
+                  <CircularProgressbarWithChildren
+                    value={nft.upgradeInfo.upgradingStatusInfo.stakeValue}
+                    strokeWidth={22}
+                    styles={buildStyles({
+                      strokeLinecap: 'butt',
+                      pathColor: '#ff5925',
+                    })}
+                  >
+                    {nft.upgradeInfo.upgradingStatusInfo.stakeStatus && (
+                      <SuccessCheck
+                        sx={{
+                          fontSize: '36px',
+                        }}
+                      />
+                    )}
+                  </CircularProgressbarWithChildren>
+                </CircularProgressbarWrap>
+
+                <div>
+                  <CheckDescription>{nft.upgradeInfo.upgradingStatusInfo.stakeDescription}</CheckDescription>
+                  <CheckDescriptionDay>(24 days left)</CheckDescriptionDay>
+                </div>
               </CheckCard>
               <CheckCard spacing={1.625}>
-                <CheckFail>
-                  <CloseCheck
-                    sx={{
-                      fontSize: '50px',
-                    }}
-                  />
-                </CheckFail>
-                <CheckDescription>You have claimed the “xxx” Soulbound Badge in our Discord</CheckDescription>
+                {nft.upgradeInfo.upgradingStatusInfo.badgeStatus ? (
+                  <CheckSuccess>
+                    <SuccessCheck
+                      sx={{
+                        fontSize: '36px',
+                      }}
+                    />
+                  </CheckSuccess>
+                ) : (
+                  <CheckFail>
+                    <CloseCheck
+                      sx={{
+                        fontSize: '50px',
+                      }}
+                    />
+                  </CheckFail>
+                )}
+
+                <CheckDescription>{nft.upgradeInfo.upgradingStatusInfo.badgeDescription}</CheckDescription>
               </CheckCard>
             </Stack>
 
@@ -205,9 +260,11 @@ const NFTInfo: FC<NFTInfoProps> = ({ nft, toggle }) => {
                 mt: 3,
               }}
             >
-              <InfoButton color="#A0A4B0">Upgrade</InfoButton>
+              <InfoButton color={status ? '#FF4125' : '#A0A4B0'}>Upgrade</InfoButton>
               <InfoButton color="#2A2A2A">Unstake</InfoButton>
-              <InfoButton color="#2A2A2A">Cancel</InfoButton>
+              <InfoButton color="#2A2A2A" onClick={() => toggle(false)}>
+                Cancel
+              </InfoButton>
             </Stack>
           </>
         ) : null}
