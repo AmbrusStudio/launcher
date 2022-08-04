@@ -4,6 +4,7 @@ import React from 'react'
 import { classNames } from '../../../utils'
 import { IconHeaderClose } from '../../Icon/HeaderClose'
 import { IconHeaderMenu } from '../../Icon/HeaderMenu'
+import { GamesNav } from '../GamesNav'
 import { SiteNav } from '../SiteNav'
 import { SocialNav } from '../SocialNav'
 import { LogoNav } from './LogoNav'
@@ -64,9 +65,9 @@ export function PageHeader() {
           </div>
         </MobileMenuWrapper>
       </div>
-      {/* <div className="hidden h-0 xl:block xl:h-auto">
+      <div className="hidden h-0 xl:block xl:h-auto">
         <GamesNav open={gamesNavOpen} />
-      </div> */}
+      </div>
     </header>
   )
 }

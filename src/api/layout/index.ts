@@ -28,7 +28,6 @@ export type HeaderGameInfo = { games: HeaderGameItem[]; exp: HeaderGameItem[] }
 type BlockInfoGame = BlockInfo
 
 function isGamesData(game: BlockInfoGame): boolean {
-  console.log(game.sort < 200, game.sort)
   if (game.sort < 200) return true
   return false
 }
