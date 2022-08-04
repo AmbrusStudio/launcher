@@ -1,12 +1,14 @@
 import styled from '@emotion/styled'
+import { useEthers } from '@usedapp/core'
 import React from 'react'
 
-import { classNames } from '../../../utils'
+import { classNames, stringSlice } from '../../../utils'
 import { IconHeaderClose } from '../../Icon/HeaderClose'
 import { IconHeaderMenu } from '../../Icon/HeaderMenu'
 import { GamesNav } from '../GamesNav'
 import { SiteNav } from '../SiteNav'
 import { SocialNav } from '../SocialNav'
+import { WalletButton } from '../WalletButton'
 import { LogoNav } from './LogoNav'
 
 type MobileMenuWrapperProps = {
@@ -21,16 +23,19 @@ const MobileMenuWrapper = styled.div<MobileMenuWrapperProps>`
 `
 
 export function PageHeader() {
+  const { account, active, activateBrowserWallet, deactivate } = useEthers()
+  const address = account ? stringSlice(account, 4, 4) : ''
+  const connected = Boolean(account && active)
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [gamesNavOpen, setGamesNavOpen] = React.useState(false)
   const handleMobileMenuToggle = React.useCallback(() => setMobileMenuOpen((s) => !s), [])
   const handleGamesNavClick = React.useCallback((open: boolean) => setGamesNavOpen(open), [])
-  // const handleWalletConnect = React.useCallback(() => {
-  //   console.log('handleWalletConnect')
-  // }, [])
-  // const handleWalletDisconnect = React.useCallback(() => {
-  //   console.log('handleWalletDisconnect')
-  // }, [])
+  const handleWalletConnect = React.useCallback(() => {
+    activateBrowserWallet()
+  }, [activateBrowserWallet])
+  const handleWalletDisconnect = React.useCallback(() => {
+    deactivate()
+  }, [deactivate])
 
   return (
     <header
@@ -55,13 +60,13 @@ export function PageHeader() {
           <SiteNav onGamesNavClick={handleGamesNavClick} />
           <div className="flex flex-col xl:flex-row items-center gap-24px xl:gap-0 px-32px py-36px xl:p-0 bg-black-bg xl:bg-transparent">
             <SocialNav className="px-26px" />
-            {/* <WalletButton
+            <WalletButton
               connected={connected}
               onConnectClick={handleWalletConnect}
               onDisonnectClick={handleWalletDisconnect}
             >
               {address}
-            </WalletButton> */}
+            </WalletButton>
           </div>
         </MobileMenuWrapper>
       </div>
