@@ -1,5 +1,6 @@
 import 'uno.css'
 import '@unocss/reset/tailwind.css'
+import './styles/base.css'
 import './styles/index.scss'
 
 import CssBaseline from '@mui/material/CssBaseline'
