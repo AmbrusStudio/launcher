@@ -9,12 +9,6 @@ import NFTStar from '../NFTStar'
 import NFTTag from '../NFTTag'
 import NFTUpgrade from '../NFTUpgrade'
 
-const Item = styled.div`
-  display: flex;
-  height: 600px;
-  background: #000000;
-  position: relative;
-`
 const NFTCover = styled.img`
   width: 100%;
   height: 100%;
@@ -28,24 +22,8 @@ const WrapperInfo = styled.div`
   flex-direction: column;
 `
 
-const NFTInfoHeadText = styled.span`
-  font-family: 'Montserrat', sans-serif;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 36px;
-  line-height: 44px;
-  text-transform: uppercase;
-`
-
-const NFTInfoHeadTitle = styled(NFTInfoHeadText)`
-  color: #ff4125;
-`
-const NFTInfoHeadSubtitle = styled(NFTInfoHeadText)`
-  color: #ffffff;
-`
-
 const NFTInfoContent = styled.div`
-  margin-top: 36px;
+  margin: 36px 0;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 24px;
@@ -82,51 +60,55 @@ const NFTItem: FC<NFTItemProps> = ({ nft }) => {
   const [togglePerk, setTogglePerk] = useState<boolean>(false)
 
   return (
-    <Item>
-      <Box
-        sx={{
-          width: '600px',
-          height: '600px',
-          overflow: 'hidden',
-        }}
-      >
-        <NFTCover src={nft.cover} alt={nft.title} />
-      </Box>
-      <WrapperInfo>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
-        >
-          <section>
-            <NFTInfoHeadTitle>{nft.title}</NFTInfoHeadTitle>
-            <Stack spacing={2} direction="row">
-              <NFTInfoHeadSubtitle>{nft.subtitle}</NFTInfoHeadSubtitle>
-              <NFTInfoHeadSubtitle>#{nft.id}</NFTInfoHeadSubtitle>
+    <div className="flex-col lg:flex-row lg:flex h-auto lg:h-[600px] bg-black relative">
+      {toggleInfo ? (
+        <NFTInfo toggle={(value) => setToggleInfo(value)} nft={nft} />
+      ) : (
+        <>
+          <div className="lg:w-[600px] lg:h-[600px] overflow-hidden">
+            <NFTCover src={nft.cover} alt={nft.title} />
+          </div>
+          <WrapperInfo>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}
+            >
+              <section>
+                <span className="font-bold text-6.5 lg:text-9 not-italic uppercase leading-11 font-sans text-rust">
+                  {nft.title}
+                </span>
+                <Stack spacing={2} direction="row">
+                  <span className="font-bold text-6.5 lg:text-9 not-italic uppercase leading-11 font-sans text-white">
+                    {nft.subtitle}
+                  </span>
+                  <span className="font-bold text-6.5 lg:text-9 not-italic uppercase leading-11 font-sans text-white">
+                    #{nft.id}
+                  </span>
+                </Stack>
+              </section>
+              <NFTTag nft={nft} />
+            </Box>
+
+            <NFTInfoContent>
+              {nft.introduction.map((j, indexJ: number) => (
+                <section key={indexJ}>
+                  <NFTInfoIntroductionTitle>{j.title}</NFTInfoIntroductionTitle>
+                  <NFTInfoIntroductionContent>{j.content}</NFTInfoIntroductionContent>
+                </section>
+              ))}
+            </NFTInfoContent>
+
+            <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
+              <NFTStar nft={nft} toggle={(value) => setTogglePerk(value)} />
+              <NFTUpgrade toggle={(value) => setToggleInfo(value)} nft={nft} />
             </Stack>
-          </section>
-          <NFTTag nft={nft} />
-        </Box>
-
-        <NFTInfoContent>
-          {nft.introduction.map((j, indexJ: number) => (
-            <section key={indexJ}>
-              <NFTInfoIntroductionTitle>{j.title}</NFTInfoIntroductionTitle>
-              <NFTInfoIntroductionContent>{j.content}</NFTInfoIntroductionContent>
-            </section>
-          ))}
-        </NFTInfoContent>
-
-        <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
-          <NFTStar nft={nft} toggle={(value) => setTogglePerk(value)} />
-          <NFTUpgrade toggle={(value) => setToggleInfo(value)} nft={nft} />
-        </Stack>
-      </WrapperInfo>
-
-      {toggleInfo && <NFTInfo toggle={(value) => setToggleInfo(value)} nft={nft} />}
+          </WrapperInfo>
+        </>
+      )}
       <NFTPerk visible={togglePerk} toggle={(value) => setTogglePerk(value)} />
-    </Item>
+    </div>
   )
 }
 

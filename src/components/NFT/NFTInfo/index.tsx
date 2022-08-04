@@ -174,25 +174,8 @@ const NFTInfo: FC<NFTInfoProps> = ({ nft, toggle }) => {
   }, [nft])
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-      }}
-    >
-      <Stack
-        spacing={10.25}
-        sx={{
-          width: '600px',
-          height: '600px',
-          backgroundColor: '#fff',
-          p: 3,
-        }}
-      >
+    <>
+      <div className="lg:w-[600px] lg:h-[600px] overflow-auto bg-white p-6 grid gap-y-20.5">
         {nft.upgradeInfo.introduction.map((info, index) => (
           <div key={index}>
             <InfoTieleFirst>{info.first}</InfoTieleFirst>
@@ -204,7 +187,7 @@ const NFTInfo: FC<NFTInfoProps> = ({ nft, toggle }) => {
             </InfoList>
           </div>
         ))}
-      </Stack>
+      </div>
       <WrapperInfo>
         <Title>{nft.upgradeInfo.title}</Title>
         <Description>{nft.upgradeInfo.description}</Description>
@@ -337,7 +320,7 @@ const NFTInfo: FC<NFTInfoProps> = ({ nft, toggle }) => {
           </>
         ) : null}
       </WrapperInfo>
-    </Box>
+    </>
   )
 }
 
