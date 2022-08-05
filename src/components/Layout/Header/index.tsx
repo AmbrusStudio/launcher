@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
-import { useEthers } from '@usedapp/core'
-import React from 'react'
+import { shortenIfAddress, useEthers } from '@usedapp/core'
+import React, { useCallback, useState } from 'react'
 
-import { classNames, stringSlice } from '../../../utils'
+import { classNames } from '../../../utils'
 import { IconHeaderClose } from '../../Icon/HeaderClose'
 import { IconHeaderMenu } from '../../Icon/HeaderMenu'
 import { GamesNav } from '../GamesNav'
@@ -24,16 +24,15 @@ const MobileMenuWrapper = styled.div<MobileMenuWrapperProps>`
 
 export function PageHeader() {
   const { account, active, activateBrowserWallet, deactivate } = useEthers()
-  const address = account ? stringSlice(account, 4, 4) : ''
   const connected = Boolean(account && active)
-  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
-  const [gamesNavOpen, setGamesNavOpen] = React.useState(false)
-  const handleMobileMenuToggle = React.useCallback(() => setMobileMenuOpen((s) => !s), [])
-  const handleGamesNavClick = React.useCallback((open: boolean) => setGamesNavOpen(open), [])
-  const handleWalletConnect = React.useCallback(() => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [gamesNavOpen, setGamesNavOpen] = useState(false)
+  const handleMobileMenuToggle = useCallback(() => setMobileMenuOpen((s) => !s), [])
+  const handleGamesNavClick = useCallback((open: boolean) => setGamesNavOpen(open), [])
+  const handleWalletConnect = useCallback(() => {
     activateBrowserWallet()
   }, [activateBrowserWallet])
-  const handleWalletDisconnect = React.useCallback(() => {
+  const handleWalletDisconnect = useCallback(() => {
     deactivate()
   }, [deactivate])
 
@@ -65,7 +64,7 @@ export function PageHeader() {
               onConnectClick={handleWalletConnect}
               onDisonnectClick={handleWalletDisconnect}
             >
-              {address}
+              {shortenIfAddress(account)}
             </WalletButton>
           </div>
         </MobileMenuWrapper>
