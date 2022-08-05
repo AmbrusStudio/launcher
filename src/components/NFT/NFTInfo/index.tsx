@@ -3,7 +3,7 @@ import 'react-circular-progressbar/dist/styles.css'
 import styled from '@emotion/styled'
 import { Box, Stack } from '@mui/material'
 import { FC, useMemo, useState } from 'react'
-import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
+import Progressbar from 'react-js-progressbar'
 
 import { NFT, NFTUpgradeState } from '../../../types'
 import CloseCheck from '../../Icon/CloseCheck'
@@ -95,7 +95,6 @@ const CheckCard = styled(Stack)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
 `
 
 const CheckDescription = styled.p`
@@ -148,6 +147,7 @@ const CheckSuccess = styled(Box)`
 const CircularProgressbarWrap = styled.div`
   width: 108px;
   height: 108px;
+  position: relative;
 `
 const ConfirmationDescription = styled.p`
   font-family: 'Montserrat', sans-serif;
@@ -174,25 +174,8 @@ const NFTInfo: FC<NFTInfoProps> = ({ nft, toggle }) => {
   }, [nft])
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-      }}
-    >
-      <Stack
-        spacing={10.25}
-        sx={{
-          width: '600px',
-          height: '600px',
-          backgroundColor: '#fff',
-          p: 3,
-        }}
-      >
+    <>
+      <div className="lg:w-[600px] lg:h-[600px] overflow-auto bg-white p-6 grid gap-y-20.5">
         {nft.upgradeInfo.introduction.map((info, index) => (
           <div key={index}>
             <InfoTieleFirst>{info.first}</InfoTieleFirst>
@@ -204,12 +187,12 @@ const NFTInfo: FC<NFTInfoProps> = ({ nft, toggle }) => {
             </InfoList>
           </div>
         ))}
-      </Stack>
+      </div>
       <WrapperInfo>
         <Title>{nft.upgradeInfo.title}</Title>
         <Description>{nft.upgradeInfo.description}</Description>
         {nft.upgrade === NFTUpgradeState.Upgrade ? (
-          <Stack spacing={1.5}>
+          <Stack spacing={1.5} className="mt-6">
             <InfoButton color="#FF4125" onClick={() => alert('Up....')}>
               Start Staking Now
             </InfoButton>
@@ -219,25 +202,30 @@ const NFTInfo: FC<NFTInfoProps> = ({ nft, toggle }) => {
           </Stack>
         ) : nft.upgrade === NFTUpgradeState.CheckUpgradingStatus && nft.upgradeInfo.upgradingStatusInfo ? (
           <>
-            <Stack spacing={1.5} direction="row">
+            <Stack spacing={1.5} direction="row" className="mt-6">
               <CheckCard spacing={1.625}>
                 <CircularProgressbarWrap>
-                  <CircularProgressbarWithChildren
-                    value={nft.upgradeInfo.upgradingStatusInfo.stakeValue}
-                    strokeWidth={22}
-                    styles={buildStyles({
-                      strokeLinecap: 'butt',
-                      pathColor: '#ff5925',
-                    })}
-                  >
-                    {nft.upgradeInfo.upgradingStatusInfo.stakeStatus && (
+                  <Progressbar
+                    input={nft.upgradeInfo.upgradingStatusInfo.stakeValue}
+                    pathWidth={44}
+                    pathColor={['#FF5925', '#FF00F5']} // use an array for gradient color.
+                    trailWidth={44}
+                    trailColor="rgba(255, 255, 255, 0.2)"
+                    customText=""
+                    pathLinecap="butt"
+                    animation={{
+                      duration: 0,
+                    }}
+                  ></Progressbar>
+                  {nft.upgradeInfo.upgradingStatusInfo.stakeStatus && (
+                    <div className="absolute left-0 top-0 right-0 bottom-0 flex items-center justify-center">
                       <SuccessCheck
                         sx={{
                           fontSize: '36px',
                         }}
                       />
-                    )}
-                  </CircularProgressbarWithChildren>
+                    </div>
+                  )}
                 </CircularProgressbarWrap>
 
                 <div>
@@ -337,7 +325,7 @@ const NFTInfo: FC<NFTInfoProps> = ({ nft, toggle }) => {
           </>
         ) : null}
       </WrapperInfo>
-    </Box>
+    </>
   )
 }
 

@@ -1,32 +1,9 @@
-import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import { useEthers } from '@usedapp/core'
 import { useEffect } from 'react'
 
 import NFTItem from '../../../components/NFT/NFTItem'
 import { NFTs } from '../../../data'
-
-const Wrapper = styled.div`
-  font-family: 'Montserrat', sans-serif;
-  max-width: 1140px;
-  width: 1140px;
-  padding: 130px 10px;
-  margin: 0 auto;
-`
-const Title = styled.h1`
-  font-family: 'Montserrat', sans-serif;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 64px;
-  line-height: 78px;
-  text-transform: uppercase;
-  color: #ffffff;
-  margin: 0 0 36px 0;
-  span {
-    color: #ff4125;
-    padding: 0 6px;
-  }
-`
 
 function AccountNFT() {
   const { account, activateBrowserWallet } = useEthers()
@@ -38,17 +15,17 @@ function AccountNFT() {
   }, [activateBrowserWallet])
 
   return (
-    <Wrapper>
-      <Title>
-        MY<span>NFTS</span>
-      </Title>
+    <div className="my-0 mx-auto px-2.5 py-22 lg:py-32.5 max-w-[1140px] font-sans">
+      <h1 className="font-bold text-9 sm:text-16 mx-0 mt-0 mb-4.5 sm:mb-9 text-white not-italic uppercase leading-12.5 sm:leading-19.5">
+        MY<span className="py-0 px-1 text-rust">NFTS</span>
+      </h1>
 
       <Stack spacing={3}>
         {NFTs.map((nft, index) => (
           <NFTItem nft={nft} key={index} />
         ))}
       </Stack>
-    </Wrapper>
+    </div>
   )
 }
 

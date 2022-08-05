@@ -4099,11 +4099,6 @@ quick-lru@^4.0.1:
   resolved "https://registry.npmmirror.com/quick-lru/-/quick-lru-4.0.1.tgz#5b8878f113a58217848c6482026c73e1ba57727f"
   integrity sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==
 
-react-circular-progressbar@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.npmmirror.com/react-circular-progressbar/-/react-circular-progressbar-2.1.0.tgz#99e5ae499c21de82223b498289e96f66adb8fa3a"
-  integrity sha512-xp4THTrod4aLpGy68FX/k1Q3nzrfHUjUe5v6FsdwXBl3YVMwgeXYQKDrku7n/D6qsJA9CuunarAboC2xCiKs1g==
-
 react-dom@^18.2.0:
   version "18.2.0"
   resolved "https://registry.npmmirror.com/react-dom/-/react-dom-18.2.0.tgz#22aaf38708db2674ed9ada224ca4aa708d821e3d"
@@ -4126,6 +4121,13 @@ react-is@^18.0.0, react-is@^18.2.0:
   version "18.2.0"
   resolved "https://registry.npmmirror.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
+
+react-js-progressbar@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.npmmirror.com/react-js-progressbar/-/react-js-progressbar-1.1.1.tgz#3c38255ed9bb57020fb476883e9ae77edbefc93a"
+  integrity sha512-eNLZa2xhR+MHSnSHyNZCZuf++pjoGgc371ikie+vSS7WfAuKPhakxO3fqMwT2+cSdgcyDOHqRb72HgfUfvuW+Q==
+  dependencies:
+    request-animation-number "^1.0.6"
 
 react-refresh@^0.14.0:
   version "0.14.0"
@@ -4225,6 +4227,11 @@ regexpp@^3.2.0:
   version "3.2.0"
   resolved "https://registry.npmmirror.com/regexpp/-/regexpp-3.2.0.tgz#0425a2768d8f23bad70ca4b90461fa2f1213e1b2"
   integrity sha512-pq2bWo9mVD43nbts2wGv17XLiNLya+GklZ8kaDLV2Z08gDCsGpnKn9BFMepvWuHCbyVvY7J5o5+BVvoQbmlJLg==
+
+request-animation-number@^1.0.6:
+  version "1.0.8"
+  resolved "https://registry.npmmirror.com/request-animation-number/-/request-animation-number-1.0.8.tgz#2591cec4b21cd5cddf0d356a0486a288269d24d4"
+  integrity sha512-t/9G8TrTzE5GBWXiQuOTeNEkiGqfv0JRac/6KMzNlTy0i01IgQxJ6G78b4cI+nHg38ZAeUScUT/gY6p6ww/SOw==
 
 require-directory@^2.1.1:
   version "2.1.1"
