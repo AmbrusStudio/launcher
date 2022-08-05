@@ -1,5 +1,3 @@
-import 'react-circular-progressbar/dist/styles.css'
-
 import styled from '@emotion/styled'
 import { Box, Stack } from '@mui/material'
 import { FC, useMemo, useState } from 'react'
