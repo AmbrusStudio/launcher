@@ -1,90 +1,64 @@
+import { cloneDeep } from 'lodash'
+import { useCallback, useEffect, useState } from 'react'
+
 import logo from '../../assets/images/logo.png'
+import FilterChecked from '../../components/Icon/FilterChecked'
+import FilterClose from '../../components/Icon/FilterClose'
+import FilterOpen from '../../components/Icon/FilterOpen'
 import Opensea from '../../components/Icon/Opensea'
 import { PageLayout } from '../../components/Layout'
-import { GALLERYS } from '../../data'
+import { GALLERYS, GALLERYS_FILTERS } from '../../data'
+import { GALLERY_FILTER, GALLERY_FILTER_LIST } from '../../types/gallery'
 
-const filters = [
-  {
-    label: 'Character',
-    list: [
-      {
-        label: 'Rin',
-        count: 1111,
-      },
-      {
-        label: 'Kit',
-        count: 1111,
-      },
-      {
-        label: 'Thorn',
-        count: 1111,
-      },
-    ],
-  },
-  {
-    label: 'HAIR',
-    list: [
-      {
-        label: 'Cool Girl - Black',
-        count: 713,
-      },
-      {
-        label: 'Cool Girl - Pink',
-        count: 309,
-      },
-      {
-        label: 'Cool Girl - Gold',
-        count: 1,
-      },
-    ],
-  },
-  {
-    label: 'FACE ACCESSORIES',
-    list: [],
-  },
-  {
-    label: 'EYES',
-    list: [],
-  },
-  {
-    label: 'MAKEUP',
-    list: [],
-  },
-  {
-    label: 'EARRINGS',
-    list: [],
-  },
-  {
-    label: 'HAT',
-    list: [],
-  },
-  {
-    label: 'SKIN',
-    list: [],
-  },
-  {
-    label: 'TATTOO',
-    list: [],
-  },
-  {
-    label: 'CLOTHING',
-    list: [],
-  },
-  {
-    label: 'NECK ACCESSORIES',
-    list: [],
-  },
-  {
-    label: 'SHOULDER ACCESSORIES',
-    list: [],
-  },
-  {
-    label: 'BACK ACCESSORIES',
-    list: [],
-  },
-]
+type FilterList = GALLERY_FILTER_LIST & {
+  is_checked: boolean
+}
+
+type Filter = GALLERY_FILTER & {
+  status: boolean
+  list: FilterList[]
+}
 
 function Gallery() {
+  // Filter
+  const [filter, setFilter] = useState<Filter[]>([])
+
+  // Toggle Filter children tab
+  const toggleFilterTab = useCallback(
+    (index: number) => {
+      if (!filter[index].list.length) {
+        return
+      }
+      const list = cloneDeep(filter)
+      list[index].status = !list[index].status
+      setFilter(list)
+    },
+    [filter]
+  )
+
+  // Toggle FIlter children tag checked
+  const ToggleFilterTagChecked = useCallback(
+    (parentIndex: number, childrenIndex: number) => {
+      const list = cloneDeep(filter)
+      list[parentIndex].list[childrenIndex].is_checked = !list[parentIndex].list[childrenIndex].is_checked
+      setFilter(list)
+    },
+    [filter]
+  )
+
+  // initialization filter status
+  useEffect(() => {
+    const filterList: Filter[] = GALLERYS_FILTERS.map((i) => ({
+      ...i,
+      status: false,
+      list: i.list.map((j) => ({
+        ...j,
+        is_checked: false,
+      })),
+    }))
+    setFilter(filterList)
+  }, [])
+
   return (
     <PageLayout>
       <div className="max-w-[1264px] m-x-auto mt-[188px]">
@@ -102,75 +76,81 @@ function Gallery() {
           />
         </div>
 
-        <div className="flex justify-between mt-[48px]">
-          <div className="w-[300px]">
-            <div className="w-[300px] h-[92px]  bg-black/20">
-              <p className="text-4xl font-bold text-left uppercase text-white">#</p>
-              <p className="opacity-20 text-4xl font-bold text-left uppercase text-white">ID</p>
-            </div>
-            <div className="w-[300px] h-[60px]">
-              <div className="border-y-2 border-rust p-y-4 text-xl font-bold text-left uppercase text-white">
-                Filters
-              </div>
-            </div>
-            {filters.map((item, index) => (
-              <div className="h-[50px]" key={index}>
-                <div className="h-[49px] "></div>
-                <div className="h-px bg-[#465358]"></div>
-                <p className="text-sm text-left uppercase text-white">{item.label}</p>
-                <p className="text-xs font-light text-right uppercase text-white">􀅽</p>
-              </div>
+      <div className="flex justify-between mt-[48px]">
+        <div className="w-[300px]">
+          <div className="w-[300px] h-[92px]  bg-black/20 flex items-center">
+            <span className="text-4xl font-bold text-left uppercase text-white">#</span>
+            {/* <p className="opacity-20 text-4xl font-bold text-left uppercase text-white">ID</p> */}
+            <input placeholder="ID" className="bg-transparent outline-none" />
+          </div>
+          <div className="w-[300px] h-[60px]">
+            <div className="border-y-2 border-rust p-y-4 text-xl font-bold text-left uppercase text-white">Filters</div>
+          </div>
+          <ul>
+            {filter.map((item, index) => (
+              <li key={index}>
+                <div
+                  className={`h-[50px] border-b-1 border-[#465358] flex items-center justify-between${
+                    item.list.length && ' ' + 'cursor-pointer'
+                  }`}
+                  onClick={() => toggleFilterTab(index)}
+                >
+                  <p className="text-sm text-left uppercase text-white">{item.label}</p>
+                  {!!item.list.length && (
+                    <>
+                      {item.status ? (
+                        <FilterClose
+                          sx={{
+                            fontSize: '12px',
+                            lineHeight: '14px',
+                          }}
+                        />
+                      ) : (
+                        <FilterOpen
+                          sx={{
+                            fontSize: '12px',
+                            lineHeight: '14px',
+                          }}
+                        />
+                      )}
+                    </>
+                  )}
+                </div>
+                {item.status && (
+                  <ul>
+                    {item.list.map((tab: FilterList, indexJ) => (
+                      <li
+                        key={indexJ}
+                        className="w-[300px] h-[42px] border-b-1 border-[#2A2A2A] bg-black flex items-center justify-between p-3 cursor-pointer"
+                        onClick={() => ToggleFilterTagChecked(index, indexJ)}
+                      >
+                        <span>
+                          <span className="text-sm text-white">{tab.label}</span>
+                          <span className="text-sm text-white/50">({tab.count})</span>
+                        </span>
+                        {tab.is_checked && (
+                          <FilterChecked
+                            className="text-rust"
+                            sx={{
+                              fontSize: '12px',
+                              lineHeight: '14px',
+                            }}
+                          />
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
             ))}
-            {/* <div className="w-[300px] h-[42px] absolute left-[88px] top-[512px]">
-            <div className="w-[300px] h-[41px] absolute left-[-1px] top-[-1px] bg-black"></div>
-            <div className="w-[300px] h-px absolute left-[-1px] top-10 bg-[#2a2a2a]"></div>
-            <p className="absolute left-[274px] top-3.5 text-xs text-left text-[#ff4125]">􀆅</p>
-            <div className="flex justify-start items-start absolute left-3 top-3 gap-1">
-              <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-white">Rin</p>
-              <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-white/50">(1,111)</p>
+          </ul>
+        </div>
+        <div>
+          <div className="flex items-center	justify-between">
+            <div className="w-[120px] h-8 rounded-2xl bg-white/10 flex items-center justify-center">
+              <p className="text-sm font-medium text-center leading-4.25 text-white">Reset Filters</p>
             </div>
-          </div>
-          <div className="w-[300px] h-[42px] absolute left-[88px] top-[554px]">
-            <div className="w-[300px] h-[41px] absolute left-[-1px] top-[-1px] bg-black"></div>
-            <div className="w-[300px] h-px absolute left-[-1px] top-10 bg-[#2a2a2a]"></div>
-            <div className="flex justify-start items-start absolute left-3 top-3 gap-1">
-              <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-white">Kit</p>
-              <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-white/50">(1,111)</p>
-            </div>
-          </div> */}
-            {/* <div className="w-[300px] h-[42px] absolute left-[88px] top-[596px]">
-            <div className="w-[300px] h-[41px] absolute left-[-1px] top-[-1px] bg-black"></div>
-            <div className="w-[300px] h-px absolute left-[-1px] top-10 bg-[#2a2a2a]"></div>
-            <div className="flex justify-start items-start absolute left-3 top-3 gap-1">
-              <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-white">Thorn</p>
-              <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-white/50">(1,111)</p>
-            </div>
-          </div>
-          <div className="w-[300px] h-[42px] absolute left-[88px] top-[689px]">
-            <div className="w-[300px] h-[41px] absolute left-[-1px] top-[-1px] bg-black"></div>
-            <div className="w-[300px] h-px absolute left-[-1px] top-10 bg-[#2a2a2a]"></div>
-            <p className="absolute left-[274px] top-3.5 text-xs text-left text-[#ff4125]">􀆅</p>
-            <div className="flex justify-start items-start absolute left-3 top-3 gap-1">
-              <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-white">Cool Girl - Black</p>
-              <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-white/50">(713)</p>
-            </div>
-          </div>
-          <div className="w-[300px] h-[42px] absolute left-[88px] top-[731px]">
-            <div className="w-[300px] h-[41px] absolute left-[-1px] top-[-1px] bg-black"></div>
-            <div className="w-[300px] h-px absolute left-[-1px] top-10 bg-[#2a2a2a]"></div>
-            <div className="flex justify-start items-start absolute left-3 top-3 gap-1">
-              <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-white">Cool Girl - Pink</p>
-              <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-white/50">(309)</p>
-            </div>
-          </div>
-          <div className="w-[300px] h-[42px] absolute left-[88px] top-[773px]">
-            <div className="w-[300px] h-[41px] absolute left-[-1px] top-[-1px] bg-black"></div>
-            <div className="w-[300px] h-px absolute left-[-1px] top-10 bg-[#2a2a2a]"></div>
-            <div className="flex justify-start items-start absolute left-3 top-3 gap-1">
-              <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-white">Cool Girl - Gold</p>
-              <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-white/50">(1)</p>
-            </div>
-          </div> */}
+            <p className="text-sm font-medium leading-4.25 text-white">7,777 items</p>
           </div>
           <div>
             <div className="flex items-center	justify-between">
