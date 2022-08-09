@@ -1,133 +1,200 @@
-import { GALLERY, GALLERY_FILTER } from '../types/gallery'
+import { groupBy } from 'lodash'
+
+import { GALLERY, GALLERY_FILTER, GALLERY_FILTER_LIST, GALLERY_PROPERTY } from '../types/gallery'
 
 export const GALLERYS: GALLERY[] = [
   {
     id: 1,
     image: 'https://i.imgur.com/yfUga0u.png',
+    property: [
+      {
+        key: GALLERY_PROPERTY.Character,
+        value: 'Rin',
+      },
+      {
+        key: GALLERY_PROPERTY.Hair,
+        value: 'Cool Girl - Black',
+      },
+    ],
   },
   {
     id: 2,
     image: 'https://i.imgur.com/yfUga0u.png',
+    property: [
+      {
+        key: GALLERY_PROPERTY.Character,
+        value: 'Kit',
+      },
+      {
+        key: GALLERY_PROPERTY.Hair,
+        value: 'Cool Girl - Pink',
+      },
+    ],
   },
   {
     id: 3,
     image: 'https://i.imgur.com/yfUga0u.png',
+    property: [
+      {
+        key: GALLERY_PROPERTY.Character,
+        value: 'Thorn',
+      },
+      {
+        key: GALLERY_PROPERTY.Hair,
+        value: 'Cool Girl - Gold',
+      },
+    ],
   },
   {
     id: 4,
     image: 'https://i.imgur.com/yfUga0u.png',
+    property: [
+      {
+        key: GALLERY_PROPERTY.Character,
+        value: 'Kit',
+      },
+      {
+        key: GALLERY_PROPERTY.Hair,
+        value: 'Cool Girl - Gold',
+      },
+    ],
   },
   {
-    id: 1,
+    id: 5,
     image: 'https://i.imgur.com/yfUga0u.png',
+    property: [
+      {
+        key: GALLERY_PROPERTY.Character,
+        value: 'Kit',
+      },
+      {
+        key: GALLERY_PROPERTY.Hair,
+        value: 'Cool Girl - Gold',
+      },
+    ],
   },
   {
-    id: 1,
+    id: 6,
     image: 'https://i.imgur.com/yfUga0u.png',
+    property: [
+      {
+        key: GALLERY_PROPERTY.Character,
+        value: 'Kit',
+      },
+      {
+        key: GALLERY_PROPERTY.Hair,
+        value: 'Cool Girl - Gold',
+      },
+    ],
   },
   {
-    id: 1,
+    id: 7,
     image: 'https://i.imgur.com/yfUga0u.png',
+    property: [
+      {
+        key: GALLERY_PROPERTY.Character,
+        value: 'Kit',
+      },
+      {
+        key: GALLERY_PROPERTY.Hair,
+        value: 'Cool Girl - Gold',
+      },
+    ],
   },
   {
-    id: 1,
+    id: 8,
     image: 'https://i.imgur.com/yfUga0u.png',
+    property: [
+      {
+        key: GALLERY_PROPERTY.Character,
+        value: 'Kit',
+      },
+      {
+        key: GALLERY_PROPERTY.Hair,
+        value: 'Cool Girl - Gold',
+      },
+    ],
   },
   {
-    id: 1,
+    id: 9,
     image: 'https://i.imgur.com/yfUga0u.png',
+    property: [
+      {
+        key: GALLERY_PROPERTY.Character,
+        value: 'Kit',
+      },
+      {
+        key: GALLERY_PROPERTY.Hair,
+        value: 'Cool Girl - Gold',
+      },
+    ],
   },
   {
-    id: 1,
+    id: 10,
     image: 'https://i.imgur.com/yfUga0u.png',
+    property: [
+      {
+        key: GALLERY_PROPERTY.Character,
+        value: 'Kit',
+      },
+      {
+        key: GALLERY_PROPERTY.Hair,
+        value: 'Cool Girl - Gold',
+      },
+    ],
   },
   {
-    id: 1,
+    id: 11,
     image: 'https://i.imgur.com/yfUga0u.png',
+    property: [
+      {
+        key: GALLERY_PROPERTY.Character,
+        value: 'Kit',
+      },
+      {
+        key: GALLERY_PROPERTY.Hair,
+        value: 'Cool Girl - Gold',
+      },
+    ],
   },
   {
-    id: 1,
+    id: 12,
     image: 'https://i.imgur.com/yfUga0u.png',
+    property: [
+      {
+        key: GALLERY_PROPERTY.Character,
+        value: 'Kit',
+      },
+      {
+        key: GALLERY_PROPERTY.Hair,
+        value: 'Cool Girl - Gold',
+      },
+    ],
   },
 ]
 
-export const GALLERYS_FILTERS: GALLERY_FILTER[] = [
-  {
-    label: 'Character',
-    list: [
-      {
-        label: 'Rin',
-        count: 1111,
-      },
-      {
-        label: 'Kit',
-        count: 1111,
-      },
-      {
-        label: 'Thorn',
-        count: 1111,
-      },
-    ],
-  },
-  {
-    label: 'HAIR',
-    list: [
-      {
-        label: 'Cool Girl - Black',
-        count: 713,
-      },
-      {
-        label: 'Cool Girl - Pink',
-        count: 309,
-      },
-      {
-        label: 'Cool Girl - Gold',
-        count: 1,
-      },
-    ],
-  },
-  {
-    label: 'FACE ACCESSORIES',
-    list: [],
-  },
-  {
-    label: 'EYES',
-    list: [],
-  },
-  {
-    label: 'MAKEUP',
-    list: [],
-  },
-  {
-    label: 'EARRINGS',
-    list: [],
-  },
-  {
-    label: 'HAT',
-    list: [],
-  },
-  {
-    label: 'SKIN',
-    list: [],
-  },
-  {
-    label: 'TATTOO',
-    list: [],
-  },
-  {
-    label: 'CLOTHING',
-    list: [],
-  },
-  {
-    label: 'NECK ACCESSORIES',
-    list: [],
-  },
-  {
-    label: 'SHOULDER ACCESSORIES',
-    list: [],
-  },
-  {
-    label: 'BACK ACCESSORIES',
-    list: [],
-  },
-]
+// Handle Filter Property
+const allProperty = GALLERYS.flatMap((i) => i.property)
+const allPropertyGroup = groupBy(allProperty, 'key')
+
+export const GALLERYS_FILTERS: GALLERY_FILTER[] = Object.values(GALLERY_PROPERTY).map((i) => {
+  const list: GALLERY_FILTER_LIST[] = []
+  if (allPropertyGroup[i]) {
+    const propertyGroup = groupBy(allPropertyGroup[i], 'value')
+
+    for (const key in propertyGroup) {
+      if (Object.prototype.hasOwnProperty.call(propertyGroup, key)) {
+        list.push({
+          label: key,
+          count: propertyGroup[key].length,
+        })
+      }
+    }
+  }
+  return {
+    label: i,
+    list,
+  }
+})
+
+// console.log('GALLERYS_FILTERS', GALLERYS_FILTERS)
