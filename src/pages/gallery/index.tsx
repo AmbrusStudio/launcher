@@ -1,5 +1,6 @@
 import { cloneDeep } from 'lodash'
 import { useCallback, useEffect, useState } from 'react'
+import { compose } from 'redux'
 
 import logo from '../../assets/images/logo.png'
 import FilterChecked from '../../components/Icon/FilterChecked'
@@ -7,20 +8,24 @@ import FilterClose from '../../components/Icon/FilterClose'
 import FilterOpen from '../../components/Icon/FilterOpen'
 import Opensea from '../../components/Icon/Opensea'
 import { GALLERYS, GALLERYS_FILTERS } from '../../data'
-import { GALLERY_FILTER, GALLERY_FILTER_LIST } from '../../types/gallery'
+import { GALLERY, GALLERY_FILTER, GALLERY_FILTER_LIST } from '../../types/gallery'
 
 type FilterList = GALLERY_FILTER_LIST & {
   is_checked: boolean
 }
 
 type Filter = GALLERY_FILTER & {
-  status: boolean
+  is_open: boolean
   list: FilterList[]
 }
 
 function Gallery() {
   // Filter
   const [filter, setFilter] = useState<Filter[]>([])
+  // gallery filter
+  const [galleryFilter, setGalleryFilter] = useState<GALLERY[]>([])
+  // search by ID
+  const [searchId, setSearchId] = useState<string>('')
 
   // Toggle Filter children tab
   const toggleFilterTab = useCallback(
@@ -29,7 +34,7 @@ function Gallery() {
         return
       }
       const list = cloneDeep(filter)
-      list[index].status = !list[index].status
+      list[index].is_open = !list[index].is_open
       setFilter(list)
     },
     [filter]
@@ -45,11 +50,26 @@ function Gallery() {
     [filter]
   )
 
+  // Handle filter
+  const handleFilter = useCallback(() => {
+    const filterFlat = (list: Filter[]) => list.flatMap((item) => item.list)
+    const filterChecked = (list: FilterList[]) => list.filter((item) => item.is_checked)
+    const filterExtract = (list: FilterList[]) => list.map((item) => item.label)
+
+    const filterResult = compose(filterExtract, filterChecked, filterFlat)(filter)
+
+    const result = GALLERYS.filter(
+      (item) => String(item.id).includes(searchId) || item.property.find((i) => filterResult.includes(i.value))
+    )
+
+    setGalleryFilter(result)
+  }, [filter, searchId])
+
   // initialization filter status
   useEffect(() => {
     const filterList: Filter[] = GALLERYS_FILTERS.map((i) => ({
       ...i,
-      status: false,
+      is_open: false,
       list: i.list.map((j) => ({
         ...j,
         is_checked: false,
@@ -57,6 +77,10 @@ function Gallery() {
     }))
     setFilter(filterList)
   }, [])
+
+  useEffect(() => {
+    handleFilter()
+  }, [handleFilter])
 
   return (
     <div className="max-w-[1264px] m-x-auto mt-[188px]">
@@ -79,12 +103,17 @@ function Gallery() {
           <div className="w-[300px] h-[92px]  bg-black/20 flex items-center">
             <span className="text-4xl font-bold text-left uppercase text-white">#</span>
             {/* <p className="opacity-20 text-4xl font-bold text-left uppercase text-white">ID</p> */}
-            <input placeholder="ID" className="bg-transparent outline-none" />
+            <input
+              placeholder="ID"
+              className="bg-transparent outline-none"
+              value={searchId}
+              onChange={(e) => setSearchId(e.target.value)}
+            />
           </div>
           <div className="w-[300px] h-[60px]">
             <div className="border-y-2 border-rust p-y-4 text-xl font-bold text-left uppercase text-white">Filters</div>
           </div>
-          <ul>
+          <ul className="select-none">
             {filter.map((item, index) => (
               <li key={index}>
                 <div
@@ -96,7 +125,7 @@ function Gallery() {
                   <p className="text-sm text-left uppercase text-white">{item.label}</p>
                   {!!item.list.length && (
                     <>
-                      {item.status ? (
+                      {item.is_open ? (
                         <FilterClose
                           sx={{
                             fontSize: '12px',
@@ -114,13 +143,15 @@ function Gallery() {
                     </>
                   )}
                 </div>
-                {item.status && (
+                {item.is_open && (
                   <ul>
                     {item.list.map((tab: FilterList, indexJ) => (
                       <li
                         key={indexJ}
                         className="w-[300px] h-[42px] border-b-1 border-[#2A2A2A] bg-black flex items-center justify-between p-3 cursor-pointer"
-                        onClick={() => ToggleFilterTagChecked(index, indexJ)}
+                        onClick={() => {
+                          ToggleFilterTagChecked(index, indexJ)
+                        }}
                       >
                         <span>
                           <span className="text-sm text-white">{tab.label}</span>
@@ -146,12 +177,22 @@ function Gallery() {
         <div>
           <div className="flex items-center	justify-between">
             <div className="w-[120px] h-8 rounded-2xl bg-white/10 flex items-center justify-center">
-              <p className="text-sm font-medium text-center leading-4.25 text-white">Reset Filters</p>
+              <p
+                className="text-sm font-medium text-center leading-4.25 text-white cursor-pointer"
+                onClick={() => {
+                  setGalleryFilter([])
+                  setSearchId('')
+                }}
+              >
+                Reset Filters
+              </p>
             </div>
-            <p className="text-sm font-medium leading-4.25 text-white">7,777 items</p>
+            <p className="text-sm font-medium leading-4.25 text-white">
+              {galleryFilter.length || GALLERYS.length} items
+            </p>
           </div>
           <div className="w-[928px] grid grid-cols-4 gap-3 mt-6">
-            {GALLERYS.map((gallery, index) => (
+            {(galleryFilter.length ? galleryFilter : GALLERYS).map((gallery, index) => (
               <div key={index} className="w-[223px] h-[223px] rounded overflow-hidden relative">
                 <img src={gallery.image} className="w-[100%] h-[100%] object-cover" />
                 <p className="absolute left-3 bottom-3 text-sm font-bold leading-4.25 uppercase text-white">
@@ -159,6 +200,7 @@ function Gallery() {
                 </p>
               </div>
             ))}
+            {!galleryFilter.length && <span>no data</span>}
           </div>
         </div>
       </div>
