@@ -74,7 +74,7 @@ function Gallery() {
         />
       </div>
 
-      <div className="flex justify-between mt-[48px]">
+      <div className="flex justify-between my-[48px]">
         <div className="w-[300px]">
           <div className="w-[300px] h-[92px]  bg-black/20 flex items-center">
             <span className="text-4xl font-bold text-left uppercase text-white">#</span>
@@ -124,7 +124,7 @@ function Gallery() {
                       >
                         <span>
                           <span className="text-sm text-white">{tab.label}</span>
-                          <span className="text-sm text-white/50">({tab.count})</span>
+                          <span className="text-sm text-white/50 m-l-1">({tab.count})</span>
                         </span>
                         {tab.is_checked && (
                           <FilterChecked
