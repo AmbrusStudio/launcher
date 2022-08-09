@@ -1,3 +1,4 @@
+import { AccountEmailAndAgreement, AccountPopup } from '../../../components/Account'
 import { useQuery } from '../../../hooks'
 
 export function SignUp() {
@@ -5,8 +6,10 @@ export function SignUp() {
   console.log(query.get('session'))
   return (
     <main id="main">
-      <div className="py-192px mx-auto">
-        <div></div>
+      <div className="py-192px mx-auto max-w-600px">
+        <AccountPopup title="Sign Up">
+          <AccountEmailAndAgreement />
+        </AccountPopup>
       </div>
     </main>
   )
