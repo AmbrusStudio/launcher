@@ -1,4 +1,4 @@
-import { NFT, NFTStarState, NFTTagState, NFTUpgradeState, PERK, PERKState, PERKTag } from '../types'
+import { NFT, NFT_TRAIT, NFTStarState, NFTTagState, NFTUpgradeState, PERK, PERKState, PERKTag } from '../types'
 
 export const NFTs: NFT[] = [
   {
@@ -10,28 +10,28 @@ export const NFTs: NFT[] = [
     tagState: NFTTagState.Cold,
     introduction: [
       {
-        title: 'Character',
-        content: 'Rin',
+        key: NFT_TRAIT.Character,
+        value: 'Rin',
       },
       {
-        title: 'Background',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.BackAccessories,
+        value: 'Off-white 1',
       },
       {
-        title: 'Hair',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Hair,
+        value: 'Off-white 1',
       },
       {
-        title: 'HeadGear',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Earrings,
+        value: 'Off-white 1',
       },
       {
-        title: 'Makeup',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Makeup,
+        value: 'Off-white 1',
       },
       {
-        title: 'Earrings',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Earrings,
+        value: 'Off-white 1',
       },
     ],
     star: 12,
@@ -76,28 +76,28 @@ export const NFTs: NFT[] = [
     tagState: NFTTagState.Cold,
     introduction: [
       {
-        title: 'Character',
-        content: 'Rin',
+        key: NFT_TRAIT.Character,
+        value: 'Rin',
       },
       {
-        title: 'Background',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.BackAccessories,
+        value: 'Off-white 1',
       },
       {
-        title: 'Hair',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Hair,
+        value: 'Off-white 1',
       },
       {
-        title: 'HeadGear',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Earrings,
+        value: 'Off-white 1',
       },
       {
-        title: 'Makeup',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Makeup,
+        value: 'Off-white 1',
       },
       {
-        title: 'Earrings',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Earrings,
+        value: 'Off-white 1',
       },
     ],
     star: 5,
@@ -149,28 +149,28 @@ export const NFTs: NFT[] = [
     tagState: NFTTagState.Cold,
     introduction: [
       {
-        title: 'Character',
-        content: 'Rin',
+        key: NFT_TRAIT.Character,
+        value: 'Rin',
       },
       {
-        title: 'Background',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.BackAccessories,
+        value: 'Off-white 1',
       },
       {
-        title: 'Hair',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Hair,
+        value: 'Off-white 1',
       },
       {
-        title: 'HeadGear',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Earrings,
+        value: 'Off-white 1',
       },
       {
-        title: 'Makeup',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Makeup,
+        value: 'Off-white 1',
       },
       {
-        title: 'Earrings',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Earrings,
+        value: 'Off-white 1',
       },
     ],
     star: 5,
@@ -222,28 +222,28 @@ export const NFTs: NFT[] = [
     tagState: NFTTagState.ColdAdd,
     introduction: [
       {
-        title: 'Character',
-        content: 'Rin',
+        key: NFT_TRAIT.Character,
+        value: 'Rin',
       },
       {
-        title: 'Background',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.BackAccessories,
+        value: 'Off-white 1',
       },
       {
-        title: 'Hair',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Hair,
+        value: 'Off-white 1',
       },
       {
-        title: 'HeadGear',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Earrings,
+        value: 'Off-white 1',
       },
       {
-        title: 'Makeup',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Makeup,
+        value: 'Off-white 1',
       },
       {
-        title: 'Earrings',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Earrings,
+        value: 'Off-white 1',
       },
     ],
     star: 150,
@@ -288,28 +288,28 @@ export const NFTs: NFT[] = [
     tagState: NFTTagState.Ultimate,
     introduction: [
       {
-        title: 'Character',
-        content: 'Rin',
+        key: NFT_TRAIT.Character,
+        value: 'Rin',
       },
       {
-        title: 'Background',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.BackAccessories,
+        value: 'Off-white 1',
       },
       {
-        title: 'Hair',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Hair,
+        value: 'Off-white 1',
       },
       {
-        title: 'HeadGear',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Earrings,
+        value: 'Off-white 1',
       },
       {
-        title: 'Makeup',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Makeup,
+        value: 'Off-white 1',
       },
       {
-        title: 'Earrings',
-        content: 'Off-white 1',
+        key: NFT_TRAIT.Earrings,
+        value: 'Off-white 1',
       },
     ],
     star: 0,

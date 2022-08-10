@@ -1,3 +1,5 @@
+import { Stack } from '@mui/material'
+import { Box } from '@mui/system'
 import { cloneDeep } from 'lodash'
 import numbro from 'numbro'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -8,6 +10,7 @@ import FilterChecked from '../../components/Icon/FilterChecked'
 import FilterClose from '../../components/Icon/FilterClose'
 import FilterOpen from '../../components/Icon/FilterOpen'
 import Opensea from '../../components/Icon/Opensea'
+import ModalGallery from '../../components/ModalGallery'
 import { GALLERY_INFO, GALLERYS, GALLERYS_FILTERS } from '../../data'
 import { GALLERY, GALLERY_FILTER, GALLERY_FILTER_LIST } from '../../types/gallery'
 
@@ -27,6 +30,10 @@ function Gallery() {
   const [galleryFilter, setGalleryFilter] = useState<GALLERY[]>([])
   // search by ID
   const [searchId, setSearchId] = useState<string>('')
+  // NFT modal
+  const [visibleNFT, setVisibleNFT] = useState<boolean>(false)
+  // NFT current
+  const [currentNFTInfo, setCurrentNFTInfo] = useState<GALLERY>()
 
   // Toggle Filter children tab
   const toggleFilterTab = useCallback(
@@ -97,144 +104,210 @@ function Gallery() {
   }, [handleFilter])
 
   return (
-    <div className="max-w-[1264px] m-x-auto mt-[188px]">
-      <div className="flex justify-between">
-        <img src={logo} className="w-[60px] h-[60px] mr-3 mt-[9px]" />
-        <div>
-          <p className="text-[64px] leading-[78px] font-bold uppercase text-white">{GALLERY_INFO.title}</p>
-          <p className="text-[64px] leading-[78px] font-bold uppercase text-rust">{GALLERY_INFO.description}</p>
-        </div>
-        <a
-          href={GALLERY_INFO.opensea_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="ml-auto mt-[3.75px] block w-[52.5px] h-[52.5px]"
-        >
-          <Opensea
-            sx={{
-              fontSize: '52.5px',
-            }}
-          />
-        </a>
-      </div>
-
-      <div className="flex justify-between my-[48px]">
-        <div className="w-[300px]">
-          <div className="p-6 m-b-4.5 bg-black/20 flex items-center">
-            <span className="text-4xl font-bold uppercase text-white leading-11">#</span>
-            <input
-              placeholder="ID"
-              className="bg-transparent text-white outline-none ml-4 leading-11 uppercase font-bold not-italic text-4xl w-[100%]
-              placeholder:uppercase placeholder:font-bold placeholder:not-italic placeholder:text-4xl placeholder:opacity-20 placeholder:text-white"
-              value={searchId}
-              onChange={(e) => setSearchId(e.target.value)}
-            />
+    <>
+      <div className="max-w-[1264px] m-x-auto mt-[188px]">
+        <div className="flex justify-between">
+          <img src={logo} className="w-[60px] h-[60px] mr-3 mt-[9px]" />
+          <div>
+            <p className="text-[64px] leading-[78px] font-bold uppercase text-white">{GALLERY_INFO.title}</p>
+            <p className="text-[64px] leading-[78px] font-bold uppercase text-rust">{GALLERY_INFO.description}</p>
           </div>
-          <div className="border-y-2 border-rust p-y-4 text-xl font-bold leading-6 uppercase text-white">Filters</div>
-          <ul className="select-none">
-            {filter.map((item, index) => (
-              <li key={index}>
-                <div
-                  className={`border-b-1 border-[#465358] p-y-4 flex items-center justify-between${
-                    item.list.length && ' ' + 'cursor-pointer'
-                  }`}
-                  onClick={() => toggleFilterTab(index)}
-                >
-                  <span className="text-sm leading-[17px] uppercase text-white">{item.label}</span>
-                  {!!item.list.length && (
-                    <>
-                      {item.is_open ? (
-                        <FilterClose
-                          sx={{
-                            fontSize: '12px',
-                          }}
-                        />
-                      ) : (
-                        <FilterOpen
-                          sx={{
-                            fontSize: '12px',
-                          }}
-                        />
-                      )}
-                    </>
-                  )}
-                </div>
-                {item.is_open && (
-                  <ul>
-                    {item.list.map((tab: FilterList, indexJ) => (
-                      <li
-                        key={indexJ}
-                        className="border-b-1 border-[#2A2A2A] bg-black flex items-center justify-between p-3 cursor-pointer"
-                        onClick={() => {
-                          ToggleFilterTagChecked(index, indexJ)
-                        }}
-                      >
-                        <span className="text-sm leading-[17px]">
-                          <span className="text-white">{tab.label}</span>
-                          <span className="text-white/50 m-l-1">
-                            ({numbro(tab.count).format({ thousandSeparated: true })})
-                          </span>
-                        </span>
-                        {tab.is_checked && (
-                          <FilterChecked
-                            className="text-rust"
+          <a
+            href={GALLERY_INFO.opensea_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-auto mt-[3.75px] block w-[52.5px] h-[52.5px]"
+          >
+            <Opensea
+              sx={{
+                fontSize: '52.5px',
+              }}
+            />
+          </a>
+        </div>
+
+        <div className="flex justify-between my-[48px]">
+          <div className="w-[300px]">
+            <div className="p-6 m-b-4.5 bg-black/20 flex items-center">
+              <span className="text-4xl font-bold uppercase text-white leading-11">#</span>
+              <input
+                placeholder="ID"
+                className="bg-transparent text-white outline-none ml-4 leading-11 uppercase font-bold not-italic text-4xl w-[100%]
+              placeholder:uppercase placeholder:font-bold placeholder:not-italic placeholder:text-4xl placeholder:opacity-20 placeholder:text-white"
+                value={searchId}
+                onChange={(e) => setSearchId(e.target.value)}
+              />
+            </div>
+            <div className="border-y-2 border-rust p-y-4 text-xl font-bold leading-6 uppercase text-white">Filters</div>
+            <ul className="select-none">
+              {filter.map((item, index) => (
+                <li key={index}>
+                  <div
+                    className={`border-b-1 border-[#465358] p-y-4 flex items-center justify-between${
+                      item.list.length && ' ' + 'cursor-pointer'
+                    }`}
+                    onClick={() => toggleFilterTab(index)}
+                  >
+                    <span className="text-sm leading-[17px] uppercase text-white">{item.label}</span>
+                    {!!item.list.length && (
+                      <>
+                        {item.is_open ? (
+                          <FilterClose
                             sx={{
                               fontSize: '12px',
-                              lineHeight: '14px',
+                            }}
+                          />
+                        ) : (
+                          <FilterOpen
+                            sx={{
+                              fontSize: '12px',
                             }}
                           />
                         )}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <div className="flex items-center	justify-between">
-            <div className="w-[120px] h-8 rounded-2xl bg-white/10 flex items-center justify-center">
-              <p
-                className="text-sm font-medium text-center leading-4.25 text-white cursor-pointer"
-                onClick={() => {
-                  setGalleryFilter([])
-                  setSearchId('')
-                }}
-              >
-                Reset Filters
+                      </>
+                    )}
+                  </div>
+                  {item.is_open && (
+                    <ul>
+                      {item.list.map((tab: FilterList, indexJ) => (
+                        <li
+                          key={indexJ}
+                          className="border-b-1 border-[#2A2A2A] bg-black flex items-center justify-between p-3 cursor-pointer"
+                          onClick={() => {
+                            ToggleFilterTagChecked(index, indexJ)
+                          }}
+                        >
+                          <span className="text-sm leading-[17px]">
+                            <span className="text-white">{tab.label}</span>
+                            <span className="text-white/50 m-l-1">
+                              ({numbro(tab.count).format({ thousandSeparated: true })})
+                            </span>
+                          </span>
+                          {tab.is_checked && (
+                            <FilterChecked
+                              className="text-rust"
+                              sx={{
+                                fontSize: '12px',
+                                lineHeight: '14px',
+                              }}
+                            />
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <div className="flex items-center	justify-between">
+              <div className="w-[120px] h-8 rounded-2xl bg-white/10 flex items-center justify-center">
+                <p
+                  className="text-sm font-medium text-center leading-4.25 text-white cursor-pointer"
+                  onClick={() => {
+                    setGalleryFilter([])
+                    setSearchId('')
+                  }}
+                >
+                  Reset Filters
+                </p>
+              </div>
+              <p className="text-sm font-medium leading-4.25 text-white">
+                {numbro(currentGallery.length).format({ thousandSeparated: true })} items
               </p>
             </div>
-            <p className="text-sm font-medium leading-4.25 text-white">
-              {numbro(currentGallery.length).format({ thousandSeparated: true })} items
-            </p>
+            {
+              <div className="w-[928px] mt-6">
+                {!!currentGallery.length && (
+                  <div className="grid grid-cols-4 gap-3">
+                    {currentGallery.map((gallery, index) => (
+                      <div
+                        key={index}
+                        className="w-[223px] h-[223px] rounded overflow-hidden relative cursor-pointer"
+                        onClick={() => {
+                          setCurrentNFTInfo(currentGallery[index])
+                          setVisibleNFT(true)
+                        }}
+                      >
+                        <img src={gallery.image} className="w-[100%] h-[100%] object-cover" />
+                        <p className="absolute left-3 bottom-3 text-sm font-bold leading-4.25 uppercase text-white">
+                          #{gallery.id}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {!currentGallery.length && <div className="text-lg py-6 text-center text-white">No Item</div>}
+              </div>
+            }
           </div>
-          {
-            <div className="w-[928px] mt-6">
-              {!!currentGallery.length && (
-                <div className="grid grid-cols-4 gap-3">
-                  {currentGallery.map((gallery, index) => (
-                    <a
-                      key={index}
-                      className="w-[223px] h-[223px] rounded overflow-hidden relative"
-                      href={gallery.url}
-                      target="_balnk"
-                      rel="noopener noreferrer"
-                    >
-                      <img src={gallery.image} className="w-[100%] h-[100%] object-cover" />
-                      <p className="absolute left-3 bottom-3 text-sm font-bold leading-4.25 uppercase text-white">
-                        #{gallery.id}
-                      </p>
-                    </a>
-                  ))}
-                </div>
-              )}
-              {!currentGallery.length && <div className="text-lg py-6 text-center text-white">No Item</div>}
-            </div>
-          }
         </div>
       </div>
-    </div>
+      <ModalGallery
+        title="E4C Rangers"
+        id={currentNFTInfo?.id}
+        visible={visibleNFT}
+        toggle={(value) => setVisibleNFT(value)}
+      >
+        <Box
+          className="flex"
+          sx={{
+            background: 'rgba(255, 255, 255, 0.8)',
+            backdropFilter: 'blur(20px)',
+          }}
+        >
+          <div className="lg:w-[600px] lg:h-[600px] overflow-hidden border-4 border-white">
+            <img
+              className="h-full object-cover w-full"
+              src="https://ambrus.s3.amazonaws.com/1657877346203_0.92_206.jpg"
+              alt="logo"
+            />
+          </div>
+          <div className="flex flex-col flex-grow p-9 text-white">
+            <div className="grid grid-cols-2 gap-6">
+              {currentNFTInfo?.property.map((j, index: number) => (
+                <section key={index}>
+                  <p className="font-normal text-xs leading-[15px] m-0 p-0 not-italic uppercase text-[#a0a4b0]">
+                    {j.key}
+                  </p>
+                  <p className="font-bold text-base leading-5 mx-0 mb-0 mt-1 p-0 text-[#2A2A2A] not-italic">
+                    {j.value}
+                  </p>
+                </section>
+              ))}
+            </div>
+
+            <Stack className="mt-auto" spacing={4.5} direction="row">
+              <a
+                className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
+                href={currentNFTInfo?.opensea_url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Opensea
+              </a>
+              <a
+                className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
+                href={currentNFTInfo?.looksrare_url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Looksrare
+              </a>
+              <a
+                className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
+                href={currentNFTInfo?.etherscan_url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Etherscan
+              </a>
+            </Stack>
+          </div>
+        </Box>
+      </ModalGallery>
+    </>
   )
 }
 

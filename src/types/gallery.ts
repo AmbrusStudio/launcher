@@ -1,25 +1,13 @@
-export enum GALLERY_PROPERTY {
-  Character = 'Character',
-  Hair = 'Hair',
-  FaceAccessories = 'Face Accessories',
-  Eyes = 'Eyes',
-  Makeup = 'Makeup',
-  Earrings = 'Earrings',
-  Hat = 'Hat',
-  Skin = 'Skin',
-  Tattoo = 'Tattoo',
-  Clothing = 'Clothing',
-  NeckAccessories = 'Neck Accessories',
-  ShoulderAccessories = 'Shoulder Accessories',
-  BackAccessories = 'Back Accessories',
-}
+import { NFT_TRAIT } from './nft'
 
 export type GALLERY = {
   id: number
   image: string
-  url: string
+  opensea_url: string
+  looksrare_url: string
+  etherscan_url: string
   property: {
-    key: GALLERY_PROPERTY
+    key: NFT_TRAIT
     value: string
   }[]
 }
@@ -30,7 +18,7 @@ export type GALLERY_FILTER_LIST = {
 }
 
 export type GALLERY_FILTER = {
-  label: GALLERY_PROPERTY
+  label: NFT_TRAIT
   list: GALLERY_FILTER_LIST[]
 }
 
