@@ -72,11 +72,24 @@ function Gallery() {
 
     // checked
     const result = filterResult.length
-      ? gallery.filter((item) => item.property.find((i) => filterResult.includes(i.value)))
+      ? gallery.filter((item) => item.trait.find((i) => filterResult.includes(i.value)))
       : gallery
 
     setGalleryFilter(result)
   }, [filter, searchId])
+
+  // initialization filter status
+  const initFilterStatus = useCallback(() => {
+    const filterList: Filter[] = GALLERYS_FILTERS.map((i) => ({
+      ...i,
+      is_open: false,
+      list: i.list.map((j) => ({
+        ...j,
+        is_checked: false,
+      })),
+    }))
+    setFilter(filterList)
+  }, [])
 
   const currentGallery = useMemo(() => {
     if (searchId) {
@@ -88,16 +101,8 @@ function Gallery() {
 
   // initialization filter status
   useEffect(() => {
-    const filterList: Filter[] = GALLERYS_FILTERS.map((i) => ({
-      ...i,
-      is_open: false,
-      list: i.list.map((j) => ({
-        ...j,
-        is_checked: false,
-      })),
-    }))
-    setFilter(filterList)
-  }, [])
+    initFilterStatus()
+  }, [initFilterStatus])
 
   useEffect(() => {
     handleFilter()
@@ -202,16 +207,15 @@ function Gallery() {
           </div>
           <div>
             <div className="flex items-center	justify-between">
-              <div className="w-[120px] h-8 rounded-2xl bg-white/10 flex items-center justify-center">
-                <p
-                  className="text-sm font-medium text-center leading-4.25 text-white cursor-pointer"
-                  onClick={() => {
-                    setGalleryFilter([])
-                    setSearchId('')
-                  }}
-                >
-                  Reset Filters
-                </p>
+              <div
+                className="w-[120px] h-8 rounded-2xl bg-white/10 flex items-center justify-center cursor-pointer"
+                onClick={() => {
+                  setGalleryFilter([])
+                  initFilterStatus()
+                  setSearchId('')
+                }}
+              >
+                <p className="text-sm font-medium text-center leading-4.25 text-white">Reset Filters</p>
               </div>
               <p className="text-sm font-medium leading-4.25 text-white">
                 {numbro(currentGallery.length).format({ thousandSeparated: true })} items
@@ -266,7 +270,7 @@ function Gallery() {
           </div>
           <div className="flex flex-col flex-grow p-9 text-white">
             <div className="grid grid-cols-2 gap-6">
-              {currentNFTInfo?.property.map((j, index: number) => (
+              {currentNFTInfo?.trait.map((j, index: number) => (
                 <section key={index}>
                   <p className="font-normal text-xs leading-[15px] m-0 p-0 not-italic uppercase text-[#a0a4b0]">
                     {j.key}

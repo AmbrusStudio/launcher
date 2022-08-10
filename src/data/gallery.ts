@@ -16,7 +16,7 @@ export const GALLERYS: GALLERY[] = [
     opensea_url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     looksrare_url: '',
     etherscan_url: 'https://etherscan.io/address/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402',
-    property: [
+    trait: [
       {
         key: NFT_TRAIT.Character,
         value: 'Rin',
@@ -49,7 +49,7 @@ export const GALLERYS: GALLERY[] = [
     opensea_url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     looksrare_url: '',
     etherscan_url: 'https://etherscan.io/address/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402',
-    property: [
+    trait: [
       {
         key: NFT_TRAIT.Character,
         value: 'Kit',
@@ -66,7 +66,7 @@ export const GALLERYS: GALLERY[] = [
     opensea_url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     looksrare_url: '',
     etherscan_url: 'https://etherscan.io/address/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402',
-    property: [
+    trait: [
       {
         key: NFT_TRAIT.Character,
         value: 'Thorn',
@@ -83,7 +83,7 @@ export const GALLERYS: GALLERY[] = [
     opensea_url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     looksrare_url: '',
     etherscan_url: 'https://etherscan.io/address/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402',
-    property: [
+    trait: [
       {
         key: NFT_TRAIT.Character,
         value: 'Kit',
@@ -100,7 +100,7 @@ export const GALLERYS: GALLERY[] = [
     opensea_url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     looksrare_url: '',
     etherscan_url: 'https://etherscan.io/address/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402',
-    property: [
+    trait: [
       {
         key: NFT_TRAIT.Character,
         value: 'Kit',
@@ -117,7 +117,7 @@ export const GALLERYS: GALLERY[] = [
     opensea_url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     looksrare_url: '',
     etherscan_url: 'https://etherscan.io/address/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402',
-    property: [
+    trait: [
       {
         key: NFT_TRAIT.Character,
         value: 'Kit',
@@ -134,7 +134,7 @@ export const GALLERYS: GALLERY[] = [
     opensea_url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     looksrare_url: '',
     etherscan_url: 'https://etherscan.io/address/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402',
-    property: [
+    trait: [
       {
         key: NFT_TRAIT.Character,
         value: 'Kit',
@@ -151,7 +151,7 @@ export const GALLERYS: GALLERY[] = [
     opensea_url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     looksrare_url: '',
     etherscan_url: 'https://etherscan.io/address/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402',
-    property: [
+    trait: [
       {
         key: NFT_TRAIT.Character,
         value: 'Kit',
@@ -168,7 +168,7 @@ export const GALLERYS: GALLERY[] = [
     opensea_url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     looksrare_url: '',
     etherscan_url: 'https://etherscan.io/address/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402',
-    property: [
+    trait: [
       {
         key: NFT_TRAIT.Character,
         value: 'Kit',
@@ -185,7 +185,7 @@ export const GALLERYS: GALLERY[] = [
     opensea_url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     looksrare_url: '',
     etherscan_url: 'https://etherscan.io/address/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402',
-    property: [
+    trait: [
       {
         key: NFT_TRAIT.Character,
         value: 'Rin',
@@ -218,7 +218,7 @@ export const GALLERYS: GALLERY[] = [
     opensea_url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     looksrare_url: '',
     etherscan_url: 'https://etherscan.io/address/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402',
-    property: [
+    trait: [
       {
         key: NFT_TRAIT.Character,
         value: 'Kit',
@@ -235,7 +235,7 @@ export const GALLERYS: GALLERY[] = [
     opensea_url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     looksrare_url: '',
     etherscan_url: 'https://etherscan.io/address/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402',
-    property: [
+    trait: [
       {
         key: NFT_TRAIT.Character,
         value: 'Rin',
@@ -265,7 +265,7 @@ export const GALLERYS: GALLERY[] = [
 ]
 
 // Handle Filter Property
-const allProperty = GALLERYS.flatMap((i) => i.property)
+const allProperty = GALLERYS.flatMap((i) => i.trait)
 const allPropertyGroup = groupBy(allProperty, 'key')
 
 export const GALLERYS_FILTERS: GALLERY_FILTER[] = Object.values(NFT_TRAIT).map((i) => {
