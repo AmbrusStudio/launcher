@@ -17,6 +17,7 @@ export enum GALLERY_PROPERTY {
 export type GALLERY = {
   id: number
   image: string
+  url: string
   property: {
     key: GALLERY_PROPERTY
     value: string
@@ -31,4 +32,10 @@ export type GALLERY_FILTER_LIST = {
 export type GALLERY_FILTER = {
   label: GALLERY_PROPERTY
   list: GALLERY_FILTER_LIST[]
+}
+
+export type GALLERY_INFO_TYPE = {
+  title: string
+  description: string
+  opensea_url: string
 }

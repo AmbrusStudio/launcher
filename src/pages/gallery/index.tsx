@@ -1,4 +1,5 @@
 import { cloneDeep } from 'lodash'
+import numbro from 'numbro'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { compose } from 'redux'
 
@@ -7,7 +8,7 @@ import FilterChecked from '../../components/Icon/FilterChecked'
 import FilterClose from '../../components/Icon/FilterClose'
 import FilterOpen from '../../components/Icon/FilterOpen'
 import Opensea from '../../components/Icon/Opensea'
-import { GALLERYS, GALLERYS_FILTERS } from '../../data'
+import { GALLERY_INFO, GALLERYS, GALLERYS_FILTERS } from '../../data'
 import { GALLERY, GALLERY_FILTER, GALLERY_FILTER_LIST } from '../../types/gallery'
 
 type FilterList = GALLERY_FILTER_LIST & {
@@ -100,15 +101,21 @@ function Gallery() {
       <div className="flex justify-between">
         <img src={logo} className="w-[60px] h-[60px] mr-3 mt-[9px]" />
         <div>
-          <p className="text-[64px] leading-[78px] font-bold uppercase text-white">E4C Rangers</p>
-          <p className="text-[64px] leading-[78px] font-bold uppercase text-rust">Gallery</p>
+          <p className="text-[64px] leading-[78px] font-bold uppercase text-white">{GALLERY_INFO.title}</p>
+          <p className="text-[64px] leading-[78px] font-bold uppercase text-rust">{GALLERY_INFO.description}</p>
         </div>
-        <Opensea
-          className="ml-auto mt-[3.75px]"
-          sx={{
-            fontSize: '52.5px',
-          }}
-        />
+        <a
+          href={GALLERY_INFO.opensea_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="ml-auto mt-[3.75px] block w-[52.5px] h-[52.5px]"
+        >
+          <Opensea
+            sx={{
+              fontSize: '52.5px',
+            }}
+          />
+        </a>
       </div>
 
       <div className="flex justify-between my-[48px]">
@@ -164,7 +171,9 @@ function Gallery() {
                       >
                         <span className="text-sm leading-[17px]">
                           <span className="text-white">{tab.label}</span>
-                          <span className="text-white/50 m-l-1">({tab.count})</span>
+                          <span className="text-white/50 m-l-1">
+                            ({numbro(tab.count).format({ thousandSeparated: true })})
+                          </span>
                         </span>
                         {tab.is_checked && (
                           <FilterChecked
@@ -197,7 +206,7 @@ function Gallery() {
               </p>
             </div>
             <p className="text-sm font-medium leading-4.25 text-white">
-              {galleryFilter.length || GALLERYS.length} items
+              {numbro(currentGallery.length).format({ thousandSeparated: true })} items
             </p>
           </div>
           {
@@ -205,12 +214,18 @@ function Gallery() {
               {!!currentGallery.length && (
                 <div className="grid grid-cols-4 gap-3">
                   {currentGallery.map((gallery, index) => (
-                    <div key={index} className="w-[223px] h-[223px] rounded overflow-hidden relative">
+                    <a
+                      key={index}
+                      className="w-[223px] h-[223px] rounded overflow-hidden relative"
+                      href={gallery.url}
+                      target="_balnk"
+                      rel="noopener noreferrer"
+                    >
                       <img src={gallery.image} className="w-[100%] h-[100%] object-cover" />
                       <p className="absolute left-3 bottom-3 text-sm font-bold leading-4.25 uppercase text-white">
                         #{gallery.id}
                       </p>
-                    </div>
+                    </a>
                   ))}
                 </div>
               )}
