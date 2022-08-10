@@ -6,7 +6,7 @@ export type GALLERY = {
   opensea_url: string
   looksrare_url: string
   etherscan_url: string
-  property: {
+  trait: {
     key: NFT_TRAIT
     value: string
   }[]
