@@ -1,6 +1,11 @@
 import { Button, Checkbox, Input } from '../../Forms'
 
-export function AccountEmailAndAgreement() {
+export type AccountEmailAndAgreementProps = {
+  onNextClick: React.MouseEventHandler<HTMLButtonElement>
+}
+
+export function AccountEmailAndAgreement(props: AccountEmailAndAgreementProps) {
+  const { onNextClick } = props
   return (
     <div className="flex flex-col gap-24px">
       <Input id="email" label="Email" placeholder="example@gmail.com" />
@@ -11,7 +16,9 @@ export function AccountEmailAndAgreement() {
         </Checkbox>
         <Checkbox id="newsletter">Check this box to subscribe to your newsletter</Checkbox>
       </div>
-      <Button variant="primary">Next</Button>
+      <Button variant="primary" onClick={onNextClick}>
+        Next
+      </Button>
     </div>
   )
 }
