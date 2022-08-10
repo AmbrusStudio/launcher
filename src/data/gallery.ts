@@ -1,11 +1,18 @@
 import { groupBy } from 'lodash'
 
-import { GALLERY, GALLERY_FILTER, GALLERY_FILTER_LIST, GALLERY_PROPERTY } from '../types/gallery'
+import { GALLERY, GALLERY_FILTER, GALLERY_FILTER_LIST, GALLERY_INFO_TYPE, GALLERY_PROPERTY } from '../types/gallery'
+
+export const GALLERY_INFO: GALLERY_INFO_TYPE = {
+  title: 'E4C Rangers',
+  description: 'Gallery',
+  opensea_url: 'https://opensea.io/collection/e4c',
+}
 
 export const GALLERYS: GALLERY[] = [
   {
     id: 1,
     image: 'https://i.imgur.com/yfUga0u.png',
+    url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     property: [
       {
         key: GALLERY_PROPERTY.Character,
@@ -20,6 +27,7 @@ export const GALLERYS: GALLERY[] = [
   {
     id: 2,
     image: 'https://i.imgur.com/yfUga0u.png',
+    url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     property: [
       {
         key: GALLERY_PROPERTY.Character,
@@ -34,6 +42,7 @@ export const GALLERYS: GALLERY[] = [
   {
     id: 3,
     image: 'https://i.imgur.com/yfUga0u.png',
+    url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     property: [
       {
         key: GALLERY_PROPERTY.Character,
@@ -48,6 +57,7 @@ export const GALLERYS: GALLERY[] = [
   {
     id: 4,
     image: 'https://i.imgur.com/yfUga0u.png',
+    url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     property: [
       {
         key: GALLERY_PROPERTY.Character,
@@ -62,6 +72,7 @@ export const GALLERYS: GALLERY[] = [
   {
     id: 5,
     image: 'https://i.imgur.com/yfUga0u.png',
+    url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     property: [
       {
         key: GALLERY_PROPERTY.Character,
@@ -76,6 +87,7 @@ export const GALLERYS: GALLERY[] = [
   {
     id: 6,
     image: 'https://i.imgur.com/yfUga0u.png',
+    url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     property: [
       {
         key: GALLERY_PROPERTY.Character,
@@ -90,6 +102,7 @@ export const GALLERYS: GALLERY[] = [
   {
     id: 7,
     image: 'https://i.imgur.com/yfUga0u.png',
+    url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     property: [
       {
         key: GALLERY_PROPERTY.Character,
@@ -104,6 +117,7 @@ export const GALLERYS: GALLERY[] = [
   {
     id: 8,
     image: 'https://i.imgur.com/yfUga0u.png',
+    url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     property: [
       {
         key: GALLERY_PROPERTY.Character,
@@ -118,6 +132,7 @@ export const GALLERYS: GALLERY[] = [
   {
     id: 9,
     image: 'https://i.imgur.com/yfUga0u.png',
+    url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     property: [
       {
         key: GALLERY_PROPERTY.Character,
@@ -132,6 +147,7 @@ export const GALLERYS: GALLERY[] = [
   {
     id: 10,
     image: 'https://i.imgur.com/yfUga0u.png',
+    url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     property: [
       {
         key: GALLERY_PROPERTY.Character,
@@ -146,6 +162,7 @@ export const GALLERYS: GALLERY[] = [
   {
     id: 11,
     image: 'https://i.imgur.com/yfUga0u.png',
+    url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     property: [
       {
         key: GALLERY_PROPERTY.Character,
@@ -160,6 +177,7 @@ export const GALLERYS: GALLERY[] = [
   {
     id: 12,
     image: 'https://i.imgur.com/yfUga0u.png',
+    url: 'https://opensea.io/assets/ethereum/0xeb05cb1c82acc87ad8e0bb7927a1dc39cd300402/13',
     property: [
       {
         key: GALLERY_PROPERTY.Character,
