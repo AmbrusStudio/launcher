@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { compose } from 'redux'
 
 import logo from '../../assets/images/logo.png'
@@ -56,14 +56,27 @@ function Gallery() {
     const filterChecked = (list: FilterList[]) => list.filter((item) => item.is_checked)
     const filterExtract = (list: FilterList[]) => list.map((item) => item.label)
 
+    // search
+    const gallery = searchId ? GALLERYS.filter((item) => String(item.id).includes(searchId)) : GALLERYS
+
+    // filter
     const filterResult = compose(filterExtract, filterChecked, filterFlat)(filter)
 
-    const result = GALLERYS.filter(
-      (item) => String(item.id).includes(searchId) || item.property.find((i) => filterResult.includes(i.value))
-    )
+    // checked
+    const result = filterResult.length
+      ? gallery.filter((item) => item.property.find((i) => filterResult.includes(i.value)))
+      : gallery
 
     setGalleryFilter(result)
   }, [filter, searchId])
+
+  const currentGallery = useMemo(() => {
+    if (searchId) {
+      return galleryFilter.length ? galleryFilter : []
+    } else {
+      return galleryFilter.length ? galleryFilter : GALLERYS
+    }
+  }, [searchId, galleryFilter])
 
   // initialization filter status
   useEffect(() => {
@@ -191,17 +204,23 @@ function Gallery() {
               {galleryFilter.length || GALLERYS.length} items
             </p>
           </div>
-          <div className="w-[928px] grid grid-cols-4 gap-3 mt-6">
-            {(galleryFilter.length ? galleryFilter : GALLERYS).map((gallery, index) => (
-              <div key={index} className="w-[223px] h-[223px] rounded overflow-hidden relative">
-                <img src={gallery.image} className="w-[100%] h-[100%] object-cover" />
-                <p className="absolute left-3 bottom-3 text-sm font-bold leading-4.25 uppercase text-white">
-                  #{gallery.id}
-                </p>
-              </div>
-            ))}
-            {!galleryFilter.length && <span>no data</span>}
-          </div>
+          {
+            <div className="w-[928px] mt-6">
+              {!!currentGallery.length && (
+                <div className="grid grid-cols-4 gap-3">
+                  {currentGallery.map((gallery, index) => (
+                    <div key={index} className="w-[223px] h-[223px] rounded overflow-hidden relative">
+                      <img src={gallery.image} className="w-[100%] h-[100%] object-cover" />
+                      <p className="absolute left-3 bottom-3 text-sm font-bold leading-4.25 uppercase text-white">
+                        #{gallery.id}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {!currentGallery.length && <div className="text-lg px-0 py-5 text-center text-white">No Item</div>}
+            </div>
+          }
         </div>
       </div>
     </div>
