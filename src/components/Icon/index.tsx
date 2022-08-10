@@ -1,6 +1,7 @@
 export * from './Add'
 export * from './Ambrus'
 export * from './ArrowDown'
+export * from './ArrowLeft'
 export * from './CheckMark'
 export * from './Close'
 export * from './CloseCheck'
