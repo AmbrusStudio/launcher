@@ -1,5 +1,5 @@
 import { getMainSiteLink } from '../../../utils'
-import { IconAmbrus } from '../../Icon/Ambrus'
+import { IconAmbrus } from '../../Icon'
 import { ExternalLink } from '../../Link'
 
 export function LogoNav() {

@@ -3,7 +3,7 @@ import React from 'react'
 
 import { ReactInputProps } from '../../../types'
 import { classNames } from '../../../utils'
-import { IconCheckMark } from '../../Icon/CheckMark'
+import { IconCheckMark } from '../../Icon'
 
 type CheckboxProps = ReactInputProps &
   Required<Pick<ReactInputProps, 'id'>> & {
