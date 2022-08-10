@@ -113,43 +113,39 @@ function Gallery() {
 
       <div className="flex justify-between my-[48px]">
         <div className="w-[300px]">
-          <div className="w-[300px] h-[92px]  bg-black/20 flex items-center">
-            <span className="text-4xl font-bold text-left uppercase text-white">#</span>
-            {/* <p className="opacity-20 text-4xl font-bold text-left uppercase text-white">ID</p> */}
+          <div className="p-6 m-b-4.5 bg-black/20 flex items-center">
+            <span className="text-4xl font-bold uppercase text-white leading-11">#</span>
             <input
               placeholder="ID"
-              className="bg-transparent outline-none"
+              className="bg-transparent text-white outline-none ml-4 leading-11 uppercase font-bold not-italic text-4xl w-[100%]
+              placeholder:uppercase placeholder:font-bold placeholder:not-italic placeholder:text-4xl placeholder:opacity-20 placeholder:text-white"
               value={searchId}
               onChange={(e) => setSearchId(e.target.value)}
             />
           </div>
-          <div className="w-[300px] h-[60px]">
-            <div className="border-y-2 border-rust p-y-4 text-xl font-bold text-left uppercase text-white">Filters</div>
-          </div>
+          <div className="border-y-2 border-rust p-y-4 text-xl font-bold leading-6 uppercase text-white">Filters</div>
           <ul className="select-none">
             {filter.map((item, index) => (
               <li key={index}>
                 <div
-                  className={`h-[50px] border-b-1 border-[#465358] flex items-center justify-between${
+                  className={`border-b-1 border-[#465358] p-y-4 flex items-center justify-between${
                     item.list.length && ' ' + 'cursor-pointer'
                   }`}
                   onClick={() => toggleFilterTab(index)}
                 >
-                  <p className="text-sm text-left uppercase text-white">{item.label}</p>
+                  <span className="text-sm leading-[17px] uppercase text-white">{item.label}</span>
                   {!!item.list.length && (
                     <>
                       {item.is_open ? (
                         <FilterClose
                           sx={{
                             fontSize: '12px',
-                            lineHeight: '14px',
                           }}
                         />
                       ) : (
                         <FilterOpen
                           sx={{
                             fontSize: '12px',
-                            lineHeight: '14px',
                           }}
                         />
                       )}
@@ -161,14 +157,14 @@ function Gallery() {
                     {item.list.map((tab: FilterList, indexJ) => (
                       <li
                         key={indexJ}
-                        className="w-[300px] h-[42px] border-b-1 border-[#2A2A2A] bg-black flex items-center justify-between p-3 cursor-pointer"
+                        className="border-b-1 border-[#2A2A2A] bg-black flex items-center justify-between p-3 cursor-pointer"
                         onClick={() => {
                           ToggleFilterTagChecked(index, indexJ)
                         }}
                       >
-                        <span>
-                          <span className="text-sm text-white">{tab.label}</span>
-                          <span className="text-sm text-white/50 m-l-1">({tab.count})</span>
+                        <span className="text-sm leading-[17px]">
+                          <span className="text-white">{tab.label}</span>
+                          <span className="text-white/50 m-l-1">({tab.count})</span>
                         </span>
                         {tab.is_checked && (
                           <FilterChecked
@@ -218,7 +214,7 @@ function Gallery() {
                   ))}
                 </div>
               )}
-              {!currentGallery.length && <div className="text-lg px-0 py-5 text-center text-white">No Item</div>}
+              {!currentGallery.length && <div className="text-lg py-6 text-center text-white">No Item</div>}
             </div>
           }
         </div>
