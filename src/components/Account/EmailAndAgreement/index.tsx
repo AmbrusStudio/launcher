@@ -1,8 +1,7 @@
+import { AccountCommonProps } from '../../../types'
 import { Button, Checkbox, Input } from '../../Forms'
 
-export type AccountEmailAndAgreementProps = {
-  onNextClick: React.MouseEventHandler<HTMLButtonElement>
-}
+export type AccountEmailAndAgreementProps = AccountCommonProps
 
 export function AccountEmailAndAgreement(props: AccountEmailAndAgreementProps) {
   const { onNextClick } = props
