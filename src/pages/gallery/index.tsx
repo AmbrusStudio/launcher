@@ -11,6 +11,7 @@ import FilterClose from '../../components/Icon/FilterClose'
 import FilterOpen from '../../components/Icon/FilterOpen'
 import FilterSliderLine from '../../components/Icon/FilterSliderLine'
 import Opensea from '../../components/Icon/Opensea'
+import { PageLayout } from '../../components/Layout'
 import ModalGallery from '../../components/ModalGallery'
 import { GALLERY_INFO, GALLERYS, GALLERYS_FILTERS } from '../../data'
 import { GALLERY, GALLERY_FILTER, GALLERY_FILTER_LIST } from '../../types/gallery'
@@ -110,7 +111,7 @@ function Gallery() {
   }, [handleFilter])
 
   return (
-    <>
+    <PageLayout>
       <div className="max-w-[1312px] m-x-auto mt-[68px] xl:mt-[188px] p-6">
         <div className="flex justify-between">
           <img src={logo} className="hidden xl:block w-[60px] h-[60px] mr-3 mt-[9px]" />
@@ -324,7 +325,7 @@ function Gallery() {
           </div>
         </Box>
       </ModalGallery>
-    </>
+    </PageLayout>
   )
 }
 
