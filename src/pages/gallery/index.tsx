@@ -9,7 +9,9 @@ import logo from '../../assets/images/logo.png'
 import FilterChecked from '../../components/Icon/FilterChecked'
 import FilterClose from '../../components/Icon/FilterClose'
 import FilterOpen from '../../components/Icon/FilterOpen'
+// import FilterSliderClose from '../../components/Icon/FilterSliderClose'
 import FilterSliderLine from '../../components/Icon/FilterSliderLine'
+// import FilterSliderLineClear from '../../components/Icon/FilterSliderLineClear'
 import Opensea from '../../components/Icon/Opensea'
 import { PageLayout } from '../../components/Layout'
 import ModalGallery from '../../components/ModalGallery'
@@ -142,11 +144,32 @@ function Gallery() {
 
         <div className="flex flex-col xl:flex-row justify-between my-3 xl:my-[48px]">
           <div className="xl:w-[300px]">
-            <div>
-              <div className="w-[52px] h-[52px] rounded bg-white hidden">
-                <FilterSliderLine className="text-black" />
+            <div className="flex">
+              <div className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3 xl:hidden">
+                <FilterSliderLine
+                  className="text-black"
+                  sx={{
+                    fontSize: '24px',
+                  }}
+                />
               </div>
-              <div className="p-6 m-b-4.5 bg-black/20 flex items-center">
+              {/* <div className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3">
+                <FilterSliderClose
+                  className="text-black"
+                  sx={{
+                    fontSize: '26.87px',
+                  }}
+                />
+              </div>
+              <div className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3">
+                <FilterSliderLineClear
+                  className="text-black"
+                  sx={{
+                    fontSize: '19.4px',
+                  }}
+                />
+              </div> */}
+              <div className="flex-1 p-6 m-b-4.5 bg-black/20 flex items-center">
                 <span className="text-4xl font-bold uppercase text-white leading-11">#</span>
                 <input
                   placeholder="ID"

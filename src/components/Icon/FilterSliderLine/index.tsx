@@ -2,11 +2,12 @@ import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon'
 
 const FilterSliderLine = (props: SvgIconProps) => {
   return (
-    <SvgIcon {...props} width="52" height="52" viewBox="0 0 52 52" fill="none">
-      <path
-        d="M23.3333 34H28.6667V31.3333H23.3333V34ZM14 18V20.6667H38V18H14ZM18 27.3333H34V24.6667H18V27.3333Z"
-        fill="currentColor"
-      />
+    <SvgIcon {...props} width="24px" height="16px" viewBox="0 0 24 16">
+      <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+        <g fill="currentColor" fillRule="nonzero">
+          <path d="M9.3333,16 L14.6667,16 L14.6667,13.3333 L9.3333,13.3333 L9.3333,16 Z M0,0 L0,2.6667 L24,2.6667 L24,0 L0,0 Z M4,9.3333 L20,9.3333 L20,6.6667 L4,6.6667 L4,9.3333 Z"></path>
+        </g>
+      </g>
     </SvgIcon>
   )
 }
