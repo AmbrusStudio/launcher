@@ -1,6 +1,22 @@
+export enum NFT_TRAIT {
+  Character = 'Character',
+  Hair = 'Hair',
+  FaceAccessories = 'Face Accessories',
+  Eyes = 'Eyes',
+  Makeup = 'Makeup',
+  Earrings = 'Earrings',
+  Hat = 'Hat',
+  Skin = 'Skin',
+  Tattoo = 'Tattoo',
+  Clothing = 'Clothing',
+  NeckAccessories = 'Neck Accessories',
+  ShoulderAccessories = 'Shoulder Accessories',
+  BackAccessories = 'Back Accessories',
+}
+
 export type NFTIntroduction = {
-  title: string
-  content: string
+  key: NFT_TRAIT
+  value: string
 }
 
 export enum NFTUpgradeInfoState {

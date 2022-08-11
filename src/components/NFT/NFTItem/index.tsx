@@ -9,11 +9,6 @@ import NFTStar from '../NFTStar'
 import NFTTag from '../NFTTag'
 import NFTUpgrade from '../NFTUpgrade'
 
-const NFTCover = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`
 const WrapperInfo = styled.div`
   color: #fff;
   padding: 24px;
@@ -66,7 +61,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft }) => {
       ) : (
         <>
           <div className="lg:w-[600px] lg:h-[600px] overflow-hidden">
-            <NFTCover src={nft.cover} alt={nft.title} />
+            <img className="h-full object-cover w-full" src={nft.cover} alt={nft.title} />
           </div>
           <WrapperInfo>
             <Box
@@ -94,8 +89,8 @@ const NFTItem: FC<NFTItemProps> = ({ nft }) => {
             <NFTInfoContent>
               {nft.introduction.map((j, indexJ: number) => (
                 <section key={indexJ}>
-                  <NFTInfoIntroductionTitle>{j.title}</NFTInfoIntroductionTitle>
-                  <NFTInfoIntroductionContent>{j.content}</NFTInfoIntroductionContent>
+                  <NFTInfoIntroductionTitle>{j.key}</NFTInfoIntroductionTitle>
+                  <NFTInfoIntroductionContent>{j.value}</NFTInfoIntroductionContent>
                 </section>
               ))}
             </NFTInfoContent>

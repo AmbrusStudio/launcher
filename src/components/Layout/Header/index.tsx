@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 
 import { classNames } from '../../../utils'
-import { IconHeaderClose, IconHeaderMenu } from '../../Icon'
+import { IconHeaderClose } from '../../Icon/HeaderClose'
+import { IconHeaderMenu } from '../../Icon/HeaderMenu'
 import { GamesNav } from '../GamesNav'
 import { SiteNav } from '../SiteNav'
 import { SocialNav } from '../SocialNav'
@@ -24,14 +25,14 @@ const MobileMenuWrapper = styled.div<MobileMenuWrapperProps>`
 export function PageHeader() {
   const { account, active, activateBrowserWallet, deactivate } = useEthers()
   const connected = Boolean(account && active)
-  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
-  const [gamesNavOpen, setGamesNavOpen] = React.useState(false)
-  const handleMobileMenuToggle = React.useCallback(() => setMobileMenuOpen((s) => !s), [])
-  const handleGamesNavClick = React.useCallback((open: boolean) => setGamesNavOpen(open), [])
-  const handleWalletConnect = React.useCallback(() => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [gamesNavOpen, setGamesNavOpen] = useState(false)
+  const handleMobileMenuToggle = useCallback(() => setMobileMenuOpen((s) => !s), [])
+  const handleGamesNavClick = useCallback((open: boolean) => setGamesNavOpen(open), [])
+  const handleWalletConnect = useCallback(() => {
     activateBrowserWallet()
   }, [activateBrowserWallet])
-  const handleWalletDisconnect = React.useCallback(() => {
+  const handleWalletDisconnect = useCallback(() => {
     deactivate()
   }, [deactivate])
 
