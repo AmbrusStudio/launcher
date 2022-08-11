@@ -1,12 +1,22 @@
+import { useEthers } from '@usedapp/core'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import {
+  AccountConnectWallet,
+  AccountConnectWalletProps,
   AccountContinueWithMetamask,
   AccountEmailAndAgreement,
   AccountEmailAndAgreementProps,
+  AccountEmailVerify,
+  AccountEmailVerifyProps,
   AccountORSpacer,
+  AccountPasswordInput,
+  AccountPasswordInputProps,
   AccountPopup,
+  AccountSignUpComplete,
+  AccountUsernameInput,
+  AccountUsernameInputProps,
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
 import { useQuery } from '../../../hooks'
@@ -34,17 +44,44 @@ function StepZero(props: StepZeroProps) {
 type StepOneProps = AccountEmailAndAgreementProps
 
 function StepOne(props: StepOneProps) {
-  const { onNextClick } = props
-  return <AccountEmailAndAgreement onNextClick={onNextClick} />
+  return <AccountEmailAndAgreement {...props} />
+}
+
+type StepTwoProps = AccountEmailVerifyProps
+
+function StepTwo(props: StepTwoProps) {
+  return <AccountEmailVerify {...props} />
+}
+
+type StepThreeProps = AccountUsernameInputProps
+
+function StepThree(props: StepThreeProps) {
+  return <AccountUsernameInput {...props} />
+}
+
+type StepFourProps = AccountPasswordInputProps
+
+function StepFour(props: StepFourProps) {
+  return <AccountPasswordInput {...props} />
+}
+
+type StepFiveProps = AccountConnectWalletProps
+
+function StepFive(props: StepFiveProps) {
+  return <AccountConnectWallet {...props} />
 }
 
 const signUpStepInfos: Record<number, StepInfo> = {
   0: { title: 'Sign Up', navBack: false },
   1: { title: 'Enter Email', navBack: true },
   2: { title: 'Verify Your Email', navBack: true },
+  3: { title: 'Choose A Username', navBack: true },
+  4: { title: 'Enter Password', navBack: true },
+  5: { title: 'Connect Wallet', navBack: false },
 }
 
-function getStepInfo(step: number): StepInfo {
+function getStepInfo(step: number, complete?: boolean): StepInfo {
+  if (complete) return { title: 'You’re all set!', navBack: false }
   const info = signUpStepInfos[step]
   if (!info) return { title: 'Sign Up', navBack: false }
   return info
@@ -53,8 +90,17 @@ function getStepInfo(step: number): StepInfo {
 export function SignUp() {
   const query = useQuery()
   const navigate = useNavigate()
+  const { account, active, activateBrowserWallet } = useEthers()
   const [step, setStep] = React.useState(0)
-  const { title, navBack } = getStepInfo(step)
+  const [complete, setComplete] = React.useState(false)
+  const { title, navBack } = getStepInfo(step, complete)
+  const isStep = React.useCallback(
+    (s: number) => {
+      if (complete) return false
+      return step === s
+    },
+    [complete, step]
+  )
   const stepIncrement = React.useCallback(() => setStep((s) => (s += 1)), [])
   const stepDecrement = React.useCallback(() => setStep((s) => (s -= 1)), [])
 
@@ -70,6 +116,17 @@ export function SignUp() {
   const handleSignInClick = React.useCallback(() => {
     navigate(`/account/signin`)
   }, [navigate])
+  const handleConnectWalletClick = React.useCallback(() => {
+    if (!(account && active)) activateBrowserWallet()
+    if (account && active) setComplete(true)
+    console.log('account', account)
+  }, [account, activateBrowserWallet, active])
+  const handleSkipMetamaskClick = React.useCallback(() => {
+    setComplete(true)
+  }, [])
+  const handleCompleteClick = React.useCallback(() => {
+    navigate(`/account/center`)
+  }, [navigate])
 
   console.log(query.get('session'))
 
@@ -77,14 +134,19 @@ export function SignUp() {
     <main id="main">
       <div className="py-192px mx-auto max-w-600px">
         <AccountPopup title={title} showBack={navBack} onNavBackClick={handleNavBackClick}>
-          {step === 0 && (
+          {isStep(0) && (
             <StepZero
               onNextClick={handleNextClick}
               onMetamaskClick={handleMetamaskClick}
               onSignInClick={handleSignInClick}
             />
           )}
-          {step === 1 && <StepOne onNextClick={handleNextClick} />}
+          {isStep(1) && <StepOne onNextClick={handleNextClick} />}
+          {isStep(2) && <StepTwo onNextClick={handleNextClick} />}
+          {isStep(3) && <StepThree onNextClick={handleNextClick} />}
+          {isStep(4) && <StepFour onNextClick={handleNextClick} />}
+          {isStep(5) && <StepFive onMetamaskClick={handleConnectWalletClick} onSkipClick={handleSkipMetamaskClick} />}
+          {complete && <AccountSignUpComplete onCompleteClick={handleCompleteClick} />}
         </AccountPopup>
       </div>
     </main>
