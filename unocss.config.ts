@@ -26,6 +26,7 @@ export default defineConfig({
       ligntGreen: '#CCFF00',
       gameNavImg: 'linear-gradient(180deg, #3F3F3F 0%, #444444 100%)',
       metamask: '#F6851B',
+      tips: '#4A4A4A',
     },
     boxShadow: {
       'nft-sale': '0px 4px 12px rgba(0, 0, 0, 0.15)',
