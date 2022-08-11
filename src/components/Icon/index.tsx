@@ -1,3 +1,4 @@
+export * from './Accept'
 export * from './Add'
 export * from './Ambrus'
 export * from './ArrowDown'
