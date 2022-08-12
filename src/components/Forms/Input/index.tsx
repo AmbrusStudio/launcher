@@ -6,15 +6,17 @@ type InputProps = ReactInputProps &
     className?: string
     label: string
     error?: string
+    labelRightElement?: React.ReactNode
   }
 
 export function Input(props: InputProps) {
-  const { className, id, label, error, ...others } = props
+  const { className, id, label, error, labelRightElement, ...others } = props
   return (
     <label htmlFor={id} className="flex flex-col gap-12px text-grey-dark cursor-pointer">
       <div className="flex flex-row flex-nowrap justify-between items-center text-12px leading-16px">
         <span className="font-bold uppercase">{label}</span>
         {error && <span className="font-normal text-rust">{error}</span>}
+        {!error && labelRightElement && labelRightElement}
       </div>
       <input
         {...others}
