@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 
 import AccountNFT from './pages/account/nft'
+import { SignIn } from './pages/account/signin'
 import { SignUp } from './pages/account/signup'
 import Gallery from './pages/gallery'
 
@@ -9,6 +10,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Gallery />} />
       <Route path="/account/nft" element={<AccountNFT />} />
+      <Route path="/account/signin" element={<SignIn />} />
       <Route path="/account/signup" element={<SignUp />} />
       <Route path="/gallery" element={<Gallery />} />
     </Routes>
