@@ -1,3 +1,5 @@
+import React from 'react'
+
 import { ReactInputProps } from '../../../types'
 import { classNames } from '../../../utils'
 
@@ -7,10 +9,11 @@ type InputProps = ReactInputProps &
     label: string
     error?: string
     labelRightElement?: React.ReactNode
+    forwardedRef: React.ForwardedRef<HTMLInputElement>
   }
 
-export function Input(props: InputProps) {
-  const { className, id, label, error, labelRightElement, ...others } = props
+function LabeledInput(props: InputProps) {
+  const { className, id, label, error, labelRightElement, forwardedRef, ...others } = props
   return (
     <label htmlFor={id} className="flex flex-col gap-12px text-grey-dark cursor-pointer">
       <div className="flex flex-row flex-nowrap justify-between items-center text-12px leading-16px">
@@ -29,7 +32,15 @@ export function Input(props: InputProps) {
           !error && 'border-white hover:border-ligntGreen focus:border-ligntGreen',
           className
         )}
+        ref={forwardedRef}
       />
     </label>
   )
 }
+
+export const Input = React.forwardRef<HTMLInputElement, Omit<InputProps, 'forwardedRef'>>(function renderLabeledInput(
+  props,
+  ref
+) {
+  return <LabeledInput {...props} forwardedRef={ref} />
+})
