@@ -1,43 +1,50 @@
-import { Stack } from '@mui/material'
-import { Box } from '@mui/system'
 import { cloneDeep } from 'lodash'
 import numbro from 'numbro'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { compose } from 'redux'
 
 import logo from '../../assets/images/logo.png'
-import FilterChecked from '../../components/Icon/FilterChecked'
-import FilterClose from '../../components/Icon/FilterClose'
-import FilterOpen from '../../components/Icon/FilterOpen'
-// import FilterSliderClose from '../../components/Icon/FilterSliderClose'
+import DrawerFilter from '../../components/Gallery/DrawerFilter'
+import GalleryFilter from '../../components/Gallery/Filter'
+import GalleryItem from '../../components/Gallery/GalleryItem'
+import ModalGalleryInfo from '../../components/Gallery/ModalGalleryInfo'
+import FilterSliderClose from '../../components/Icon/FilterSliderClose'
 import FilterSliderLine from '../../components/Icon/FilterSliderLine'
-// import FilterSliderLineClear from '../../components/Icon/FilterSliderLineClear'
 import Opensea from '../../components/Icon/Opensea'
 import { PageLayout } from '../../components/Layout'
-import ModalGallery from '../../components/ModalGallery'
-import { GALLERY_INFO, GALLERYS, GALLERYS_FILTERS } from '../../data'
-import { GALLERY, GALLERY_FILTER, GALLERY_FILTER_LIST } from '../../types/gallery'
-
-type FilterList = GALLERY_FILTER_LIST & {
-  is_checked: boolean
-}
-
-type Filter = GALLERY_FILTER & {
-  is_open: boolean
-  list: FilterList[]
-}
+import { GALLERY_INFO, GALLERYS, GALLERYS_FILTERS_STATUS } from '../../data'
+import { Filter, FilterList, GALLERY } from '../../types/gallery'
+import { ToggleFilterCheckedFn } from '../../utils'
 
 function Gallery() {
   // Filter
-  const [filter, setFilter] = useState<Filter[]>([])
-  // gallery filter
+  const [filter, setFilter] = useState<Filter[]>(GALLERYS_FILTERS_STATUS)
+  // Gallery filter
   const [galleryFilter, setGalleryFilter] = useState<GALLERY[]>([])
-  // search by ID
+  // Search by ID
   const [searchId, setSearchId] = useState<string>('')
   // NFT modal
   const [visibleNFT, setVisibleNFT] = useState<boolean>(false)
   // NFT current
   const [currentNFTInfo, setCurrentNFTInfo] = useState<GALLERY>()
+  // Gallery Filter Drawer
+  const [visibleDrawer, setVisibleDrawer] = useState<boolean>(false)
+
+  // Drawer has filter
+  const hasFilter = useMemo(() => {
+    const isChecked = (element: Filter) => (element.list as FilterList[]).find((i) => i.is_checked)
+
+    return filter.some(isChecked)
+  }, [filter])
+
+  // Current gallery data
+  const currentGallery = useMemo(() => {
+    if (searchId) {
+      return galleryFilter.length ? galleryFilter : []
+    } else {
+      return galleryFilter.length ? galleryFilter : GALLERYS
+    }
+  }, [searchId, galleryFilter])
 
   // Toggle Filter children tab
   const toggleFilterTab = useCallback(
@@ -52,65 +59,50 @@ function Gallery() {
     [filter]
   )
 
-  // Toggle FIlter children tag checked
-  const ToggleFilterTagChecked = useCallback(
-    (parentIndex: number, childrenIndex: number) => {
-      const list = cloneDeep(filter)
-      list[parentIndex].list[childrenIndex].is_checked = !list[parentIndex].list[childrenIndex].is_checked
-      setFilter(list)
+  // Handle filter
+  const handleFilter = useCallback(
+    (filter: Filter[]) => {
+      const filterFlat = (list: Filter[]) => list.flatMap((item) => item.list)
+      const filterChecked = (list: FilterList[]) => list.filter((item) => item.is_checked)
+      const filterExtract = (list: FilterList[]) => list.map((item) => item.label)
+
+      // search
+      const gallery = searchId ? GALLERYS.filter((item) => String(item.id).includes(searchId)) : GALLERYS
+
+      // filter
+      const filterResult = compose(filterExtract, filterChecked, filterFlat)(filter)
+
+      // checked
+      const result = filterResult.length
+        ? gallery.filter((item) => item.trait.find((i) => filterResult.includes(i.value)))
+        : gallery
+
+      setGalleryFilter(result)
     },
-    [filter]
+    [searchId]
   )
 
-  // Handle filter
-  const handleFilter = useCallback(() => {
-    const filterFlat = (list: Filter[]) => list.flatMap((item) => item.list)
-    const filterChecked = (list: FilterList[]) => list.filter((item) => item.is_checked)
-    const filterExtract = (list: FilterList[]) => list.map((item) => item.label)
+  // Toggle filter children tag checked - change
+  const ToggleFilterTagCheckedChange = useCallback(
+    (parentIndex: number, childrenIndex: number) => {
+      const list = ToggleFilterCheckedFn(filter, parentIndex, childrenIndex)
+      setFilter(list)
+      handleFilter(list)
+    },
+    [filter, handleFilter]
+  )
 
-    // search
-    const gallery = searchId ? GALLERYS.filter((item) => String(item.id).includes(searchId)) : GALLERYS
-
-    // filter
-    const filterResult = compose(filterExtract, filterChecked, filterFlat)(filter)
-
-    // checked
-    const result = filterResult.length
-      ? gallery.filter((item) => item.trait.find((i) => filterResult.includes(i.value)))
-      : gallery
-
-    setGalleryFilter(result)
-  }, [filter, searchId])
-
-  // initialization filter status
-  const initFilterStatus = useCallback(() => {
-    const filterList: Filter[] = GALLERYS_FILTERS.map((i) => ({
-      ...i,
-      is_open: false,
-      list: i.list.map((j) => ({
-        ...j,
-        is_checked: false,
-      })),
-    }))
-    setFilter(filterList)
+  // Clear filter
+  const ClearFilter = useCallback(() => {
+    setGalleryFilter([])
+    setFilter(GALLERYS_FILTERS_STATUS)
+    setSearchId('')
   }, [])
 
-  const currentGallery = useMemo(() => {
-    if (searchId) {
-      return galleryFilter.length ? galleryFilter : []
-    } else {
-      return galleryFilter.length ? galleryFilter : GALLERYS
-    }
-  }, [searchId, galleryFilter])
-
-  // initialization filter status
+  // Watch searchId change
   useEffect(() => {
-    initFilterStatus()
-  }, [initFilterStatus])
-
-  useEffect(() => {
-    handleFilter()
-  }, [handleFilter])
+    handleFilter(filter)
+  }, [handleFilter, filter])
 
   return (
     <PageLayout>
@@ -144,112 +136,60 @@ function Gallery() {
 
         <div className="flex flex-col xl:flex-row justify-between my-3 xl:my-[48px]">
           <div className="xl:w-[300px]">
-            <div className="flex">
-              <div className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3 xl:hidden">
-                <FilterSliderLine
-                  className="text-black"
-                  sx={{
-                    fontSize: '24px',
-                  }}
-                />
-              </div>
-              {/* <div className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3">
-                <FilterSliderClose
-                  className="text-black"
-                  sx={{
-                    fontSize: '26.87px',
-                  }}
-                />
-              </div>
-              <div className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3">
-                <FilterSliderLineClear
-                  className="text-black"
-                  sx={{
-                    fontSize: '19.4px',
-                  }}
-                />
-              </div> */}
-              <div className="flex-1 p-6 m-b-4.5 bg-black/20 flex items-center">
-                <span className="text-4xl font-bold uppercase text-white leading-11">#</span>
+            <div className="flex m-b-6 xl:m-b-4.5">
+              {hasFilter ? (
+                <div className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3">
+                  <FilterSliderClose
+                    className="text-black"
+                    onClick={() => ClearFilter()}
+                    sx={{
+                      fontSize: '26.87px',
+                    }}
+                  />
+                </div>
+              ) : (
+                <div
+                  className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3 xl:hidden"
+                  onClick={() => setVisibleDrawer(true)}
+                >
+                  <FilterSliderLine
+                    className="text-black"
+                    sx={{
+                      fontSize: '24px',
+                    }}
+                  />
+                </div>
+              )}
+              <div className="flex-1 p-4 xl:p-6 bg-black/20 flex items-center">
+                <span className="text-base xl:text-4xl font-bold uppercase text-white leading-5 xl:leading-11">#</span>
                 <input
                   placeholder="ID"
-                  className="bg-transparent text-white outline-none ml-4 leading-11 uppercase font-bold not-italic text-4xl w-[100%]
-              placeholder:uppercase placeholder:font-bold placeholder:not-italic placeholder:text-4xl placeholder:opacity-20 placeholder:text-white"
+                  className="bg-transparent text-white outline-none ml-2 xl:ml-4 leading-5 xl:leading-11 uppercase font-bold not-italic text-base xl:text-4xl w-[100%]
+              placeholder:uppercase placeholder:font-bold placeholder:not-italic placeholder:text-base xl:placeholder:text-4xl placeholder:opacity-20 placeholder:text-white"
                   value={searchId}
-                  onChange={(e) => setSearchId(e.target.value)}
+                  onChange={(e) => {
+                    setSearchId(e.target.value)
+                  }}
                 />
               </div>
             </div>
-            <div className="border-y-2 border-rust p-y-4 text-xl font-bold leading-6 uppercase text-white">Filters</div>
-            <ul className="select-none">
-              {filter.map((item, index) => (
-                <li key={index}>
-                  <div
-                    className={`border-b-1 border-[#465358] p-y-4 flex items-center justify-between${
-                      item.list.length && ' ' + 'cursor-pointer'
-                    }`}
-                    onClick={() => toggleFilterTab(index)}
-                  >
-                    <span className="text-sm leading-[17px] uppercase text-white">{item.label}</span>
-                    {!!item.list.length && (
-                      <>
-                        {item.is_open ? (
-                          <FilterClose
-                            sx={{
-                              fontSize: '12px',
-                            }}
-                          />
-                        ) : (
-                          <FilterOpen
-                            sx={{
-                              fontSize: '12px',
-                            }}
-                          />
-                        )}
-                      </>
-                    )}
-                  </div>
-                  {item.is_open && (
-                    <ul>
-                      {item.list.map((tab: FilterList, indexJ) => (
-                        <li
-                          key={indexJ}
-                          className="border-b-1 border-[#2A2A2A] bg-black flex items-center justify-between p-3 cursor-pointer"
-                          onClick={() => {
-                            ToggleFilterTagChecked(index, indexJ)
-                          }}
-                        >
-                          <span className="text-sm leading-[17px]">
-                            <span className="text-white">{tab.label}</span>
-                            <span className="text-white/50 m-l-1">
-                              ({numbro(tab.count).format({ thousandSeparated: true })})
-                            </span>
-                          </span>
-                          {tab.is_checked && (
-                            <FilterChecked
-                              className="text-rust"
-                              sx={{
-                                fontSize: '12px',
-                                lineHeight: '14px',
-                              }}
-                            />
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </li>
-              ))}
-            </ul>
+            <div className="hidden xl:block">
+              <div className="border-y-2 border-rust p-y-4 text-xl font-bold leading-6 uppercase text-white">
+                Filters
+              </div>
+              <GalleryFilter
+                filter={filter}
+                toggleFilterTab={toggleFilterTab}
+                ToggleFilterTagChecked={ToggleFilterTagCheckedChange}
+              />
+            </div>
           </div>
           <div>
             <div className="flex items-center	justify-between">
               <div
                 className="p-x-4 p-y-2 rounded-2xl bg-white/10 hidden xl:flex items-center justify-center cursor-pointer"
                 onClick={() => {
-                  setGalleryFilter([])
-                  initFilterStatus()
-                  setSearchId('')
+                  ClearFilter()
                 }}
               >
                 <p className="text-sm font-medium text-center leading-4.25 text-white">Reset Filters</p>
@@ -263,19 +203,14 @@ function Gallery() {
                 {!!currentGallery.length && (
                   <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
                     {currentGallery.map((gallery, index) => (
-                      <div
+                      <GalleryItem
                         key={index}
-                        className="w-[100%] h-[100%] rounded overflow-hidden relative cursor-pointer"
+                        data={gallery}
                         onClick={() => {
                           setCurrentNFTInfo(currentGallery[index])
                           setVisibleNFT(true)
                         }}
-                      >
-                        <img src={gallery.image} className="w-[100%] h-[100%] object-cover" />
-                        <p className="absolute left-3 bottom-3 text-sm font-bold leading-4.25 uppercase text-white">
-                          #{gallery.id}
-                        </p>
-                      </div>
+                      />
                     ))}
                   </div>
                 )}
@@ -285,69 +220,17 @@ function Gallery() {
           </div>
         </div>
       </div>
-      <ModalGallery
-        title="E4C Rangers"
-        id={currentNFTInfo?.id}
-        visible={visibleNFT}
-        toggle={(value) => setVisibleNFT(value)}
-      >
-        <Box
-          className="flex"
-          sx={{
-            background: 'rgba(255, 255, 255, 0.8)',
-            backdropFilter: 'blur(20px)',
-          }}
-        >
-          <div className="lg:w-[600px] lg:h-[600px] overflow-hidden border-4 border-white">
-            <img
-              className="h-full object-cover w-full"
-              src="https://ambrus.s3.amazonaws.com/1657877346203_0.92_206.jpg"
-              alt="logo"
-            />
-          </div>
-          <div className="flex flex-col flex-grow p-9 text-white">
-            <div className="grid grid-cols-2 gap-6">
-              {currentNFTInfo?.trait.map((j, index: number) => (
-                <section key={index}>
-                  <p className="font-normal text-xs leading-[15px] m-0 p-0 not-italic uppercase text-[#a0a4b0]">
-                    {j.key}
-                  </p>
-                  <p className="font-bold text-base leading-5 mx-0 mb-0 mt-1 p-0 text-[#2A2A2A] not-italic">
-                    {j.value}
-                  </p>
-                </section>
-              ))}
-            </div>
 
-            <Stack className="mt-auto" spacing={4.5} direction="row">
-              <a
-                className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
-                href={currentNFTInfo?.opensea_url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Opensea
-              </a>
-              <a
-                className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
-                href={currentNFTInfo?.looksrare_url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Looksrare
-              </a>
-              <a
-                className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
-                href={currentNFTInfo?.etherscan_url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Etherscan
-              </a>
-            </Stack>
-          </div>
-        </Box>
-      </ModalGallery>
+      <ModalGalleryInfo visible={visibleNFT} setVisible={setVisibleNFT} currentNFTInfo={currentNFTInfo} />
+      <DrawerFilter
+        visibleDrawer={visibleDrawer}
+        setVisibleDrawer={setVisibleDrawer}
+        applyFilter={(value) => {
+          handleFilter(value)
+          setFilter(value)
+          setVisibleDrawer(false)
+        }}
+      />
     </PageLayout>
   )
 }

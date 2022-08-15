@@ -289,3 +289,12 @@ export const GALLERYS_FILTERS: GALLERY_FILTER[] = Object.values(NFT_TRAIT).map((
 })
 
 // console.log('GALLERYS_FILTERS', GALLERYS_FILTERS)
+
+export const GALLERYS_FILTERS_STATUS = GALLERYS_FILTERS.map((i) => ({
+  ...i,
+  is_open: false,
+  list: i.list.map((j) => ({
+    ...j,
+    is_checked: false,
+  })),
+}))
