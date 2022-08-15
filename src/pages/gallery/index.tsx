@@ -110,10 +110,12 @@ function Gallery() {
           <div className="lg:w-[300px] lg:shrink-0 m-r-9">
             <div className="flex m-b-6 lg:m-b-4.5">
               {hasFilter ? (
-                <div className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3 lg:hidden">
+                <div
+                  className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3 cursor-pointer lg:hidden"
+                  onClick={() => ClearFilter()}
+                >
                   <FilterSliderClose
                     className="text-black"
-                    onClick={() => ClearFilter()}
                     sx={{
                       fontSize: '26.87px',
                     }}
@@ -121,7 +123,7 @@ function Gallery() {
                 </div>
               ) : (
                 <div
-                  className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3 lg:hidden"
+                  className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3 cursor-pointer lg:hidden"
                   onClick={() => setVisibleDrawer(true)}
                 >
                   <FilterSliderLine
