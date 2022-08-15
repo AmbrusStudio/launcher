@@ -1,11 +1,15 @@
-import { AccountCommonProps, ReactInputProps } from '../../../types'
-import { classNames } from '../../../utils'
+import React from 'react'
+import useDigitInput from 'react-digit-input'
+import { useFormContext } from 'react-hook-form'
+
+import { AccountCommonProps, AccountFormData, ReactInputProps } from '../../../types'
+import { classNames, getFormErrorMessage } from '../../../utils'
 import { Button } from '../../Forms'
 import { AccountTips } from '../Tips'
 
 type InputProps = ReactInputProps & { error?: string }
 
-function Input(props: InputProps) {
+const Input = React.forwardRef<HTMLInputElement, InputProps>(function renderInput(props: InputProps, ref) {
   const { className, error, ...others } = props
   return (
     <input
@@ -20,20 +24,49 @@ function Input(props: InputProps) {
         !error && 'border-grey-medium hover:border-ligntGreen focus:border-ligntGreen',
         className
       )}
+      required
       {...others}
+      ref={ref}
     />
   )
-}
+})
 
 function DigitInputs() {
+  const {
+    register,
+    setValue,
+    formState: { errors },
+  } = useFormContext<AccountFormData>()
+  const [code, setCode] = React.useState('')
+  const handleCodeChange = React.useCallback(
+    (code: string) => {
+      setCode(code)
+      setValue('verifyCode', code)
+    },
+    [setValue]
+  )
+  const digits = useDigitInput({
+    acceptedCharacters: /^[0-9]$/,
+    length: 6,
+    value: code,
+    onChange: handleCodeChange,
+  })
+  const error = getFormErrorMessage(errors.verifyCode)
+
   return (
     <div className="grid grid-cols-6 gap-24px px-24px">
-      <Input />
-      <Input />
-      <Input />
-      <Input />
-      <Input />
-      <Input />
+      <Input autoFocus error={error} {...digits[0]} />
+      <Input error={error} {...digits[1]} />
+      <Input error={error} {...digits[2]} />
+      <Input error={error} {...digits[3]} />
+      <Input error={error} {...digits[4]} />
+      <Input error={error} {...digits[5]} />
+      <input
+        id="verify-code"
+        type="text"
+        className="hidden"
+        {...register('verifyCode', { required: true, minLength: 6, maxLength: 6, pattern: new RegExp('^[0-9]{6}$') })}
+      />
     </div>
   )
 }
@@ -41,22 +74,22 @@ function DigitInputs() {
 export type AccountEmailVerifyProps = AccountCommonProps
 
 export function AccountEmailVerify(props: AccountEmailVerifyProps) {
-  const { onNextClick } = props
+  const { onNextButtonSubmit } = props
 
   return (
-    <div className="flex flex-col gap-36px">
+    <form className="flex flex-col gap-36px" onSubmit={onNextButtonSubmit}>
       <AccountTips>
         <p>We have sent a verification code to your email address. Please enter it below.</p>
       </AccountTips>
       <DigitInputs />
       <div className="flex flex-col gap-24px">
-        <Button variant="primary" onClick={onNextClick}>
+        <Button variant="primary" type="submit">
           Next
         </Button>
         <Button variant="secondary" disabled>
           Send again (52s)
         </Button>
       </div>
-    </div>
+    </form>
   )
 }

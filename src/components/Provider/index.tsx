@@ -1,6 +1,7 @@
 import { Config, DAppProvider, Mainnet, Rinkeby } from '@usedapp/core'
 import { getDefaultProvider } from 'ethers'
 import { ReactNode } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
 
 type ProvidersProps = {
   children: ReactNode
@@ -15,5 +16,10 @@ const config: Config = {
 }
 
 export function Provider({ children }: ProvidersProps) {
-  return <DAppProvider config={config}>{children}</DAppProvider>
+  const formMethods = useForm()
+  return (
+    <DAppProvider config={config}>
+      <FormProvider {...formMethods}>{children}</FormProvider>
+    </DAppProvider>
+  )
 }

@@ -1,5 +1,6 @@
 import { useEthers } from '@usedapp/core'
 import React from 'react'
+import { useFormContext } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
 import {
@@ -20,18 +21,18 @@ import {
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
 import { useQuery } from '../../../hooks'
-import { StepInfo } from '../../../types'
+import { AccountFormData, AccountStepCommonProps, StepInfo } from '../../../types'
 
-type StepZeroProps = AccountEmailAndAgreementProps & {
+type StepZeroProps = AccountStepCommonProps & {
   onMetamaskClick: React.MouseEventHandler<HTMLButtonElement>
   onSignInClick: React.MouseEventHandler<HTMLButtonElement>
 }
 
 function StepZero(props: StepZeroProps) {
-  const { onMetamaskClick, onSignInClick, onNextClick } = props
+  const { onSubmit, onMetamaskClick, onSignInClick } = props
   return (
     <div className="flex flex-col gap-24px">
-      <AccountEmailAndAgreement onNextClick={onNextClick} />
+      <AccountEmailAndAgreement onNextButtonSubmit={onSubmit} />
       <AccountORSpacer />
       <AccountContinueWithMetamask onClick={onMetamaskClick} />
       <Button variant="secondary" onClick={onSignInClick}>
@@ -91,6 +92,8 @@ export function SignUp() {
   const query = useQuery()
   const navigate = useNavigate()
   const { account, active, activateBrowserWallet } = useEthers()
+  const { watch, trigger, handleSubmit } = useFormContext<AccountFormData>()
+
   const [step, setStep] = React.useState(0)
   const [complete, setComplete] = React.useState(false)
   const { title, navBack } = getStepInfo(step, complete)
@@ -107,28 +110,73 @@ export function SignUp() {
   const handleNavBackClick = React.useCallback(() => {
     stepDecrement()
   }, [stepDecrement])
-  const handleNextClick = React.useCallback(() => {
-    stepIncrement()
-  }, [stepIncrement])
   const handleMetamaskClick = React.useCallback(() => {
     stepIncrement()
   }, [stepIncrement])
   const handleSignInClick = React.useCallback(() => {
     navigate(`/account/signin`)
   }, [navigate])
-  const handleConnectWalletClick = React.useCallback(() => {
+  const handleBindWalletClick = React.useCallback(() => {
     if (!(account && active)) activateBrowserWallet()
     if (account && active) setComplete(true)
     console.log('account', account)
   }, [account, activateBrowserWallet, active])
-  const handleSkipMetamaskClick = React.useCallback(() => {
+  const handleSkipBindWalletClick = React.useCallback(() => {
     setComplete(true)
   }, [])
   const handleCompleteClick = React.useCallback(() => {
     navigate(`/account/center`)
   }, [navigate])
 
-  console.log(query.get('session'))
+  /** For step 0, sign up with email directly. */
+  const handleEmailSignUpSubmit = React.useCallback(async (data: AccountFormData) => {
+    console.log('handleEmailSignUpSubmit', data)
+    setStep(2)
+  }, [])
+  /** For step 1, bind email after sign up with Metamask. */
+  const handleEmailBindSubmit = React.useCallback(
+    async (data: AccountFormData) => {
+      console.log('handleEmailBindSubmit', data)
+      stepIncrement()
+    },
+    [stepIncrement]
+  )
+  /** For step 2, verify email with 6 digits code. */
+  const handleEmailVerifyCodeSubmit = React.useCallback(
+    async (data: AccountFormData) => {
+      const check = await trigger('verifyCode')
+      if (!check) return
+      console.log('handleEmailVerifyCodeSubmit', data)
+      stepIncrement()
+    },
+    [stepIncrement, trigger]
+  )
+  /** For step 3, set an username. */
+  const handleUsernameSubmit = React.useCallback(
+    async (data: AccountFormData) => {
+      const check = await trigger('username')
+      if (!check) return
+      console.log('handleUsernameSubmit', data)
+      stepIncrement()
+    },
+    [stepIncrement, trigger]
+  )
+  /** For step 4, set a password */
+  const handlePasswordSubmit = React.useCallback(
+    async (data: AccountFormData) => {
+      console.log('handleUsernameSubmit', data)
+      stepIncrement()
+    },
+    [stepIncrement]
+  )
+
+  console.log('session', query.get('session'))
+
+  React.useEffect(() => {
+    // TODO: remove before prodction
+    const subscription = watch((value, { name, type }) => console.log('watch', name, type, value))
+    return () => subscription.unsubscribe()
+  }, [watch])
 
   return (
     <main id="main">
@@ -136,16 +184,16 @@ export function SignUp() {
         <AccountPopup title={title} showBack={navBack} onNavBackClick={handleNavBackClick}>
           {isStep(0) && (
             <StepZero
-              onNextClick={handleNextClick}
+              onSubmit={handleSubmit(handleEmailSignUpSubmit)}
               onMetamaskClick={handleMetamaskClick}
               onSignInClick={handleSignInClick}
             />
           )}
-          {isStep(1) && <StepOne onNextClick={handleNextClick} />}
-          {isStep(2) && <StepTwo onNextClick={handleNextClick} />}
-          {isStep(3) && <StepThree onNextClick={handleNextClick} />}
-          {isStep(4) && <StepFour onNextClick={handleNextClick} />}
-          {isStep(5) && <StepFive onMetamaskClick={handleConnectWalletClick} onSkipClick={handleSkipMetamaskClick} />}
+          {isStep(1) && <StepOne onNextButtonSubmit={handleSubmit(handleEmailBindSubmit)} />}
+          {isStep(2) && <StepTwo onNextButtonSubmit={handleSubmit(handleEmailVerifyCodeSubmit)} />}
+          {isStep(3) && <StepThree onNextButtonSubmit={handleSubmit(handleUsernameSubmit)} />}
+          {isStep(4) && <StepFour onNextButtonSubmit={handleSubmit(handlePasswordSubmit)} />}
+          {isStep(5) && <StepFive onMetamaskClick={handleBindWalletClick} onSkipClick={handleSkipBindWalletClick} />}
           {complete && <AccountSignUpComplete onCompleteClick={handleCompleteClick} />}
         </AccountPopup>
       </div>

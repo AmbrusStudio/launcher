@@ -4,5 +4,19 @@ export type StepInfo = {
 }
 
 export type AccountCommonProps = {
-  onNextClick: React.MouseEventHandler<HTMLButtonElement>
+  onNextButtonSubmit: React.FormEventHandler<HTMLFormElement>
+}
+
+export type AccountStepCommonProps = {
+  onSubmit: React.FormEventHandler<HTMLFormElement>
+}
+
+export type AccountFormData = {
+  email: string
+  agreement: boolean
+  newsletter?: boolean
+  verifyCode: string
+  username: string
+  password: string
+  confirmPassword: string
 }

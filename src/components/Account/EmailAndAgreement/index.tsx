@@ -1,23 +1,49 @@
-import { AccountCommonProps } from '../../../types'
+import { useFormContext } from 'react-hook-form'
+
+import { AccountCommonProps, AccountFormData } from '../../../types'
+import { getFormErrorMessage } from '../../../utils'
 import { Button, Checkbox, Input } from '../../Forms'
 
 export type AccountEmailAndAgreementProps = AccountCommonProps
 
 export function AccountEmailAndAgreement(props: AccountEmailAndAgreementProps) {
-  const { onNextClick } = props
+  const { onNextButtonSubmit } = props
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<AccountFormData>()
+
   return (
-    <div className="flex flex-col gap-24px">
-      <Input id="email" label="Email" placeholder="example@gmail.com" />
+    <form className="flex flex-col gap-24px" onSubmit={onNextButtonSubmit}>
+      <Input
+        id="email"
+        type="email"
+        label="Email"
+        placeholder="example@gmail.com"
+        required
+        {...register('email', { required: true })}
+        error={getFormErrorMessage(errors.email)}
+      />
       <div className="flex flex-col gap-12px">
-        <Checkbox id="agreement">
+        <Checkbox
+          id="agreement"
+          {...register('agreement', { required: true })}
+          error={getFormErrorMessage(errors.agreement)}
+        >
           Check this box after you read and agree to our <a href="#">Privacy Policy</a> and{' '}
           <a href="#">User Agreement</a>
         </Checkbox>
-        <Checkbox id="newsletter">Check this box to subscribe to your newsletter</Checkbox>
+        <Checkbox
+          id="newsletter"
+          {...register('newsletter', { value: false })}
+          error={getFormErrorMessage(errors.newsletter)}
+        >
+          Check this box to subscribe to your newsletter
+        </Checkbox>
       </div>
-      <Button variant="primary" onClick={onNextClick}>
+      <Button variant="primary" type="submit">
         Next
       </Button>
-    </div>
+    </form>
   )
 }

@@ -1,4 +1,7 @@
-import { AccountCommonProps } from '../../../types'
+import { useFormContext } from 'react-hook-form'
+
+import { AccountCommonProps, AccountFormData } from '../../../types'
+import { getFormErrorMessage } from '../../../utils'
 import { Button, Input } from '../../Forms'
 import { AccountTips } from '../Tips'
 
@@ -7,9 +10,16 @@ export type AccountPasswordInputProps = AccountCommonProps & {
 }
 
 export function AccountPasswordInput(props: AccountPasswordInputProps) {
-  const { isNew, onNextClick } = props
+  const { isNew, onNextButtonSubmit } = props
+  const {
+    register,
+    watch,
+    formState: { errors },
+  } = useFormContext<AccountFormData>()
+  const currentPassword = watch('password', '')
+
   return (
-    <div className="flex flex-col gap-24px">
+    <form className="flex flex-col gap-24px" onSubmit={onNextButtonSubmit}>
       <AccountTips>
         <ul>
           <li>Must contain at least 1 letter and 1 number.</li>
@@ -23,6 +33,18 @@ export function AccountPasswordInput(props: AccountPasswordInputProps) {
         autoComplete="on"
         minLength={8}
         required
+        {...register('password', {
+          required: 'You must specify a password.',
+          minLength: {
+            value: 8,
+            message: 'Password must have at least 8 characters.',
+          },
+          pattern: {
+            value: /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/,
+            message: 'Password must contain at least 1 letter and 1 number.',
+          },
+        })}
+        error={getFormErrorMessage(errors.password)}
       />
       <Input
         id="confirm-password"
@@ -31,10 +53,14 @@ export function AccountPasswordInput(props: AccountPasswordInputProps) {
         autoComplete="current-password"
         minLength={8}
         required
+        {...register('confirmPassword', {
+          validate: (value) => value === currentPassword || 'The passwords does not match.',
+        })}
+        error={getFormErrorMessage(errors.confirmPassword)}
       />
-      <Button variant="primary" onClick={onNextClick}>
+      <Button variant="primary" type="submit">
         Next
       </Button>
-    </div>
+    </form>
   )
 }
