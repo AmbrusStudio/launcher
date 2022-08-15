@@ -164,7 +164,7 @@ export function SignUp() {
   /** For step 4, set a password */
   const handlePasswordSubmit = React.useCallback(
     async (data: AccountSignUpFormData) => {
-      console.log('handleUsernameSubmit', data)
+      console.log('handlePasswordSubmit', data)
       stepIncrement()
     },
     [stepIncrement]
