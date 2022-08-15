@@ -25,3 +25,10 @@ export type AccountSignInFormData = {
   email: string
   password: string
 }
+
+export type AccountForgotPasswordFormData = {
+  email: string
+  verifyCode: string
+  password: string
+  confirmPassword: string
+}

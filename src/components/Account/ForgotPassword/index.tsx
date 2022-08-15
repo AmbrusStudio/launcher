@@ -1,16 +1,30 @@
-import { AccountCommonProps } from '../../../types'
+import { useFormContext } from 'react-hook-form'
+
+import { AccountCommonProps, AccountForgotPasswordFormData } from '../../../types'
+import { getFormErrorMessage } from '../../../utils'
 import { Button, Input } from '../../Forms'
 
 export type AccountForgotPasswordProps = AccountCommonProps
 
 export function AccountForgotPassword(props: AccountForgotPasswordProps) {
-  const { onNextClick } = props
+  const { onNextButtonSubmit } = props
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<AccountForgotPasswordFormData>()
   return (
-    <div className="flex flex-col gap-24px">
-      <Input id="email" label="Email" placeholder="example@gmail.com" required />
-      <Button variant="primary" onClick={onNextClick}>
+    <form className="flex flex-col gap-24px" onSubmit={onNextButtonSubmit}>
+      <Input
+        id="email"
+        label="Email"
+        placeholder="example@gmail.com"
+        required
+        {...register('email', { required: true })}
+        error={getFormErrorMessage(errors.email)}
+      />
+      <Button variant="primary" type="submit">
         Next
       </Button>
-    </div>
+    </form>
   )
 }

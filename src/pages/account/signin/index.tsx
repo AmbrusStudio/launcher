@@ -1,4 +1,5 @@
 import React from 'react'
+import { useFormContext } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
 import {
@@ -19,7 +20,7 @@ import {
   AccountWallletSignIn,
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
-import { StepInfo } from '../../../types'
+import { AccountForgotPasswordFormData, AccountSignInFormData, StepInfo } from '../../../types'
 
 type StepZeroProps = AccountUsernameAndPasswordProps & {
   onMetamaskClick: React.MouseEventHandler<HTMLButtonElement>
@@ -27,10 +28,10 @@ type StepZeroProps = AccountUsernameAndPasswordProps & {
 }
 
 function StepZero(props: StepZeroProps) {
-  const { onMetamaskClick, onSignUpClick, onFogotPasswordClick, onNextClick } = props
+  const { onMetamaskClick, onSignUpClick, onFogotPasswordClick, onNextButtonSubmit } = props
   return (
     <div className="flex flex-col gap-24px">
-      <AccountUsernameAndPassword onFogotPasswordClick={onFogotPasswordClick} onNextClick={onNextClick} />
+      <AccountUsernameAndPassword onFogotPasswordClick={onFogotPasswordClick} onNextButtonSubmit={onNextButtonSubmit} />
       <AccountORSpacer />
       <AccountContinueWithMetamask onClick={onMetamaskClick} />
       <Button variant="secondary" onClick={onSignUpClick}>
@@ -81,6 +82,9 @@ function getStepInfo(step: number, complete?: boolean): StepInfo {
 
 export function SignIn() {
   const navigate = useNavigate()
+  const { handleSubmit: handleSignInSubmit } = useFormContext<AccountSignInFormData>()
+  const { trigger, handleSubmit: handleFogotPasswordSubmit } = useFormContext<AccountForgotPasswordFormData>()
+
   const [step, setStep] = React.useState(0)
   const [wallet, setWallet] = React.useState(false)
   const [complete, setComplete] = React.useState(false)
@@ -104,9 +108,6 @@ export function SignIn() {
   const handleToMetamaskClick = React.useCallback(() => {
     setWallet(true)
   }, [])
-  const handleNormalSignInClick = React.useCallback(() => {
-    setComplete(true)
-  }, [])
   const handleMetamaskSignInClick = React.useCallback(() => {
     setComplete(true)
   }, [])
@@ -117,21 +118,53 @@ export function SignIn() {
     navigate(`/account/signup`)
   }, [navigate])
 
+  const handleNormalSignInSubmit = React.useCallback(async (data: AccountSignInFormData) => {
+    console.log('handleNormalSignInSubmit', data)
+    setComplete(true)
+  }, [])
+
+  /** For step 1, send email for verify user can reset password. */
+  const handleSendEmailSubmit = React.useCallback(
+    async (data: AccountForgotPasswordFormData) => {
+      console.log('handleNormalSignInSubmit', data)
+      stepIncrement()
+    },
+    [stepIncrement]
+  )
+  /** For step 2, verify email with 6 digits code. */
+  const handleEmailVerifyCodeSubmit = React.useCallback(
+    async (data: AccountForgotPasswordFormData) => {
+      const check = await trigger('verifyCode')
+      if (!check) return
+      console.log('handleEmailVerifyCodeSubmit', data)
+      stepIncrement()
+    },
+    [stepIncrement, trigger]
+  )
+  /** For step 3, set a new password */
+  const handleNewPasswordSubmit = React.useCallback(
+    async (data: AccountForgotPasswordFormData) => {
+      console.log('handleNewPasswordSubmit', data)
+      stepIncrement()
+    },
+    [stepIncrement]
+  )
+
   return (
     <main id="main">
       <div className="py-192px mx-auto max-w-600px">
         <AccountPopup title={title} showBack={navBack} onNavBackClick={handleNavBackClick}>
           {isStep(0) && (
             <StepZero
+              onNextButtonSubmit={handleSignInSubmit(handleNormalSignInSubmit)}
               onFogotPasswordClick={handleNextClick}
-              onNextClick={handleNormalSignInClick}
               onMetamaskClick={handleToMetamaskClick}
               onSignUpClick={handleSignUpClick}
             />
           )}
-          {isStep(1) && <StepOne onNextClick={handleNextClick} />}
-          {isStep(2) && <StepTwo onNextClick={handleNextClick} />}
-          {isStep(3) && <StepThree onNextClick={handleNextClick} />}
+          {isStep(1) && <StepOne onNextButtonSubmit={handleFogotPasswordSubmit(handleSendEmailSubmit)} />}
+          {isStep(2) && <StepTwo onNextButtonSubmit={handleFogotPasswordSubmit(handleEmailVerifyCodeSubmit)} />}
+          {isStep(3) && <StepThree onNextButtonSubmit={handleFogotPasswordSubmit(handleNewPasswordSubmit)} />}
           {isStep(4) && <StepFour onCompleteClick={handleResetPasswordCompleteClick} />}
           {!complete && wallet && (
             <AccountWallletSignIn brandName="E4C Fallen Arena" onMetamaskClick={handleMetamaskSignInClick} />

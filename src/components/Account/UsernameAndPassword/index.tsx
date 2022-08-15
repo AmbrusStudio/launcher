@@ -1,4 +1,7 @@
-import { AccountCommonProps } from '../../../types'
+import { useFormContext } from 'react-hook-form'
+
+import { AccountCommonProps, AccountSignInFormData } from '../../../types'
+import { getFormErrorMessage } from '../../../utils'
 import { Button, Input } from '../../Forms'
 
 export type AccountUsernameAndPasswordProps = AccountCommonProps & FogotPasswordProps
@@ -17,10 +20,22 @@ function FogotPassword(props: FogotPasswordProps) {
 }
 
 export function AccountUsernameAndPassword(props: AccountUsernameAndPasswordProps) {
-  const { onNextClick, onFogotPasswordClick } = props
+  const { onNextButtonSubmit, onFogotPasswordClick } = props
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<AccountSignInFormData>()
+
   return (
-    <div className="flex flex-col gap-24px">
-      <Input id="email" label="Username/Email" placeholder="example@gmail.com" required />
+    <form className="flex flex-col gap-24px" onSubmit={onNextButtonSubmit}>
+      <Input
+        id="email"
+        label="Username/Email"
+        placeholder="example@gmail.com"
+        required
+        {...register('email', { required: true })}
+        error={getFormErrorMessage(errors.email)}
+      />
       <Input
         id="password"
         type="password"
@@ -30,10 +45,11 @@ export function AccountUsernameAndPassword(props: AccountUsernameAndPasswordProp
         placeholder="Enter password here"
         labelRightElement={<FogotPassword onFogotPasswordClick={onFogotPasswordClick} />}
         required
+        {...register('password', { required: 'You must specify a password.' })}
       />
-      <Button variant="primary" onClick={onNextClick}>
+      <Button variant="primary" type="submit">
         Next
       </Button>
-    </div>
+    </form>
   )
 }
