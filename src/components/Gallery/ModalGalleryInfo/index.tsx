@@ -14,13 +14,7 @@ interface ModalGalleryInfoProps {
 const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ currentNFTInfo, visible, setVisible }) => {
   return (
     <ModalGallery title="E4C Rangers" id={currentNFTInfo?.id} visible={visible} toggle={(value) => setVisible(value)}>
-      <Box
-        className="flex flex-1 lg:flex-none flex-col lg:flex-row overflow-hidden lg:overflow-auto"
-        sx={{
-          background: 'rgba(255, 255, 255, 0.8)',
-          backdropFilter: 'blur(20px)',
-        }}
-      >
+      <Box className="flex flex-1 lg:flex-none flex-col lg:flex-row overflow-hidden lg:overflow-auto bg-white lg:bg-white/80 backdrop-blur-[20px] transition-none">
         <div className="lg:w-[600px] lg:h-[600px] overflow-hidden border-4 border-white">
           <img
             className="h-full object-cover w-full"

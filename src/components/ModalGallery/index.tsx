@@ -21,6 +21,7 @@ const ModalGallery: FC<ModalGalleryProps> = ({ visible, title, toggle, close = t
       fullScreen={!matchesSM}
       open={visible}
       onClose={() => toggle(false)}
+      transitionDuration={0}
       sx={{
         '.MuiBackdrop-root': {
           backgroundColor: 'transparent',
@@ -36,7 +37,7 @@ const ModalGallery: FC<ModalGalleryProps> = ({ visible, title, toggle, close = t
         },
       }}
     >
-      <div className="w-full flex items-center justify-between text-white bg-[#2A2A2A] lg:bg-[rgba(42, 42, 42, 0.8)] p-x-4 p-y-4 lg:p-y-6">
+      <div className="w-full flex items-center justify-between text-white bg-[#2A2A2A] lg:bg-[#2A2A2A]/80 p-x-4 p-y-4 lg:p-y-6">
         <span className="font-bold not-italic uppercase text-base leading-5 lg:text-4xl lg:leading-11">
           {title}
           <span className="ml-0 lg:ml-9 block lg:inline">#{id}</span>
