@@ -1,7 +1,5 @@
-import { cloneDeep } from 'lodash'
 import numbro from 'numbro'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { compose } from 'redux'
+import { useCallback, useMemo, useState } from 'react'
 
 import logo from '../../assets/images/logo.png'
 import DrawerFilter from '../../components/Gallery/DrawerFilter'
@@ -14,7 +12,7 @@ import Opensea from '../../components/Icon/Opensea'
 import { PageLayout } from '../../components/Layout'
 import { GALLERY_INFO, GALLERYS, GALLERYS_FILTERS_STATUS } from '../../data'
 import { Filter, FilterList, GALLERY } from '../../types/gallery'
-import { ToggleFilterCheckedFn } from '../../utils'
+import { handleFilterFn, toggleFilterCheckedFn, toggleFilterOpenFn } from '../../utils'
 
 function Gallery() {
   // Filter
@@ -46,50 +44,29 @@ function Gallery() {
     }
   }, [searchId, galleryFilter])
 
-  // Toggle Filter children tab
+  // Toggle Filter children open
   const toggleFilterTab = useCallback(
     (index: number) => {
-      if (!filter[index].list.length) {
-        return
-      }
-      const list = cloneDeep(filter)
-      list[index].is_open = !list[index].is_open
-      setFilter(list)
+      const list = toggleFilterOpenFn(filter, index)
+      list && setFilter(list)
     },
     [filter]
   )
 
   // Handle filter
-  const handleFilter = useCallback(
-    (filter: Filter[]) => {
-      const filterFlat = (list: Filter[]) => list.flatMap((item) => item.list)
-      const filterChecked = (list: FilterList[]) => list.filter((item) => item.is_checked)
-      const filterExtract = (list: FilterList[]) => list.map((item) => item.label)
-
-      // search
-      const gallery = searchId ? GALLERYS.filter((item) => String(item.id).includes(searchId)) : GALLERYS
-
-      // filter
-      const filterResult = compose(filterExtract, filterChecked, filterFlat)(filter)
-
-      // checked
-      const result = filterResult.length
-        ? gallery.filter((item) => item.trait.find((i) => filterResult.includes(i.value)))
-        : gallery
-
-      setGalleryFilter(result)
-    },
-    [searchId]
-  )
+  const handleFilter = useCallback((filter: Filter[], searchId: string) => {
+    const result = handleFilterFn(filter, searchId)
+    setGalleryFilter(result)
+  }, [])
 
   // Toggle filter children tag checked - change
   const ToggleFilterTagCheckedChange = useCallback(
     (parentIndex: number, childrenIndex: number) => {
-      const list = ToggleFilterCheckedFn(filter, parentIndex, childrenIndex)
+      const list = toggleFilterCheckedFn(filter, parentIndex, childrenIndex)
       setFilter(list)
-      handleFilter(list)
+      handleFilter(list, searchId)
     },
-    [filter, handleFilter]
+    [filter, handleFilter, searchId]
   )
 
   // Clear filter
@@ -98,11 +75,6 @@ function Gallery() {
     setFilter(GALLERYS_FILTERS_STATUS)
     setSearchId('')
   }, [])
-
-  // Watch searchId change
-  useEffect(() => {
-    handleFilter(filter)
-  }, [handleFilter, filter])
 
   return (
     <PageLayout>
@@ -169,6 +141,7 @@ function Gallery() {
                   value={searchId}
                   onChange={(e) => {
                     setSearchId(e.target.value)
+                    handleFilter(filter, e.target.value)
                   }}
                 />
               </div>
@@ -226,7 +199,7 @@ function Gallery() {
         visibleDrawer={visibleDrawer}
         setVisibleDrawer={setVisibleDrawer}
         applyFilter={(value) => {
-          handleFilter(value)
+          handleFilter(value, searchId)
           setFilter(value)
           setVisibleDrawer(false)
         }}

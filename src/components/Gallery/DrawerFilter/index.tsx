@@ -1,12 +1,11 @@
 import SwipeableDrawer from '@mui/material/SwipeableDrawer'
-import { cloneDeep } from 'lodash'
 import { Dispatch, FC, SetStateAction, useCallback, useState } from 'react'
 
 import GalleryFilter from '../../../components/Gallery/Filter'
 import FilterSliderLineClear from '../../../components/Icon/FilterSliderLineClear'
 import { GALLERYS_FILTERS_STATUS } from '../../../data'
 import { Filter } from '../../../types/gallery'
-import { ToggleFilterCheckedFn } from '../../../utils'
+import { toggleFilterCheckedFn, toggleFilterOpenFn } from '../../../utils'
 
 interface DrawerFilterProps {
   readonly visibleDrawer: boolean
@@ -24,12 +23,8 @@ const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, setVisibleDrawer, 
   // Toggle Filter children tab
   const toggleFilterTab = useCallback(
     (index: number) => {
-      if (!filter[index].list.length) {
-        return
-      }
-      const list = cloneDeep(filter)
-      list[index].is_open = !list[index].is_open
-      setFilter(list)
+      const list = toggleFilterOpenFn(filter, index)
+      list && setFilter(list)
     },
     [filter]
   )
@@ -37,7 +32,7 @@ const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, setVisibleDrawer, 
   // Toggle filter children tag checked
   const ToggleFilterTagChecked = useCallback(
     (parentIndex: number, childrenIndex: number) => {
-      const list = ToggleFilterCheckedFn(filter, parentIndex, childrenIndex)
+      const list = toggleFilterCheckedFn(filter, parentIndex, childrenIndex)
       setFilter(list)
     },
     [filter]
