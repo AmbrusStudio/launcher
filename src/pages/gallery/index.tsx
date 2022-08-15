@@ -138,7 +138,7 @@ function Gallery() {
           <div className="xl:w-[300px]">
             <div className="flex m-b-6 xl:m-b-4.5">
               {hasFilter ? (
-                <div className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3">
+                <div className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3 xl:hidden">
                   <FilterSliderClose
                     className="text-black"
                     onClick={() => ClearFilter()}
