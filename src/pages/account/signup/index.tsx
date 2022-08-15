@@ -21,18 +21,18 @@ import {
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
 import { useQuery } from '../../../hooks'
-import { AccountSignUpFormData, AccountStepCommonProps, StepInfo } from '../../../types'
+import { AccountSignUpFormData, StepInfo } from '../../../types'
 
-type StepZeroProps = AccountStepCommonProps & {
+type StepZeroProps = AccountEmailAndAgreementProps & {
   onMetamaskClick: React.MouseEventHandler<HTMLButtonElement>
   onSignInClick: React.MouseEventHandler<HTMLButtonElement>
 }
 
 function StepZero(props: StepZeroProps) {
-  const { onSubmit, onMetamaskClick, onSignInClick } = props
+  const { onNextButtonSubmit, onMetamaskClick, onSignInClick } = props
   return (
     <div className="flex flex-col gap-24px">
-      <AccountEmailAndAgreement onNextButtonSubmit={onSubmit} />
+      <AccountEmailAndAgreement onNextButtonSubmit={onNextButtonSubmit} />
       <AccountORSpacer />
       <AccountContinueWithMetamask onClick={onMetamaskClick} />
       <Button variant="secondary" onClick={onSignInClick}>
@@ -184,7 +184,7 @@ export function SignUp() {
         <AccountPopup title={title} showBack={navBack} onNavBackClick={handleNavBackClick}>
           {isStep(0) && (
             <StepZero
-              onSubmit={handleSubmit(handleEmailSignUpSubmit)}
+              onNextButtonSubmit={handleSubmit(handleEmailSignUpSubmit)}
               onMetamaskClick={handleMetamaskClick}
               onSignInClick={handleSignInClick}
             />
