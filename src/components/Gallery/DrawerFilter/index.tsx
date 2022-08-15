@@ -1,5 +1,5 @@
 import SwipeableDrawer from '@mui/material/SwipeableDrawer'
-import { Dispatch, FC, SetStateAction, useCallback, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useCallback, useEffect, useState } from 'react'
 
 import GalleryFilter from '../../../components/Gallery/Filter'
 import FilterSliderLineClear from '../../../components/Icon/FilterSliderLineClear'
@@ -37,6 +37,15 @@ const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, setVisibleDrawer, 
     },
     [filter]
   )
+
+  // Watch visible, false initialization
+  useEffect(() => {
+    if (!visibleDrawer) {
+      setTimeout(() => {
+        setFilter(GALLERYS_FILTERS_STATUS)
+      }, 300)
+    }
+  }, [visibleDrawer])
 
   return (
     <SwipeableDrawer
