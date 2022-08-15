@@ -106,14 +106,14 @@ function Gallery() {
 
   return (
     <PageLayout>
-      <div className="max-w-[1312px] m-x-auto mt-[68px] xl:mt-[188px] p-6">
+      <div className="max-w-[1312px] m-x-auto mt-[68px] lg:mt-[98px] xl:mt-[188px] p-6">
         <div className="flex justify-between">
-          <img src={logo} className="hidden xl:block w-[60px] h-[60px] mr-3 mt-[9px]" />
+          <img src={logo} className="hidden lg:block w-[60px] h-[60px] mr-3 mt-[9px]" />
           <div>
-            <p className="text-[32px] xl:text-[64px] leading-[39px] xl:leading-[78px] font-bold uppercase text-white">
+            <p className="text-[32px] lg:text-[64px] leading-[39px] lg:leading-[78px] font-bold uppercase text-white">
               {GALLERY_INFO.title}
             </p>
-            <p className="text-[32px] xl:text-[64px] leading-[39px] xl:leading-[78px] font-bold uppercase text-rust">
+            <p className="text-[32px] lg:text-[64px] leading-[39px] lg:leading-[78px] font-bold uppercase text-rust">
               {GALLERY_INFO.description}
             </p>
           </div>
@@ -134,11 +134,11 @@ function Gallery() {
           </a>
         </div>
 
-        <div className="flex flex-col xl:flex-row justify-between my-3 xl:my-[48px]">
-          <div className="xl:w-[300px]">
-            <div className="flex m-b-6 xl:m-b-4.5">
+        <div className="flex flex-col lg:flex-row justify-between my-3 lg:my-[48px]">
+          <div className="lg:w-[300px] lg:shrink-0 m-r-9">
+            <div className="flex m-b-6 lg:m-b-4.5">
               {hasFilter ? (
-                <div className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3 xl:hidden">
+                <div className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3 lg:hidden">
                   <FilterSliderClose
                     className="text-black"
                     onClick={() => ClearFilter()}
@@ -149,7 +149,7 @@ function Gallery() {
                 </div>
               ) : (
                 <div
-                  className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3 xl:hidden"
+                  className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3 lg:hidden"
                   onClick={() => setVisibleDrawer(true)}
                 >
                   <FilterSliderLine
@@ -160,12 +160,12 @@ function Gallery() {
                   />
                 </div>
               )}
-              <div className="flex-1 p-4 xl:p-6 bg-black/20 flex items-center">
-                <span className="text-base xl:text-4xl font-bold uppercase text-white leading-5 xl:leading-11">#</span>
+              <div className="flex-1 p-4 lg:p-6 bg-black/20 flex items-center">
+                <span className="text-base lg:text-4xl font-bold uppercase text-white leading-5 lg:leading-11">#</span>
                 <input
                   placeholder="ID"
-                  className="bg-transparent text-white outline-none ml-2 xl:ml-4 leading-5 xl:leading-11 uppercase font-bold not-italic text-base xl:text-4xl w-[100%]
-              placeholder:uppercase placeholder:font-bold placeholder:not-italic placeholder:text-base xl:placeholder:text-4xl placeholder:opacity-20 placeholder:text-white"
+                  className="bg-transparent text-white outline-none ml-2 lg:ml-4 leading-5 lg:leading-11 uppercase font-bold not-italic text-base lg:text-4xl w-[100%]
+              placeholder:uppercase placeholder:font-bold placeholder:not-italic placeholder:text-base lg:placeholder:text-4xl placeholder:opacity-20 placeholder:text-white"
                   value={searchId}
                   onChange={(e) => {
                     setSearchId(e.target.value)
@@ -173,7 +173,7 @@ function Gallery() {
                 />
               </div>
             </div>
-            <div className="hidden xl:block">
+            <div className="hidden lg:block">
               <div className="border-y-2 border-rust p-y-4 text-xl font-bold leading-6 uppercase text-white">
                 Filters
               </div>
@@ -187,7 +187,7 @@ function Gallery() {
           <div>
             <div className="flex items-center	justify-between">
               <div
-                className="p-x-4 p-y-2 rounded-2xl bg-white/10 hidden xl:flex items-center justify-center cursor-pointer"
+                className="p-x-4 p-y-2 rounded-2xl bg-white/10 hidden lg:flex items-center justify-center cursor-pointer"
                 onClick={() => {
                   ClearFilter()
                 }}
@@ -199,9 +199,9 @@ function Gallery() {
               </p>
             </div>
             {
-              <div className="xl:w-[928px] mt-3 xl:mt-6">
+              <div className="xl:w-[928px] mt-3 lg:mt-6">
                 {!!currentGallery.length && (
-                  <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                     {currentGallery.map((gallery, index) => (
                       <GalleryItem
                         key={index}

@@ -15,7 +15,7 @@ const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ currentNFTInfo, visible, 
   return (
     <ModalGallery title="E4C Rangers" id={currentNFTInfo?.id} visible={visible} toggle={(value) => setVisible(value)}>
       <Box
-        className="flex flex-1 xl:flex-none flex-col xl:flex-row overflow-hidden xl:overflow-auto"
+        className="flex flex-1 lg:flex-none flex-col lg:flex-row overflow-hidden lg:overflow-auto"
         sx={{
           background: 'rgba(255, 255, 255, 0.8)',
           backdropFilter: 'blur(20px)',

@@ -14,7 +14,7 @@ interface ModalGalleryProps {
 }
 
 const ModalGallery: FC<ModalGalleryProps> = ({ visible, title, toggle, close = true, id, children }) => {
-  const matchesSM = useMediaQuery('(min-width:640px)')
+  const matchesSM = useMediaQuery('(min-width:1024px)')
 
   return (
     <Dialog
@@ -36,23 +36,12 @@ const ModalGallery: FC<ModalGalleryProps> = ({ visible, title, toggle, close = t
         },
       }}
     >
-      <div className="w-full flex items-center justify-between text-white bg-[#2A2A2A] xl:bg-[rgba(42, 42, 42, 0.8)] p-x-4 p-y-4 xl:p-y-6">
-        <span className="font-bold not-italic uppercase text-base leading-5 xl:text-4xl xl:leading-11">
+      <div className="w-full flex items-center justify-between text-white bg-[#2A2A2A] lg:bg-[rgba(42, 42, 42, 0.8)] p-x-4 p-y-4 lg:p-y-6">
+        <span className="font-bold not-italic uppercase text-base leading-5 lg:text-4xl lg:leading-11">
           {title}
-          <span className="ml-0 xl:ml-9 block xl:inline">#{id}</span>
+          <span className="ml-0 lg:ml-9 block lg:inline">#{id}</span>
         </span>
-        {close && (
-          <Close
-            onClick={() => toggle(false)}
-            sx={{
-              fontSize: {
-                sm: '24px',
-                xl: '36px',
-              },
-              cursor: 'pointer',
-            }}
-          />
-        )}
+        {close && <Close onClick={() => toggle(false)} className="!text-2xl !lg:text-4xl cursor-pointer" />}
       </div>
       {children}
     </Dialog>

@@ -69,7 +69,7 @@ const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, setVisibleDrawer, 
             Filters
           </div>
           <div
-            className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center ml-6 xl:hidden"
+            className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center ml-6"
             onClick={() => setVisibleDrawer(false)}
           >
             <FilterSliderLineClear
