@@ -1,6 +1,6 @@
 import { useFormContext } from 'react-hook-form'
 
-import { AccountCommonProps, AccountFormData } from '../../../types'
+import { AccountCommonProps, AccountSignUpFormData } from '../../../types'
 import { getFormErrorMessage } from '../../../utils'
 import { Button, Input } from '../../Forms'
 import { AccountTips } from '../Tips'
@@ -15,7 +15,7 @@ export function AccountPasswordInput(props: AccountPasswordInputProps) {
     register,
     watch,
     formState: { errors },
-  } = useFormContext<AccountFormData>()
+  } = useFormContext<AccountSignUpFormData>()
   const currentPassword = watch('password', '')
 
   return (

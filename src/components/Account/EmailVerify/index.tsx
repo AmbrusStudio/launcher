@@ -2,7 +2,7 @@ import React from 'react'
 import useDigitInput from 'react-digit-input'
 import { useFormContext } from 'react-hook-form'
 
-import { AccountCommonProps, AccountFormData, ReactInputProps } from '../../../types'
+import { AccountCommonProps, AccountSignUpFormData, ReactInputProps } from '../../../types'
 import { classNames, getFormErrorMessage } from '../../../utils'
 import { Button } from '../../Forms'
 import { AccountTips } from '../Tips'
@@ -36,7 +36,7 @@ function DigitInputs() {
     register,
     setValue,
     formState: { errors },
-  } = useFormContext<AccountFormData>()
+  } = useFormContext<AccountSignUpFormData>()
   const [code, setCode] = React.useState('')
   const handleCodeChange = React.useCallback(
     (code: string) => {

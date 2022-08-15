@@ -21,7 +21,7 @@ import {
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
 import { useQuery } from '../../../hooks'
-import { AccountFormData, AccountStepCommonProps, StepInfo } from '../../../types'
+import { AccountSignUpFormData, AccountStepCommonProps, StepInfo } from '../../../types'
 
 type StepZeroProps = AccountStepCommonProps & {
   onMetamaskClick: React.MouseEventHandler<HTMLButtonElement>
@@ -92,7 +92,7 @@ export function SignUp() {
   const query = useQuery()
   const navigate = useNavigate()
   const { account, active, activateBrowserWallet } = useEthers()
-  const { watch, trigger, handleSubmit } = useFormContext<AccountFormData>()
+  const { watch, trigger, handleSubmit } = useFormContext<AccountSignUpFormData>()
 
   const [step, setStep] = React.useState(0)
   const [complete, setComplete] = React.useState(false)
@@ -129,13 +129,13 @@ export function SignUp() {
   }, [navigate])
 
   /** For step 0, sign up with email directly. */
-  const handleEmailSignUpSubmit = React.useCallback(async (data: AccountFormData) => {
+  const handleEmailSignUpSubmit = React.useCallback(async (data: AccountSignUpFormData) => {
     console.log('handleEmailSignUpSubmit', data)
     setStep(2)
   }, [])
   /** For step 1, bind email after sign up with Metamask. */
   const handleEmailBindSubmit = React.useCallback(
-    async (data: AccountFormData) => {
+    async (data: AccountSignUpFormData) => {
       console.log('handleEmailBindSubmit', data)
       stepIncrement()
     },
@@ -143,7 +143,7 @@ export function SignUp() {
   )
   /** For step 2, verify email with 6 digits code. */
   const handleEmailVerifyCodeSubmit = React.useCallback(
-    async (data: AccountFormData) => {
+    async (data: AccountSignUpFormData) => {
       const check = await trigger('verifyCode')
       if (!check) return
       console.log('handleEmailVerifyCodeSubmit', data)
@@ -153,7 +153,7 @@ export function SignUp() {
   )
   /** For step 3, set an username. */
   const handleUsernameSubmit = React.useCallback(
-    async (data: AccountFormData) => {
+    async (data: AccountSignUpFormData) => {
       const check = await trigger('username')
       if (!check) return
       console.log('handleUsernameSubmit', data)
@@ -163,7 +163,7 @@ export function SignUp() {
   )
   /** For step 4, set a password */
   const handlePasswordSubmit = React.useCallback(
-    async (data: AccountFormData) => {
+    async (data: AccountSignUpFormData) => {
       console.log('handleUsernameSubmit', data)
       stepIncrement()
     },

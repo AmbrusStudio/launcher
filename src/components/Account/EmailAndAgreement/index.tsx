@@ -1,6 +1,6 @@
 import { useFormContext } from 'react-hook-form'
 
-import { AccountCommonProps, AccountFormData } from '../../../types'
+import { AccountCommonProps, AccountSignUpFormData } from '../../../types'
 import { getFormErrorMessage } from '../../../utils'
 import { Button, Checkbox, Input } from '../../Forms'
 
@@ -11,7 +11,7 @@ export function AccountEmailAndAgreement(props: AccountEmailAndAgreementProps) {
   const {
     register,
     formState: { errors },
-  } = useFormContext<AccountFormData>()
+  } = useFormContext<AccountSignUpFormData>()
 
   return (
     <form className="flex flex-col gap-24px" onSubmit={onNextButtonSubmit}>

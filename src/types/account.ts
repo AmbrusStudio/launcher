@@ -11,7 +11,7 @@ export type AccountStepCommonProps = {
   onSubmit: React.FormEventHandler<HTMLFormElement>
 }
 
-export type AccountFormData = {
+export type AccountSignUpFormData = {
   email: string
   agreement: boolean
   newsletter?: boolean
@@ -19,4 +19,9 @@ export type AccountFormData = {
   username: string
   password: string
   confirmPassword: string
+}
+
+export type AccountSignInFormData = {
+  email: string
+  password: string
 }
