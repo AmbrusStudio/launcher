@@ -27,3 +27,12 @@ export type GALLERY_INFO_TYPE = {
   description: string
   opensea_url: string
 }
+
+export type FilterList = GALLERY_FILTER_LIST & {
+  is_checked: boolean
+}
+
+export type Filter = GALLERY_FILTER & {
+  is_open: boolean
+  list: FilterList[]
+}
