@@ -60,7 +60,7 @@ function Gallery() {
   }, [])
 
   // Toggle filter children tag checked - change
-  const ToggleFilterTagCheckedChange = useCallback(
+  const toggleFilterTagCheckedChange = useCallback(
     (parentIndex: number, childrenIndex: number) => {
       const list = toggleFilterCheckedFn(filter, parentIndex, childrenIndex)
       setFilter(list)
@@ -70,7 +70,7 @@ function Gallery() {
   )
 
   // Clear filter
-  const ClearFilter = useCallback(() => {
+  const clearFilter = useCallback(() => {
     setGalleryFilter([])
     setFilter(GALLERYS_FILTERS_STATUS)
     setSearchId('')
@@ -112,7 +112,7 @@ function Gallery() {
               {hasFilter ? (
                 <div
                   className="w-[52px] h-[52px] rounded bg-white flex items-center justify-center mr-3 cursor-pointer lg:hidden"
-                  onClick={() => ClearFilter()}
+                  onClick={() => clearFilter()}
                 >
                   <FilterSliderClose
                     className="text-black"
@@ -155,7 +155,7 @@ function Gallery() {
               <GalleryFilter
                 filter={filter}
                 toggleFilterTab={toggleFilterTab}
-                ToggleFilterTagChecked={ToggleFilterTagCheckedChange}
+                toggleFilterTagChecked={toggleFilterTagCheckedChange}
               />
             </div>
           </div>
@@ -164,7 +164,7 @@ function Gallery() {
               <div
                 className="p-x-4 p-y-2 rounded-2xl bg-white/10 hidden lg:flex items-center justify-center cursor-pointer"
                 onClick={() => {
-                  ClearFilter()
+                  clearFilter()
                 }}
               >
                 <p className="text-sm font-medium text-center leading-4.25 text-white">Reset Filters</p>
