@@ -30,7 +30,7 @@ const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, setVisibleDrawer, 
   )
 
   // Toggle filter children tag checked
-  const ToggleFilterTagChecked = useCallback(
+  const toggleFilterTagChecked = useCallback(
     (parentIndex: number, childrenIndex: number) => {
       const list = toggleFilterCheckedFn(filter, parentIndex, childrenIndex)
       setFilter(list)
@@ -87,10 +87,10 @@ const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, setVisibleDrawer, 
         <GalleryFilter
           filter={filter}
           toggleFilterTab={toggleFilterTab}
-          ToggleFilterTagChecked={ToggleFilterTagChecked}
+          toggleFilterTagChecked={toggleFilterTagChecked}
         />
         <button
-          className="p-y-5 bg-[#ff4125] leading-5 uppercase text-white text-base font-semibold absolute bottom-6 left-6 right-6"
+          className="p-y-5 bg-rust leading-5 uppercase text-white text-base font-semibold absolute bottom-6 left-6 right-6"
           onClick={() => {
             applyFilter(filter)
           }}

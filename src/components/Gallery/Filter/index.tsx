@@ -9,10 +9,10 @@ import FilterOpen from '../../Icon/FilterOpen'
 interface GalleryFilterProps {
   readonly filter: Filter[]
   toggleFilterTab: (index: number) => void
-  ToggleFilterTagChecked: (parentIndex: number, childrenIndex: number) => void
+  toggleFilterTagChecked: (parentIndex: number, childrenIndex: number) => void
 }
 
-const GalleryFilter: FC<GalleryFilterProps> = ({ filter, toggleFilterTab, ToggleFilterTagChecked }) => {
+const GalleryFilter: FC<GalleryFilterProps> = ({ filter, toggleFilterTab, toggleFilterTagChecked }) => {
   return (
     <ul className="select-none">
       {filter.map((item, index) => (
@@ -49,7 +49,7 @@ const GalleryFilter: FC<GalleryFilterProps> = ({ filter, toggleFilterTab, Toggle
                   key={indexJ}
                   className="border-b-1 border-[#2A2A2A] bg-black flex items-center justify-between p-3 cursor-pointer"
                   onClick={() => {
-                    ToggleFilterTagChecked(index, indexJ)
+                    toggleFilterTagChecked(index, indexJ)
                   }}
                 >
                   <span className="text-sm leading-[17px]">
