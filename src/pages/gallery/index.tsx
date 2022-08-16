@@ -11,22 +11,23 @@ import FilterSliderLine from '../../components/Icon/FilterSliderLine'
 import Opensea from '../../components/Icon/Opensea'
 import { PageLayout } from '../../components/Layout'
 import { GALLERY_INFO, GALLERYS, GALLERYS_FILTERS_STATUS } from '../../data'
+import { useNumStrState } from '../../hooks/useNumStrState'
 import { Filter, FilterList, GALLERY } from '../../types/gallery'
-import { handleFilterFn, toggleFilterCheckedFn, toggleFilterOpenFn } from '../../utils'
+import { handleFilterFn, numStr, toggleFilterCheckedFn, toggleFilterOpenFn } from '../../utils'
 
 function Gallery() {
   // Filter
   const [filter, setFilter] = useState<Filter[]>(GALLERYS_FILTERS_STATUS)
   // Gallery filter
   const [galleryFilter, setGalleryFilter] = useState<GALLERY[]>([])
-  // Search by ID
-  const [searchId, setSearchId] = useState<string>('')
   // NFT modal
   const [visibleNFT, setVisibleNFT] = useState<boolean>(false)
   // NFT current
   const [currentNFTInfo, setCurrentNFTInfo] = useState<GALLERY>()
   // Gallery Filter Drawer
   const [visibleDrawer, setVisibleDrawer] = useState<boolean>(false)
+  // Search by ID
+  const [searchId, setSearchId] = useNumStrState()
 
   // Drawer has filter
   const hasFilter = useMemo(() => {
@@ -74,7 +75,7 @@ function Gallery() {
     setGalleryFilter([])
     setFilter(GALLERYS_FILTERS_STATUS)
     setSearchId('')
-  }, [])
+  }, [setSearchId])
 
   return (
     <PageLayout>
@@ -143,7 +144,7 @@ function Gallery() {
                   value={searchId}
                   onChange={(e) => {
                     setSearchId(e.target.value)
-                    handleFilter(filter, e.target.value)
+                    handleFilter(filter, numStr(e.target.value))
                   }}
                 />
               </div>
