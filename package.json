@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
+    "@metamask/detect-provider": "^1.2.0",
     "@mui/material": "^5.9.1",
     "@types/lodash": "^4.14.182",
     "@usedapp/core": "^1.1.3",

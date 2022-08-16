@@ -1,4 +1,4 @@
-import { useEthers } from '@usedapp/core'
+import { shortenIfAddress, useEthers } from '@usedapp/core'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -20,7 +20,7 @@ import {
   AccountUsernameInputProps,
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
-import { useQuery } from '../../../hooks'
+import { useMetamaskSign, useQuery } from '../../../hooks'
 import { AccountSignUpFormData, StepInfo } from '../../../types'
 
 type StepZeroProps = AccountEmailAndAgreementProps & {
@@ -91,11 +91,13 @@ function getStepInfo(step: number, complete?: boolean): StepInfo {
 export function SignUp() {
   const query = useQuery()
   const navigate = useNavigate()
-  const { account, active, activateBrowserWallet } = useEthers()
+  const { account } = useEthers()
+  const { getMetamaskSignSignature } = useMetamaskSign()
   const { watch, trigger, handleSubmit } = useFormContext<AccountSignUpFormData>()
 
   const [step, setStep] = React.useState(0)
   const [complete, setComplete] = React.useState(false)
+  const [walletSignUp, setWalletSignUp] = React.useState(false)
   const { title, navBack } = getStepInfo(step, complete)
   const isStep = React.useCallback(
     (s: number) => {
@@ -110,23 +112,32 @@ export function SignUp() {
   const handleNavBackClick = React.useCallback(() => {
     stepDecrement()
   }, [stepDecrement])
-  const handleMetamaskClick = React.useCallback(() => {
-    stepIncrement()
-  }, [stepIncrement])
   const handleSignInClick = React.useCallback(() => {
     navigate(`/account/signin`)
   }, [navigate])
-  const handleBindWalletClick = React.useCallback(() => {
-    if (!(account && active)) activateBrowserWallet()
-    if (account && active) setComplete(true)
-    console.log('account', account)
-  }, [account, activateBrowserWallet, active])
-  const handleSkipBindWalletClick = React.useCallback(() => {
-    setComplete(true)
-  }, [])
   const handleCompleteClick = React.useCallback(() => {
     navigate(`/account/center`)
   }, [navigate])
+
+  const handleBindWalletClick = React.useCallback(async () => {
+    const code = '123456'
+    const signature = await getMetamaskSignSignature(code)
+    if (!signature) return
+    console.log('account', account, 'signature', signature)
+    setComplete(true)
+  }, [account, getMetamaskSignSignature])
+  const handleSkipBindWalletClick = React.useCallback(() => {
+    setComplete(true)
+  }, [])
+
+  const handleMetamaskSignUpClick = React.useCallback(async () => {
+    const code = '123456'
+    const signature = await getMetamaskSignSignature(code)
+    if (!signature) return
+    console.log('account', account, 'signature', signature)
+    setWalletSignUp(true)
+    stepIncrement()
+  }, [account, getMetamaskSignSignature, stepIncrement])
 
   /** For step 0, sign up with email directly. */
   const handleEmailSignUpSubmit = React.useCallback(async (data: AccountSignUpFormData) => {
@@ -165,9 +176,13 @@ export function SignUp() {
   const handlePasswordSubmit = React.useCallback(
     async (data: AccountSignUpFormData) => {
       console.log('handlePasswordSubmit', data)
-      stepIncrement()
+      if (account && walletSignUp) {
+        setComplete(true)
+      } else {
+        stepIncrement()
+      }
     },
-    [stepIncrement]
+    [account, stepIncrement, walletSignUp]
   )
 
   console.log('session', query.get('session'))
@@ -185,7 +200,7 @@ export function SignUp() {
           {isStep(0) && (
             <StepZero
               onNextButtonSubmit={handleSubmit(handleEmailSignUpSubmit)}
-              onMetamaskClick={handleMetamaskClick}
+              onMetamaskClick={handleMetamaskSignUpClick}
               onSignInClick={handleSignInClick}
             />
           )}
@@ -193,7 +208,13 @@ export function SignUp() {
           {isStep(2) && <StepTwo onNextButtonSubmit={handleSubmit(handleEmailVerifyCodeSubmit)} />}
           {isStep(3) && <StepThree onNextButtonSubmit={handleSubmit(handleUsernameSubmit)} />}
           {isStep(4) && <StepFour onNextButtonSubmit={handleSubmit(handlePasswordSubmit)} />}
-          {isStep(5) && <StepFive onMetamaskClick={handleBindWalletClick} onSkipClick={handleSkipBindWalletClick} />}
+          {isStep(5) && (
+            <StepFive
+              account={shortenIfAddress(account)}
+              onMetamaskClick={handleBindWalletClick}
+              onSkipClick={handleSkipBindWalletClick}
+            />
+          )}
           {complete && <AccountSignUpComplete onCompleteClick={handleCompleteClick} />}
         </AccountPopup>
       </div>

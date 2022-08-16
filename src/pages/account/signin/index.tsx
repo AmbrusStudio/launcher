@@ -1,3 +1,4 @@
+import { shortenIfAddress, useEthers } from '@usedapp/core'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -20,6 +21,7 @@ import {
   AccountWallletSignIn,
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
+import { useMetamaskSign } from '../../../hooks'
 import { AccountForgotPasswordFormData, AccountSignInFormData, StepInfo } from '../../../types'
 
 type StepZeroProps = AccountUsernameAndPasswordProps & {
@@ -81,9 +83,12 @@ function getStepInfo(step: number, complete?: boolean): StepInfo {
 }
 
 export function SignIn() {
+  const brandName = 'E4C Fallen Arena'
   const navigate = useNavigate()
   const { handleSubmit: handleSignInSubmit } = useFormContext<AccountSignInFormData>()
   const { trigger, handleSubmit: handleFogotPasswordSubmit } = useFormContext<AccountForgotPasswordFormData>()
+  const { account } = useEthers()
+  const { getMetamaskSignSignature } = useMetamaskSign()
 
   const [step, setStep] = React.useState(0)
   const [wallet, setWallet] = React.useState(false)
@@ -108,15 +113,20 @@ export function SignIn() {
   const handleToMetamaskClick = React.useCallback(() => {
     setWallet(true)
   }, [])
-  const handleMetamaskSignInClick = React.useCallback(() => {
-    setComplete(true)
-  }, [])
   const handleResetPasswordCompleteClick = React.useCallback(() => {
     location && location.reload()
   }, [])
   const handleSignUpClick = React.useCallback(() => {
     navigate(`/account/signup`)
   }, [navigate])
+
+  const handleMetamaskSignInClick = React.useCallback(async () => {
+    const code = '123456'
+    const signature = await getMetamaskSignSignature(code)
+    if (!signature) return
+    console.log('account', account, 'signature', signature)
+    setComplete(true)
+  }, [account, getMetamaskSignSignature])
 
   const handleNormalSignInSubmit = React.useCallback(async (data: AccountSignInFormData) => {
     console.log('handleNormalSignInSubmit', data)
@@ -167,9 +177,13 @@ export function SignIn() {
           {isStep(3) && <StepThree onNextButtonSubmit={handleFogotPasswordSubmit(handleNewPasswordSubmit)} />}
           {isStep(4) && <StepFour onCompleteClick={handleResetPasswordCompleteClick} />}
           {!complete && wallet && (
-            <AccountWallletSignIn brandName="E4C Fallen Arena" onMetamaskClick={handleMetamaskSignInClick} />
+            <AccountWallletSignIn
+              account={shortenIfAddress(account)}
+              brandName={brandName}
+              onMetamaskClick={handleMetamaskSignInClick}
+            />
           )}
-          {complete && <AccountSignInComplete brandName="E4C Fallen Arena" />}
+          {complete && <AccountSignInComplete brandName={brandName} />}
         </AccountPopup>
       </div>
     </main>

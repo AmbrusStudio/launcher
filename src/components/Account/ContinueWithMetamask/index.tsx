@@ -2,10 +2,12 @@ import { ReactButtonProps } from '../../../types'
 import { classNames } from '../../../utils'
 import { IconMetamack } from '../../Icon'
 
-type AccountContinueWithMetamaskProps = ReactButtonProps
+type AccountContinueWithMetamaskProps = ReactButtonProps & {
+  account?: string
+}
 
 export function AccountContinueWithMetamask(props: AccountContinueWithMetamaskProps) {
-  const { className, ...others } = props
+  const { className, account, ...others } = props
   return (
     <button
       className={classNames(
@@ -20,7 +22,7 @@ export function AccountContinueWithMetamask(props: AccountContinueWithMetamaskPr
       {...others}
     >
       <IconMetamack className="absolute w-36px h-auto" />
-      <span className="w-full">Continue with Metamask</span>
+      <span className="w-full">{account ? account : 'Continue with Metamask'}</span>
     </button>
   )
 }
