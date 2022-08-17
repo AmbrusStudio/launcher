@@ -1,7 +1,12 @@
 import { useFormContext } from 'react-hook-form'
 
 import { AccountCommonProps, AccountSignUpFormData } from '../../../types'
-import { getFormErrorMessage } from '../../../utils'
+import {
+  getFormErrorMessage,
+  getMaxLengthValidationRule,
+  getMinLengthValidationRule,
+  getUsernameValidationPattern,
+} from '../../../utils'
 import { Button, Input } from '../../Forms'
 import { AccountTips } from '../Tips'
 
@@ -13,6 +18,9 @@ export function AccountUsernameInput(props: AccountUsernameInputProps) {
     register,
     formState: { errors },
   } = useFormContext<AccountSignUpFormData>()
+  const minLength = getMinLengthValidationRule('Username', 20)
+  const maxLength = getMaxLengthValidationRule('Username', 20)
+  const pattern = getUsernameValidationPattern()
 
   return (
     <form className="flex flex-col gap-24px" onSubmit={onNextButtonSubmit}>
@@ -23,13 +31,7 @@ export function AccountUsernameInput(props: AccountUsernameInputProps) {
         id="username"
         label="Username"
         required
-        {...register('username', {
-          required: 'You must specify an username.',
-          minLength: {
-            value: 8,
-            message: 'Username must have at least 8 characters.',
-          },
-        })}
+        {...register('username', { required: 'You must specify an username.', minLength, maxLength, pattern })}
         error={getFormErrorMessage(errors.username)}
       />
       <Button variant="primary" type="submit">

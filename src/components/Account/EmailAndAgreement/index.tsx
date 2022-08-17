@@ -1,7 +1,7 @@
 import { useFormContext } from 'react-hook-form'
 
 import { AccountCommonProps, AccountSignUpFormData } from '../../../types'
-import { getFormErrorMessage } from '../../../utils'
+import { getEmailValidationPattern, getFormErrorMessage, getMaxLengthValidationRule } from '../../../utils'
 import { Button, Checkbox, Input } from '../../Forms'
 
 export type AccountEmailAndAgreementProps = AccountCommonProps
@@ -12,6 +12,8 @@ export function AccountEmailAndAgreement(props: AccountEmailAndAgreementProps) {
     register,
     formState: { errors },
   } = useFormContext<AccountSignUpFormData>()
+  const maxLength = getMaxLengthValidationRule('Email', 255)
+  const pattern = getEmailValidationPattern()
 
   return (
     <form className="flex flex-col gap-24px" onSubmit={onNextButtonSubmit}>
@@ -21,7 +23,7 @@ export function AccountEmailAndAgreement(props: AccountEmailAndAgreementProps) {
         label="Email"
         placeholder="example@gmail.com"
         required
-        {...register('email', { required: true })}
+        {...register('email', { required: true, maxLength, pattern })}
         error={getFormErrorMessage(errors.email)}
       />
       <div className="flex flex-col gap-12px">

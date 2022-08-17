@@ -1,7 +1,12 @@
 import { useFormContext } from 'react-hook-form'
 
 import { AccountCommonProps, AccountSignUpFormData } from '../../../types'
-import { getFormErrorMessage } from '../../../utils'
+import {
+  getFormErrorMessage,
+  getMaxLengthValidationRule,
+  getMinLengthValidationRule,
+  getPasswordValidationPattern,
+} from '../../../utils'
 import { Button, Input } from '../../Forms'
 import { AccountTips } from '../Tips'
 
@@ -17,13 +22,16 @@ export function AccountPasswordInput(props: AccountPasswordInputProps) {
     formState: { errors },
   } = useFormContext<AccountSignUpFormData>()
   const currentPassword = watch('password', '')
+  const minLength = getMinLengthValidationRule('Password', 20)
+  const maxLength = getMaxLengthValidationRule('Password', 20)
+  const pattern = getPasswordValidationPattern()
 
   return (
     <form className="flex flex-col gap-24px" onSubmit={onNextButtonSubmit}>
       <AccountTips>
         <ul>
           <li>Must contain at least 1 letter and 1 number.</li>
-          <li>Password is at least 8 characters long.</li>
+          <li>Password is at least 8 characters and cannot be longer than 20 characters.</li>
         </ul>
       </AccountTips>
       <Input
@@ -33,17 +41,7 @@ export function AccountPasswordInput(props: AccountPasswordInputProps) {
         autoComplete="on"
         minLength={8}
         required
-        {...register('password', {
-          required: 'You must specify a password.',
-          minLength: {
-            value: 8,
-            message: 'Password must have at least 8 characters.',
-          },
-          pattern: {
-            value: /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/,
-            message: 'Password must contain at least 1 letter and 1 number.',
-          },
-        })}
+        {...register('password', { required: 'You must specify a password.', minLength, maxLength, pattern })}
         error={getFormErrorMessage(errors.password)}
       />
       <Input
