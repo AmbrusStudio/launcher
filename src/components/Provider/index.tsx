@@ -1,4 +1,4 @@
-import { Config, DAppProvider, Mainnet, Rinkeby } from '@usedapp/core'
+import { Config, DAppProvider, Mainnet, Rinkeby, Ropsten } from '@usedapp/core'
 import { getDefaultProvider } from 'ethers'
 import { ReactNode } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -12,6 +12,7 @@ const config: Config = {
   readOnlyUrls: {
     [Mainnet.chainId]: getDefaultProvider('mainnet'),
     [Rinkeby.chainId]: getDefaultProvider('rinkeby'),
+    [Ropsten.chainId]: getDefaultProvider('ropsten'),
   },
 }
 
