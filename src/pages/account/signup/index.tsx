@@ -195,7 +195,7 @@ export function SignUp() {
 
   return (
     <main id="main">
-      <div className="py-192px mx-auto max-w-600px">
+      <div className="xl:py-192px xl:mx-auto max-w-600px">
         <AccountPopup title={title} showBack={navBack} onNavBackClick={handleNavBackClick}>
           {isStep(0) && (
             <StepZero

@@ -8,7 +8,7 @@ export type AccountSignInCompleteProps = {
 export function AccountSignInComplete(props: AccountSignInCompleteProps) {
   const { brandName } = props
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col flex-1 justify-center xl:justify-initial">
       <div className="mx-auto mb-48px">
         <IconAccept className="w-120px h-120px" />
       </div>

@@ -1,3 +1,5 @@
+import React from 'react'
+
 import { ReactButtonProps } from '../../../types'
 import { classNames } from '../../../utils'
 import { IconMetamack } from '../../Icon'
@@ -22,7 +24,13 @@ export function AccountContinueWithMetamask(props: AccountContinueWithMetamaskPr
       {...others}
     >
       <IconMetamack className="absolute w-36px h-auto" />
-      <span className="w-full">{account ? account : 'Continue with Metamask'}</span>
+      {!account && (
+        <React.Fragment>
+          <span className="w-full hidden xl:inline-block">Continue with Metamask</span>
+          <span className="w-full xl:hidden">Metamask</span>
+        </React.Fragment>
+      )}
+      {account && <span className="w-full">{account}</span>}
     </button>
   )
 }
