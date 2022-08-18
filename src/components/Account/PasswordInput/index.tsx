@@ -22,7 +22,7 @@ export function AccountPasswordInput(props: AccountPasswordInputProps) {
     formState: { errors },
   } = useFormContext<AccountSignUpFormData>()
   const currentPassword = watch('password', '')
-  const minLength = getMinLengthValidationRule('Password', 20)
+  const minLength = getMinLengthValidationRule('Password', 8)
   const maxLength = getMaxLengthValidationRule('Password', 20)
   const pattern = getPasswordValidationPattern()
 

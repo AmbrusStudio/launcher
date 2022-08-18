@@ -18,7 +18,7 @@ export function AccountUsernameInput(props: AccountUsernameInputProps) {
     register,
     formState: { errors },
   } = useFormContext<AccountSignUpFormData>()
-  const minLength = getMinLengthValidationRule('Username', 20)
+  const minLength = getMinLengthValidationRule('Username', 5)
   const maxLength = getMaxLengthValidationRule('Username', 20)
   const pattern = getUsernameValidationPattern()
 
