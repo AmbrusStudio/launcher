@@ -1,10 +1,11 @@
 import Dialog from '@mui/material/Dialog'
-import { Mainnet, useEthers } from '@usedapp/core'
+import { useEthers } from '@usedapp/core'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { Dispatch, FC, SetStateAction, useCallback } from 'react'
 
 import { WALLET_LIST } from '../../data'
 import { WALLET_NAME } from '../../types'
+import { getDefaultChainId } from '../../utils'
 
 interface WalletModalProps {
   readonly visible: boolean
@@ -19,8 +20,9 @@ const WalletModal: FC<WalletModalProps> = ({ visible, setVisible }) => {
    */
   const handleWalletConnect = useCallback(async () => {
     activateBrowserWallet()
-    if (chainId !== Mainnet.chainId) {
-      await switchNetwork(Mainnet.chainId)
+    const defaultChainId = getDefaultChainId()
+    if (chainId !== defaultChainId) {
+      await switchNetwork(defaultChainId)
     }
     setVisible(false)
   }, [activateBrowserWallet, switchNetwork, chainId, setVisible])
