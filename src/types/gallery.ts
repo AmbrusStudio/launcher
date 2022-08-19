@@ -1,16 +1,24 @@
 import { NFT_TRAIT } from './nft'
 
+export type GALLERY_TRAIT = {
+  key: NFT_TRAIT
+  value: string
+}
+
+export type GALLERY_TRAIT_MAP = {
+  trait: Map<NFT_TRAIT, string>
+}
+
 export type GALLERY = {
   id: number
   image: string
   opensea_url: string
   looksrare_url: string
   etherscan_url: string
-  trait: {
-    key: NFT_TRAIT
-    value: string
-  }[]
+  trait: GALLERY_TRAIT[]
 }
+
+export type GALLERY_MAP = Omit<GALLERY, 'trait'> & GALLERY_TRAIT_MAP
 
 export type GALLERY_FILTER_LIST = {
   label: string
