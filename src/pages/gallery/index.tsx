@@ -10,16 +10,14 @@ import FilterSliderClose from '../../components/Icon/FilterSliderClose'
 import FilterSliderLine from '../../components/Icon/FilterSliderLine'
 import Opensea from '../../components/Icon/Opensea'
 import { PageLayout } from '../../components/Layout'
-import { GALLERY_INFO, GALLERYS, GALLERYS_FILTERS_STATUS } from '../../data'
+import { GALLERY_INFO, GALLERYS_FILTERS_STATUS } from '../../data'
 import { useNumStrState } from '../../hooks/useNumStrState'
 import { Filter, FilterList, GALLERY } from '../../types/gallery'
-import { handleFilterFn, numStr, toggleFilterCheckedFn, toggleFilterOpenFn } from '../../utils'
+import { handleFilterFn, toggleFilterCheckedFn, toggleFilterOpenFn } from '../../utils'
 
 function Gallery() {
   // Filter
   const [filter, setFilter] = useState<Filter[]>(GALLERYS_FILTERS_STATUS)
-  // Gallery filter
-  const [galleryFilter, setGalleryFilter] = useState<GALLERY[]>([])
   // NFT modal
   const [visibleNFT, setVisibleNFT] = useState<boolean>(false)
   // NFT current
@@ -36,14 +34,10 @@ function Gallery() {
     return filter.some(isChecked)
   }, [filter])
 
-  // Current gallery data
+  // Current gallery
   const currentGallery = useMemo(() => {
-    if (searchId) {
-      return galleryFilter.length ? galleryFilter : []
-    } else {
-      return galleryFilter.length ? galleryFilter : GALLERYS
-    }
-  }, [searchId, galleryFilter])
+    return handleFilterFn(filter, searchId)
+  }, [filter, searchId])
 
   // Toggle Filter children open
   const toggleFilterTab = useCallback(
@@ -54,25 +48,17 @@ function Gallery() {
     [filter]
   )
 
-  // Handle filter
-  const handleFilter = useCallback((filter: Filter[], searchId: string) => {
-    const result = handleFilterFn(filter, searchId)
-    setGalleryFilter(result)
-  }, [])
-
   // Toggle filter children tag checked - change
   const toggleFilterTagCheckedChange = useCallback(
     (parentIndex: number, childrenIndex: number) => {
       const list = toggleFilterCheckedFn(filter, parentIndex, childrenIndex)
       setFilter(list)
-      handleFilter(list, searchId)
     },
-    [filter, handleFilter, searchId]
+    [filter]
   )
 
   // Clear filter
   const clearFilter = useCallback(() => {
-    setGalleryFilter([])
     setFilter(GALLERYS_FILTERS_STATUS)
     setSearchId('')
   }, [setSearchId])
@@ -144,7 +130,6 @@ function Gallery() {
                   value={searchId}
                   onChange={(e) => {
                     setSearchId(e.target.value)
-                    handleFilter(filter, numStr(e.target.value))
                   }}
                 />
               </div>
@@ -160,7 +145,7 @@ function Gallery() {
               />
             </div>
           </div>
-          <div>
+          <div className="w-full">
             <div className="flex items-center	justify-between">
               <div
                 className="p-x-4 p-y-2 rounded-2xl bg-white/10 hidden lg:flex items-center justify-center cursor-pointer"
@@ -175,7 +160,7 @@ function Gallery() {
               </p>
             </div>
             {
-              <div className="xl:w-[928px] mt-3 lg:mt-6">
+              <div className="mt-3 lg:mt-6">
                 {!!currentGallery.length && (
                   <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                     {currentGallery.map((gallery, index) => (
@@ -202,7 +187,6 @@ function Gallery() {
         visibleDrawer={visibleDrawer}
         setVisibleDrawer={setVisibleDrawer}
         applyFilter={(value) => {
-          handleFilter(value, searchId)
           setFilter(value)
           setVisibleDrawer(false)
         }}
