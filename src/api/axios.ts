@@ -1,7 +1,7 @@
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import Axios, { AxiosError } from 'axios'
 
-class Request {
+class MainBackendRequest {
   public readonly client: AxiosInstance
 
   constructor(private readonly baseURL: string) {
@@ -43,12 +43,27 @@ class Request {
   }
 }
 
-function getAPIBaseUrl(): string {
-  const baseUrl: string | undefined = import.meta.env.VITE_BACKEND_API_URL
-  if (!baseUrl) throw new TypeError('VITE_BACKEND_API_URL not set')
-  return new URL('/api/v1', baseUrl).href
+class AccountBackendRequest {
+  public readonly client: AxiosInstance
+
+  constructor(private readonly baseURL: string) {
+    if (!baseURL) throw new TypeError('baseURL is required.')
+    this.client = Axios.create({
+      baseURL: this.baseURL,
+      headers: { 'Content-Type': 'application/json' },
+      validateStatus: () => true,
+    })
+  }
 }
 
-const request = new Request(getAPIBaseUrl())
+function getAPIBaseUrl(path: string): string {
+  const baseUrl: string | undefined = import.meta.env.VITE_BACKEND_API_URL
+  if (!baseUrl) throw new TypeError('VITE_BACKEND_API_URL not set')
+  return new URL(path, baseUrl).href
+}
 
-export const serveRequest = request.client
+const _mainBackendRequest = new MainBackendRequest(getAPIBaseUrl('/api/v1'))
+export const mainBackendRequest = _mainBackendRequest.client
+
+const _accountBackendRequest = new AccountBackendRequest(getAPIBaseUrl('/account-dev'))
+export const accountBackendRequest = _accountBackendRequest.client

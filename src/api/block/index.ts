@@ -1,5 +1,5 @@
-import { serveRequest } from '../axios'
+import { mainBackendRequest } from '../axios'
 
 export async function getBlockInfoApi<T = unknown>(key: string) {
-  return await serveRequest.get<T>(`/getBlockInfoApi?langId=14&key=${key}`)
+  return await mainBackendRequest.get<T>(`/getBlockInfoApi?langId=14&key=${key}`)
 }

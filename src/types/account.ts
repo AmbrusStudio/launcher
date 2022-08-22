@@ -32,3 +32,12 @@ export type AccountForgotPasswordFormData = {
   password: string
   confirmPassword: string
 }
+
+type ResultOk<T = unknown> = { isOk: true; data: T; error: null }
+type ResultErr<E = unknown> = { isOk: false; data: null; error: E }
+
+export type AccountApiResult<T = unknown, E = Error> = ResultOk<T> | ResultErr<E>
+
+export type AccountAccessToken = {
+  accessToken: string
+}
