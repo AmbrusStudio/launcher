@@ -22,22 +22,24 @@ import {
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
 import WalletModal from '../../../components/WalletModal'
-import { useMetamaskSign, useQuery } from '../../../hooks'
+import { useMetamaskAccount, useQuery } from '../../../hooks'
 import { AccountForgotPasswordFormData, AccountSignInFormData, StepInfo } from '../../../types'
 
 type StepZeroProps = AccountUsernameAndPasswordProps & {
   account: string
+  metamaskButtonDisabled?: boolean
   onMetamaskClick: React.MouseEventHandler<HTMLButtonElement>
   onSignUpClick: React.MouseEventHandler<HTMLButtonElement>
 }
 
 function StepZero(props: StepZeroProps) {
-  const { account, onMetamaskClick, onSignUpClick, onFogotPasswordClick, onNextButtonSubmit } = props
+  const { account, metamaskButtonDisabled = false } = props
+  const { onMetamaskClick, onSignUpClick, onFogotPasswordClick, onNextButtonSubmit } = props
   return (
     <div className="flex flex-col gap-24px">
       <AccountUsernameAndPassword onFogotPasswordClick={onFogotPasswordClick} onNextButtonSubmit={onNextButtonSubmit} />
       <AccountORSpacer />
-      <AccountContinueWithMetamask account={account} onClick={onMetamaskClick} />
+      <AccountContinueWithMetamask account={account} disabled={metamaskButtonDisabled} onClick={onMetamaskClick} />
       <Button variant="secondary" onClick={onSignUpClick}>
         Sign up instead
       </Button>
@@ -91,7 +93,7 @@ export function SignIn() {
   const { handleSubmit: handleSignInSubmit } = useFormContext<AccountSignInFormData>()
   const { trigger, handleSubmit: handleFogotPasswordSubmit } = useFormContext<AccountForgotPasswordFormData>()
   const { account } = useEthers()
-  const { getMetamaskSignSignature } = useMetamaskSign()
+  const { walletLogin, walletBind } = useMetamaskAccount()
 
   const shortAccount = shortenIfAddress(account)
 
@@ -100,6 +102,9 @@ export function SignIn() {
   const [step, setStep] = React.useState(0)
   const [openWalletModal, setOpenWalletModal] = React.useState(false)
   const [complete, setComplete] = React.useState(false)
+  const [signInError, setSignInError] = React.useState('')
+  const [metamaskSigning, setMetamaskSigning] = React.useState(false)
+
   const { title, navBack } = getStepInfo(step, complete)
   const isStep = React.useCallback(
     (s: number) => {
@@ -125,13 +130,20 @@ export function SignIn() {
   }, [navigate])
 
   const handleMetamaskSignInClick = React.useCallback(async () => {
-    if (!account && !openWalletModal) return setOpenWalletModal(true)
-    const code = '123456'
-    const signature = await getMetamaskSignSignature(code)
-    if (!signature) return
-    console.log('account', account, 'signature', signature)
-    setComplete(true)
-  }, [account, getMetamaskSignSignature, openWalletModal])
+    if (metamaskSigning) return
+    try {
+      setMetamaskSigning(true)
+      if (signInError) setSignInError('')
+      if (!account && !openWalletModal) return setOpenWalletModal(true)
+      const res = await walletLogin()
+      if (!res.isOk) return setSignInError(res.error.message)
+      const token = res.data.accessToken
+      console.log('token', token)
+      setComplete(true)
+    } finally {
+      setMetamaskSigning(false)
+    }
+  }, [account, metamaskSigning, openWalletModal, signInError, walletLogin])
 
   const handleNormalSignInSubmit = React.useCallback(async (data: AccountSignInFormData) => {
     console.log('handleNormalSignInSubmit', data)
@@ -172,6 +184,7 @@ export function SignIn() {
           {isStep(0) && (
             <StepZero
               account={shortAccount}
+              metamaskButtonDisabled={metamaskSigning}
               onNextButtonSubmit={handleSignInSubmit(handleNormalSignInSubmit)}
               onFogotPasswordClick={handleNextClick}
               onMetamaskClick={handleMetamaskSignInClick}
@@ -186,6 +199,7 @@ export function SignIn() {
             <AccountWallletSignIn
               account={shortAccount}
               brandName={brandName}
+              disabled={metamaskSigning}
               onMetamaskClick={handleMetamaskSignInClick}
             />
           )}

@@ -1,3 +1,4 @@
+import Alert from '@mui/material/Alert'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
@@ -21,22 +22,23 @@ import {
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
 import WalletModal from '../../../components/WalletModal'
-import { useMetamaskSign, useQuery } from '../../../hooks'
+import { useMetamaskAccount, useQuery } from '../../../hooks'
 import { AccountSignUpFormData, StepInfo } from '../../../types'
 
 type StepZeroProps = AccountEmailAndAgreementProps & {
   account: string
+  metamaskButtonDisabled?: boolean
   onMetamaskClick: React.MouseEventHandler<HTMLButtonElement>
   onSignInClick: React.MouseEventHandler<HTMLButtonElement>
 }
 
 function StepZero(props: StepZeroProps) {
-  const { account, onNextButtonSubmit, onMetamaskClick, onSignInClick } = props
+  const { account, metamaskButtonDisabled = false, onNextButtonSubmit, onMetamaskClick, onSignInClick } = props
   return (
     <div className="flex flex-col gap-24px">
       <AccountEmailAndAgreement onNextButtonSubmit={onNextButtonSubmit} />
       <AccountORSpacer />
-      <AccountContinueWithMetamask account={account} onClick={onMetamaskClick} />
+      <AccountContinueWithMetamask account={account} disabled={metamaskButtonDisabled} onClick={onMetamaskClick} />
       <Button variant="secondary" onClick={onSignInClick}>
         Sign in instead
       </Button>
@@ -94,7 +96,7 @@ export function SignUp() {
   const query = useQuery()
   const navigate = useNavigate()
   const { account } = useEthers()
-  const { getMetamaskSignSignature } = useMetamaskSign()
+  const { walletLogin, walletBind } = useMetamaskAccount()
   const { watch, trigger, handleSubmit } = useFormContext<AccountSignUpFormData>()
 
   const shortAccount = shortenIfAddress(account)
@@ -102,6 +104,10 @@ export function SignUp() {
   const [step, setStep] = React.useState(0)
   const [openWalletModal, setOpenWalletModal] = React.useState(false)
   const [complete, setComplete] = React.useState(false)
+  const [signUpError, setSignUpError] = React.useState('')
+  const [metamaskBinding, setMetamaskBinding] = React.useState(false)
+  const [metamaskSigning, setMetamaskSigning] = React.useState(false)
+
   const { title, navBack } = getStepInfo(step, complete)
   const isStep = React.useCallback(
     (s: number) => {
@@ -124,24 +130,37 @@ export function SignUp() {
   }, [navigate])
 
   const handleBindWalletClick = React.useCallback(async () => {
-    const code = '123456'
-    const signature = await getMetamaskSignSignature(code)
-    if (!signature) return
-    console.log('account', account, 'signature', signature)
-    setComplete(true)
-  }, [account, getMetamaskSignSignature])
+    if (metamaskBinding) return
+    try {
+      setMetamaskBinding(true)
+      if (signUpError) setSignUpError('')
+      if (!account && !openWalletModal) return setOpenWalletModal(true)
+      const res = await walletBind()
+      if (!res.isOk) return setSignUpError(res.error.message)
+      setComplete(true)
+    } finally {
+      setMetamaskBinding(false)
+    }
+  }, [account, metamaskBinding, openWalletModal, signUpError, walletBind])
   const handleSkipBindWalletClick = React.useCallback(() => {
     setComplete(true)
   }, [])
 
   const handleMetamaskSignUpClick = React.useCallback(async () => {
-    if (!account && !openWalletModal) return setOpenWalletModal(true)
-    const code = '123456'
-    const signature = await getMetamaskSignSignature(code)
-    if (!signature) return
-    console.log('account', account, 'signature', signature)
-    setComplete(true)
-  }, [account, getMetamaskSignSignature, openWalletModal])
+    if (metamaskSigning) return
+    try {
+      setMetamaskSigning(true)
+      if (signUpError) setSignUpError('')
+      if (!account && !openWalletModal) return setOpenWalletModal(true)
+      const res = await walletLogin()
+      if (!res.isOk) return setSignUpError(res.error.message)
+      const token = res.data.accessToken
+      console.log('token', token)
+      setComplete(true)
+    } finally {
+      setMetamaskSigning(false)
+    }
+  }, [account, metamaskSigning, openWalletModal, signUpError, walletLogin])
 
   /** For step 0, sign up with email directly. */
   const handleEmailSignUpSubmit = React.useCallback(async (data: AccountSignUpFormData) => {
@@ -197,9 +216,15 @@ export function SignUp() {
     <main id="main">
       <div className="md:py-192px md:mx-auto max-w-600px">
         <AccountPopup title={title} showBack={navBack} onNavBackClick={handleNavBackClick}>
+          {signUpError && (
+            <Alert variant="filled" severity="error">
+              {signUpError}
+            </Alert>
+          )}
           {isStep(0) && (
             <StepZero
               account={shortAccount}
+              metamaskButtonDisabled={metamaskSigning}
               onNextButtonSubmit={handleSubmit(handleEmailSignUpSubmit)}
               onMetamaskClick={handleMetamaskSignUpClick}
               onSignInClick={handleSignInClick}
@@ -212,6 +237,7 @@ export function SignUp() {
           {isStep(5) && (
             <StepFive
               account={shortAccount}
+              metamaskButtonDisabled={metamaskBinding}
               onMetamaskClick={handleBindWalletClick}
               onSkipClick={handleSkipBindWalletClick}
             />
