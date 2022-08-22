@@ -17,8 +17,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function renderInpu
       inputMode="numeric"
       className={classNames(
         'flex flex-row flex-nowrap items-center box-border',
-        'w-48px h-48px xl:w-60px xl:h-60px border-1px bg-white rounded-4px',
-        'font-semibold text-24px xl:text-32px leading-24px xl:leading-32px text-grey-dark text-center',
+        'w-48px h-48px md:w-60px md:h-60px border-1px bg-white rounded-4px',
+        'font-semibold text-24px md:text-32px leading-24px md:leading-32px text-grey-dark text-center',
         'placeholder:text-grey-medium hover:outline-none focus:outline-none',
         error && 'border-rust',
         !error && 'border-grey-medium hover:border-ligntGreen focus:border-ligntGreen',

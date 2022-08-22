@@ -13,7 +13,7 @@ type AccountPopupProps = {
 export function AccountPopup(props: React.PropsWithChildren<AccountPopupProps>) {
   const { children, className, title, showBack, onNavBackClick } = props
   return (
-    <div className="flex flex-col drop-shadow-nft-modal min-h-screen xl:min-h-auto">
+    <div className="flex flex-col drop-shadow-nft-modal min-h-screen md:min-h-auto">
       <div className="flex flex-row flex-nowrap items-center p-24px xl:py-16px text-white bg-black-bg/80">
         {showBack && (
           <button className="mr-12px" onClick={onNavBackClick} title="Nav back">

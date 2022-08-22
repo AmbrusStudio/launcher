@@ -25,8 +25,8 @@ export function AccountContinueWithMetamask(props: AccountContinueWithMetamaskPr
       {...others}
     >
       <IconMetamack className="absolute w-36px h-auto" />
-      <span className="w-full hidden xl:inline-block">Continue with {buttonText}</span>
-      <span className="w-full xl:hidden">{buttonText}</span>
+      <span className="w-full hidden md:inline-block">Continue with {buttonText}</span>
+      <span className="w-full md:hidden">{buttonText}</span>
     </button>
   )
 }
