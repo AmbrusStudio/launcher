@@ -20,21 +20,23 @@ import {
   AccountUsernameInputProps,
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
+import WalletModal from '../../../components/WalletModal'
 import { useMetamaskSign, useQuery } from '../../../hooks'
 import { AccountSignUpFormData, StepInfo } from '../../../types'
 
 type StepZeroProps = AccountEmailAndAgreementProps & {
+  account: string
   onMetamaskClick: React.MouseEventHandler<HTMLButtonElement>
   onSignInClick: React.MouseEventHandler<HTMLButtonElement>
 }
 
 function StepZero(props: StepZeroProps) {
-  const { onNextButtonSubmit, onMetamaskClick, onSignInClick } = props
+  const { account, onNextButtonSubmit, onMetamaskClick, onSignInClick } = props
   return (
     <div className="flex flex-col gap-24px">
       <AccountEmailAndAgreement onNextButtonSubmit={onNextButtonSubmit} />
       <AccountORSpacer />
-      <AccountContinueWithMetamask onClick={onMetamaskClick} />
+      <AccountContinueWithMetamask account={account} onClick={onMetamaskClick} />
       <Button variant="secondary" onClick={onSignInClick}>
         Sign in instead
       </Button>
@@ -95,9 +97,11 @@ export function SignUp() {
   const { getMetamaskSignSignature } = useMetamaskSign()
   const { watch, trigger, handleSubmit } = useFormContext<AccountSignUpFormData>()
 
+  const shortAccount = shortenIfAddress(account)
+
   const [step, setStep] = React.useState(0)
+  const [openWalletModal, setOpenWalletModal] = React.useState(false)
   const [complete, setComplete] = React.useState(false)
-  const [walletSignUp, setWalletSignUp] = React.useState(false)
   const { title, navBack } = getStepInfo(step, complete)
   const isStep = React.useCallback(
     (s: number) => {
@@ -131,13 +135,13 @@ export function SignUp() {
   }, [])
 
   const handleMetamaskSignUpClick = React.useCallback(async () => {
+    if (!account && !openWalletModal) return setOpenWalletModal(true)
     const code = '123456'
     const signature = await getMetamaskSignSignature(code)
     if (!signature) return
     console.log('account', account, 'signature', signature)
-    setWalletSignUp(true)
-    stepIncrement()
-  }, [account, getMetamaskSignSignature, stepIncrement])
+    setComplete(true)
+  }, [account, getMetamaskSignSignature, openWalletModal])
 
   /** For step 0, sign up with email directly. */
   const handleEmailSignUpSubmit = React.useCallback(async (data: AccountSignUpFormData) => {
@@ -176,13 +180,9 @@ export function SignUp() {
   const handlePasswordSubmit = React.useCallback(
     async (data: AccountSignUpFormData) => {
       console.log('handlePasswordSubmit', data)
-      if (account && walletSignUp) {
-        setComplete(true)
-      } else {
-        stepIncrement()
-      }
+      stepIncrement()
     },
-    [account, stepIncrement, walletSignUp]
+    [stepIncrement]
   )
 
   console.log('session', query.get('session'))
@@ -199,6 +199,7 @@ export function SignUp() {
         <AccountPopup title={title} showBack={navBack} onNavBackClick={handleNavBackClick}>
           {isStep(0) && (
             <StepZero
+              account={shortAccount}
               onNextButtonSubmit={handleSubmit(handleEmailSignUpSubmit)}
               onMetamaskClick={handleMetamaskSignUpClick}
               onSignInClick={handleSignInClick}
@@ -210,7 +211,7 @@ export function SignUp() {
           {isStep(4) && <StepFour onNextButtonSubmit={handleSubmit(handlePasswordSubmit)} />}
           {isStep(5) && (
             <StepFive
-              account={shortenIfAddress(account)}
+              account={shortAccount}
               onMetamaskClick={handleBindWalletClick}
               onSkipClick={handleSkipBindWalletClick}
             />
@@ -218,6 +219,7 @@ export function SignUp() {
           {complete && <AccountSignUpComplete onCompleteClick={handleCompleteClick} />}
         </AccountPopup>
       </div>
+      <WalletModal visible={openWalletModal} setVisible={setOpenWalletModal} />
     </main>
   )
 }
