@@ -10,6 +10,7 @@ type AccountContinueWithMetamaskProps = ReactButtonProps & {
 
 export function AccountContinueWithMetamask(props: AccountContinueWithMetamaskProps) {
   const { className, account, ...others } = props
+  const buttonText = account || 'Metamask'
   return (
     <button
       className={classNames(
@@ -24,13 +25,8 @@ export function AccountContinueWithMetamask(props: AccountContinueWithMetamaskPr
       {...others}
     >
       <IconMetamack className="absolute w-36px h-auto" />
-      {!account && (
-        <React.Fragment>
-          <span className="w-full hidden xl:inline-block">Continue with Metamask</span>
-          <span className="w-full xl:hidden">Metamask</span>
-        </React.Fragment>
-      )}
-      {account && <span className="w-full">{account}</span>}
+      <span className="w-full hidden xl:inline-block">Continue with {buttonText}</span>
+      <span className="w-full xl:hidden">{buttonText}</span>
     </button>
   )
 }
