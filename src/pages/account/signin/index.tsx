@@ -21,21 +21,23 @@ import {
   AccountWallletSignIn,
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
-import { useMetamaskSign } from '../../../hooks'
+import WalletModal from '../../../components/WalletModal'
+import { useMetamaskSign, useQuery } from '../../../hooks'
 import { AccountForgotPasswordFormData, AccountSignInFormData, StepInfo } from '../../../types'
 
 type StepZeroProps = AccountUsernameAndPasswordProps & {
+  account: string
   onMetamaskClick: React.MouseEventHandler<HTMLButtonElement>
   onSignUpClick: React.MouseEventHandler<HTMLButtonElement>
 }
 
 function StepZero(props: StepZeroProps) {
-  const { onMetamaskClick, onSignUpClick, onFogotPasswordClick, onNextButtonSubmit } = props
+  const { account, onMetamaskClick, onSignUpClick, onFogotPasswordClick, onNextButtonSubmit } = props
   return (
     <div className="flex flex-col gap-24px">
       <AccountUsernameAndPassword onFogotPasswordClick={onFogotPasswordClick} onNextButtonSubmit={onNextButtonSubmit} />
       <AccountORSpacer />
-      <AccountContinueWithMetamask onClick={onMetamaskClick} />
+      <AccountContinueWithMetamask account={account} onClick={onMetamaskClick} />
       <Button variant="secondary" onClick={onSignUpClick}>
         Sign up instead
       </Button>
@@ -84,14 +86,19 @@ function getStepInfo(step: number, complete?: boolean): StepInfo {
 
 export function SignIn() {
   const brandName = 'E4C Fallen Arena'
+  const query = useQuery()
   const navigate = useNavigate()
   const { handleSubmit: handleSignInSubmit } = useFormContext<AccountSignInFormData>()
   const { trigger, handleSubmit: handleFogotPasswordSubmit } = useFormContext<AccountForgotPasswordFormData>()
   const { account } = useEthers()
   const { getMetamaskSignSignature } = useMetamaskSign()
 
+  const shortAccount = shortenIfAddress(account)
+
+  const client = query.get('client')
+  const [wallet] = React.useState(!!client)
   const [step, setStep] = React.useState(0)
-  const [wallet, setWallet] = React.useState(false)
+  const [openWalletModal, setOpenWalletModal] = React.useState(false)
   const [complete, setComplete] = React.useState(false)
   const { title, navBack } = getStepInfo(step, complete)
   const isStep = React.useCallback(
@@ -110,9 +117,6 @@ export function SignIn() {
   const handleNextClick = React.useCallback(() => {
     stepIncrement()
   }, [stepIncrement])
-  const handleToMetamaskClick = React.useCallback(() => {
-    setWallet(true)
-  }, [])
   const handleResetPasswordCompleteClick = React.useCallback(() => {
     location && location.reload()
   }, [])
@@ -121,12 +125,13 @@ export function SignIn() {
   }, [navigate])
 
   const handleMetamaskSignInClick = React.useCallback(async () => {
+    if (!account && !openWalletModal) return setOpenWalletModal(true)
     const code = '123456'
     const signature = await getMetamaskSignSignature(code)
     if (!signature) return
     console.log('account', account, 'signature', signature)
     setComplete(true)
-  }, [account, getMetamaskSignSignature])
+  }, [account, getMetamaskSignSignature, openWalletModal])
 
   const handleNormalSignInSubmit = React.useCallback(async (data: AccountSignInFormData) => {
     console.log('handleNormalSignInSubmit', data)
@@ -166,9 +171,10 @@ export function SignIn() {
         <AccountPopup title={title} showBack={navBack} onNavBackClick={handleNavBackClick}>
           {isStep(0) && (
             <StepZero
+              account={shortAccount}
               onNextButtonSubmit={handleSignInSubmit(handleNormalSignInSubmit)}
               onFogotPasswordClick={handleNextClick}
-              onMetamaskClick={handleToMetamaskClick}
+              onMetamaskClick={handleMetamaskSignInClick}
               onSignUpClick={handleSignUpClick}
             />
           )}
@@ -178,7 +184,7 @@ export function SignIn() {
           {isStep(4) && <StepFour onCompleteClick={handleResetPasswordCompleteClick} />}
           {!complete && wallet && (
             <AccountWallletSignIn
-              account={shortenIfAddress(account)}
+              account={shortAccount}
               brandName={brandName}
               onMetamaskClick={handleMetamaskSignInClick}
             />
@@ -186,6 +192,7 @@ export function SignIn() {
           {complete && <AccountSignInComplete brandName={brandName} />}
         </AccountPopup>
       </div>
+      <WalletModal visible={openWalletModal} setVisible={setOpenWalletModal} />
     </main>
   )
 }
