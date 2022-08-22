@@ -7,6 +7,7 @@ import { NFT, NFTUpgradeState } from '../../../types'
 import CloseCheck from '../../Icon/CloseCheck'
 import SuccessCheck from '../../Icon/SuccessCheck'
 import ModalCustom from '../../ModalCustom'
+import NFTAnnouncement from '../NFTAnnouncement'
 
 const InfoButton = styled.button<{ color: string }>`
   background: ${(p) => p.color || '#ff4125'};
@@ -174,16 +175,8 @@ const NFTInfo: FC<NFTInfoProps> = ({ nft, toggle }) => {
   return (
     <>
       <div className="lg:w-[600px] lg:h-[600px] overflow-auto bg-white p-6 grid gap-y-20.5">
-        {nft.upgradeInfo.introduction.map((info, index) => (
-          <div key={index}>
-            <InfoTieleFirst>{info.first}</InfoTieleFirst>
-            <InfoTieleSecond>{info.second}</InfoTieleSecond>
-            <InfoList>
-              {info.list.map((item, indexJ) => (
-                <li key={indexJ}>{item.text}</li>
-              ))}
-            </InfoList>
-          </div>
+        {nft.upgradeInfo.introduction.map((item, index) => (
+          <NFTAnnouncement data={item} key={index} />
         ))}
       </div>
       <WrapperInfo>

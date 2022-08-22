@@ -23,14 +23,16 @@ export enum NFTUpgradeInfoState {
   Cold = 'Cold',
 }
 
-export type NFTUpgradeInfo = {
-  introduction: {
-    first: string
-    second: string
-    list: {
-      text: string
-    }[]
+export type NFTAnnouncementType = {
+  first: string
+  second: string
+  list: {
+    text: string
   }[]
+}
+
+export type NFTUpgradeInfo = {
+  introduction: NFTAnnouncementType[]
   title: string
   description: string
   upgradingStatusInfo: {
