@@ -4,12 +4,13 @@ import { AccountTips } from '../Tips'
 
 export type AccountConnectWalletProps = {
   account?: string
+  metamaskButtonDisabled?: boolean
   onMetamaskClick: React.MouseEventHandler<HTMLButtonElement>
   onSkipClick: React.MouseEventHandler<HTMLButtonElement>
 }
 
 export function AccountConnectWallet(props: AccountConnectWalletProps) {
-  const { account, onMetamaskClick, onSkipClick } = props
+  const { account, metamaskButtonDisabled = false, onMetamaskClick, onSkipClick } = props
   return (
     <div className="flex flex-col gap-24px">
       <AccountTips>
@@ -18,7 +19,7 @@ export function AccountConnectWallet(props: AccountConnectWalletProps) {
           Account in the future.
         </p>
       </AccountTips>
-      <AccountContinueWithMetamask account={account} onClick={onMetamaskClick} />
+      <AccountContinueWithMetamask account={account} disabled={metamaskButtonDisabled} onClick={onMetamaskClick} />
       <Button variant="secondary" onClick={onSkipClick}>
         Skip for now
       </Button>
