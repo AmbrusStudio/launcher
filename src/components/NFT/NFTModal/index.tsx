@@ -6,26 +6,23 @@ import Close from '../../Icon/Close'
 import NFTAnnouncement from '../NFTAnnouncement'
 
 const InfoButton = styled.button<{ color: string }>`
-  padding: 8px 0;
+  padding-top: 20px;
   background: ${(p) => p.color || '#ff4125'};
   font-style: normal;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 16px;
-  line-height: 30px;
+  line-height: 20px;
   text-align: center;
   text-transform: uppercase;
   color: #ffffff;
   border: none;
   outline: none;
-  min-height: 46px;
-  min-width: 160px;
-  display: inline-block;
   cursor: pointer;
 `
 
 const Actions = styled(InfoButton)`
-  padding-bottom: constant(safe-area-inset-bottom);
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: calc(constant(safe-area-inset-bottom) + 20px);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
 `
 
 interface NFTModalProps {
@@ -36,7 +33,7 @@ interface NFTModalProps {
 const NFTModal: FC<NFTModalProps> = ({ title, nft }) => {
   return (
     <div className="fixed top-0 right-0 bottom-0 left-0 flex flex-col z-11">
-      <div className="bg-black/70 backdrop-blur-md text-white p-6 flex items-center justify-between">
+      <div className="bg-black/70 backdrop-blur-md text-white p-6 flex items-center justify-between shadow-lg z-12">
         <span className="font-bold text-2xl leading-[29px] text-white not-italic uppercase">{title}</span>
         <Close
           onClick={() => console.log(false)}
