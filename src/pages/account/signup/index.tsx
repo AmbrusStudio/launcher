@@ -217,7 +217,7 @@ export function SignUp() {
       <div className="md:py-192px md:mx-auto max-w-600px">
         <AccountPopup title={title} showBack={navBack} onNavBackClick={handleNavBackClick}>
           {signUpError && (
-            <Alert variant="filled" severity="error">
+            <Alert className="mb-24px" variant="filled" severity="error">
               {signUpError}
             </Alert>
           )}

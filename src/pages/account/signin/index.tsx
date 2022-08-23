@@ -1,3 +1,4 @@
+import Alert from '@mui/material/Alert'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
@@ -93,7 +94,7 @@ export function SignIn() {
   const { handleSubmit: handleSignInSubmit } = useFormContext<AccountSignInFormData>()
   const { trigger, handleSubmit: handleFogotPasswordSubmit } = useFormContext<AccountForgotPasswordFormData>()
   const { account } = useEthers()
-  const { walletLogin, walletBind } = useMetamaskAccount()
+  const { walletLogin } = useMetamaskAccount()
 
   const shortAccount = shortenIfAddress(account)
 
@@ -181,6 +182,11 @@ export function SignIn() {
     <main id="main">
       <div className="md:py-192px md:mx-auto max-w-600px">
         <AccountPopup title={title} showBack={navBack} onNavBackClick={handleNavBackClick}>
+          {signInError && (
+            <Alert className="mb-24px" variant="filled" severity="error">
+              {signInError}
+            </Alert>
+          )}
           {isStep(0) && (
             <StepZero
               account={shortAccount}
