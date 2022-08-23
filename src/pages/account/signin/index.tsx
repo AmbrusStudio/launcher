@@ -138,8 +138,6 @@ export function SignIn() {
       if (!account && !openWalletModal) return setOpenWalletModal(true)
       const res = await walletLogin()
       if (!res.isOk) return setSignInError(res.error.message)
-      const token = res.data.accessToken
-      console.log('token', token)
       setComplete(true)
     } finally {
       setMetamaskSigning(false)

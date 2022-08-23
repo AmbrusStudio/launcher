@@ -1,6 +1,8 @@
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import Axios, { AxiosError } from 'axios'
 
+import { LSK_ACCESS_TOKEN } from '../constants'
+
 class MainBackendRequest {
   public readonly client: AxiosInstance
 
@@ -53,6 +55,17 @@ class AccountBackendRequest {
       headers: { 'Content-Type': 'application/json' },
       validateStatus: () => true,
     })
+    this.client.interceptors.request.use(this.onRequestFulfilled.bind(this))
+  }
+
+  private async onRequestFulfilled(config: AxiosRequestConfig): Promise<AxiosRequestConfig> {
+    if (localStorage) {
+      const token = localStorage.getItem(LSK_ACCESS_TOKEN)
+      if (token) {
+        config.headers = Object.assign({}, config.headers, { Authorization: token })
+      }
+    }
+    return config
   }
 }
 
