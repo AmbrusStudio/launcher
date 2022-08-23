@@ -71,10 +71,36 @@ function DigitInputs() {
   )
 }
 
-export type AccountEmailVerifyProps = AccountCommonProps
+const resendTime = 60
+
+export type AccountEmailVerifyProps = AccountCommonProps & {
+  onResendClick?: React.MouseEventHandler<HTMLButtonElement>
+}
 
 export function AccountEmailVerify(props: AccountEmailVerifyProps) {
-  const { onNextButtonSubmit } = props
+  const { onNextButtonSubmit, onResendClick } = props
+  const [timeLeft, setTimeLeft] = React.useState(resendTime)
+  const intervalRef = React.useRef<ReturnType<typeof setInterval>>()
+
+  const canResend = timeLeft <= 0
+
+  const stopTimer = React.useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current)
+  }, [])
+
+  const handleResendEmail = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
+    async (e) => {
+      if (onResendClick) onResendClick(e)
+      setTimeLeft(resendTime)
+    },
+    [onResendClick]
+  )
+
+  React.useEffect(() => {
+    if (timeLeft <= 0) stopTimer()
+    intervalRef.current = setInterval(() => setTimeLeft((t) => t - 1), 1000)
+    return () => clearInterval(intervalRef.current)
+  }, [stopTimer, timeLeft])
 
   return (
     <form className="flex flex-col gap-36px" onSubmit={onNextButtonSubmit}>
@@ -86,8 +112,8 @@ export function AccountEmailVerify(props: AccountEmailVerifyProps) {
         <Button variant="primary" type="submit">
           Next
         </Button>
-        <Button variant="secondary" disabled>
-          Send again (52s)
+        <Button variant="secondary" disabled={!canResend} onClick={handleResendEmail}>
+          Send again{!canResend && ` (${timeLeft}s)`}
         </Button>
       </div>
     </form>
