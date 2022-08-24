@@ -22,17 +22,17 @@ import {
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
 import WalletModal from '../../../components/WalletModal'
-import { useMetamaskAccount, useQuery } from '../../../hooks'
+import { useMetamaskAccount } from '../../../hooks'
 import { AccountSignUpFormData, StepInfo } from '../../../types'
 
-type StepZeroProps = AccountEmailAndAgreementProps & {
+type StepSignUpProps = AccountEmailAndAgreementProps & {
   account: string
   metamaskButtonDisabled?: boolean
   onMetamaskClick: React.MouseEventHandler<HTMLButtonElement>
   onSignInClick: React.MouseEventHandler<HTMLButtonElement>
 }
 
-function StepZero(props: StepZeroProps) {
+function StepSignUp(props: StepSignUpProps) {
   const { account, metamaskButtonDisabled = false, onNextButtonSubmit, onMetamaskClick, onSignInClick } = props
   return (
     <div className="flex flex-col gap-24px">
@@ -46,43 +46,36 @@ function StepZero(props: StepZeroProps) {
   )
 }
 
-type StepOneProps = AccountEmailAndAgreementProps
+type StepVerifyYourEmailProps = AccountEmailVerifyProps
 
-function StepOne(props: StepOneProps) {
-  return <AccountEmailAndAgreement {...props} />
-}
-
-type StepTwoProps = AccountEmailVerifyProps
-
-function StepTwo(props: StepTwoProps) {
+function StepVerifyYourEmail(props: StepVerifyYourEmailProps) {
   return <AccountEmailVerify {...props} />
 }
 
-type StepThreeProps = AccountUsernameInputProps
+type StepChooseAUsernameProps = AccountUsernameInputProps
 
-function StepThree(props: StepThreeProps) {
+function StepChooseAUsername(props: StepChooseAUsernameProps) {
   return <AccountUsernameInput {...props} />
 }
 
-type StepFourProps = AccountPasswordInputProps
+type StepEnterPasswordProps = AccountPasswordInputProps
 
-function StepFour(props: StepFourProps) {
+function StepEnterPassword(props: StepEnterPasswordProps) {
   return <AccountPasswordInput {...props} />
 }
 
-type StepFiveProps = AccountConnectWalletProps
+type StepConnectWalletProps = AccountConnectWalletProps
 
-function StepFive(props: StepFiveProps) {
+function StepConnectWallet(props: StepConnectWalletProps) {
   return <AccountConnectWallet {...props} />
 }
 
 const signUpStepInfos: Record<number, StepInfo> = {
   0: { title: 'Sign Up', navBack: false },
-  1: { title: 'Enter Email', navBack: true },
-  2: { title: 'Verify Your Email', navBack: true },
-  3: { title: 'Choose A Username', navBack: true },
-  4: { title: 'Enter Password', navBack: true },
-  5: { title: 'Connect Wallet', navBack: false },
+  1: { title: 'Verify Your Email', navBack: true },
+  2: { title: 'Choose A Username', navBack: true },
+  3: { title: 'Enter Password', navBack: true },
+  4: { title: 'Connect Wallet', navBack: false },
 }
 
 function getStepInfo(step: number, complete?: boolean): StepInfo {
@@ -93,7 +86,6 @@ function getStepInfo(step: number, complete?: boolean): StepInfo {
 }
 
 export function SignUp() {
-  const query = useQuery()
   const navigate = useNavigate()
   const { account } = useEthers()
   const { walletLogin, walletBind } = useMetamaskAccount()
@@ -129,6 +121,57 @@ export function SignUp() {
     navigate(`/account/center`)
   }, [navigate])
 
+  const handleMetamaskSignUpClick = React.useCallback(async () => {
+    if (metamaskSigning) return
+    try {
+      setMetamaskSigning(true)
+      if (signUpError) setSignUpError('')
+      if (!account && !openWalletModal) return setOpenWalletModal(true)
+      const res = await walletLogin()
+      if (!res.isOk) return setSignUpError(res.error.message)
+      setComplete(true)
+    } finally {
+      setMetamaskSigning(false)
+    }
+  }, [account, metamaskSigning, openWalletModal, signUpError, walletLogin])
+
+  /** For step 0, sign up with email directly. */
+  const handleEmailSignUpSubmit = React.useCallback(
+    async (data: AccountSignUpFormData) => {
+      console.log('handleEmailSignUpSubmit', data)
+      stepIncrement()
+    },
+    [stepIncrement]
+  )
+  /** For step 1, verify email with 6 digits code. */
+  const handleEmailVerifyCodeSubmit = React.useCallback(
+    async (data: AccountSignUpFormData) => {
+      const check = await trigger('verifyCode')
+      if (!check) return
+      console.log('handleEmailVerifyCodeSubmit', data)
+      stepIncrement()
+    },
+    [stepIncrement, trigger]
+  )
+  /** For step 2, set an username. */
+  const handleUsernameSubmit = React.useCallback(
+    async (data: AccountSignUpFormData) => {
+      const check = await trigger('username')
+      if (!check) return
+      console.log('handleUsernameSubmit', data)
+      stepIncrement()
+    },
+    [stepIncrement, trigger]
+  )
+  /** For step 3, set a password */
+  const handlePasswordSubmit = React.useCallback(
+    async (data: AccountSignUpFormData) => {
+      console.log('handlePasswordSubmit', data)
+      stepIncrement()
+    },
+    [stepIncrement]
+  )
+  /** For step 4, bind wallet */
   const handleBindWalletClick = React.useCallback(async () => {
     if (metamaskBinding) return
     try {
@@ -146,64 +189,6 @@ export function SignUp() {
     setComplete(true)
   }, [])
 
-  const handleMetamaskSignUpClick = React.useCallback(async () => {
-    if (metamaskSigning) return
-    try {
-      setMetamaskSigning(true)
-      if (signUpError) setSignUpError('')
-      if (!account && !openWalletModal) return setOpenWalletModal(true)
-      const res = await walletLogin()
-      if (!res.isOk) return setSignUpError(res.error.message)
-      setComplete(true)
-    } finally {
-      setMetamaskSigning(false)
-    }
-  }, [account, metamaskSigning, openWalletModal, signUpError, walletLogin])
-
-  /** For step 0, sign up with email directly. */
-  const handleEmailSignUpSubmit = React.useCallback(async (data: AccountSignUpFormData) => {
-    console.log('handleEmailSignUpSubmit', data)
-    setStep(2)
-  }, [])
-  /** For step 1, bind email after sign up with Metamask. */
-  const handleEmailBindSubmit = React.useCallback(
-    async (data: AccountSignUpFormData) => {
-      console.log('handleEmailBindSubmit', data)
-      stepIncrement()
-    },
-    [stepIncrement]
-  )
-  /** For step 2, verify email with 6 digits code. */
-  const handleEmailVerifyCodeSubmit = React.useCallback(
-    async (data: AccountSignUpFormData) => {
-      const check = await trigger('verifyCode')
-      if (!check) return
-      console.log('handleEmailVerifyCodeSubmit', data)
-      stepIncrement()
-    },
-    [stepIncrement, trigger]
-  )
-  /** For step 3, set an username. */
-  const handleUsernameSubmit = React.useCallback(
-    async (data: AccountSignUpFormData) => {
-      const check = await trigger('username')
-      if (!check) return
-      console.log('handleUsernameSubmit', data)
-      stepIncrement()
-    },
-    [stepIncrement, trigger]
-  )
-  /** For step 4, set a password */
-  const handlePasswordSubmit = React.useCallback(
-    async (data: AccountSignUpFormData) => {
-      console.log('handlePasswordSubmit', data)
-      stepIncrement()
-    },
-    [stepIncrement]
-  )
-
-  console.log('session', query.get('session'))
-
   React.useEffect(() => {
     // TODO: remove before prodction
     const subscription = watch((value, { name, type }) => console.log('watch', name, type, value))
@@ -220,7 +205,7 @@ export function SignUp() {
             </Alert>
           )}
           {isStep(0) && (
-            <StepZero
+            <StepSignUp
               account={shortAccount}
               metamaskButtonDisabled={metamaskSigning}
               onNextButtonSubmit={handleSubmit(handleEmailSignUpSubmit)}
@@ -228,12 +213,11 @@ export function SignUp() {
               onSignInClick={handleSignInClick}
             />
           )}
-          {isStep(1) && <StepOne onNextButtonSubmit={handleSubmit(handleEmailBindSubmit)} />}
-          {isStep(2) && <StepTwo onNextButtonSubmit={handleSubmit(handleEmailVerifyCodeSubmit)} />}
-          {isStep(3) && <StepThree onNextButtonSubmit={handleSubmit(handleUsernameSubmit)} />}
-          {isStep(4) && <StepFour onNextButtonSubmit={handleSubmit(handlePasswordSubmit)} />}
-          {isStep(5) && (
-            <StepFive
+          {isStep(1) && <StepVerifyYourEmail onNextButtonSubmit={handleSubmit(handleEmailVerifyCodeSubmit)} />}
+          {isStep(2) && <StepChooseAUsername onNextButtonSubmit={handleSubmit(handleUsernameSubmit)} />}
+          {isStep(3) && <StepEnterPassword onNextButtonSubmit={handleSubmit(handlePasswordSubmit)} />}
+          {isStep(4) && (
+            <StepConnectWallet
               account={shortAccount}
               metamaskButtonDisabled={metamaskBinding}
               onMetamaskClick={handleBindWalletClick}

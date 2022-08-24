@@ -26,14 +26,14 @@ import WalletModal from '../../../components/WalletModal'
 import { useMetamaskAccount, useOpenGameClient, useQuery } from '../../../hooks'
 import { AccountForgotPasswordFormData, AccountSignInFormData, StepInfo } from '../../../types'
 
-type StepZeroProps = AccountUsernameAndPasswordProps & {
+type StepSignInProps = AccountUsernameAndPasswordProps & {
   account: string
   metamaskButtonDisabled?: boolean
   onMetamaskClick: React.MouseEventHandler<HTMLButtonElement>
   onSignUpClick: React.MouseEventHandler<HTMLButtonElement>
 }
 
-function StepZero(props: StepZeroProps) {
+function StepSignIn(props: StepSignInProps) {
   const { account, metamaskButtonDisabled = false } = props
   const { onMetamaskClick, onSignUpClick, onFogotPasswordClick, onNextButtonSubmit } = props
   return (
@@ -48,27 +48,27 @@ function StepZero(props: StepZeroProps) {
   )
 }
 
-type StepOneProps = AccountForgotPasswordProps
+type StepForgotPasswordProps = AccountForgotPasswordProps
 
-function StepOne(props: StepOneProps) {
+function StepForgotPassword(props: StepForgotPasswordProps) {
   return <AccountForgotPassword {...props} />
 }
 
-type StepTwoProps = AccountEmailVerifyProps
+type StepVerifyEmailProps = AccountEmailVerifyProps
 
-function StepTwo(props: StepTwoProps) {
+function StepVerifyEmail(props: StepVerifyEmailProps) {
   return <AccountEmailVerify {...props} />
 }
 
-type StepThreeProps = AccountPasswordInputProps
+type StepResetPasswordProps = AccountPasswordInputProps
 
-function StepThree(props: StepThreeProps) {
+function StepResetPassword(props: StepResetPasswordProps) {
   return <AccountPasswordInput {...props} isNew />
 }
 
-type StepFourProps = AccountResetPasswordCompleteProps
+type StepResetCompleteProps = AccountResetPasswordCompleteProps
 
-function StepFour(props: StepFourProps) {
+function StepResetComplete(props: StepResetCompleteProps) {
   return <AccountResetPasswordComplete {...props} />
 }
 
@@ -121,9 +121,14 @@ export function SignIn() {
   const handleNavBackClick = React.useCallback(() => {
     stepDecrement()
   }, [stepDecrement])
-  const handleNextClick = React.useCallback(() => {
-    stepIncrement()
-  }, [stepIncrement])
+  const handleNextClick = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
+    (e) => {
+      e.stopPropagation()
+      e.preventDefault()
+      stepIncrement()
+    },
+    [stepIncrement]
+  )
   const handleResetPasswordCompleteClick = React.useCallback(() => {
     location && location.reload()
   }, [])
@@ -188,7 +193,7 @@ export function SignIn() {
             </Alert>
           )}
           {isStep(0) && (
-            <StepZero
+            <StepSignIn
               account={shortAccount}
               metamaskButtonDisabled={metamaskSigning}
               onNextButtonSubmit={handleSignInSubmit(handleNormalSignInSubmit)}
@@ -197,10 +202,10 @@ export function SignIn() {
               onSignUpClick={handleSignUpClick}
             />
           )}
-          {isStep(1) && <StepOne onNextButtonSubmit={handleFogotPasswordSubmit(handleSendEmailSubmit)} />}
-          {isStep(2) && <StepTwo onNextButtonSubmit={handleFogotPasswordSubmit(handleEmailVerifyCodeSubmit)} />}
-          {isStep(3) && <StepThree onNextButtonSubmit={handleFogotPasswordSubmit(handleNewPasswordSubmit)} />}
-          {isStep(4) && <StepFour onCompleteClick={handleResetPasswordCompleteClick} />}
+          {isStep(1) && <StepForgotPassword onNextButtonSubmit={handleFogotPasswordSubmit(handleSendEmailSubmit)} />}
+          {isStep(2) && <StepVerifyEmail onNextButtonSubmit={handleFogotPasswordSubmit(handleEmailVerifyCodeSubmit)} />}
+          {isStep(3) && <StepResetPassword onNextButtonSubmit={handleFogotPasswordSubmit(handleNewPasswordSubmit)} />}
+          {isStep(4) && <StepResetComplete onCompleteClick={handleResetPasswordCompleteClick} />}
           {!complete && wallet && (
             <AccountWallletSignIn
               account={shortAccount}
