@@ -144,12 +144,12 @@ export function SignIn() {
       if (!account && !openWalletModal) return setOpenWalletModal(true)
       const res = await walletLogin()
       if (!res.isOk) return setSignInError(res.error.message)
-      openGameClient({ path: res.data.accessToken }, 1000)
+      if (wallet) openGameClient({ path: res.data.accessToken }, 1000)
       setComplete(true)
     } finally {
       setMetamaskSigning(false)
     }
-  }, [account, metamaskSigning, openGameClient, openWalletModal, signInError, walletLogin])
+  }, [account, metamaskSigning, openGameClient, openWalletModal, signInError, wallet, walletLogin])
 
   const handleNormalSignInSubmit = React.useCallback(async (data: AccountSignInFormData) => {
     console.log('handleNormalSignInSubmit', data)
