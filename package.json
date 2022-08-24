@@ -27,6 +27,7 @@
     "rollup-plugin-polyfill-node": "^0.10.2",
     "stream-browserify": "^3.0.0",
     "use-local-storage-state": "^18.1.1",
+    "swiper": "^8.3.2",
     "util": "^0.12.4",
     "web-vitals": "^2.1.4"
   },

@@ -1,14 +1,15 @@
 import { NFT, NFT_TRAIT, NFTStarState, NFTTagState, NFTUpgradeState, PERK, PERKState, PERKTag } from '../types'
 
-export const NFTs: NFT[] = [
+export const NFT_DATA: NFT[] = [
   {
     cover: 'https://ambrus.s3.amazonaws.com/1657877346203_0.92_206.jpg',
     title: 'E4C Rangers',
     subtitle: 'Series 1',
+    description: 'Staking Descriptions',
     id: 537,
     tag: 'Gold Edition',
     tagState: NFTTagState.Cold,
-    introduction: [
+    trait: [
       {
         key: NFT_TRAIT.Character,
         value: 'Rin',
@@ -71,10 +72,11 @@ export const NFTs: NFT[] = [
     cover: 'https://ambrus.s3.amazonaws.com/1657877346199_0.09_204.jpg',
     title: 'E4C Rangers',
     subtitle: 'Series 1',
+    description: '',
     id: 537,
     tag: 'Gold Edition',
     tagState: NFTTagState.Cold,
-    introduction: [
+    trait: [
       {
         key: NFT_TRAIT.Character,
         value: 'Rin',
@@ -144,10 +146,11 @@ export const NFTs: NFT[] = [
     cover: 'https://ambrus.s3.amazonaws.com/1657877346199_0.09_204.jpg',
     title: 'E4C Rangers',
     subtitle: 'Series 1',
+    description: '',
     id: 537,
     tag: 'Gold Edition',
     tagState: NFTTagState.Cold,
-    introduction: [
+    trait: [
       {
         key: NFT_TRAIT.Character,
         value: 'Rin',
@@ -217,10 +220,11 @@ export const NFTs: NFT[] = [
     cover: 'https://ambrus.s3.amazonaws.com/1657877346191_0.92_107.jpg',
     title: 'E4C Rangers',
     subtitle: 'Series 1',
+    description: 'Staking Descriptions',
     id: 537,
     tag: 'Gold Edition',
     tagState: NFTTagState.ColdAdd,
-    introduction: [
+    trait: [
       {
         key: NFT_TRAIT.Character,
         value: 'Rin',
@@ -283,10 +287,11 @@ export const NFTs: NFT[] = [
     cover: 'https://ambrus.s3.amazonaws.com/1657877346186_0.34_105.jpg',
     title: 'E4C Rangers',
     subtitle: 'Series 1',
+    description: 'Staking Descriptions',
     id: 537,
     tag: 'Ultimate Edition',
     tagState: NFTTagState.Ultimate,
-    introduction: [
+    trait: [
       {
         key: NFT_TRAIT.Character,
         value: 'Rin',
