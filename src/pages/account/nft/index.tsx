@@ -1,3 +1,5 @@
+import 'swiper/css'
+
 import styled from '@emotion/styled'
 import { formatEther } from '@ethersproject/units'
 import { Stack } from '@mui/material'
