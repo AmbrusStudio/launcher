@@ -1,7 +1,7 @@
 import Dialog from '@mui/material/Dialog'
 import { useEthers } from '@usedapp/core'
 import WalletConnectProvider from '@walletconnect/web3-provider'
-import { Dispatch, FC, SetStateAction, useCallback } from 'react'
+import { FC, useCallback } from 'react'
 
 import { WALLET_LIST } from '../../data'
 import { WALLET_NAME } from '../../types'
@@ -9,10 +9,10 @@ import { getDefaultChainId } from '../../utils'
 
 interface WalletModalProps {
   readonly visible: boolean
-  setVisible: Dispatch<SetStateAction<boolean>>
+  onModalClose: () => void
 }
 
-const WalletModal: FC<WalletModalProps> = ({ visible, setVisible }) => {
+const WalletModal: FC<WalletModalProps> = ({ visible, onModalClose }) => {
   const { activateBrowserWallet, switchNetwork, chainId, activate } = useEthers()
 
   /**
@@ -24,8 +24,8 @@ const WalletModal: FC<WalletModalProps> = ({ visible, setVisible }) => {
     if (chainId !== defaultChainId) {
       await switchNetwork(defaultChainId)
     }
-    setVisible(false)
-  }, [activateBrowserWallet, switchNetwork, chainId, setVisible])
+    onModalClose()
+  }, [activateBrowserWallet, chainId, onModalClose, switchNetwork])
 
   /**
    * WalletConnect
@@ -40,12 +40,12 @@ const WalletModal: FC<WalletModalProps> = ({ visible, setVisible }) => {
       await provider.enable()
       await activate(provider)
 
-      setVisible(false)
+      onModalClose()
     } catch (error) {
       console.error(error)
       alert('An error occurred, please refresh and try again.')
     }
-  }, [activate, setVisible])
+  }, [activate, onModalClose])
 
   /**
    * Wallet select
@@ -62,7 +62,7 @@ const WalletModal: FC<WalletModalProps> = ({ visible, setVisible }) => {
   )
 
   return (
-    <Dialog open={visible} onClose={() => setVisible(false)}>
+    <Dialog open={visible} onClose={() => onModalClose()}>
       <div className="max-w-[400px]">
         {WALLET_LIST.map((wallet, index) => (
           <div

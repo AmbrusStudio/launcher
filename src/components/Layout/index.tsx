@@ -7,14 +7,21 @@ type PageLayoutProps = {
   className?: string
 }
 
+export function BasePageLayout(props: React.PropsWithChildren<PageLayoutProps>) {
+  const { className, children } = props
+  return (
+    <main id="main" className={className}>
+      {children}
+    </main>
+  )
+}
+
 export function PageLayout(props: React.PropsWithChildren<PageLayoutProps>) {
   const { className, children } = props
   return (
     <Fragment>
       <PageHeader />
-      <main id="main" className={className}>
-        {children}
-      </main>
+      <BasePageLayout className={className}>{children}</BasePageLayout>
       <PageFooter />
     </Fragment>
   )

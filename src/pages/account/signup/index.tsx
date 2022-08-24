@@ -21,8 +21,8 @@ import {
   AccountUsernameInputProps,
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
-import WalletModal from '../../../components/WalletModal'
-import { useMetamaskAccount } from '../../../hooks'
+import { BasePageLayout } from '../../../components/Layout'
+import { useMetamaskAccount, useWalletModal } from '../../../hooks'
 import { AccountSignUpFormData, StepInfo } from '../../../types'
 
 type StepSignUpProps = AccountEmailAndAgreementProps & {
@@ -90,11 +90,11 @@ export function SignUp() {
   const { account } = useEthers()
   const { walletLogin, walletBind } = useMetamaskAccount()
   const { watch, trigger, handleSubmit } = useFormContext<AccountSignUpFormData>()
+  const { openWalletModal } = useWalletModal()
 
   const shortAccount = shortenIfAddress(account)
 
   const [step, setStep] = React.useState(0)
-  const [openWalletModal, setOpenWalletModal] = React.useState(false)
   const [complete, setComplete] = React.useState(false)
   const [signUpError, setSignUpError] = React.useState('')
   const [metamaskBinding, setMetamaskBinding] = React.useState(false)
@@ -126,7 +126,7 @@ export function SignUp() {
     try {
       setMetamaskSigning(true)
       if (signUpError) setSignUpError('')
-      if (!account && !openWalletModal) return setOpenWalletModal(true)
+      if (!account) return openWalletModal()
       const res = await walletLogin()
       if (!res.isOk) return setSignUpError(res.error.message)
       setComplete(true)
@@ -177,7 +177,7 @@ export function SignUp() {
     try {
       setMetamaskBinding(true)
       if (signUpError) setSignUpError('')
-      if (!account && !openWalletModal) return setOpenWalletModal(true)
+      if (!account) return openWalletModal()
       const res = await walletBind()
       if (!res.isOk) return setSignUpError(res.error.message)
       setComplete(true)
@@ -196,38 +196,35 @@ export function SignUp() {
   }, [watch])
 
   return (
-    <main id="main">
-      <div className="md:py-192px md:mx-auto max-w-600px">
-        <AccountPopup title={title} showBack={navBack} onNavBackClick={handleNavBackClick}>
-          {signUpError && (
-            <Alert className="mb-24px" variant="filled" severity="error">
-              {signUpError}
-            </Alert>
-          )}
-          {isStep(0) && (
-            <StepSignUp
-              account={shortAccount}
-              metamaskButtonDisabled={metamaskSigning}
-              onNextButtonSubmit={handleSubmit(handleEmailSignUpSubmit)}
-              onMetamaskClick={handleMetamaskSignUpClick}
-              onSignInClick={handleSignInClick}
-            />
-          )}
-          {isStep(1) && <StepVerifyYourEmail onNextButtonSubmit={handleSubmit(handleEmailVerifyCodeSubmit)} />}
-          {isStep(2) && <StepChooseAUsername onNextButtonSubmit={handleSubmit(handleUsernameSubmit)} />}
-          {isStep(3) && <StepEnterPassword onNextButtonSubmit={handleSubmit(handlePasswordSubmit)} />}
-          {isStep(4) && (
-            <StepConnectWallet
-              account={shortAccount}
-              metamaskButtonDisabled={metamaskBinding}
-              onMetamaskClick={handleBindWalletClick}
-              onSkipClick={handleSkipBindWalletClick}
-            />
-          )}
-          {complete && <AccountSignUpComplete onCompleteClick={handleCompleteClick} />}
-        </AccountPopup>
-      </div>
-      <WalletModal visible={openWalletModal} setVisible={setOpenWalletModal} />
-    </main>
+    <BasePageLayout className="md:py-192px md:mx-auto max-w-600px">
+      <AccountPopup title={title} showBack={navBack} onNavBackClick={handleNavBackClick}>
+        {signUpError && (
+          <Alert className="mb-24px" variant="filled" severity="error">
+            {signUpError}
+          </Alert>
+        )}
+        {isStep(0) && (
+          <StepSignUp
+            account={shortAccount}
+            metamaskButtonDisabled={metamaskSigning}
+            onNextButtonSubmit={handleSubmit(handleEmailSignUpSubmit)}
+            onMetamaskClick={handleMetamaskSignUpClick}
+            onSignInClick={handleSignInClick}
+          />
+        )}
+        {isStep(1) && <StepVerifyYourEmail onNextButtonSubmit={handleSubmit(handleEmailVerifyCodeSubmit)} />}
+        {isStep(2) && <StepChooseAUsername onNextButtonSubmit={handleSubmit(handleUsernameSubmit)} />}
+        {isStep(3) && <StepEnterPassword onNextButtonSubmit={handleSubmit(handlePasswordSubmit)} />}
+        {isStep(4) && (
+          <StepConnectWallet
+            account={shortAccount}
+            metamaskButtonDisabled={metamaskBinding}
+            onMetamaskClick={handleBindWalletClick}
+            onSkipClick={handleSkipBindWalletClick}
+          />
+        )}
+        {complete && <AccountSignUpComplete onCompleteClick={handleCompleteClick} />}
+      </AccountPopup>
+    </BasePageLayout>
   )
 }

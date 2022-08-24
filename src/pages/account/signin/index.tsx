@@ -22,8 +22,8 @@ import {
   AccountWallletSignIn,
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
-import WalletModal from '../../../components/WalletModal'
-import { useMetamaskAccount, useOpenGameClient, useQuery } from '../../../hooks'
+import { BasePageLayout } from '../../../components/Layout'
+import { useMetamaskAccount, useOpenGameClient, useQuery, useWalletModal } from '../../../hooks'
 import { AccountForgotPasswordFormData, AccountSignInFormData, StepInfo } from '../../../types'
 
 type StepSignInProps = AccountUsernameAndPasswordProps & {
@@ -96,13 +96,13 @@ export function SignIn() {
   const { account } = useEthers()
   const { walletLogin } = useMetamaskAccount()
   const { openGameClient } = useOpenGameClient()
+  const { openWalletModal } = useWalletModal()
 
   const shortAccount = shortenIfAddress(account)
 
   const client = query.get('client')
   const [wallet] = React.useState(!!client)
   const [step, setStep] = React.useState(0)
-  const [openWalletModal, setOpenWalletModal] = React.useState(false)
   const [complete, setComplete] = React.useState(false)
   const [signInError, setSignInError] = React.useState('')
   const [metamaskSigning, setMetamaskSigning] = React.useState(false)
@@ -141,7 +141,7 @@ export function SignIn() {
     try {
       setMetamaskSigning(true)
       if (signInError) setSignInError('')
-      if (!account && !openWalletModal) return setOpenWalletModal(true)
+      if (!account) return openWalletModal()
       const res = await walletLogin()
       if (!res.isOk) return setSignInError(res.error.message)
       if (wallet) openGameClient({ path: res.data.accessToken }, 1000)
@@ -184,40 +184,37 @@ export function SignIn() {
   )
 
   return (
-    <main id="main">
-      <div className="md:py-192px md:mx-auto max-w-600px">
-        <AccountPopup title={title} showBack={navBack} onNavBackClick={handleNavBackClick}>
-          {signInError && (
-            <Alert className="mb-24px" variant="filled" severity="error">
-              {signInError}
-            </Alert>
-          )}
-          {isStep(0) && (
-            <StepSignIn
-              account={shortAccount}
-              metamaskButtonDisabled={metamaskSigning}
-              onNextButtonSubmit={handleSignInSubmit(handleNormalSignInSubmit)}
-              onFogotPasswordClick={handleNextClick}
-              onMetamaskClick={handleMetamaskSignInClick}
-              onSignUpClick={handleSignUpClick}
-            />
-          )}
-          {isStep(1) && <StepForgotPassword onNextButtonSubmit={handleFogotPasswordSubmit(handleSendEmailSubmit)} />}
-          {isStep(2) && <StepVerifyEmail onNextButtonSubmit={handleFogotPasswordSubmit(handleEmailVerifyCodeSubmit)} />}
-          {isStep(3) && <StepResetPassword onNextButtonSubmit={handleFogotPasswordSubmit(handleNewPasswordSubmit)} />}
-          {isStep(4) && <StepResetComplete onCompleteClick={handleResetPasswordCompleteClick} />}
-          {!complete && wallet && (
-            <AccountWallletSignIn
-              account={shortAccount}
-              brandName={brandName}
-              disabled={metamaskSigning}
-              onMetamaskClick={handleMetamaskSignInClick}
-            />
-          )}
-          {complete && <AccountSignInComplete brandName={brandName} />}
-        </AccountPopup>
-      </div>
-      <WalletModal visible={openWalletModal} setVisible={setOpenWalletModal} />
-    </main>
+    <BasePageLayout className="md:py-192px md:mx-auto max-w-600px">
+      <AccountPopup title={title} showBack={navBack} onNavBackClick={handleNavBackClick}>
+        {signInError && (
+          <Alert className="mb-24px" variant="filled" severity="error">
+            {signInError}
+          </Alert>
+        )}
+        {isStep(0) && (
+          <StepSignIn
+            account={shortAccount}
+            metamaskButtonDisabled={metamaskSigning}
+            onNextButtonSubmit={handleSignInSubmit(handleNormalSignInSubmit)}
+            onFogotPasswordClick={handleNextClick}
+            onMetamaskClick={handleMetamaskSignInClick}
+            onSignUpClick={handleSignUpClick}
+          />
+        )}
+        {isStep(1) && <StepForgotPassword onNextButtonSubmit={handleFogotPasswordSubmit(handleSendEmailSubmit)} />}
+        {isStep(2) && <StepVerifyEmail onNextButtonSubmit={handleFogotPasswordSubmit(handleEmailVerifyCodeSubmit)} />}
+        {isStep(3) && <StepResetPassword onNextButtonSubmit={handleFogotPasswordSubmit(handleNewPasswordSubmit)} />}
+        {isStep(4) && <StepResetComplete onCompleteClick={handleResetPasswordCompleteClick} />}
+        {!complete && wallet && (
+          <AccountWallletSignIn
+            account={shortAccount}
+            brandName={brandName}
+            disabled={metamaskSigning}
+            onMetamaskClick={handleMetamaskSignInClick}
+          />
+        )}
+        {complete && <AccountSignInComplete brandName={brandName} />}
+      </AccountPopup>
+    </BasePageLayout>
   )
 }
