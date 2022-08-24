@@ -23,7 +23,7 @@ import {
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
 import WalletModal from '../../../components/WalletModal'
-import { useMetamaskAccount, useQuery } from '../../../hooks'
+import { useMetamaskAccount, useOpenGameClient, useQuery } from '../../../hooks'
 import { AccountForgotPasswordFormData, AccountSignInFormData, StepInfo } from '../../../types'
 
 type StepZeroProps = AccountUsernameAndPasswordProps & {
@@ -95,6 +95,7 @@ export function SignIn() {
   const { trigger, handleSubmit: handleFogotPasswordSubmit } = useFormContext<AccountForgotPasswordFormData>()
   const { account } = useEthers()
   const { walletLogin } = useMetamaskAccount()
+  const { openGameClient } = useOpenGameClient()
 
   const shortAccount = shortenIfAddress(account)
 
@@ -138,11 +139,12 @@ export function SignIn() {
       if (!account && !openWalletModal) return setOpenWalletModal(true)
       const res = await walletLogin()
       if (!res.isOk) return setSignInError(res.error.message)
+      openGameClient({ path: res.data.accessToken }, 1000)
       setComplete(true)
     } finally {
       setMetamaskSigning(false)
     }
-  }, [account, metamaskSigning, openWalletModal, signInError, walletLogin])
+  }, [account, metamaskSigning, openGameClient, openWalletModal, signInError, walletLogin])
 
   const handleNormalSignInSubmit = React.useCallback(async (data: AccountSignInFormData) => {
     console.log('handleNormalSignInSubmit', data)
