@@ -1,4 +1,6 @@
-import { ValidationRule } from 'react-hook-form'
+import type { ValidationRule } from 'react-hook-form'
+
+import { getAccessTokenPayload } from './jwt'
 
 export function getEmailValidationPattern(): ValidationRule<RegExp> {
   return {
@@ -35,4 +37,11 @@ export function getMaxLengthValidationRule(name: string, length: number): Valida
     value: length,
     message: `${name} cannot be longer than ${length} characters.`,
   }
+}
+
+export function isAccountTokenExpired(token: string): boolean {
+  const payload = getAccessTokenPayload(token)
+  const now = Date.now()
+  if (!payload.exp || payload.exp <= now) return true
+  return false
 }

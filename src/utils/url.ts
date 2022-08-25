@@ -19,3 +19,11 @@ export function openFallenArenaClient(path: string, query?: Record<string, strin
   const _url = `fallenarena://${path}${_query}`
   if (window) window.location.assign(_url)
 }
+
+export function redirectToSignIn(): void {
+  if (window) {
+    if (window.location.href.includes('/account/signin')) return
+    const url = new URL('/account/signin', window.location.href)
+    window.location.replace(url)
+  }
+}

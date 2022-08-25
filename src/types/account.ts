@@ -1,3 +1,7 @@
+import type { JWTPayload } from 'jose'
+
+import type { RemoveIndex } from './utils'
+
 export type StepInfo = {
   title: string
   navBack: boolean
@@ -40,4 +44,11 @@ export type AccountApiResult<T = unknown, E = Error> = ResultOk<T> | ResultErr<E
 
 export type AccountAccessToken = {
   accessToken: string
+}
+
+export type AccountAccessTokenJWTPayload = RemoveIndex<JWTPayload> & {
+  id: number
+  email: string | null
+  wallet: string | null
+  nickname: string | null
 }
