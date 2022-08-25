@@ -23,22 +23,27 @@ import {
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
 import { BasePageLayout } from '../../../components/Layout'
-import { useMetamaskAccount, useOpenGameClient, useQuery, useWalletModal } from '../../../hooks'
+import { useEmailAccount, useMetamaskAccount, useOpenGameClient, useQuery, useWalletModal } from '../../../hooks'
 import { AccountForgotPasswordFormData, AccountSignInFormData, StepInfo } from '../../../types'
 
 type StepSignInProps = AccountUsernameAndPasswordProps & {
   account: string
+  nextButtonDisabled?: boolean
   metamaskButtonDisabled?: boolean
   onMetamaskClick: React.MouseEventHandler<HTMLButtonElement>
   onSignUpClick: React.MouseEventHandler<HTMLButtonElement>
 }
 
 function StepSignIn(props: StepSignInProps) {
-  const { account, metamaskButtonDisabled = false } = props
+  const { account, nextButtonDisabled = false, metamaskButtonDisabled = false } = props
   const { onMetamaskClick, onSignUpClick, onFogotPasswordClick, onNextButtonSubmit } = props
   return (
     <div className="flex flex-col gap-24px">
-      <AccountUsernameAndPassword onFogotPasswordClick={onFogotPasswordClick} onNextButtonSubmit={onNextButtonSubmit} />
+      <AccountUsernameAndPassword
+        disabled={nextButtonDisabled}
+        onFogotPasswordClick={onFogotPasswordClick}
+        onNextButtonSubmit={onNextButtonSubmit}
+      />
       <AccountORSpacer />
       <AccountContinueWithMetamask account={account} disabled={metamaskButtonDisabled} onClick={onMetamaskClick} />
       <Button variant="secondary" onClick={onSignUpClick}>
@@ -94,9 +99,10 @@ export function SignIn() {
   const { handleSubmit: handleSignInSubmit } = useFormContext<AccountSignInFormData>()
   const { trigger, handleSubmit: handleFogotPasswordSubmit } = useFormContext<AccountForgotPasswordFormData>()
   const { account } = useEthers()
-  const { walletLogin } = useMetamaskAccount()
   const { openGameClient } = useOpenGameClient()
   const { openWalletModal } = useWalletModal()
+  const { walletLogin } = useMetamaskAccount()
+  const { emailLogin } = useEmailAccount()
 
   const shortAccount = shortenIfAddress(account)
 
@@ -106,6 +112,7 @@ export function SignIn() {
   const [complete, setComplete] = React.useState(false)
   const [signInError, setSignInError] = React.useState('')
   const [metamaskSigning, setMetamaskSigning] = React.useState(false)
+  const [emailSigning, setEmailSigning] = React.useState(false)
 
   const { title, navBack } = getStepInfo(step, complete)
   const isStep = React.useCallback(
@@ -151,10 +158,21 @@ export function SignIn() {
     }
   }, [account, metamaskSigning, openGameClient, openWalletModal, signInError, wallet, walletLogin])
 
-  const handleNormalSignInSubmit = React.useCallback(async (data: AccountSignInFormData) => {
-    console.log('handleNormalSignInSubmit', data)
-    setComplete(true)
-  }, [])
+  const handleNormalSignInSubmit = React.useCallback(
+    async (data: AccountSignInFormData) => {
+      if (emailSigning) return
+      try {
+        setEmailSigning(true)
+        if (signInError) setSignInError('')
+        const res = await emailLogin(data.email, data.password)
+        if (!res.isOk) return setSignInError(res.error.message)
+        setComplete(true)
+      } finally {
+        setEmailSigning(false)
+      }
+    },
+    [emailLogin, emailSigning, signInError]
+  )
 
   /** For step 1, send email for verify user can reset password. */
   const handleSendEmailSubmit = React.useCallback(
@@ -194,6 +212,7 @@ export function SignIn() {
         {isStep(0) && (
           <StepSignIn
             account={shortAccount}
+            nextButtonDisabled={emailSigning}
             metamaskButtonDisabled={metamaskSigning}
             onNextButtonSubmit={handleSignInSubmit(handleNormalSignInSubmit)}
             onFogotPasswordClick={handleNextClick}

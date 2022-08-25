@@ -22,21 +22,23 @@ import {
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
 import { BasePageLayout } from '../../../components/Layout'
-import { useMetamaskAccount, useWalletModal } from '../../../hooks'
+import { useEmailAccount, useMetamaskAccount, useWalletModal } from '../../../hooks'
 import { AccountSignUpFormData, StepInfo } from '../../../types'
 
 type StepSignUpProps = AccountEmailAndAgreementProps & {
   account: string
+  nextButtonDisabled?: boolean
   metamaskButtonDisabled?: boolean
   onMetamaskClick: React.MouseEventHandler<HTMLButtonElement>
   onSignInClick: React.MouseEventHandler<HTMLButtonElement>
 }
 
 function StepSignUp(props: StepSignUpProps) {
-  const { account, metamaskButtonDisabled = false, onNextButtonSubmit, onMetamaskClick, onSignInClick } = props
+  const { account, nextButtonDisabled = false, metamaskButtonDisabled = false } = props
+  const { onNextButtonSubmit, onMetamaskClick, onSignInClick } = props
   return (
     <div className="flex flex-col gap-24px">
-      <AccountEmailAndAgreement onNextButtonSubmit={onNextButtonSubmit} />
+      <AccountEmailAndAgreement disabled={nextButtonDisabled} onNextButtonSubmit={onNextButtonSubmit} />
       <AccountORSpacer />
       <AccountContinueWithMetamask account={account} disabled={metamaskButtonDisabled} onClick={onMetamaskClick} />
       <Button variant="secondary" onClick={onSignInClick}>
@@ -88,9 +90,10 @@ function getStepInfo(step: number, complete?: boolean): StepInfo {
 export function SignUp() {
   const navigate = useNavigate()
   const { account } = useEthers()
-  const { walletLogin, walletBind } = useMetamaskAccount()
-  const { watch, trigger, handleSubmit } = useFormContext<AccountSignUpFormData>()
+  const { getValues, trigger, handleSubmit } = useFormContext<AccountSignUpFormData>()
   const { openWalletModal } = useWalletModal()
+  const { walletLogin, walletBind } = useMetamaskAccount()
+  const { emailSendVerification, emailRegister } = useEmailAccount()
 
   const shortAccount = shortenIfAddress(account)
 
@@ -99,6 +102,8 @@ export function SignUp() {
   const [signUpError, setSignUpError] = React.useState('')
   const [metamaskBinding, setMetamaskBinding] = React.useState(false)
   const [metamaskSigning, setMetamaskSigning] = React.useState(false)
+  const [verifySending, setVerifySending] = React.useState(false)
+  const [emailSigning, setEmailSigning] = React.useState(false)
 
   const { title, navBack } = getStepInfo(step, complete)
   const isStep = React.useCallback(
@@ -138,27 +143,44 @@ export function SignUp() {
   /** For step 0, sign up with email directly. */
   const handleEmailSignUpSubmit = React.useCallback(
     async (data: AccountSignUpFormData) => {
-      console.log('handleEmailSignUpSubmit', data)
-      stepIncrement()
+      if (!data.agreement || verifySending) return
+      try {
+        setVerifySending(true)
+        if (signUpError) setSignUpError('')
+        const res = await emailSendVerification(data.email, data.newsletter)
+        if (!res.isOk) return setSignUpError(res.error.message)
+        stepIncrement()
+      } finally {
+        setVerifySending(false)
+      }
     },
-    [stepIncrement]
+    [emailSendVerification, signUpError, stepIncrement, verifySending]
   )
   /** For step 1, verify email with 6 digits code. */
   const handleEmailVerifyCodeSubmit = React.useCallback(
     async (data: AccountSignUpFormData) => {
+      if (!data.verifyCode) return
       const check = await trigger('verifyCode')
       if (!check) return
-      console.log('handleEmailVerifyCodeSubmit', data)
       stepIncrement()
     },
     [stepIncrement, trigger]
   )
+  /** For step 1, resend verify email. */
+  const handleResendEmailVerifyCodeClick = React.useCallback(async () => {
+    const check = await trigger('email')
+    if (!check) return stepDecrement() // If no email, back to input email.
+    if (signUpError) setSignUpError('')
+    const [email, newsletter] = getValues(['email', 'newsletter'])
+    const res = await emailSendVerification(email, newsletter)
+    if (!res.isOk) return setSignUpError(res.error.message)
+  }, [emailSendVerification, getValues, signUpError, stepDecrement, trigger])
   /** For step 2, set an username. */
   const handleUsernameSubmit = React.useCallback(
     async (data: AccountSignUpFormData) => {
+      if (!data.username) return
       const check = await trigger('username')
       if (!check) return
-      console.log('handleUsernameSubmit', data)
       stepIncrement()
     },
     [stepIncrement, trigger]
@@ -166,10 +188,25 @@ export function SignUp() {
   /** For step 3, set a password */
   const handlePasswordSubmit = React.useCallback(
     async (data: AccountSignUpFormData) => {
-      console.log('handlePasswordSubmit', data)
-      stepIncrement()
+      if (emailSigning) return
+      try {
+        setEmailSigning(true)
+        if (signUpError) setSignUpError('')
+        const check = await trigger('password')
+        if (!check) return
+        const res = await emailRegister({
+          address: data.email,
+          password: data.password,
+          code: data.verifyCode,
+          nickname: data.username,
+        })
+        if (!res.isOk) return setSignUpError(res.error.message)
+        stepIncrement()
+      } finally {
+        setEmailSigning(false)
+      }
     },
-    [stepIncrement]
+    [emailRegister, emailSigning, signUpError, stepIncrement, trigger]
   )
   /** For step 4, bind wallet */
   const handleBindWalletClick = React.useCallback(async () => {
@@ -186,14 +223,9 @@ export function SignUp() {
     }
   }, [account, metamaskBinding, openWalletModal, signUpError, walletBind])
   const handleSkipBindWalletClick = React.useCallback(() => {
+    if (signUpError) setSignUpError('')
     setComplete(true)
-  }, [])
-
-  React.useEffect(() => {
-    // TODO: remove before prodction
-    const subscription = watch((value, { name, type }) => console.log('watch', name, type, value))
-    return () => subscription.unsubscribe()
-  }, [watch])
+  }, [signUpError])
 
   return (
     <BasePageLayout className="md:py-192px md:mx-auto max-w-600px">
@@ -206,15 +238,23 @@ export function SignUp() {
         {isStep(0) && (
           <StepSignUp
             account={shortAccount}
+            nextButtonDisabled={verifySending}
             metamaskButtonDisabled={metamaskSigning}
             onNextButtonSubmit={handleSubmit(handleEmailSignUpSubmit)}
             onMetamaskClick={handleMetamaskSignUpClick}
             onSignInClick={handleSignInClick}
           />
         )}
-        {isStep(1) && <StepVerifyYourEmail onNextButtonSubmit={handleSubmit(handleEmailVerifyCodeSubmit)} />}
+        {isStep(1) && (
+          <StepVerifyYourEmail
+            onNextButtonSubmit={handleSubmit(handleEmailVerifyCodeSubmit)}
+            onResendClick={handleResendEmailVerifyCodeClick}
+          />
+        )}
         {isStep(2) && <StepChooseAUsername onNextButtonSubmit={handleSubmit(handleUsernameSubmit)} />}
-        {isStep(3) && <StepEnterPassword onNextButtonSubmit={handleSubmit(handlePasswordSubmit)} />}
+        {isStep(3) && (
+          <StepEnterPassword disabled={emailSigning} onNextButtonSubmit={handleSubmit(handlePasswordSubmit)} />
+        )}
         {isStep(4) && (
           <StepConnectWallet
             account={shortAccount}
