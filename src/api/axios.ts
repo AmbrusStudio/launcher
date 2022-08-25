@@ -62,7 +62,7 @@ class AccountBackendRequest {
     if (localStorage) {
       const token = localStorage.getItem(LSK_ACCESS_TOKEN)
       if (token) {
-        config.headers = Object.assign({}, config.headers, { Authorization: token })
+        config.headers = Object.assign({}, config.headers, { Authorization: `Bearer ${JSON.parse(token)}` })
       }
     }
     return config
