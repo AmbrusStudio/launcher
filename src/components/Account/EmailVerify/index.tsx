@@ -31,12 +31,17 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function renderInpu
   )
 })
 
-function DigitInputs() {
+type DigitInputsHandle = {
+  handleCodeReset: () => void
+}
+
+const DigitInputs = React.forwardRef(function useDigitInputs(_, ref) {
   const {
     register,
     setValue,
     formState: { errors },
   } = useFormContext<AccountSignUpFormData>()
+
   const [code, setCode] = React.useState('')
   const handleCodeChange = React.useCallback(
     (code: string) => {
@@ -45,6 +50,7 @@ function DigitInputs() {
     },
     [setValue]
   )
+
   const digits = useDigitInput({
     acceptedCharacters: /^[0-9]$/,
     length: 6,
@@ -52,6 +58,13 @@ function DigitInputs() {
     onChange: handleCodeChange,
   })
   const error = getFormErrorMessage(errors.verifyCode)
+
+  const handleCodeReset = React.useCallback(() => {
+    setCode('')
+    setValue('verifyCode', '')
+  }, [setValue])
+
+  React.useImperativeHandle<unknown, DigitInputsHandle>(ref, () => ({ handleCodeReset }), [handleCodeReset])
 
   return (
     <div className="flex flex-row flex-nowrap justify-between xl:px-24px">
@@ -69,7 +82,7 @@ function DigitInputs() {
       />
     </div>
   )
-}
+})
 
 const resendTime = 60
 
@@ -81,6 +94,7 @@ export function AccountEmailVerify(props: AccountEmailVerifyProps) {
   const { onNextButtonSubmit, onResendClick } = props
   const [timeLeft, setTimeLeft] = React.useState(resendTime)
   const intervalRef = React.useRef<ReturnType<typeof setInterval>>()
+  const digitInputsRef = React.useRef<DigitInputsHandle>()
 
   const canResend = timeLeft <= 0
 
@@ -90,6 +104,7 @@ export function AccountEmailVerify(props: AccountEmailVerifyProps) {
 
   const handleResendEmail = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
     async (e) => {
+      if (digitInputsRef.current) digitInputsRef.current.handleCodeReset()
       if (onResendClick) onResendClick(e)
       setTimeLeft(resendTime)
     },
@@ -107,7 +122,7 @@ export function AccountEmailVerify(props: AccountEmailVerifyProps) {
       <AccountTips>
         <p>We have sent a verification code to your email address. Please enter it below.</p>
       </AccountTips>
-      <DigitInputs />
+      <DigitInputs ref={digitInputsRef} />
       <div className="flex flex-col gap-24px">
         <Button variant="primary" type="submit">
           Next
