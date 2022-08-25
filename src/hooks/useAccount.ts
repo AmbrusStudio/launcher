@@ -2,7 +2,14 @@ import { useEthers } from '@usedapp/core'
 import React from 'react'
 import useLocalStorageState from 'use-local-storage-state'
 
-import { bindMetamaskAddress, doMetamaskLogin, getMetamaskCode } from '../api'
+import {
+  bindMetamaskAddress,
+  doEmailLogin,
+  doMetamaskLogin,
+  getMetamaskCode,
+  registerWithEmail,
+  sendVerifyEmail,
+} from '../api'
 import { LSK_ACCESS_TOKEN } from '../constants'
 import { AccountAccessToken, AccountApiResult } from '../types'
 import { getDefaultChainId } from '../utils'
@@ -61,4 +68,49 @@ export function useMetamaskAccount(): UseMetamaskAccount {
   }, [account, getMetamaskSignCode, getMetamaskSignSignature])
 
   return { walletLogin, walletBind }
+}
+
+type EmailRegisterParams = {
+  address: string
+  password: string
+  code: string
+  nickname: string
+}
+
+type UseEmailAccount = {
+  emailSendVerification: (address: string, subscription?: boolean) => Promise<AccountApiResult<void>>
+  emailLogin: (address: string, password: string) => Promise<AccountApiResult<AccountAccessToken>>
+  emailRegister: (params: EmailRegisterParams) => Promise<AccountApiResult<AccountAccessToken>>
+}
+
+export function useEmailAccount(): UseEmailAccount {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setAccessToken] = useLocalStorageState<string>(LSK_ACCESS_TOKEN)
+
+  const emailSendVerification = React.useCallback<UseEmailAccount['emailSendVerification']>(
+    async (address, subscription = false) => {
+      return await sendVerifyEmail(address, subscription)
+    },
+    []
+  )
+
+  const emailLogin = React.useCallback<UseEmailAccount['emailLogin']>(
+    async (address, password) => {
+      const res = await doEmailLogin(address, password)
+      if (res.isOk) setAccessToken(res.data.accessToken)
+      return res
+    },
+    [setAccessToken]
+  )
+
+  const emailRegister = React.useCallback<UseEmailAccount['emailRegister']>(
+    async (params) => {
+      const res = await registerWithEmail(params)
+      if (res.isOk) setAccessToken(res.data.accessToken)
+      return res
+    },
+    [setAccessToken]
+  )
+
+  return { emailSendVerification, emailLogin, emailRegister }
 }

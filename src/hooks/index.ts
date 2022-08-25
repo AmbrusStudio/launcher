@@ -1,4 +1,4 @@
-export * from './useEthers'
+export * from './useAccount'
 export * from './useNumStrState'
 export * from './useOpenGameClient'
 export * from './useQuery'
