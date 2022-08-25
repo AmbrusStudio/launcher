@@ -71,9 +71,9 @@ export const NFT_DATA: NFT[] = [
   {
     cover: 'https://ambrus.s3.amazonaws.com/1657877346199_0.09_204.jpg',
     title: 'E4C Rangers',
-    subtitle: 'Series 1',
+    subtitle: 'Series 12',
     description: '',
-    id: 537,
+    id: 57,
     tag: 'Gold Edition',
     tagState: NFTTagState.Cold,
     trait: [
@@ -145,9 +145,9 @@ export const NFT_DATA: NFT[] = [
   {
     cover: 'https://ambrus.s3.amazonaws.com/1657877346199_0.09_204.jpg',
     title: 'E4C Rangers',
-    subtitle: 'Series 1',
+    subtitle: 'Series 11',
     description: '',
-    id: 537,
+    id: 57,
     tag: 'Gold Edition',
     tagState: NFTTagState.Cold,
     trait: [
@@ -219,9 +219,9 @@ export const NFT_DATA: NFT[] = [
   {
     cover: 'https://ambrus.s3.amazonaws.com/1657877346191_0.92_107.jpg',
     title: 'E4C Rangers',
-    subtitle: 'Series 1',
+    subtitle: 'Series 10',
     description: 'Staking Descriptions',
-    id: 537,
+    id: 47,
     tag: 'Gold Edition',
     tagState: NFTTagState.ColdAdd,
     trait: [
@@ -286,7 +286,7 @@ export const NFT_DATA: NFT[] = [
   {
     cover: 'https://ambrus.s3.amazonaws.com/1657877346186_0.34_105.jpg',
     title: 'E4C Rangers',
-    subtitle: 'Series 1',
+    subtitle: 'Series 87',
     description: 'Staking Descriptions',
     id: 537,
     tag: 'Ultimate Edition',
