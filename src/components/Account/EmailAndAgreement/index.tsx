@@ -4,10 +4,12 @@ import { AccountCommonProps, AccountSignUpFormData } from '../../../types'
 import { getEmailValidationPattern, getFormErrorMessage, getMaxLengthValidationRule } from '../../../utils'
 import { Button, Checkbox, Input } from '../../Forms'
 
-export type AccountEmailAndAgreementProps = AccountCommonProps
+export type AccountEmailAndAgreementProps = AccountCommonProps & {
+  disabled?: boolean
+}
 
 export function AccountEmailAndAgreement(props: AccountEmailAndAgreementProps) {
-  const { onNextButtonSubmit } = props
+  const { disabled, onNextButtonSubmit } = props
   const {
     register,
     formState: { errors },
@@ -43,7 +45,7 @@ export function AccountEmailAndAgreement(props: AccountEmailAndAgreementProps) {
           Check this box to subscribe to your newsletter
         </Checkbox>
       </div>
-      <Button variant="primary" type="submit">
+      <Button variant="primary" type="submit" disabled={disabled}>
         Next
       </Button>
     </form>

@@ -4,7 +4,10 @@ import { AccountCommonProps, AccountSignInFormData } from '../../../types'
 import { getFormErrorMessage } from '../../../utils'
 import { Button, Input } from '../../Forms'
 
-export type AccountUsernameAndPasswordProps = AccountCommonProps & FogotPasswordProps
+export type AccountUsernameAndPasswordProps = AccountCommonProps &
+  FogotPasswordProps & {
+    disabled?: boolean
+  }
 
 type FogotPasswordProps = {
   onFogotPasswordClick: React.MouseEventHandler<HTMLButtonElement>
@@ -20,7 +23,7 @@ function FogotPassword(props: FogotPasswordProps) {
 }
 
 export function AccountUsernameAndPassword(props: AccountUsernameAndPasswordProps) {
-  const { onNextButtonSubmit, onFogotPasswordClick } = props
+  const { disabled = false, onNextButtonSubmit, onFogotPasswordClick } = props
   const {
     register,
     formState: { errors },
@@ -47,7 +50,7 @@ export function AccountUsernameAndPassword(props: AccountUsernameAndPasswordProp
         required
         {...register('password', { required: 'You must specify a password.' })}
       />
-      <Button variant="primary" type="submit">
+      <Button variant="primary" type="submit" disabled={disabled}>
         Next
       </Button>
     </form>

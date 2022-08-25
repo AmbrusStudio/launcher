@@ -12,10 +12,11 @@ import { AccountTips } from '../Tips'
 
 export type AccountPasswordInputProps = AccountCommonProps & {
   isNew?: boolean
+  disabled?: boolean
 }
 
 export function AccountPasswordInput(props: AccountPasswordInputProps) {
-  const { isNew, onNextButtonSubmit } = props
+  const { isNew, disabled, onNextButtonSubmit } = props
   const {
     register,
     watch,
@@ -56,7 +57,7 @@ export function AccountPasswordInput(props: AccountPasswordInputProps) {
         })}
         error={getFormErrorMessage(errors.confirmPassword)}
       />
-      <Button variant="primary" type="submit">
+      <Button variant="primary" type="submit" disabled={disabled}>
         Next
       </Button>
     </form>
