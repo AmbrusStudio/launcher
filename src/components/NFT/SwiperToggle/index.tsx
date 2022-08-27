@@ -1,24 +1,19 @@
 import 'swiper/css'
 
 import classNames from 'classnames'
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useState } from 'react'
 import Swiper from 'swiper'
 import { Swiper as SwiperReact, SwiperSlide } from 'swiper/react'
 
 import { NFT_DATA } from '../../../data'
 
 interface SwiperToggleProps {
+  readonly currentIndex: number
   toggle: Dispatch<SetStateAction<number>>
 }
 
-const SwiperToggle: FC<SwiperToggleProps> = ({ toggle }) => {
+const SwiperToggle: FC<SwiperToggleProps> = ({ toggle, currentIndex }) => {
   const [swiper, setSwiper] = useState<Swiper>()
-
-  useEffect(() => {
-    if (swiper) {
-      ;(window as any).swiper1 = swiper
-    }
-  }, [swiper])
 
   return (
     <SwiperReact
@@ -34,10 +29,22 @@ const SwiperToggle: FC<SwiperToggleProps> = ({ toggle }) => {
       className="!px-6"
     >
       {NFT_DATA.map((item, index) => (
-        <SwiperSlide className="px-[6px] box-border" onClick={() => toggle(index)} key={index}>
+        <SwiperSlide
+          className="px-[6px] box-border"
+          onClick={() => {
+            toggle(index)
+
+            if (index > currentIndex || (index === 0 && currentIndex === NFT_DATA.length - 1)) {
+              swiper?.slideNext()
+            } else if (index < currentIndex || (index === NFT_DATA.length - 1 && currentIndex === 0)) {
+              swiper?.slidePrev()
+            }
+          }}
+          key={index}
+        >
           <div
             className={classNames('w-[100%] h-[100%] bg-white opacity-50', {
-              'border-2 border-white !opacity-100': index === 0,
+              'border-2 border-white !opacity-100': index === currentIndex,
             })}
           >
             <img className="object-cover" src={item.cover} />
