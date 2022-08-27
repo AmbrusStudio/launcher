@@ -51,12 +51,7 @@ function AccountNFT() {
   }
 
   const onReceived = () => {
-    sendReceived(
-      getAddress('0xC36442b4a4522E871399CD717aBDD847Ab11FE88'),
-      getAddress('0x3484040A7c337A95d0eD7779769ffe3e14ecCcA6'),
-      '1',
-      'hello'
-    )
+    sendReceived('', getAddress('0x3484040A7c337A95d0eD7779769ffe3e14ecCcA6'), '1', '')
   }
 
   const onUnstake = () => {
