@@ -5,9 +5,6 @@ import Add from '../../../components/Icon/Add'
 import { NFT, NFTTagState } from '../../../types'
 
 const Wrapper = styled.div<{ state: NFTTagState }>`
-  width: 140px;
-  height: 58px;
-  padding: 12px;
   background: ${(p) =>
     p.state === NFTTagState.Cold
       ? '#ffb600'
@@ -16,16 +13,6 @@ const Wrapper = styled.div<{ state: NFTTagState }>`
       : p.state === NFTTagState.Ultimate
       ? 'linear-gradient(90deg, #5C5C5C 0%, #484848 100%)'
       : '#fff'};
-  font-family: 'Montserrat', sans-serif;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 17px;
-  text-transform: uppercase;
-  color: #ffffff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 `
 
 interface NFTTagProps {
@@ -34,7 +21,10 @@ interface NFTTagProps {
 
 const NFTTag: FC<NFTTagProps> = ({ nft }) => {
   return (
-    <Wrapper state={nft.tagState}>
+    <Wrapper
+      state={nft.tagState}
+      className="w-25 xl:w-35 h-10 xl:h-[58px] p-[5px] xl:p-3 text-xs xl:text-sm leading-[15px] xl:leading-[17px] flex items-center justify-between font-bold text-white not-italic uppercase"
+    >
       <span>{nft.tag}</span>
       {nft.tagState === NFTTagState.ColdAdd ? (
         <Add

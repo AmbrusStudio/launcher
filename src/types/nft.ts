@@ -14,7 +14,7 @@ export enum NFT_TRAIT {
   BackAccessories = 'Back Accessories',
 }
 
-export type NFTIntroduction = {
+export type Trait = {
   key: NFT_TRAIT
   value: string
 }
@@ -23,14 +23,16 @@ export enum NFTUpgradeInfoState {
   Cold = 'Cold',
 }
 
-export type NFTUpgradeInfo = {
-  introduction: {
-    first: string
-    second: string
-    list: {
-      text: string
-    }[]
+export type NFTAnnouncementType = {
+  first: string
+  second: string
+  list: {
+    text: string
   }[]
+}
+
+export type NFTUpgradeInfo = {
+  introduction: NFTAnnouncementType[]
   title: string
   description: string
   upgradingStatusInfo: {
@@ -65,10 +67,11 @@ export type NFT = {
   cover: string
   title: string
   subtitle: string
+  description: string
   id: number
   tag: string
   tagState: NFTTagState
-  introduction: NFTIntroduction[]
+  trait: Trait[]
   star: number
   starState: NFTStarState
   upgrade: NFTUpgradeState

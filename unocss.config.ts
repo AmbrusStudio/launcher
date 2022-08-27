@@ -30,9 +30,11 @@ export default defineConfig({
     },
     boxShadow: {
       'nft-sale': '0px 4px 12px rgba(0, 0, 0, 0.15)',
+      'statusCheck-drawer-modal': '0px -4px 8px rgba(0, 0, 0, 0.2)',
     },
     dropShadow: {
       'nft-modal': '0px 4px 24px rgba(0, 0, 0, 0.4)',
+      'statusCheck-head-modal': '0px 4px 8px rgba(0, 0, 0, 0.2)',
     },
   },
 })
