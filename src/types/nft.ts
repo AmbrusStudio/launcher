@@ -64,6 +64,7 @@ export enum NFTUpgradeState {
 }
 
 export type NFT = {
+  tokenId: string
   cover: string
   title: string
   subtitle: string

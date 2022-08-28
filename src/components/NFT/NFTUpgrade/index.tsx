@@ -11,7 +11,7 @@ const NFTInfoButton = styled.button<{ state: NFTUpgradeState }>`
   font-style: normal;
   font-weight: 600;
   text-align: center;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   color: #ffffff;
   border: none;
   outline: none;
@@ -28,20 +28,33 @@ const NFTInfoButtonUpgrade = styled(NFTInfoButton)`
 interface NFTUpgradeProps {
   readonly nft: NFT
   toggle: (value: boolean) => void
+  click?: (value: string) => void
 }
 
-const NFTUpgrade: FC<NFTUpgradeProps> = ({ nft, toggle }) => {
+const NFTUpgrade: FC<NFTUpgradeProps> = ({ nft, toggle, click }) => {
   return (
     <>
-      {nft.upgrade === NFTUpgradeState.Upgrade ? (
-        <NFTInfoButtonUpgrade onClick={() => toggle(true)} state={nft.upgrade}>
-          Upgrade
-        </NFTInfoButtonUpgrade>
-      ) : nft.upgrade === NFTUpgradeState.CheckUpgradingStatus ? (
-        <NFTInfoButtonUpgrade onClick={() => toggle(true)} state={nft.upgrade}>
-          Check upgrading status
-        </NFTInfoButtonUpgrade>
-      ) : null}
+      <div className="hidden">
+        {nft.upgrade === NFTUpgradeState.Upgrade ? (
+          <NFTInfoButtonUpgrade onClick={() => toggle(true)} state={nft.upgrade}>
+            Upgrade
+          </NFTInfoButtonUpgrade>
+        ) : nft.upgrade === NFTUpgradeState.CheckUpgradingStatus ? (
+          <NFTInfoButtonUpgrade onClick={() => toggle(true)} state={nft.upgrade}>
+            Check upgrading status
+          </NFTInfoButtonUpgrade>
+        ) : null}
+      </div>
+      {nft.tokenId === '16' && (
+        <>
+          <NFTInfoButtonUpgrade onClick={() => click && click('stake')} state={nft.upgrade}>
+            Stake
+          </NFTInfoButtonUpgrade>
+          <NFTInfoButtonUpgrade onClick={() => click && click('unstake')} state={nft.upgrade}>
+            UnStake
+          </NFTInfoButtonUpgrade>
+        </>
+      )}
     </>
   )
 }
