@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
+import { useEthers } from '@usedapp/core'
 import React from 'react'
 
-import { classNames } from '../../../utils'
+import { classNames, getDefaultChainId } from '../../../utils'
 
 type WalletButtonProps = {
   connected?: boolean
@@ -25,7 +26,11 @@ const ButtonContent: React.FC<React.PropsWithChildren> = (props) => (
 )
 
 export function WalletButton(props: React.PropsWithChildren<WalletButtonProps>) {
+  const { chainId, switchNetwork } = useEthers()
+  const defaultChainId = getDefaultChainId()
+
   const { connected, children, onDisonnectClick, onConnectClick } = props
+
   const [hover, setHover] = React.useState(false)
   const handleButtonClick = React.useCallback(() => {
     if (connected) {
@@ -36,19 +41,33 @@ export function WalletButton(props: React.PropsWithChildren<WalletButtonProps>) 
   }, [connected, onConnectClick, onDisonnectClick])
   const handleHover = React.useCallback((s: boolean) => setHover(Boolean(props.connected) && s), [props.connected])
   return (
-    <Button
-      className={classNames(
-        'flex flex-row flex-nowrap justify-center items-center rounded-4px h-36px w-186px text-white',
-        hover && 'button-hover'
+    <>
+      {connected && chainId !== defaultChainId ? (
+        <Button
+          className={classNames(
+            'flex flex-row flex-nowrap justify-center items-center rounded-4px h-36px w-186px text-white font-semibold text-14px'
+          )}
+          type="button"
+          onClick={() => switchNetwork(defaultChainId)}
+        >
+          Switch Network
+        </Button>
+      ) : (
+        <Button
+          className={classNames(
+            'flex flex-row flex-nowrap justify-center items-center rounded-4px h-36px w-186px text-white',
+            hover && 'button-hover'
+          )}
+          type="button"
+          onClick={handleButtonClick}
+          onMouseOver={() => handleHover(true)}
+          onMouseLeave={() => handleHover(false)}
+        >
+          {connected && !hover && <ButtonContent>{children}</ButtonContent>}
+          {connected && hover && <ButtonContent>Disconnect</ButtonContent>}
+          {!connected && <ButtonContent>Connect Wallet</ButtonContent>}
+        </Button>
       )}
-      type="button"
-      onClick={handleButtonClick}
-      onMouseOver={() => handleHover(true)}
-      onMouseLeave={() => handleHover(false)}
-    >
-      {connected && !hover && <ButtonContent>{children}</ButtonContent>}
-      {connected && hover && <ButtonContent>Disconnect</ButtonContent>}
-      {!connected && <ButtonContent>Connect Wallet</ButtonContent>}
-    </Button>
+    </>
   )
 }

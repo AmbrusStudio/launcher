@@ -1,11 +1,12 @@
 import styled from '@emotion/styled'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
-import React from 'react'
+import { useCallback, useState } from 'react'
+import Web3Modal from 'web3modal'
 
-import { useWalletModal } from '../../../hooks'
 import { classNames } from '../../../utils'
 import { IconHeaderClose } from '../../Icon/HeaderClose'
 import { IconHeaderMenu } from '../../Icon/HeaderMenu'
+import { web3ModalProviderOptions } from '../../Provider'
 import { GamesNav } from '../GamesNav'
 import { SiteNav } from '../SiteNav'
 import { SocialNav } from '../SocialNav'
@@ -24,18 +25,30 @@ const MobileMenuWrapper = styled.div<MobileMenuWrapperProps>`
 `
 
 export function PageHeader() {
-  const { account, active, deactivate } = useEthers()
-  const { openWalletModal } = useWalletModal()
+  const { account, active, deactivate, activate } = useEthers()
 
   const connected = Boolean(account && active)
-  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
-  const [gamesNavOpen, setGamesNavOpen] = React.useState(false)
-  const handleMobileMenuToggle = React.useCallback(() => setMobileMenuOpen((s) => !s), [])
-  const handleGamesNavClick = React.useCallback((open: boolean) => setGamesNavOpen(open), [])
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [gamesNavOpen, setGamesNavOpen] = useState(false)
+  const handleMobileMenuToggle = useCallback(() => setMobileMenuOpen((s) => !s), [])
+  const handleGamesNavClick = useCallback((open: boolean) => setGamesNavOpen(open), [])
 
-  const handleWalletDisconnect = React.useCallback(() => {
+  const handleWalletDisconnect = useCallback(() => {
     deactivate()
   }, [deactivate])
+
+  const activateProvider = useCallback(async () => {
+    const web3Modal = new Web3Modal({
+      providerOptions: web3ModalProviderOptions,
+    })
+    try {
+      const provider = await web3Modal.connect()
+
+      await activate(provider)
+    } catch (error: any) {
+      console.log(error.message)
+    }
+  }, [activate])
 
   return (
     <header
@@ -60,13 +73,15 @@ export function PageHeader() {
           <SiteNav onGamesNavClick={handleGamesNavClick} />
           <div className="flex flex-col xl:flex-row items-center gap-24px xl:gap-0 px-32px py-36px xl:p-0 bg-black-bg xl:bg-transparent">
             <SocialNav className="px-26px" />
-            <WalletButton
-              connected={connected}
-              onConnectClick={() => openWalletModal()}
-              onDisonnectClick={handleWalletDisconnect}
-            >
-              {shortenIfAddress(account)}
-            </WalletButton>
+            <div className="flex items-center">
+              <WalletButton
+                connected={connected}
+                onConnectClick={() => activateProvider()}
+                onDisonnectClick={handleWalletDisconnect}
+              >
+                {shortenIfAddress(account)}
+              </WalletButton>
+            </div>
           </div>
         </MobileMenuWrapper>
       </div>
