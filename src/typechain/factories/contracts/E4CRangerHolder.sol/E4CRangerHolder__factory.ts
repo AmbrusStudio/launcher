@@ -6,7 +6,7 @@ import type { Provider, TransactionRequest } from '@ethersproject/providers'
 import type { PromiseOrValue } from '../../../common'
 import type { E4CRangerHolder, E4CRangerHolderInterface } from '../../../contracts/E4CRangerHolder.sol/E4CRangerHolder'
 
-export const _abi = [
+const _abi = [
   {
     inputs: [
       {

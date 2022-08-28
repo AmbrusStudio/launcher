@@ -1,17 +1,19 @@
 import { Falsy, useCall, useContractFunction } from '@usedapp/core'
-import { Contract, utils } from 'ethers'
+import { Contract } from 'ethers'
 
-import { _abi } from '../typechain/factories/contracts/E4CRangerHolder.sol/E4CRangerHolder__factory'
+import { ERC721__factory } from '../typechain/factories/@openzeppelin/contracts/token/ERC721/ERC721__factory'
+import { E4CRangerHolder__factory } from '../typechain/factories/contracts/E4CRangerHolder.sol/E4CRangerHolder__factory'
 
+/**
+ * E4CRangerHolder
+ * @param tokenAddress
+ * @returns
+ */
 export function useE4CRangerHolder(tokenAddress: string | Falsy) {
-  const Interface = new utils.Interface(_abi)
-
-  console.log('Interface', Interface)
-
   const { value, error } =
     useCall(
       tokenAddress && {
-        contract: new Contract(tokenAddress, Interface),
+        contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
         method: 'nft',
         args: [],
       }
@@ -21,23 +23,33 @@ export function useE4CRangerHolder(tokenAddress: string | Falsy) {
     return undefined
   }
 
-  console.log('value', value, error)
-
   return value?.[0]
 }
 
-export function useE4CRangerHolderReceived(tokenAddress: string) {
-  const Interface = new utils.Interface(_abi)
-  const contract = new Contract(tokenAddress, Interface)
-  const { state, send } = useContractFunction(contract, 'onERC721Received')
+/**
+ * ERC721 safeTransferFrom
+ * @param tokenAddress
+ * @returns
+ */
+export function useERC721SafeTransferFrom(tokenAddress: string) {
+  const contract = new Contract(tokenAddress, ERC721__factory.abi)
+  const { state, send } = useContractFunction(contract, 'safeTransferFrom', {
+    gasLimitBufferPercentage: 10,
+  })
 
   return { state, send }
 }
 
-export function useE4CRangerHolderUnstake(tokenAddress: string) {
-  const Interface = new utils.Interface(_abi)
-  const contract = new Contract(tokenAddress, Interface)
-  const { state, send } = useContractFunction(contract, 'unstake')
+/**
+ * E4CRanger unstake
+ * @param tokenAddress
+ * @returns
+ */
+export function useE4CRangerUnstake(tokenAddress: string) {
+  const contract = new Contract(tokenAddress, E4CRangerHolder__factory.abi)
+  const { state, send } = useContractFunction(contract, 'unstake', {
+    gasLimitBufferPercentage: 10,
+  })
 
   return { state, send }
 }

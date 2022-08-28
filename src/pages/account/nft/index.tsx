@@ -1,10 +1,7 @@
 import styled from '@emotion/styled'
-import { formatEther } from '@ethersproject/units'
 import { Stack } from '@mui/material'
-import { useEtherBalance, useEthers, useSendTransaction } from '@usedapp/core'
-import { utils } from 'ethers'
-import { getAddress } from 'ethers/lib/utils'
-import { useMemo, useState } from 'react'
+import { useEthers } from '@usedapp/core'
+import { useCallback, useMemo, useState } from 'react'
 
 import { PageLayout } from '../../../components/Layout'
 import NFTItem from '../../../components/NFT/NFTItem'
@@ -13,50 +10,53 @@ import NFTModal from '../../../components/NFT/NFTModal'
 import NFTStar from '../../../components/NFT/NFTStar'
 import NFTUpgrade from '../../../components/NFT/NFTUpgrade'
 import SwiperToggle from '../../../components/NFT/SwiperToggle'
+import { ADDRESS_ASR, ADDRESS_E4C_Ranger } from '../../../contracts'
 import { NFT_DATA } from '../../../data'
-import {
-  useE4CRangerHolder,
-  useE4CRangerHolderReceived,
-  useE4CRangerHolderUnstake,
-} from '../../../hooks/useE4CRangerHolder'
+import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRangerHolder'
 
 const Actions = styled(Stack)`
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
 `
-const ADDRESS = '0x07E64dA6F2F62bc34Dcf1bb7d281c1977337d76b'
 
 function AccountNFT() {
-  const { account, chainId } = useEthers()
-  const etherBalance = useEtherBalance(account)
+  // const [ownerTokenId, setOwnerTokenId] = useState<string[]>(['1', '16'])
+  const { account } = useEthers()
 
-  const info = useE4CRangerHolder(ADDRESS)
-  const { state: stateReceived, send: sendReceived } = useE4CRangerHolderReceived(ADDRESS)
-  const { state: stateUnstake, send: sendUnstake } = useE4CRangerHolderUnstake(ADDRESS)
+  // const infoASR = useERC721BalanceOf(ADDRESS_ASR, account)
+  // const ASRLogs = useERC721Logs(ADDRESS_ASR)
+  // const result = useERC721OwnerOfs(ADDRESS_ASR, ['1', '11', '16'])
+  const { state: stateSafeTransferFrom, send: safeTransferFrom } = useERC721SafeTransferFrom(ADDRESS_ASR)
+  const { state: stateUnstake, send: unstake } = useE4CRangerUnstake(ADDRESS_E4C_Ranger)
 
   const [visibleModal, setVisibleModal] = useState<boolean>(false)
   const [currentIndex, setCurrentIndex] = useState<number>(0)
 
   const currentNFT_DATA = useMemo(() => NFT_DATA[currentIndex], [currentIndex])
 
-  console.log('info', info)
+  // console.log('infoASR', infoASR)
+  // console.log('ASRLogs', ASRLogs)
 
-  const { sendTransaction, state } = useSendTransaction()
+  const onSafeTransferFrom = useCallback(() => {
+    safeTransferFrom(account, ADDRESS_E4C_Ranger, '16')
+  }, [account, safeTransferFrom])
 
-  const sendEth = () => {
-    sendTransaction({
-      to: getAddress('0x3484040A7c337A95d0eD7779769ffe3e14ecCcA6'),
-      value: utils.parseEther('0.00012'),
-    })
-  }
+  const onUnstake = useCallback(() => {
+    unstake('16')
+  }, [unstake])
 
-  const onReceived = () => {
-    sendReceived('', getAddress('0x3484040A7c337A95d0eD7779769ffe3e14ecCcA6'), '1', '')
-  }
+  // useEffect(() => {
+  //   const list: string[] = []
 
-  const onUnstake = () => {
-    sendUnstake('1')
-  }
+  //   ASRLogs?.forEach((item) => {
+  //     if (account && item.data.to === getAddress(account)) {
+  //       console.log('tokenId', item.data.tokenId.toString())
+  //       list.push(item.data.tokenId.toString())
+  //     }
+  //   })
+
+  //   setOwnerTokenId(list)
+  // }, [ASRLogs, account])
 
   return (
     <PageLayout>
@@ -65,43 +65,20 @@ function AccountNFT() {
           MY<span className="py-0 px-1 text-rust">NFTS</span>
         </h1>
 
-        <div className="text-white">
-          <p>{account}</p>
-          <p>{chainId}</p>
-          {etherBalance && (
-            <div className="balance">
-              Ether balance:
-              <p className="bold">{formatEther(etherBalance)} ETH</p>
-            </div>
-          )}
-          <p>{JSON.stringify(state)}</p>
-          <button
-            className="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
-            onClick={() => sendEth()}
-          >
-            send
-          </button>
-          <hr />
-          <p>{JSON.stringify(stateReceived)}</p>
-          <button
-            className="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
-            onClick={() => onReceived()}
-          >
-            onERC721Received
-          </button>
-          <hr />
-          <p>{JSON.stringify(stateUnstake)}</p>
-          <button
-            className="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
-            onClick={() => onUnstake()}
-          >
-            unstake
-          </button>
-        </div>
         <div className="hidden lg:block px-6 xl:px-2.5 my-6 sm:my-9">
           <Stack spacing={3}>
             {NFT_DATA.map((nft, index) => (
-              <NFTItem nft={nft} key={index} />
+              <NFTItem
+                nft={nft}
+                key={index}
+                click={(value) => {
+                  if (value === 'stake') {
+                    onSafeTransferFrom()
+                  } else if (value === 'unstake') {
+                    onUnstake()
+                  }
+                }}
+              />
             ))}
           </Stack>
         </div>

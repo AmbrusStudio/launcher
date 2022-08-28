@@ -19,9 +19,10 @@ const WrapperInfo = styled.div`
 
 interface NFTItemProps {
   readonly nft: NFT
+  click?: (value: string) => void
 }
 
-const NFTItem: FC<NFTItemProps> = ({ nft }) => {
+const NFTItem: FC<NFTItemProps> = ({ nft, click }) => {
   const [toggleInfo, setToggleInfo] = useState<boolean>(false)
   const [togglePerk, setTogglePerk] = useState<boolean>(false)
 
@@ -39,7 +40,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft }) => {
 
             <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
               <NFTStar nft={nft} toggle={(value) => setTogglePerk(value)} />
-              <NFTUpgrade toggle={(value) => setToggleInfo(value)} nft={nft} />
+              <NFTUpgrade click={click} toggle={(value) => setToggleInfo(value)} nft={nft} />
             </Stack>
           </WrapperInfo>
         </>
