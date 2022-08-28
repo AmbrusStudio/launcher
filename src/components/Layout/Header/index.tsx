@@ -39,6 +39,7 @@ export function PageHeader() {
 
   const activateProvider = useCallback(async () => {
     const web3Modal = new Web3Modal({
+      cacheProvider: true,
       providerOptions: web3ModalProviderOptions,
     })
     try {
