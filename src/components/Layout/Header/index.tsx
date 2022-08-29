@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
-import { useCallback, useState } from 'react'
+import React from 'react'
 import Web3Modal from 'web3modal'
 
-import { classNames } from '../../../utils'
+import { classNames, getDefaultChainId } from '../../../utils'
 import { IconHeaderClose } from '../../Icon/HeaderClose'
 import { IconHeaderMenu } from '../../Icon/HeaderMenu'
 import { web3ModalProviderOptions } from '../../Provider'
@@ -25,31 +25,32 @@ const MobileMenuWrapper = styled.div<MobileMenuWrapperProps>`
 `
 
 export function PageHeader() {
-  const { account, active, deactivate, activate } = useEthers()
+  const { account, active, chainId, deactivate, activate, switchNetwork } = useEthers()
 
+  const defaultChainId = getDefaultChainId()
+  const chainIdMismatch = chainId !== defaultChainId
   const connected = Boolean(account && active)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [gamesNavOpen, setGamesNavOpen] = useState(false)
-  const handleMobileMenuToggle = useCallback(() => setMobileMenuOpen((s) => !s), [])
-  const handleGamesNavClick = useCallback((open: boolean) => setGamesNavOpen(open), [])
 
-  const handleWalletDisconnect = useCallback(() => {
-    deactivate()
-  }, [deactivate])
+  // To distinguish the source of hooks, pleace do not remove the `React.` prefix.
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
+  const [gamesNavOpen, setGamesNavOpen] = React.useState(false)
+  const handleMobileMenuToggle = React.useCallback(() => setMobileMenuOpen((s) => !s), [])
+  const handleGamesNavClick = React.useCallback((open: boolean) => setGamesNavOpen(open), [])
 
-  const activateProvider = useCallback(async () => {
+  const handleWalletConnect = React.useCallback(async () => {
     const web3Modal = new Web3Modal({
       cacheProvider: true,
       providerOptions: web3ModalProviderOptions,
     })
-    try {
-      const provider = await web3Modal.connect()
-
-      await activate(provider)
-    } catch (error: any) {
-      console.log(error.message)
-    }
+    const provider = await web3Modal.connect()
+    await activate(provider)
   }, [activate])
+  const handleWalletDisconnect = React.useCallback(() => {
+    deactivate()
+  }, [deactivate])
+  const handleWalletSwitchNetwork = React.useCallback(async () => {
+    if (chainIdMismatch) await switchNetwork(defaultChainId)
+  }, [chainIdMismatch, defaultChainId, switchNetwork])
 
   return (
     <header
@@ -74,15 +75,15 @@ export function PageHeader() {
           <SiteNav onGamesNavClick={handleGamesNavClick} />
           <div className="flex flex-col xl:flex-row items-center gap-24px xl:gap-0 px-32px py-36px xl:p-0 bg-black-bg xl:bg-transparent">
             <SocialNav className="px-26px" />
-            <div className="flex items-center">
-              <WalletButton
-                connected={connected}
-                onConnectClick={() => activateProvider()}
-                onDisonnectClick={handleWalletDisconnect}
-              >
-                {shortenIfAddress(account)}
-              </WalletButton>
-            </div>
+            <WalletButton
+              connected={connected}
+              chainIdMismatch={chainIdMismatch}
+              onConnectClick={handleWalletConnect}
+              onSwitchNetworkClick={handleWalletSwitchNetwork}
+              onDisonnectClick={handleWalletDisconnect}
+            >
+              {shortenIfAddress(account)}
+            </WalletButton>
           </div>
         </MobileMenuWrapper>
       </div>
