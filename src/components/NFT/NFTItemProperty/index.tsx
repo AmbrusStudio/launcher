@@ -66,7 +66,7 @@ const NFTItemProperty: FC<NFTItemPropertyProps> = ({ nft }) => {
       <NFTInfoContent>
         {nft.trait.map((trait, index: number) => (
           <section key={index}>
-            <NFTInfoIntroductionTitle>{trait.key}</NFTInfoIntroductionTitle>
+            <NFTInfoIntroductionTitle>{trait.trait_type}</NFTInfoIntroductionTitle>
             <NFTInfoIntroductionContent>{trait.value}</NFTInfoIntroductionContent>
           </section>
         ))}

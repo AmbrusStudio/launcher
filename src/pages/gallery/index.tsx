@@ -12,7 +12,8 @@ import Opensea from '../../components/Icon/Opensea'
 import { PageLayout } from '../../components/Layout'
 import { GALLERY_INFO, GALLERYS_FILTERS_STATUS } from '../../data'
 import { useNumStrState } from '../../hooks/useNumStrState'
-import { Filter, FilterList, GALLERY } from '../../types/gallery'
+import { Metadata } from '../../types'
+import { Filter, FilterList } from '../../types/gallery'
 import { handleFilterFn, toggleFilterCheckedFn, toggleFilterOpenFn } from '../../utils'
 
 function Gallery() {
@@ -21,7 +22,7 @@ function Gallery() {
   // NFT modal
   const [visibleNFT, setVisibleNFT] = useState<boolean>(false)
   // NFT current
-  const [currentNFTInfo, setCurrentNFTInfo] = useState<GALLERY>()
+  const [currentNFTInfo, setCurrentNFTInfo] = useState<Metadata>()
   // Gallery Filter Drawer
   const [visibleDrawer, setVisibleDrawer] = useState<boolean>(false)
   // Search by ID
@@ -37,7 +38,7 @@ function Gallery() {
   // Current gallery
   const currentGallery = useMemo(() => {
     return handleFilterFn(filter, searchId)
-  }, [filter, searchId])
+  }, [searchId, filter])
 
   // Toggle Filter children open
   const toggleFilterTab = useCallback(
@@ -162,7 +163,7 @@ function Gallery() {
             {
               <div className="mt-3 lg:mt-6">
                 {!!currentGallery.length && (
-                  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 max-h-[928px] overflow-auto">
                     {currentGallery.map((gallery, index) => (
                       <GalleryItem
                         key={index}
@@ -182,7 +183,7 @@ function Gallery() {
         </div>
       </div>
 
-      <ModalGalleryInfo visible={visibleNFT} setVisible={setVisibleNFT} currentNFTInfo={currentNFTInfo} />
+      <ModalGalleryInfo visible={visibleNFT} setVisible={setVisibleNFT} metadata={currentNFTInfo} />
       <DrawerFilter
         visibleDrawer={visibleDrawer}
         setVisibleDrawer={setVisibleDrawer}

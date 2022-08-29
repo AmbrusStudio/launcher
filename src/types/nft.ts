@@ -1,23 +1,4 @@
-export enum NFT_TRAIT {
-  Character = 'Character',
-  Hair = 'Hair',
-  FaceAccessories = 'Face Accessories',
-  Eyes = 'Eyes',
-  Makeup = 'Makeup',
-  Earrings = 'Earrings',
-  Hat = 'Hat',
-  Skin = 'Skin',
-  Tattoo = 'Tattoo',
-  Clothing = 'Clothing',
-  NeckAccessories = 'Neck Accessories',
-  ShoulderAccessories = 'Shoulder Accessories',
-  BackAccessories = 'Back Accessories',
-}
-
-export type Trait = {
-  key: NFT_TRAIT
-  value: string
-}
+import { TraitItem } from './metadata'
 
 export enum NFTUpgradeInfoState {
   Cold = 'Cold',
@@ -72,7 +53,7 @@ export type NFT = {
   id: number
   tag: string
   tagState: NFTTagState
-  trait: Trait[]
+  trait: TraitItem[]
   star: number
   starState: NFTStarState
   upgrade: NFTUpgradeState
