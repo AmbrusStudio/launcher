@@ -3,33 +3,37 @@ import { Box } from '@mui/system'
 import { Dispatch, FC, SetStateAction } from 'react'
 
 import ModalGallery from '../../../components/ModalGallery'
-import { GALLERY } from '../../../types/gallery'
+import { Metadata } from '../../../types'
+import { parseTokenId } from '../../../utils'
 
 interface ModalGalleryInfoProps {
-  readonly currentNFTInfo?: GALLERY
+  readonly metadata?: Metadata
   readonly visible: boolean
   setVisible: Dispatch<SetStateAction<boolean>>
 }
 
-const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ currentNFTInfo, visible, setVisible }) => {
+const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ metadata, visible, setVisible }) => {
   return (
-    <ModalGallery title="E4C Rangers" id={currentNFTInfo?.id} visible={visible} toggle={(value) => setVisible(value)}>
+    <ModalGallery
+      title="E4C Rangers"
+      id={parseTokenId(metadata?.name || '')}
+      visible={visible}
+      toggle={(value) => setVisible(value)}
+    >
       <Box className="flex flex-1 lg:flex-none flex-col lg:flex-row overflow-hidden lg:overflow-auto bg-white lg:bg-white/80 backdrop-blur-[20px] transition-none">
         <div className="lg:w-[600px] lg:h-[600px] overflow-hidden border-4 border-white">
-          <img
-            className="h-full object-cover w-full"
-            src="https://ambrus.s3.amazonaws.com/1657877346203_0.92_206.jpg"
-            alt="logo"
-          />
+          <img className="h-full object-cover w-full" src={metadata?.image} alt="logo" />
         </div>
         <div className="flex flex-col flex-grow p-9 text-white overflow-auto">
           <div className="grid grid-cols-2 gap-6 mb-auto">
-            {currentNFTInfo?.trait.map((j, index: number) => (
+            {metadata?.attributes.map((trait, index: number) => (
               <section key={index}>
                 <p className="font-normal text-xs leading-[15px] m-0 p-0 not-italic uppercase text-[#a0a4b0]">
-                  {j.key}
+                  {trait.trait_type}
                 </p>
-                <p className="font-bold text-base leading-5 mx-0 mb-0 mt-1 p-0 text-[#2A2A2A] not-italic">{j.value}</p>
+                <p className="font-bold text-base leading-5 mx-0 mb-0 mt-1 p-0 text-[#2A2A2A] not-italic">
+                  {trait.value}
+                </p>
               </section>
             ))}
           </div>
@@ -37,7 +41,7 @@ const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ currentNFTInfo, visible, 
           <Stack className="mt-9" spacing={4.5} direction="row">
             <a
               className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
-              href={currentNFTInfo?.opensea_url}
+              href={''}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -45,7 +49,7 @@ const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ currentNFTInfo, visible, 
             </a>
             <a
               className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
-              href={currentNFTInfo?.looksrare_url}
+              href={''}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -53,7 +57,7 @@ const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ currentNFTInfo, visible, 
             </a>
             <a
               className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
-              href={currentNFTInfo?.etherscan_url}
+              href={''}
               target="_blank"
               rel="noopener noreferrer"
             >

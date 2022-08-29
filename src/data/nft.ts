@@ -1,4 +1,4 @@
-import { NFT, NFT_TRAIT, NFTStarState, NFTTagState, NFTUpgradeState, PERK, PERKState, PERKTag } from '../types'
+import { NFT, NFTStarState, NFTTagState, NFTUpgradeState, PERK, PERKState, PERKTag } from '../types'
 
 export const NFT_DATA: NFT[] = [
   {
@@ -10,32 +10,7 @@ export const NFT_DATA: NFT[] = [
     id: 537,
     tag: 'Gold Edition',
     tagState: NFTTagState.Cold,
-    trait: [
-      {
-        key: NFT_TRAIT.Character,
-        value: 'Rin',
-      },
-      {
-        key: NFT_TRAIT.BackAccessories,
-        value: 'Off-white 1',
-      },
-      {
-        key: NFT_TRAIT.Hair,
-        value: 'Off-white 1',
-      },
-      {
-        key: NFT_TRAIT.Earrings,
-        value: 'Off-white 1',
-      },
-      {
-        key: NFT_TRAIT.Makeup,
-        value: 'Off-white 1',
-      },
-      {
-        key: NFT_TRAIT.Earrings,
-        value: 'Off-white 1',
-      },
-    ],
+    trait: [],
     star: 12,
     starState: NFTStarState.Default,
     upgrade: NFTUpgradeState.Upgrade,
@@ -78,32 +53,7 @@ export const NFT_DATA: NFT[] = [
     id: 537,
     tag: 'Ultimate Edition',
     tagState: NFTTagState.Cold,
-    trait: [
-      {
-        key: NFT_TRAIT.Character,
-        value: 'Rin',
-      },
-      {
-        key: NFT_TRAIT.BackAccessories,
-        value: 'Off-white 1',
-      },
-      {
-        key: NFT_TRAIT.Hair,
-        value: 'Off-white 1',
-      },
-      {
-        key: NFT_TRAIT.Earrings,
-        value: 'Off-white 1',
-      },
-      {
-        key: NFT_TRAIT.Makeup,
-        value: 'Off-white 1',
-      },
-      {
-        key: NFT_TRAIT.Earrings,
-        value: 'Off-white 1',
-      },
-    ],
+    trait: [],
     star: 12,
     starState: NFTStarState.Default,
     upgrade: NFTUpgradeState.Upgrade,
@@ -147,27 +97,27 @@ export const NFT_DATA: NFT[] = [
   //   tagState: NFTTagState.Cold,
   //   trait: [
   //     {
-  //       key: NFT_TRAIT.Character,
+  //       key: Trait.Character,
   //       value: 'Rin',
   //     },
   //     {
-  //       key: NFT_TRAIT.BackAccessories,
+  //       key: Trait.BackAccessories,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Hair,
+  //       key: Trait.Hair,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Earrings,
+  //       key: Trait.Earrings,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Makeup,
+  //       key: Trait.Makeup,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Earrings,
+  //       key: Trait.Earrings,
   //       value: 'Off-white 1',
   //     },
   //   ],
@@ -214,27 +164,27 @@ export const NFT_DATA: NFT[] = [
   //   tagState: NFTTagState.Cold,
   //   trait: [
   //     {
-  //       key: NFT_TRAIT.Character,
+  //       key: Trait.Character,
   //       value: 'Rin',
   //     },
   //     {
-  //       key: NFT_TRAIT.BackAccessories,
+  //       key: Trait.BackAccessories,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Hair,
+  //       key: Trait.Hair,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Earrings,
+  //       key: Trait.Earrings,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Makeup,
+  //       key: Trait.Makeup,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Earrings,
+  //       key: Trait.Earrings,
   //       value: 'Off-white 1',
   //     },
   //   ],
@@ -288,27 +238,27 @@ export const NFT_DATA: NFT[] = [
   //   tagState: NFTTagState.Cold,
   //   trait: [
   //     {
-  //       key: NFT_TRAIT.Character,
+  //       key: Trait.Character,
   //       value: 'Rin',
   //     },
   //     {
-  //       key: NFT_TRAIT.BackAccessories,
+  //       key: Trait.BackAccessories,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Hair,
+  //       key: Trait.Hair,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Earrings,
+  //       key: Trait.Earrings,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Makeup,
+  //       key: Trait.Makeup,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Earrings,
+  //       key: Trait.Earrings,
   //       value: 'Off-white 1',
   //     },
   //   ],
@@ -362,27 +312,27 @@ export const NFT_DATA: NFT[] = [
   //   tagState: NFTTagState.ColdAdd,
   //   trait: [
   //     {
-  //       key: NFT_TRAIT.Character,
+  //       key: Trait.Character,
   //       value: 'Rin',
   //     },
   //     {
-  //       key: NFT_TRAIT.BackAccessories,
+  //       key: Trait.BackAccessories,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Hair,
+  //       key: Trait.Hair,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Earrings,
+  //       key: Trait.Earrings,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Makeup,
+  //       key: Trait.Makeup,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Earrings,
+  //       key: Trait.Earrings,
   //       value: 'Off-white 1',
   //     },
   //   ],
@@ -429,27 +379,27 @@ export const NFT_DATA: NFT[] = [
   //   tagState: NFTTagState.Ultimate,
   //   trait: [
   //     {
-  //       key: NFT_TRAIT.Character,
+  //       key: Trait.Character,
   //       value: 'Rin',
   //     },
   //     {
-  //       key: NFT_TRAIT.BackAccessories,
+  //       key: Trait.BackAccessories,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Hair,
+  //       key: Trait.Hair,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Earrings,
+  //       key: Trait.Earrings,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Makeup,
+  //       key: Trait.Makeup,
   //       value: 'Off-white 1',
   //     },
   //     {
-  //       key: NFT_TRAIT.Earrings,
+  //       key: Trait.Earrings,
   //       value: 'Off-white 1',
   //     },
   //   ],

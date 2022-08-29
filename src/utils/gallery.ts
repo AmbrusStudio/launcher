@@ -1,8 +1,9 @@
 import { cloneDeep } from 'lodash'
 
-import { GALLERYS } from '../data'
-import { NFT_TRAIT } from '../types'
-import { Filter, FilterList, GALLERY, GALLERY_MAP, GALLERY_TRAIT } from '../types/gallery'
+import { ALL_METADATA } from '../data'
+import { Metadata, Trait, TraitItem } from '../types'
+import { Filter, FilterList, GALLERY_MAP } from '../types/gallery'
+import { parseTokenId } from './metadata'
 /**
  * modify filter checked
  * @param filter
@@ -36,14 +37,14 @@ export const toggleFilterOpenFn = (filter: Filter[], index: number): Filter[] | 
  * @param filter
  * @returns
  */
-const convertFilterToMap = (filter: Filter[]): Map<NFT_TRAIT, string[]> => {
+const convertFilterToMap = (filter: Filter[]): Map<Trait, string[]> => {
   const filterChecked = filter.filter((i) => i.list.some((j: FilterList) => j.is_checked))
   const filterActiveChecked = filterChecked.map((i) => ({
     ...i,
     list: i.list.filter((j: FilterList) => j.is_checked),
   }))
 
-  const result = new Map<NFT_TRAIT, string[]>()
+  const result = new Map<Trait, string[]>()
 
   filterActiveChecked.forEach((item) => {
     const list = item.list.map((i) => i.label)
@@ -58,12 +59,12 @@ const convertFilterToMap = (filter: Filter[]): Map<NFT_TRAIT, string[]> => {
  * @param data
  * @returns
  */
-const convertTraitToMap = (data: GALLERY[]): GALLERY_MAP[] => {
+const convertTraitToMap = (data: Metadata[]): GALLERY_MAP[] => {
   return data.map((item) => {
-    const traitMap = new Map<NFT_TRAIT, string>()
+    const traitMap = new Map<Trait, string>()
 
-    item.trait.forEach((traitItem) => {
-      traitMap.set(traitItem.key, traitItem.value)
+    item.attributes.forEach((traitItem) => {
+      traitMap.set(traitItem.trait_type, traitItem.value)
     })
 
     return {
@@ -78,12 +79,12 @@ const convertTraitToMap = (data: GALLERY[]): GALLERY_MAP[] => {
  * @param data
  * @returns
  */
-const convertTraitToArray = (data: GALLERY_MAP[]): GALLERY[] => {
+const convertTraitToArray = (data: GALLERY_MAP[]): Metadata[] => {
   return data.map((item) => {
-    const traitArr: GALLERY_TRAIT[] = []
+    const traitArr: TraitItem[] = []
     item.trait.forEach((val, key) => {
       traitArr.push({
-        key: key,
+        trait_type: key,
         value: val,
       })
     })
@@ -100,9 +101,11 @@ const convertTraitToArray = (data: GALLERY_MAP[]): GALLERY[] => {
  * @param searchId
  * @returns
  */
-export const handleFilterFn = (filter: Filter[], searchId: string): GALLERY[] => {
+export const handleFilterFn = (filter: Filter[], searchId: string): Metadata[] => {
   // Search filter
-  const gallery = searchId ? GALLERYS.filter((item) => String(item.id).includes(searchId)) : GALLERYS
+  const gallery = searchId
+    ? ALL_METADATA.filter((item) => String(parseTokenId(item.name)).includes(searchId))
+    : ALL_METADATA
 
   const filterChecked = convertFilterToMap(filter)
   // No filter
