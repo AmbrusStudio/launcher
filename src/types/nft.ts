@@ -79,3 +79,9 @@ export type PERK = {
   state: PERKState
   tag: PERKTag
 }
+
+export enum NFTEdition {
+  DefaultEdition = 'Edition',
+  GoldEdition = 'Gold Edition',
+  UltimateEdition = 'Ultimate Edition',
+}
