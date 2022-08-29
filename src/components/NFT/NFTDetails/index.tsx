@@ -2,7 +2,8 @@ import styled from '@emotion/styled'
 import { Box, Stack } from '@mui/material'
 import { FC } from 'react'
 
-import { NFT } from '../../../types'
+import { Metadata } from '../../../types'
+import { getEdition, parseTokenId } from '../../../utils'
 import NFTTag from '../NFTTag'
 
 const NFTInfoContent = styled.div`
@@ -10,6 +11,8 @@ const NFTInfoContent = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 24px;
+  max-height: 252px;
+  overflow: auto;
 `
 
 const NFTInfoIntroductionTitle = styled.p`
@@ -34,11 +37,12 @@ const NFTInfoIntroductionContent = styled.p`
   margin: 4px 0 0 0;
 `
 
-interface NFTItemPropertyProps {
-  readonly nft: NFT
+interface NFTDetailsProps {
+  readonly nft: Metadata
+  readonly tokenId: number
 }
 
-const NFTItemProperty: FC<NFTItemPropertyProps> = ({ nft }) => {
+const NFTDetails: FC<NFTDetailsProps> = ({ nft, tokenId }) => {
   return (
     <>
       <Box
@@ -49,22 +53,22 @@ const NFTItemProperty: FC<NFTItemPropertyProps> = ({ nft }) => {
       >
         <section>
           <span className="font-bold text-6.5 lg:text-9 not-italic uppercase leading-11 font-sans text-rust">
-            {nft.title}
+            {nft.name}
           </span>
           <Stack spacing={2} direction="row">
             <span className="font-bold text-6.5 lg:text-9 not-italic uppercase leading-11 font-sans text-white">
-              {nft.subtitle}
+              {nft.description || '-'}
             </span>
             <span className="font-bold text-6.5 lg:text-9 not-italic uppercase leading-11 font-sans text-white">
-              #{nft.id}
+              #{tokenId}
             </span>
           </Stack>
         </section>
-        <NFTTag nft={nft} />
+        <NFTTag content={getEdition(parseTokenId(nft.name))} />
       </Box>
 
       <NFTInfoContent>
-        {nft.trait.map((trait, index: number) => (
+        {nft.attributes.map((trait, index) => (
           <section key={index}>
             <NFTInfoIntroductionTitle>{trait.trait_type}</NFTInfoIntroductionTitle>
             <NFTInfoIntroductionContent>{trait.value}</NFTInfoIntroductionContent>
@@ -75,4 +79,4 @@ const NFTItemProperty: FC<NFTItemPropertyProps> = ({ nft }) => {
   )
 }
 
-export default NFTItemProperty
+export default NFTDetails

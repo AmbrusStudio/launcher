@@ -1,40 +1,36 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
 
-import Add from '../../../components/Icon/Add'
-import { NFT, NFTTagState } from '../../../types'
+import { NFTEdition } from '../../../types'
 
-const Wrapper = styled.div<{ state: NFTTagState }>`
+const Wrapper = styled.div<{ state: NFTEdition }>`
   background: ${(p) =>
-    p.state === NFTTagState.Cold
+    p.state === NFTEdition.GoldEdition
       ? '#ffb600'
-      : p.state === NFTTagState.ColdAdd
-      ? 'linear-gradient(90deg, #F0B316 0%, #EB456D 100%)'
-      : p.state === NFTTagState.Ultimate
+      : // : p.state === NFTEdition.GoldEdition
+      // ? 'linear-gradient(90deg, #F0B316 0%, #EB456D 100%)'
+      p.state === NFTEdition.UltimateEdition
       ? 'linear-gradient(90deg, #5C5C5C 0%, #484848 100%)'
       : '#fff'};
 `
 
 interface NFTTagProps {
-  readonly nft: NFT
+  readonly content: NFTEdition
 }
 
-const NFTTag: FC<NFTTagProps> = ({ nft }) => {
+const NFTTag: FC<NFTTagProps> = ({ content }) => {
   return (
     <Wrapper
-      state={nft.tagState}
+      state={content}
       className="w-25 xl:w-35 h-10 xl:h-[58px] p-[5px] xl:p-3 text-xs xl:text-sm leading-[15px] xl:leading-[17px] flex items-center justify-between font-bold text-white not-italic uppercase"
     >
-      <span>{nft.tag}</span>
-      {nft.tagState === NFTTagState.ColdAdd ? (
-        <Add
-          sx={{
-            fontSize: '12px',
-          }}
-        />
-      ) : (
-        <span>&nbsp;&nbsp;</span>
-      )}
+      <span>{content}</span>
+      <span>&nbsp;&nbsp;</span>
+      {/* <Add
+        sx={{
+          fontSize: '12px',
+        }}
+      /> */}
     </Wrapper>
   )
 }

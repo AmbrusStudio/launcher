@@ -3,31 +3,36 @@ import 'swiper/css'
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import { useEthers } from '@usedapp/core'
-import { useCallback, useMemo, useState } from 'react'
+import { Alchemy } from 'alchemy-sdk'
+import { getAddress } from 'ethers/lib/utils'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { PageLayout } from '../../../components/Layout'
+import NFTDetails from '../../../components/NFT/NFTDetails'
 import NFTItem from '../../../components/NFT/NFTItem'
-import NFTItemProperty from '../../../components/NFT/NFTItemProperty'
 import NFTModal from '../../../components/NFT/NFTModal'
 import NFTStar from '../../../components/NFT/NFTStar'
 import NFTUpgrade from '../../../components/NFT/NFTUpgrade'
 import SwiperToggle from '../../../components/NFT/SwiperToggle'
-import { ADDRESS_ASR, ADDRESS_E4C_Ranger } from '../../../contracts'
-import { NFT_DATA } from '../../../data'
+import { ADDRESS_ASRS, ADDRESS_E4C_Rangers, AlchemyNetworks } from '../../../contracts'
+import { ALL_METADATA, NFT_DATA } from '../../../data'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRangerHolder'
+import { getDefaultChainId, nftsForOwner, parseTokenId } from '../../../utils'
 
 const Actions = styled(Stack)`
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
 `
 
+const defaultChainId = getDefaultChainId()
+const ADDRESS_ASR = ADDRESS_ASRS[defaultChainId]
+const ADDRESS_E4C_Ranger = ADDRESS_E4C_Rangers[defaultChainId]
+const AlchemyNetwork = AlchemyNetworks[defaultChainId]
+
 function AccountNFT() {
-  // const [ownerTokenId, setOwnerTokenId] = useState<string[]>(['1', '16'])
+  const [tokenId, setTokenId] = useState<string[]>([])
   const { account } = useEthers()
 
-  // const infoASR = useERC721BalanceOf(ADDRESS_ASR, account)
-  // const ASRLogs = useERC721Logs(ADDRESS_ASR)
-  // const result = useERC721OwnerOfs(ADDRESS_ASR, ['1', '11', '16'])
   const { state: stateSafeTransferFrom, send: safeTransferFrom } = useERC721SafeTransferFrom(ADDRESS_ASR)
   const { state: stateUnstake, send: unstake } = useE4CRangerUnstake(ADDRESS_E4C_Ranger)
 
@@ -36,29 +41,55 @@ function AccountNFT() {
 
   const currentNFT_DATA = useMemo(() => NFT_DATA[currentIndex], [currentIndex])
 
-  // console.log('infoASR', infoASR)
-  // console.log('ASRLogs', ASRLogs)
+  const onSafeTransferFrom = useCallback(
+    (tokenId: string) => {
+      safeTransferFrom(account, ADDRESS_E4C_Ranger, tokenId)
+    },
+    [account, safeTransferFrom]
+  )
 
-  const onSafeTransferFrom = useCallback(() => {
-    safeTransferFrom(account, ADDRESS_E4C_Ranger, '16')
-  }, [account, safeTransferFrom])
+  const onUnstake = useCallback(
+    (tokenId: string) => {
+      unstake(tokenId)
+    },
+    [unstake]
+  )
+  // owner nfts
+  const nfts = useMemo(() => {
+    return nftsForOwner(tokenId)
+  }, [tokenId])
 
-  const onUnstake = useCallback(() => {
-    unstake('16')
-  }, [unstake])
+  // console.log('nfts', nfts)
 
-  // useEffect(() => {
-  //   const list: string[] = []
+  // fetch nfts for owner
+  const fetchNftsForOwner = useCallback(async () => {
+    if (!account) {
+      return
+    }
+    const ALCHEMY_API_KEY: string | undefined = import.meta.env.VITE_ALCHEMY_API_KEY
+    if (!ALCHEMY_API_KEY) throw new TypeError('VITE_ALCHEMY_API_KEY not set')
+    const settings = {
+      apiKey: ALCHEMY_API_KEY,
+      network: AlchemyNetwork,
+    }
 
-  //   ASRLogs?.forEach((item) => {
-  //     if (account && item.data.to === getAddress(account)) {
-  //       console.log('tokenId', item.data.tokenId.toString())
-  //       list.push(item.data.tokenId.toString())
-  //     }
-  //   })
+    const alchemy = new Alchemy(settings)
 
-  //   setOwnerTokenId(list)
-  // }, [ASRLogs, account])
+    const nftsForOwner = await alchemy.nft.getNftsForOwner(account)
+    console.log('...', nftsForOwner)
+
+    const list = nftsForOwner.ownedNfts
+      .filter((item) => getAddress(item.contract.address) === getAddress(ADDRESS_ASR))
+      .map((item) => item.tokenId)
+
+    console.log('list', list)
+
+    setTokenId(list)
+  }, [account])
+
+  useEffect(() => {
+    fetchNftsForOwner()
+  }, [fetchNftsForOwner])
 
   return (
     <PageLayout>
@@ -68,21 +99,21 @@ function AccountNFT() {
         </h1>
 
         <div className="hidden lg:block px-6 xl:px-2.5 my-6 sm:my-9">
-          <Stack spacing={3}>
-            {NFT_DATA.map((nft, index) => (
-              <NFTItem
-                nft={nft}
-                key={index}
-                click={(value) => {
-                  if (value === 'stake') {
-                    onSafeTransferFrom()
-                  } else if (value === 'unstake') {
-                    onUnstake()
-                  }
-                }}
-              />
-            ))}
-          </Stack>
+          {nfts.length ? (
+            <Stack spacing={3}>
+              {nfts.map((nft, index) => (
+                <NFTItem
+                  nft={nft}
+                  key={index}
+                  tokenId={parseTokenId(nft.name)}
+                  safeTransferFrom={(value) => onSafeTransferFrom(value)}
+                  unstake={(value) => onUnstake(value)}
+                />
+              ))}
+            </Stack>
+          ) : (
+            <span>No Data</span>
+          )}
         </div>
 
         <div className="block lg:hidden">
@@ -91,7 +122,7 @@ function AccountNFT() {
           </div>
 
           <div className="px-6 xl:px-2.5">
-            <NFTItemProperty nft={currentNFT_DATA} />
+            <NFTDetails nft={ALL_METADATA[0]} tokenId={1} />
           </div>
 
           <Actions sx={{ marginTop: 'auto' }} direction="row" spacing={1.5} className="fixed left-6 bottom-6 right-6">
