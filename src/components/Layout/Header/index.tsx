@@ -1,12 +1,11 @@
 import styled from '@emotion/styled'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
 import React from 'react'
-import Web3Modal from 'web3modal'
 
-import { classNames, getDefaultChainId } from '../../../utils'
+import { useWeb3Modal } from '../../../hooks'
+import { classNames } from '../../../utils'
 import { IconHeaderClose } from '../../Icon/HeaderClose'
 import { IconHeaderMenu } from '../../Icon/HeaderMenu'
-import { web3ModalProviderOptions } from '../../Provider'
 import { GamesNav } from '../GamesNav'
 import { SiteNav } from '../SiteNav'
 import { SocialNav } from '../SocialNav'
@@ -25,10 +24,9 @@ const MobileMenuWrapper = styled.div<MobileMenuWrapperProps>`
 `
 
 export function PageHeader() {
-  const { account, active, chainId, deactivate, activate, switchNetwork } = useEthers()
+  const { account, active, deactivate } = useEthers()
+  const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
 
-  const defaultChainId = getDefaultChainId()
-  const chainIdMismatch = chainId !== defaultChainId
   const connected = Boolean(account && active)
 
   // To distinguish the source of hooks, pleace do not remove the `React.` prefix.
@@ -38,19 +36,14 @@ export function PageHeader() {
   const handleGamesNavClick = React.useCallback((open: boolean) => setGamesNavOpen(open), [])
 
   const handleWalletConnect = React.useCallback(async () => {
-    const web3Modal = new Web3Modal({
-      cacheProvider: true,
-      providerOptions: web3ModalProviderOptions,
-    })
-    const provider = await web3Modal.connect()
-    await activate(provider)
-  }, [activate])
+    await connect()
+  }, [connect])
   const handleWalletDisconnect = React.useCallback(() => {
     deactivate()
   }, [deactivate])
   const handleWalletSwitchNetwork = React.useCallback(async () => {
-    if (chainIdMismatch) await switchNetwork(defaultChainId)
-  }, [chainIdMismatch, defaultChainId, switchNetwork])
+    if (chainIdMismatch) await switchNetwork()
+  }, [chainIdMismatch, switchNetwork])
 
   return (
     <header

@@ -22,7 +22,7 @@ import {
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
 import { BasePageLayout } from '../../../components/Layout'
-import { useEmailAccount, useMetamaskAccount, useWalletModal } from '../../../hooks'
+import { useEmailAccount, useMetamaskAccount, useWeb3Modal } from '../../../hooks'
 import { AccountSignUpFormData, StepInfo } from '../../../types'
 
 type StepSignUpProps = AccountEmailAndAgreementProps & {
@@ -91,7 +91,7 @@ export function SignUp() {
   const navigate = useNavigate()
   const { account } = useEthers()
   const { getValues, trigger, handleSubmit } = useFormContext<AccountSignUpFormData>()
-  const { openWalletModal } = useWalletModal()
+  const { connect } = useWeb3Modal()
   const { walletLogin, walletBind } = useMetamaskAccount()
   const { emailSendVerification, emailRegister } = useEmailAccount()
 
@@ -131,14 +131,14 @@ export function SignUp() {
     try {
       setMetamaskSigning(true)
       if (signUpError) setSignUpError('')
-      if (!account) return openWalletModal()
+      if (!account) return connect()
       const res = await walletLogin()
       if (!res.isOk) return setSignUpError(res.error.message)
       setComplete(true)
     } finally {
       setMetamaskSigning(false)
     }
-  }, [account, metamaskSigning, openWalletModal, signUpError, walletLogin])
+  }, [metamaskSigning, signUpError, account, connect, walletLogin])
 
   /** For step 0, sign up with email directly. */
   const handleEmailSignUpSubmit = React.useCallback(
@@ -214,14 +214,14 @@ export function SignUp() {
     try {
       setMetamaskBinding(true)
       if (signUpError) setSignUpError('')
-      if (!account) return openWalletModal()
+      if (!account) return connect()
       const res = await walletBind()
       if (!res.isOk) return setSignUpError(res.error.message)
       setComplete(true)
     } finally {
       setMetamaskBinding(false)
     }
-  }, [account, metamaskBinding, openWalletModal, signUpError, walletBind])
+  }, [account, connect, metamaskBinding, signUpError, walletBind])
   const handleSkipBindWalletClick = React.useCallback(() => {
     if (signUpError) setSignUpError('')
     setComplete(true)
