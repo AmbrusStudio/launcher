@@ -6,7 +6,6 @@ import { useEthers } from '@usedapp/core'
 import { useCallback, useMemo, useState } from 'react'
 
 import { PageLayout } from '../../../components/Layout'
-import NFTDetails from '../../../components/NFT/NFTDetails'
 import NFTItem from '../../../components/NFT/NFTItem'
 import NFTModal from '../../../components/NFT/NFTModal'
 import NFTStar from '../../../components/NFT/NFTStar'
@@ -40,7 +39,7 @@ function AccountNFT() {
   // owner nfts
   const nfts = useMemo<NFTE4CRanger[]>(() => nftsForOwner(tokenId, upgraded), [tokenId, upgraded])
 
-  const onSafeTransferFrom = useCallback(
+  const onStake = useCallback(
     (tokenId: string) => {
       safeTransferFrom(account, ADDRESS_E4C_Ranger, tokenId)
     },
@@ -71,7 +70,7 @@ function AccountNFT() {
                   nft={nft}
                   key={index}
                   tokenId={nft.tokenId}
-                  safeTransferFrom={(value) => onSafeTransferFrom(value)}
+                  stake={(value) => onStake(value)}
                   unstake={(value) => onUnstake(value)}
                 />
               ))}
@@ -86,9 +85,7 @@ function AccountNFT() {
             <SwiperToggle currentIndex={currentIndex} toggle={(value) => setCurrentIndex(value)} />
           </div>
 
-          <div className="px-6 xl:px-2.5">
-            <NFTDetails nft={nfts[0]} tokenId={'1'} />
-          </div>
+          <div className="px-6 xl:px-2.5">{/* <NFTDetails nft={nfts[0]} tokenId={'1'} /> */}</div>
 
           <Actions sx={{ marginTop: 'auto' }} direction="row" spacing={1.5} className="fixed left-6 bottom-6 right-6">
             <NFTStar nft={currentNFT_DATA} toggle={(value) => console.log(value)} />
