@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { FC, useState } from 'react'
 
+import { stakeInfoData } from '../../../data'
 import { NFT } from '../../../types'
 import { ArrowUp } from '../../Icon'
 import Close from '../../Icon/Close'
@@ -63,14 +64,12 @@ const NFTModal: FC<NFTModalProps> = ({ visible, toggle, title, nft }) => {
           </div>
           <div className="overflow-auto bg-black flex-1">
             <div className="bg-white backdrop-blur-md px-6 pt-6 pb-[109px] grid gap-y-[36px]">
-              {nft.upgradeInfo.introduction.map((item, index) => (
+              {stakeInfoData.announcement.map((item, index) => (
                 <NFTAnnouncement data={item} key={index} />
               ))}
             </div>
             <div className="bg-black backdrop-blur-md p-6">
-              <p className="font-normal text-base leading-[30px] text-white not-italic">
-                {nft.upgradeInfo.description}
-              </p>
+              <p className="font-normal text-base leading-[30px] text-white not-italic">{stakeInfoData.description}</p>
             </div>
           </div>
           {/* <Actions className="fixed left-6 bottom-6 right-6" color={'#ff4125'}>

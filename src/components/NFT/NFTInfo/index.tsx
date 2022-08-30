@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import { FC } from 'react'
 
+import { stakeInfoData } from '../../../data'
 import { NFT, NFTUpgradeState } from '../../../types'
 import NFTAnnouncement from '../NFTAnnouncement'
 import StatusCheck from '../StatusCheck'
@@ -63,13 +64,13 @@ const StakeInfo: FC<StakeInfoProps> = ({ nft, toggle }) => {
   return (
     <>
       <div className="lg:w-[600px] lg:h-[600px] overflow-auto bg-white p-6 grid gap-y-20.5">
-        {nft.upgradeInfo.introduction.map((item, index) => (
+        {stakeInfoData.announcement.map((item, index) => (
           <NFTAnnouncement data={item} key={index} />
         ))}
       </div>
       <WrapperInfo>
-        <Title>{nft.upgradeInfo.title}</Title>
-        {nft.description && <Description>{nft.description}</Description>}
+        <Title>{stakeInfoData.title}</Title>
+        <Description>{stakeInfoData.description}</Description>
         {nft.upgrade === NFTUpgradeState.Upgrade ? (
           <Stack spacing={1.5} className="mt-6">
             <InfoButton color="#FF4125" onClick={() => alert('Up....')}>
