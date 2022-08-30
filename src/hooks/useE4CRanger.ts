@@ -3,6 +3,7 @@ import { Contract } from 'ethers'
 
 import { ERC721__factory } from '../typechain/factories/@openzeppelin/contracts/token/ERC721/ERC721__factory'
 import { E4CRangerHolder__factory } from '../typechain/factories/contracts/E4CRangerHolder.sol/E4CRangerHolder__factory'
+import { E4CRangerHolder__factory as E4CRangerHolderFactory } from '../typechain/factories/contracts/E4CRangerHolder__factory'
 
 /**
  * E4CRangerHolder
@@ -60,9 +61,7 @@ export function useE4CRangerUnstake(tokenAddress: string) {
  * @param tokenIds
  * @returns
  */
-export function useUpgraded(tokenAddress: string, tokenIds: string[]): (boolean | undefined)[] {
-  console.log('tokenIds', tokenIds)
-
+export function useUpgradeds(tokenAddress: string, tokenIds: string[]): (boolean | undefined)[] {
   const calls =
     tokenIds?.map((tokenId) => ({
       contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
@@ -72,8 +71,31 @@ export function useUpgraded(tokenAddress: string, tokenIds: string[]): (boolean 
   const results = useCalls(calls) ?? []
   results.forEach((result, idx) => {
     if (result && result.error) {
+      console.error(`Error encountered calling 'upgraded' on ${calls[idx]?.contract.address}: ${result.error.message}`)
+    }
+  })
+  console.log('results', results)
+  return results.map((result) => result?.value?.[0])
+}
+
+/**
+ * E4CRanger originalOwner
+ * @param tokenAddress
+ * @param tokenIds
+ * @returns constants.AddressZero || Address
+ */
+export function useOriginalOwners(tokenAddress: string, tokenIds: string[]): string[] {
+  const calls =
+    tokenIds?.map((tokenId) => ({
+      contract: new Contract(tokenAddress, E4CRangerHolderFactory.abi),
+      method: 'originalOwner',
+      args: [tokenId],
+    })) ?? []
+  const results = useCalls(calls) ?? []
+  results.forEach((result, idx) => {
+    if (result && result.error) {
       console.error(
-        `Error encountered calling 'totalSupply' on ${calls[idx]?.contract.address}: ${result.error.message}`
+        `Error encountered calling 'originalOwner' on ${calls[idx]?.contract.address}: ${result.error.message}`
       )
     }
   })

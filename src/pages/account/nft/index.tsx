@@ -3,6 +3,7 @@ import 'swiper/css'
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import { useEthers } from '@usedapp/core'
+import { getAddress } from 'ethers/lib/utils'
 import { useCallback, useMemo, useState } from 'react'
 
 import { PageLayout } from '../../../components/Layout'
@@ -13,8 +14,13 @@ import NFTUpgrade from '../../../components/NFT/NFTUpgrade'
 import SwiperToggle from '../../../components/NFT/SwiperToggle'
 import { ADDRESS_ASR, ADDRESS_E4C_Ranger } from '../../../contracts'
 import { NFT_DATA } from '../../../data'
-import { useE4CRangerUnstake, useERC721SafeTransferFrom, useUpgraded } from '../../../hooks/useE4CRanger'
-import { useTokenId } from '../../../hooks/useTokenId'
+import {
+  useE4CRangerUnstake,
+  useERC721SafeTransferFrom,
+  useOriginalOwners,
+  useUpgradeds,
+} from '../../../hooks/useE4CRanger'
+import { useTokenId, useTokenIdByContract } from '../../../hooks/useTokenId'
 import { NFTE4CRanger } from '../../../types'
 import { nftsForOwner } from '../../../utils'
 
@@ -26,8 +32,26 @@ const Actions = styled(Stack)`
 function AccountNFT() {
   const { account } = useEthers()
   const tokenId = useTokenId()
-  const upgraded = useUpgraded(ADDRESS_E4C_Ranger, tokenId)
-  console.log('upgraded', upgraded)
+  const tokenIdForContract = useTokenIdByContract()
+  const upgraded = useUpgradeds(ADDRESS_E4C_Ranger, tokenId)
+  const originalOwner = useOriginalOwners(ADDRESS_E4C_Ranger, tokenIdForContract)
+  const tokenIdForOriginalContract = useMemo(() => {
+    const list: string[] = []
+    originalOwner.forEach((item, index) => {
+      if (account && getAddress(item) === getAddress(account)) {
+        list.push(tokenIdForContract[index])
+      }
+    })
+
+    return list
+  }, [account, originalOwner, tokenIdForContract])
+  const upgradedForContract = useUpgradeds(ADDRESS_E4C_Ranger, tokenIdForOriginalContract)
+
+  // console.log('upgraded', upgraded)
+  console.log('tokenIdForContract', tokenIdForContract)
+  console.log('originalOwner', originalOwner)
+  console.log('tokenIdForOriginalContract', tokenIdForOriginalContract)
+  console.log('upgradedForContract', upgradedForContract)
 
   const { state: stateSafeTransferFrom, send: safeTransferFrom } = useERC721SafeTransferFrom(ADDRESS_ASR)
   const { state: stateUnstake, send: unstake } = useE4CRangerUnstake(ADDRESS_E4C_Ranger)
@@ -38,6 +62,11 @@ function AccountNFT() {
   const currentNFT_DATA = useMemo(() => NFT_DATA[currentIndex], [currentIndex])
   // owner nfts
   const nfts = useMemo<NFTE4CRanger[]>(() => nftsForOwner(tokenId, upgraded), [tokenId, upgraded])
+  const nftsForContract = useMemo<NFTE4CRanger[]>(
+    () => nftsForOwner(tokenIdForOriginalContract, upgradedForContract),
+    [tokenIdForOriginalContract, upgradedForContract]
+  )
+  // console.log('nfts', nfts)
 
   const onStake = useCallback(
     (tokenId: string) => {
@@ -53,8 +82,6 @@ function AccountNFT() {
     [unstake]
   )
 
-  console.log('nfts', nfts)
-
   return (
     <PageLayout>
       <div className="my-0 mx-auto py-23 lg:py-32.5 max-w-[1140px] font-sans">
@@ -63,12 +90,12 @@ function AccountNFT() {
         </h1>
 
         <div className="hidden lg:block px-6 xl:px-2.5 my-6 sm:my-9">
-          {nfts.length ? (
+          {[...nfts, ...nftsForContract].length ? (
             <Stack spacing={3}>
-              {nfts.map((nft, index) => (
+              {[...nfts, ...nftsForContract].map((nft) => (
                 <NFTItem
                   nft={nft}
-                  key={index}
+                  key={nft.tokenId}
                   tokenId={nft.tokenId}
                   stake={(value) => onStake(value)}
                   unstake={(value) => onUnstake(value)}
