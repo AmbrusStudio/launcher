@@ -16,7 +16,7 @@ const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ metadata, visible, setVis
   return (
     <ModalGallery
       title="E4C Rangers"
-      id={parseTokenId(metadata?.name || '')}
+      id={Number(parseTokenId(metadata?.name || ''))}
       visible={visible}
       toggle={(value) => setVisible(value)}
     >

@@ -3,7 +3,7 @@ import { Stack } from '@mui/material'
 import { FC, useState } from 'react'
 
 import { NFT_DATA } from '../../../data'
-import { Metadata } from '../../../types'
+import { NFTE4CRanger } from '../../../types'
 import NFTDetails from '../NFTDetails'
 import NFTInfo from '../NFTInfo'
 import NFTPerk from '../NFTPerk'
@@ -37,8 +37,8 @@ const NFTInfoButtonUpgrade = styled(NFTInfoButton)`
 `
 
 interface NFTItemProps {
-  readonly nft: Metadata
-  readonly tokenId: number
+  readonly nft: NFTE4CRanger
+  readonly tokenId: string
   click?: (value: string) => void
   safeTransferFrom: (value: string) => void
   unstake: (value: string) => void
@@ -61,7 +61,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, safeTransferFrom, unstake }) 
             <NFTDetails nft={nft} tokenId={tokenId} />
 
             <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
-              {tokenId >= 16 && (
+              {Number(tokenId) >= 16 && nft.upgraded === false && (
                 <>
                   <NFTInfoButtonUpgrade onClick={() => safeTransferFrom(String(tokenId))}>Stake</NFTInfoButtonUpgrade>
                   <NFTInfoButtonUpgrade onClick={() => unstake(String(tokenId))}>UnStake</NFTInfoButtonUpgrade>

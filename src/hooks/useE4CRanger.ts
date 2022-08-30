@@ -1,4 +1,4 @@
-import { Falsy, useCall, useContractFunction } from '@usedapp/core'
+import { Falsy, useCall, useCalls, useContractFunction } from '@usedapp/core'
 import { Contract } from 'ethers'
 
 import { ERC721__factory } from '../typechain/factories/@openzeppelin/contracts/token/ERC721/ERC721__factory'
@@ -9,7 +9,7 @@ import { E4CRangerHolder__factory } from '../typechain/factories/contracts/E4CRa
  * @param tokenAddress
  * @returns
  */
-export function useE4CRangerHolder(tokenAddress: string | Falsy) {
+export function useE4CRanger(tokenAddress: string | Falsy) {
   const { value, error } =
     useCall(
       tokenAddress && {
@@ -52,4 +52,31 @@ export function useE4CRangerUnstake(tokenAddress: string) {
   })
 
   return { state, send }
+}
+
+/**
+ * E4CRanger upgraded
+ * @param tokenAddress
+ * @param tokenIds
+ * @returns
+ */
+export function useUpgraded(tokenAddress: string, tokenIds: string[]): (boolean | undefined)[] {
+  console.log('tokenIds', tokenIds)
+
+  const calls =
+    tokenIds?.map((tokenId) => ({
+      contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
+      method: 'upgraded',
+      args: [tokenId],
+    })) ?? []
+  const results = useCalls(calls) ?? []
+  results.forEach((result, idx) => {
+    if (result && result.error) {
+      console.error(
+        `Error encountered calling 'totalSupply' on ${calls[idx]?.contract.address}: ${result.error.message}`
+      )
+    }
+  })
+  console.log('results', results)
+  return results.map((result) => result?.value?.[0])
 }

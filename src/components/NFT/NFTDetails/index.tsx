@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 import { Box, Stack } from '@mui/material'
 import { FC } from 'react'
 
-import { Metadata } from '../../../types'
-import { getEdition, parseTokenId } from '../../../utils'
+import { NFTE4CRanger } from '../../../types'
+import { getEdition } from '../../../utils'
 import NFTTag from '../NFTTag'
 
 const NFTInfoContent = styled.div`
@@ -38,8 +38,8 @@ const NFTInfoIntroductionContent = styled.p`
 `
 
 interface NFTDetailsProps {
-  readonly nft: Metadata
-  readonly tokenId: number
+  readonly nft: NFTE4CRanger
+  readonly tokenId: string
 }
 
 const NFTDetails: FC<NFTDetailsProps> = ({ nft, tokenId }) => {
@@ -64,7 +64,7 @@ const NFTDetails: FC<NFTDetailsProps> = ({ nft, tokenId }) => {
             </span>
           </Stack>
         </section>
-        <NFTTag content={getEdition(parseTokenId(nft.name))} />
+        {nft.upgraded !== undefined && <NFTTag content={getEdition(Number(tokenId), nft.upgraded)} />}
       </Box>
 
       <NFTInfoContent>

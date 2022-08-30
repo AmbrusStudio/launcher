@@ -1,4 +1,4 @@
-import { TraitItem } from './metadata'
+import { Metadata, TraitItem } from './metadata'
 
 export enum NFTUpgradeInfoState {
   Cold = 'Cold',
@@ -81,7 +81,14 @@ export type PERK = {
 }
 
 export enum NFTEdition {
-  DefaultEdition = 'Edition',
   GoldEdition = 'Gold Edition',
+  GoldPlusEdition = 'Gold Plus Edition',
   UltimateEdition = 'Ultimate Edition',
 }
+
+export type NFTE4CRangerUpgraded = boolean | undefined
+
+export type NFTE4CRanger = {
+  tokenId: string
+  upgraded: NFTE4CRangerUpgraded
+} & Metadata
