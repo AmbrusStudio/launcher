@@ -94,4 +94,5 @@ export type NFTE4CRangerUpgraded = boolean | undefined
 export type NFTE4CRanger = {
   tokenId: string
   upgraded: NFTE4CRangerUpgraded
+  staking: boolean
 } & Metadata

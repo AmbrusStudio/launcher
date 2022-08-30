@@ -20,6 +20,7 @@ import {
   useOriginalOwners,
   useUpgradeds,
 } from '../../../hooks/useE4CRanger'
+import { useERC721OwnerOfs } from '../../../hooks/useERC721'
 import { useTokenId, useTokenIdByContract } from '../../../hooks/useTokenId'
 import { NFTE4CRanger } from '../../../types'
 import { nftsForOwner } from '../../../utils'
@@ -38,20 +39,26 @@ function AccountNFT() {
   const tokenIdForOriginalContract = useMemo(() => {
     const list: string[] = []
     originalOwner.forEach((item, index) => {
-      if (account && getAddress(item) === getAddress(account)) {
+      if (account && item && getAddress(item) === getAddress(account)) {
         list.push(tokenIdForContract[index])
       }
+      // if (account && item) {
+      //   list.push(tokenIdForContract[index])
+      // }
     })
 
     return list
   }, [account, originalOwner, tokenIdForContract])
   const upgradedForContract = useUpgradeds(ADDRESS_E4C_Ranger, tokenIdForOriginalContract)
+  // replace with ownerOf
+  const ownerOfForContract = useERC721OwnerOfs(ADDRESS_ASR, tokenIdForContract)
 
   // console.log('upgraded', upgraded)
   console.log('tokenIdForContract', tokenIdForContract)
   console.log('originalOwner', originalOwner)
   console.log('tokenIdForOriginalContract', tokenIdForOriginalContract)
   console.log('upgradedForContract', upgradedForContract)
+  console.log('ownerOfForContract', ownerOfForContract)
 
   const { state: stateSafeTransferFrom, send: safeTransferFrom } = useERC721SafeTransferFrom(ADDRESS_ASR)
   const { state: stateUnstake, send: unstake } = useE4CRangerUnstake(ADDRESS_E4C_Ranger)
@@ -61,12 +68,13 @@ function AccountNFT() {
 
   const currentNFT_DATA = useMemo(() => NFT_DATA[currentIndex], [currentIndex])
   // owner nfts
-  const nfts = useMemo<NFTE4CRanger[]>(() => nftsForOwner(tokenId, upgraded), [tokenId, upgraded])
+  const nfts = useMemo<NFTE4CRanger[]>(() => nftsForOwner(tokenId, upgraded, []), [tokenId, upgraded])
   const nftsForContract = useMemo<NFTE4CRanger[]>(
-    () => nftsForOwner(tokenIdForOriginalContract, upgradedForContract),
-    [tokenIdForOriginalContract, upgradedForContract]
+    () => nftsForOwner(tokenIdForOriginalContract, upgradedForContract, originalOwner),
+    [tokenIdForOriginalContract, upgradedForContract, originalOwner]
   )
-  // console.log('nfts', nfts)
+  console.log('nfts', nfts)
+  console.log('nftsForContract', nftsForContract)
 
   const onStake = useCallback(
     (tokenId: string) => {

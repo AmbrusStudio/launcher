@@ -46,25 +46,26 @@ export function useERC721OwnerOf(tokenAddress: string | Falsy, tokenId: string) 
   return value?.[0]
 }
 
-export function useERC721OwnerOfs(tokenAddress: string, tokenId: string[]) {
+/**
+ * useERC721 ownerOf
+ * @param tokenAddress
+ * @param tokenIds
+ * @returns
+ */
+export function useERC721OwnerOfs(tokenAddress: string, tokenIds: string[]): string[] {
   const calls =
-    tokenId?.map((id) => ({
+    tokenIds?.map((tokenId) => ({
       contract: new Contract(tokenAddress, ERC721__factory.abi),
       method: 'ownerOf',
-      args: [id],
+      args: [tokenId],
     })) ?? []
-
   const results = useCalls(calls) ?? []
   results.forEach((result, idx) => {
     if (result && result.error) {
-      console.error(
-        `Error encountered calling 'totalSupply' on ${calls[idx]?.contract.address}: ${result.error.message}`
-      )
+      console.error(`Error encountered calling 'ownerOf' on ${calls[idx]?.contract.address}: ${result.error.message}`)
     }
   })
-
   console.log('results', results)
-
   return results.map((result) => result?.value?.[0])
 }
 

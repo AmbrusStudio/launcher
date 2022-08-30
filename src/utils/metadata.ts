@@ -1,3 +1,4 @@
+import { constants } from 'ethers'
 import { compose } from 'redux'
 
 import { ALL_METADATA } from '../data'
@@ -18,11 +19,17 @@ export const parseTokenId = (name: string): string => {
  * @param tokenId
  * @returns
  */
-export const nftsForOwner = (tokenIds: string[], upgradeds: NFTE4CRangerUpgraded[]): NFTE4CRanger[] => {
+export const nftsForOwner = (
+  tokenIds: string[],
+  upgradeds: NFTE4CRangerUpgraded[],
+  originalOwners: string[]
+): NFTE4CRanger[] => {
   // tokenId: upgraded
   const tokenIdPairUpgraded = new Map<string, NFTE4CRangerUpgraded>()
+  const tokenIdPairStaking = new Map<string, boolean>()
   for (let i = 0; i < tokenIds.length; i++) {
     tokenIdPairUpgraded.set(tokenIds[i], upgradeds?.[i])
+    tokenIdPairStaking.set(tokenIds[i], originalOwners?.[i] ? originalOwners?.[i] !== constants.AddressZero : false)
   }
 
   const metadataFilter = (data: Metadata[]): Metadata[] =>
@@ -34,6 +41,7 @@ export const nftsForOwner = (tokenIds: string[], upgradeds: NFTE4CRangerUpgraded
       return {
         tokenId: tokenId,
         upgraded: tokenIdPairUpgraded.get(tokenId),
+        staking: !!tokenIdPairStaking.get(tokenId),
         ...item,
       }
     })

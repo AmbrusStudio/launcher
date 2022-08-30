@@ -35,6 +35,11 @@ const NFTButtonUpgrade = styled(NFTInfoButton)`
   font-size: 16px;
   line-height: 20px;
 `
+const NFTButtonUnstake = styled(NFTInfoButton)`
+  font-size: 16px;
+  line-height: 20px;
+  background: #a0a4b0;
+`
 
 const NFTButtonStar = styled(NFTInfoButton)`
   max-width: 120px;
@@ -67,7 +72,11 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, stake, unstake }) => {
               <NFTButtonStar>
                 <Star sx={{ fontSize: '36px' }} />
               </NFTButtonStar>
-              <NFTButtonUpgrade onClick={() => setVisibleInfo(!visibleInfo)}>Upgrade</NFTButtonUpgrade>
+              {nft.staking ? (
+                <NFTButtonUnstake onClick={() => unstake(tokenId)}>Unstake</NFTButtonUnstake>
+              ) : (
+                <NFTButtonUpgrade onClick={() => setVisibleInfo(!visibleInfo)}>Upgrade</NFTButtonUpgrade>
+              )}
             </>
           )}
         </Stack>
