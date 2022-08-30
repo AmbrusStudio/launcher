@@ -3,9 +3,7 @@ import { Stack } from '@mui/material'
 import { FC } from 'react'
 
 import { stakeInfoData } from '../../../data'
-import { NFT, NFTUpgradeState } from '../../../types'
 import NFTAnnouncement from '../NFTAnnouncement'
-import StatusCheck from '../StatusCheck'
 
 const InfoButton = styled.button<{ color: string }>`
   background: ${(p) => p.color || '#ff4125'};
@@ -56,13 +54,13 @@ const Description = styled.p`
 `
 
 interface StakeInfoProps {
-  readonly nft: NFT
   toggle: (value: boolean) => void
+  stake: () => void
 }
 
-const StakeInfo: FC<StakeInfoProps> = ({ nft, toggle }) => {
+const StakeInfo: FC<StakeInfoProps> = ({ toggle, stake }) => {
   return (
-    <>
+    <div className="absolute top-0 right-0 bottom-0 left-0 flex">
       <div className="lg:w-[600px] lg:h-[600px] overflow-auto bg-white p-6 grid gap-y-20.5">
         {stakeInfoData.announcement.map((item, index) => (
           <NFTAnnouncement data={item} key={index} />
@@ -71,20 +69,16 @@ const StakeInfo: FC<StakeInfoProps> = ({ nft, toggle }) => {
       <WrapperInfo>
         <Title>{stakeInfoData.title}</Title>
         <Description>{stakeInfoData.description}</Description>
-        {nft.upgrade === NFTUpgradeState.Upgrade ? (
-          <Stack spacing={1.5} className="mt-6">
-            <InfoButton color="#FF4125" onClick={() => alert('Up....')}>
-              Start Staking Now
-            </InfoButton>
-            <InfoButton color="#A0A4B0" onClick={() => toggle(false)}>
-              Cancel
-            </InfoButton>
-          </Stack>
-        ) : nft.upgrade === NFTUpgradeState.CheckUpgradingStatus && nft.upgradeInfo.upgradingStatusInfo ? (
-          <StatusCheck nft={nft} toggle={toggle} />
-        ) : null}
+        <Stack spacing={1.5} className="mt-6">
+          <InfoButton color="#FF4125" onClick={() => stake()}>
+            Start Staking Now
+          </InfoButton>
+          <InfoButton color="#A0A4B0" onClick={() => toggle(false)}>
+            Cancel
+          </InfoButton>
+        </Stack>
       </WrapperInfo>
-    </>
+    </div>
   )
 }
 

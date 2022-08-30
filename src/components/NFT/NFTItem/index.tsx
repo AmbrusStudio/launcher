@@ -2,11 +2,11 @@ import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import { FC, useState } from 'react'
 
-import { NFT_DATA } from '../../../data'
-import { Metadata } from '../../../types'
+import Star from '../../../components/Icon/Star'
+import { NFTE4CRanger } from '../../../types'
 import NFTDetails from '../NFTDetails'
-import NFTInfo from '../NFTInfo'
 import NFTPerk from '../NFTPerk'
+import StakeInfo from '../StakeInfo'
 
 const WrapperInfo = styled.div`
   color: #fff;
@@ -22,7 +22,7 @@ const NFTInfoButton = styled.button`
   font-style: normal;
   font-weight: 600;
   text-align: center;
-  /* text-transform: uppercase; */
+  text-transform: uppercase;
   color: #ffffff;
   border: none;
   outline: none;
@@ -31,47 +31,58 @@ const NFTInfoButton = styled.button`
   cursor: pointer;
 `
 
-const NFTInfoButtonUpgrade = styled(NFTInfoButton)`
+const NFTButtonUpgrade = styled(NFTInfoButton)`
   font-size: 16px;
   line-height: 20px;
 `
+const NFTButtonUnstake = styled(NFTInfoButton)`
+  font-size: 16px;
+  line-height: 20px;
+  background: #a0a4b0;
+`
+
+const NFTButtonStar = styled(NFTInfoButton)`
+  max-width: 120px;
+  position: relative;
+`
 
 interface NFTItemProps {
-  readonly nft: Metadata
-  readonly tokenId: number
+  readonly nft: NFTE4CRanger
+  readonly tokenId: string
   click?: (value: string) => void
-  safeTransferFrom: (value: string) => void
+  stake: (value: string) => void
   unstake: (value: string) => void
 }
 
-const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, safeTransferFrom, unstake }) => {
-  const [toggleInfo, setToggleInfo] = useState<boolean>(false)
+const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, stake, unstake }) => {
+  const [visibleInfo, setVisibleInfo] = useState<boolean>(false)
   const [togglePerk, setTogglePerk] = useState<boolean>(false)
 
   return (
     <div className="flex-col lg:flex-row lg:flex h-auto lg:h-[600px] bg-black relative">
-      {toggleInfo ? (
-        <NFTInfo toggle={(value) => setToggleInfo(value)} nft={NFT_DATA[0]} />
-      ) : (
-        <>
-          <div className="lg:w-[600px] lg:h-[600px] overflow-hidden">
-            <img className="h-full object-cover w-full" src={nft.image} alt={nft.name} />
-          </div>
-          <WrapperInfo>
-            <NFTDetails nft={nft} tokenId={tokenId} />
+      <div className="lg:w-[600px] lg:h-[600px] overflow-hidden">
+        <img className="h-full object-cover w-full" src={nft.image} alt={nft.name} />
+      </div>
+      <WrapperInfo>
+        <NFTDetails nft={nft} tokenId={tokenId} />
 
-            <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
-              {tokenId >= 16 && (
-                <>
-                  <NFTInfoButtonUpgrade onClick={() => safeTransferFrom(String(tokenId))}>Stake</NFTInfoButtonUpgrade>
-                  <NFTInfoButtonUpgrade onClick={() => unstake(String(tokenId))}>UnStake</NFTInfoButtonUpgrade>
-                </>
+        <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
+          {Number(tokenId) >= 16 && nft.upgraded === false && (
+            <>
+              <NFTButtonStar>
+                <Star sx={{ fontSize: '36px' }} />
+              </NFTButtonStar>
+              {nft.staking ? (
+                <NFTButtonUnstake onClick={() => unstake(tokenId)}>Unstake</NFTButtonUnstake>
+              ) : (
+                <NFTButtonUpgrade onClick={() => setVisibleInfo(!visibleInfo)}>Upgrade</NFTButtonUpgrade>
               )}
-            </Stack>
-          </WrapperInfo>
-        </>
-      )}
+            </>
+          )}
+        </Stack>
+      </WrapperInfo>
       <NFTPerk visible={togglePerk} toggle={(value) => setTogglePerk(value)} />
+      {visibleInfo && <StakeInfo toggle={(value) => setVisibleInfo(value)} stake={() => stake(tokenId)} />}
     </div>
   )
 }

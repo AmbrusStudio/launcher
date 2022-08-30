@@ -1,21 +1,24 @@
-import { TraitItem } from './metadata'
+import { Metadata, TraitItem } from './metadata'
 
 export enum NFTUpgradeInfoState {
   Cold = 'Cold',
 }
 
-export type NFTAnnouncementType = {
-  first: string
-  second: string
+export type StakeInfoDataAnnouncementType = {
+  title: string
+  description: string
   list: {
     text: string
   }[]
 }
 
-export type NFTUpgradeInfo = {
-  introduction: NFTAnnouncementType[]
+export type StakeInfoDataType = {
   title: string
   description: string
+  announcement: StakeInfoDataAnnouncementType[]
+}
+
+export type NFTUpgradeInfo = {
   upgradingStatusInfo: {
     stakeStatus: boolean
     stakeDescription: string
@@ -81,7 +84,15 @@ export type PERK = {
 }
 
 export enum NFTEdition {
-  DefaultEdition = 'Edition',
   GoldEdition = 'Gold Edition',
+  GoldPlusEdition = 'Gold Plus Edition',
   UltimateEdition = 'Ultimate Edition',
 }
+
+export type NFTE4CRangerUpgraded = boolean | undefined
+
+export type NFTE4CRanger = {
+  tokenId: string
+  upgraded: NFTE4CRangerUpgraded
+  staking: boolean
+} & Metadata
