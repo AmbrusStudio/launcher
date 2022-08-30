@@ -1,4 +1,4 @@
-import { AccountAccessToken, AccountApiResult } from '../../types'
+import { AccountAccessToken, AccountApiResult, EmailVerificationTypes } from '../../types'
 import { accountBackendRequest } from '../axios'
 
 type MetamaskCode = {
@@ -30,8 +30,12 @@ export async function bindMetamaskAddress(address: string, signature: string): P
   return { isOk: false, data: null, error: new Error('Unkonwn error') }
 }
 
-export async function sendVerifyEmail(address: string, subscription = false): Promise<AccountApiResult<void>> {
-  const res = await accountBackendRequest.post<void>('/email/send-verification', { address, subscription })
+export async function sendVerifyEmail(
+  type: EmailVerificationTypes,
+  address: string,
+  subscription = false
+): Promise<AccountApiResult<void>> {
+  const res = await accountBackendRequest.post<void>('/email/send-verification', { type, address, subscription })
   if (res.status === 201) return { isOk: true, data: res.data, error: null }
   if (res.status === 409) return { isOk: false, data: null, error: new Error('Requests too often') }
   return { isOk: false, data: null, error: new Error('Unkonwn error') }

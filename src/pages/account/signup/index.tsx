@@ -23,7 +23,7 @@ import {
 import { Button } from '../../../components/Forms'
 import { BasePageLayout } from '../../../components/Layout'
 import { useEmailAccount, useMetamaskAccount, useWeb3Modal } from '../../../hooks'
-import { AccountSignUpFormData, StepInfo } from '../../../types'
+import { AccountSignUpFormData, EmailVerificationTypes, StepInfo } from '../../../types'
 
 type StepSignUpProps = AccountEmailAndAgreementProps & {
   account: string
@@ -147,7 +147,7 @@ export function SignUp() {
       try {
         setVerifySending(true)
         if (signUpError) setSignUpError('')
-        const res = await emailSendVerification(data.email, data.newsletter)
+        const res = await emailSendVerification(EmailVerificationTypes.Registration, data.email, data.newsletter)
         if (!res.isOk) return setSignUpError(res.error.message)
         stepIncrement()
       } finally {
@@ -172,7 +172,7 @@ export function SignUp() {
     if (!check) return stepDecrement() // If no email, back to input email.
     if (signUpError) setSignUpError('')
     const [email, newsletter] = getValues(['email', 'newsletter'])
-    const res = await emailSendVerification(email, newsletter)
+    const res = await emailSendVerification(EmailVerificationTypes.Registration, email, newsletter)
     if (!res.isOk) return setSignUpError(res.error.message)
   }, [emailSendVerification, getValues, signUpError, stepDecrement, trigger])
   /** For step 2, set an username. */

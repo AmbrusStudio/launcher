@@ -11,7 +11,7 @@ import {
   sendVerifyEmail,
 } from '../api'
 import { LSK_ACCESS_TOKEN } from '../constants'
-import { AccountAccessToken, AccountApiResult } from '../types'
+import { AccountAccessToken, AccountApiResult, EmailVerificationTypes } from '../types'
 import { getDefaultChainId } from '../utils'
 
 type UseMetamaskAccount = {
@@ -78,7 +78,11 @@ type EmailRegisterParams = {
 }
 
 type UseEmailAccount = {
-  emailSendVerification: (address: string, subscription?: boolean) => Promise<AccountApiResult<void>>
+  emailSendVerification: (
+    type: EmailVerificationTypes,
+    address: string,
+    subscription?: boolean
+  ) => Promise<AccountApiResult<void>>
   emailLogin: (address: string, password: string) => Promise<AccountApiResult<AccountAccessToken>>
   emailRegister: (params: EmailRegisterParams) => Promise<AccountApiResult<AccountAccessToken>>
 }
@@ -88,8 +92,8 @@ export function useEmailAccount(): UseEmailAccount {
   const [_, setAccessToken] = useLocalStorageState<string>(LSK_ACCESS_TOKEN)
 
   const emailSendVerification = React.useCallback<UseEmailAccount['emailSendVerification']>(
-    async (address, subscription = false) => {
-      return await sendVerifyEmail(address, subscription)
+    async (type, address, subscription = false) => {
+      return await sendVerifyEmail(type, address, subscription)
     },
     []
   )

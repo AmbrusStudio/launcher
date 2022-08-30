@@ -52,3 +52,8 @@ export type AccountAccessTokenJWTPayload = RemoveIndex<JWTPayload> & {
   wallet: string | null
   nickname: string | null
 }
+
+export enum EmailVerificationTypes {
+  Registration = 'registration',
+  Recovery = 'recovery',
+}
