@@ -4,10 +4,12 @@ import { AccountCommonProps, AccountForgotPasswordFormData } from '../../../type
 import { getFormErrorMessage } from '../../../utils'
 import { Button, Input } from '../../Forms'
 
-export type AccountForgotPasswordProps = AccountCommonProps
+export type AccountForgotPasswordProps = AccountCommonProps & {
+  disabled?: boolean
+}
 
 export function AccountForgotPassword(props: AccountForgotPasswordProps) {
-  const { onNextButtonSubmit } = props
+  const { disabled, onNextButtonSubmit } = props
   const {
     register,
     formState: { errors },
@@ -22,7 +24,7 @@ export function AccountForgotPassword(props: AccountForgotPasswordProps) {
         {...register('email', { required: true })}
         error={getFormErrorMessage(errors.email)}
       />
-      <Button variant="primary" type="submit">
+      <Button variant="primary" type="submit" disabled={disabled}>
         Next
       </Button>
     </form>

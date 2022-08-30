@@ -8,6 +8,7 @@ import {
   doMetamaskLogin,
   getMetamaskCode,
   registerWithEmail,
+  resetPassword,
   sendVerifyEmail,
   verifyVerificationCode,
 } from '../api'
@@ -87,11 +88,12 @@ type UseEmailAccount = {
   emailVerifyVerification: (code: string, address: string) => Promise<AccountApiResult<void>>
   emailLogin: (address: string, password: string) => Promise<AccountApiResult<AccountAccessToken>>
   emailRegister: (params: EmailRegisterParams) => Promise<AccountApiResult<AccountAccessToken>>
+  emailResetPassword: (code: string, address: string, password: string) => Promise<AccountApiResult<void>>
 }
 
 export function useEmailAccount(): UseEmailAccount {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setAccessToken] = useLocalStorageState<string>(LSK_ACCESS_TOKEN)
+  const [_, setAccessToken, { removeItem }] = useLocalStorageState<string>(LSK_ACCESS_TOKEN)
 
   const emailSendVerification = React.useCallback<UseEmailAccount['emailSendVerification']>(
     async (type, address, subscription = false) => {
@@ -125,5 +127,14 @@ export function useEmailAccount(): UseEmailAccount {
     [setAccessToken]
   )
 
-  return { emailSendVerification, emailVerifyVerification, emailLogin, emailRegister }
+  const emailResetPassword = React.useCallback<UseEmailAccount['emailResetPassword']>(
+    async (code, address, password) => {
+      const res = await resetPassword(code, address, password)
+      if (res.isOk) removeItem()
+      return res
+    },
+    [removeItem]
+  )
+
+  return { emailSendVerification, emailVerifyVerification, emailLogin, emailRegister, emailResetPassword }
 }

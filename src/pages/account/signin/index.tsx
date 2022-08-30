@@ -24,7 +24,7 @@ import {
 import { Button } from '../../../components/Forms'
 import { BasePageLayout } from '../../../components/Layout'
 import { useEmailAccount, useMetamaskAccount, useOpenGameClient, useQuery, useWeb3Modal } from '../../../hooks'
-import { AccountForgotPasswordFormData, AccountSignInFormData, StepInfo } from '../../../types'
+import { AccountForgotPasswordFormData, AccountSignInFormData, EmailVerificationTypes, StepInfo } from '../../../types'
 
 type StepSignInProps = AccountUsernameAndPasswordProps & {
   account: string
@@ -97,12 +97,12 @@ export function SignIn() {
   const query = useQuery()
   const navigate = useNavigate()
   const { handleSubmit: handleSignInSubmit } = useFormContext<AccountSignInFormData>()
-  const { trigger, handleSubmit: handleFogotPasswordSubmit } = useFormContext<AccountForgotPasswordFormData>()
+  const { handleSubmit: handleFogotPasswordSubmit } = useFormContext<AccountForgotPasswordFormData>()
   const { account } = useEthers()
   const { openGameClient } = useOpenGameClient()
   const { connect } = useWeb3Modal()
   const { walletLogin } = useMetamaskAccount()
-  const { emailLogin } = useEmailAccount()
+  const { emailLogin, emailSendVerification, emailVerifyVerification, emailResetPassword } = useEmailAccount()
 
   const shortAccount = shortenIfAddress(account)
 
@@ -113,6 +113,8 @@ export function SignIn() {
   const [signInError, setSignInError] = React.useState('')
   const [metamaskSigning, setMetamaskSigning] = React.useState(false)
   const [emailSigning, setEmailSigning] = React.useState(false)
+  const [verifySending, setVerifySending] = React.useState(false)
+  const [resetSending, setResetSending] = React.useState(false)
 
   const { title, navBack } = getStepInfo(step, complete)
   const isStep = React.useCallback(
@@ -177,28 +179,50 @@ export function SignIn() {
   /** For step 1, send email for verify user can reset password. */
   const handleSendEmailSubmit = React.useCallback(
     async (data: AccountForgotPasswordFormData) => {
-      console.log('handleNormalSignInSubmit', data)
-      stepIncrement()
+      if (!data.email || verifySending) return
+      try {
+        setVerifySending(true)
+        if (signInError) setSignInError('')
+        const res = await emailSendVerification(EmailVerificationTypes.Recovery, data.email)
+        if (!res.isOk) return setSignInError(res.error.message)
+        stepIncrement()
+      } finally {
+        setVerifySending(false)
+      }
     },
-    [stepIncrement]
+    [emailSendVerification, signInError, stepIncrement, verifySending]
   )
   /** For step 2, verify email with 6 digits code. */
   const handleEmailVerifyCodeSubmit = React.useCallback(
     async (data: AccountForgotPasswordFormData) => {
-      const check = await trigger('verifyCode')
-      if (!check) return
-      console.log('handleEmailVerifyCodeSubmit', data)
-      stepIncrement()
+      if (!data.verifyCode || verifySending) return
+      try {
+        setVerifySending(true)
+        if (signInError) setSignInError('')
+        const res = await emailVerifyVerification(data.verifyCode, data.email)
+        if (!res.isOk) return setSignInError(res.error.message)
+        stepIncrement()
+      } finally {
+        setVerifySending(false)
+      }
     },
-    [stepIncrement, trigger]
+    [emailVerifyVerification, signInError, stepIncrement, verifySending]
   )
   /** For step 3, set a new password */
   const handleNewPasswordSubmit = React.useCallback(
     async (data: AccountForgotPasswordFormData) => {
-      console.log('handleNewPasswordSubmit', data)
-      stepIncrement()
+      if (!data.password || resetSending) return
+      try {
+        setResetSending(true)
+        if (signInError) setSignInError('')
+        const res = await emailResetPassword(data.verifyCode, data.email, data.password)
+        if (!res.isOk) return setSignInError(res.error.message)
+        stepIncrement()
+      } finally {
+        setResetSending(false)
+      }
     },
-    [stepIncrement]
+    [emailResetPassword, resetSending, signInError, stepIncrement]
   )
 
   return (
@@ -220,9 +244,24 @@ export function SignIn() {
             onSignUpClick={handleSignUpClick}
           />
         )}
-        {isStep(1) && <StepForgotPassword onNextButtonSubmit={handleFogotPasswordSubmit(handleSendEmailSubmit)} />}
-        {isStep(2) && <StepVerifyEmail onNextButtonSubmit={handleFogotPasswordSubmit(handleEmailVerifyCodeSubmit)} />}
-        {isStep(3) && <StepResetPassword onNextButtonSubmit={handleFogotPasswordSubmit(handleNewPasswordSubmit)} />}
+        {isStep(1) && (
+          <StepForgotPassword
+            disabled={verifySending}
+            onNextButtonSubmit={handleFogotPasswordSubmit(handleSendEmailSubmit)}
+          />
+        )}
+        {isStep(2) && (
+          <StepVerifyEmail
+            nextButtonDisabled={verifySending}
+            onNextButtonSubmit={handleFogotPasswordSubmit(handleEmailVerifyCodeSubmit)}
+          />
+        )}
+        {isStep(3) && (
+          <StepResetPassword
+            disabled={resetSending}
+            onNextButtonSubmit={handleFogotPasswordSubmit(handleNewPasswordSubmit)}
+          />
+        )}
         {isStep(4) && <StepResetComplete onCompleteClick={handleResetPasswordCompleteClick} />}
         {!complete && wallet && (
           <AccountWallletSignIn

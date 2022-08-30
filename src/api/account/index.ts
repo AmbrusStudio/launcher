@@ -75,3 +75,12 @@ export async function doEmailLogin(address: string, password: string): Promise<A
   if (res.status === 401) return { isOk: false, data: null, error: new Error('Incorrect email or password') }
   return { isOk: false, data: null, error: new Error('Unkonwn error') }
 }
+
+export async function resetPassword(code: string, address: string, password: string): Promise<AccountApiResult<void>> {
+  const res = await accountBackendRequest.post<void>('/email/reset-password', { code, address, password })
+  if (res.status === 200) return { isOk: true, data: res.data, error: null }
+  if (res.status === 400) return { isOk: false, data: null, error: new Error('Email mismatch') }
+  if (res.status === 401) return { isOk: false, data: null, error: new Error('Account not found') }
+  if (res.status === 404) return { isOk: false, data: null, error: new Error('Verification code expired') }
+  return { isOk: false, data: null, error: new Error('Unkonwn error') }
+}
