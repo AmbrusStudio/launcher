@@ -87,11 +87,12 @@ const DigitInputs = React.forwardRef(function useDigitInputs(_, ref) {
 const resendTime = 60
 
 export type AccountEmailVerifyProps = AccountCommonProps & {
+  nextButtonDisabled?: boolean
   onResendClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
 export function AccountEmailVerify(props: AccountEmailVerifyProps) {
-  const { onNextButtonSubmit, onResendClick } = props
+  const { nextButtonDisabled, onNextButtonSubmit, onResendClick } = props
   const [timeLeft, setTimeLeft] = React.useState(resendTime)
   const intervalRef = React.useRef<ReturnType<typeof setInterval>>()
   const digitInputsRef = React.useRef<DigitInputsHandle>()
@@ -124,7 +125,7 @@ export function AccountEmailVerify(props: AccountEmailVerifyProps) {
       </AccountTips>
       <DigitInputs ref={digitInputsRef} />
       <div className="flex flex-col gap-24px">
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" disabled={nextButtonDisabled}>
           Next
         </Button>
         <Button variant="secondary" disabled={!canResend} onClick={handleResendEmail}>

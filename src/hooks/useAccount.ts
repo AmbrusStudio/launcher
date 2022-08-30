@@ -9,6 +9,7 @@ import {
   getMetamaskCode,
   registerWithEmail,
   sendVerifyEmail,
+  verifyVerificationCode,
 } from '../api'
 import { LSK_ACCESS_TOKEN } from '../constants'
 import { AccountAccessToken, AccountApiResult, EmailVerificationTypes } from '../types'
@@ -83,6 +84,7 @@ type UseEmailAccount = {
     address: string,
     subscription?: boolean
   ) => Promise<AccountApiResult<void>>
+  emailVerifyVerification: (code: string, address: string) => Promise<AccountApiResult<void>>
   emailLogin: (address: string, password: string) => Promise<AccountApiResult<AccountAccessToken>>
   emailRegister: (params: EmailRegisterParams) => Promise<AccountApiResult<AccountAccessToken>>
 }
@@ -94,6 +96,13 @@ export function useEmailAccount(): UseEmailAccount {
   const emailSendVerification = React.useCallback<UseEmailAccount['emailSendVerification']>(
     async (type, address, subscription = false) => {
       return await sendVerifyEmail(type, address, subscription)
+    },
+    []
+  )
+
+  const emailVerifyVerification = React.useCallback<UseEmailAccount['emailVerifyVerification']>(
+    async (code, address) => {
+      return await verifyVerificationCode(code, address)
     },
     []
   )
@@ -116,5 +125,5 @@ export function useEmailAccount(): UseEmailAccount {
     [setAccessToken]
   )
 
-  return { emailSendVerification, emailLogin, emailRegister }
+  return { emailSendVerification, emailVerifyVerification, emailLogin, emailRegister }
 }

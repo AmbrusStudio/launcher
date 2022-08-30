@@ -41,6 +41,14 @@ export async function sendVerifyEmail(
   return { isOk: false, data: null, error: new Error('Unkonwn error') }
 }
 
+export async function verifyVerificationCode(code: string, address: string): Promise<AccountApiResult<void>> {
+  const res = await accountBackendRequest.post<void>('/email/verification-code/verify', { code, address })
+  if (res.status === 200) return { isOk: true, data: res.data, error: null }
+  // Verification code not found & Verification code for this address not found
+  if (res.status === 404) return { isOk: false, data: null, error: new Error('Verification code expired') }
+  return { isOk: false, data: null, error: new Error('Unkonwn error') }
+}
+
 type EmailRegister = AccountAccessToken
 
 type RegisterWithEmailParams = {

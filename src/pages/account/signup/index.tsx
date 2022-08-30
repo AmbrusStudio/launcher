@@ -93,7 +93,7 @@ export function SignUp() {
   const { getValues, trigger, handleSubmit } = useFormContext<AccountSignUpFormData>()
   const { connect } = useWeb3Modal()
   const { walletLogin, walletBind } = useMetamaskAccount()
-  const { emailSendVerification, emailRegister } = useEmailAccount()
+  const { emailSendVerification, emailVerifyVerification, emailRegister } = useEmailAccount()
 
   const shortAccount = shortenIfAddress(account)
 
@@ -159,12 +159,18 @@ export function SignUp() {
   /** For step 1, verify email with 6 digits code. */
   const handleEmailVerifyCodeSubmit = React.useCallback(
     async (data: AccountSignUpFormData) => {
-      if (!data.verifyCode) return
-      const check = await trigger('verifyCode')
-      if (!check) return
-      stepIncrement()
+      if (!data.verifyCode || verifySending) return
+      try {
+        setVerifySending(true)
+        if (signUpError) setSignUpError('')
+        const res = await emailVerifyVerification(data.verifyCode, data.email)
+        if (!res.isOk) return setSignUpError(res.error.message)
+        stepIncrement()
+      } finally {
+        setVerifySending(false)
+      }
     },
-    [stepIncrement, trigger]
+    [emailVerifyVerification, signUpError, stepIncrement, verifySending]
   )
   /** For step 1, resend verify email. */
   const handleResendEmailVerifyCodeClick = React.useCallback(async () => {
@@ -179,21 +185,17 @@ export function SignUp() {
   const handleUsernameSubmit = React.useCallback(
     async (data: AccountSignUpFormData) => {
       if (!data.username) return
-      const check = await trigger('username')
-      if (!check) return
       stepIncrement()
     },
-    [stepIncrement, trigger]
+    [stepIncrement]
   )
   /** For step 3, set a password */
   const handlePasswordSubmit = React.useCallback(
     async (data: AccountSignUpFormData) => {
-      if (emailSigning) return
+      if (!data.password || emailSigning) return
       try {
         setEmailSigning(true)
         if (signUpError) setSignUpError('')
-        const check = await trigger('password')
-        if (!check) return
         const res = await emailRegister({
           address: data.email,
           password: data.password,
@@ -206,7 +208,7 @@ export function SignUp() {
         setEmailSigning(false)
       }
     },
-    [emailRegister, emailSigning, signUpError, stepIncrement, trigger]
+    [emailRegister, emailSigning, signUpError, stepIncrement]
   )
   /** For step 4, bind wallet */
   const handleBindWalletClick = React.useCallback(async () => {
@@ -247,6 +249,7 @@ export function SignUp() {
         )}
         {isStep(1) && (
           <StepVerifyYourEmail
+            nextButtonDisabled={verifySending}
             onNextButtonSubmit={handleSubmit(handleEmailVerifyCodeSubmit)}
             onResendClick={handleResendEmailVerifyCodeClick}
           />
