@@ -77,8 +77,8 @@ function AccountNFT() {
     [tokenIdForOriginalContract, upgradedForContract, originalOwner]
   )
   const nfts = useMemo(() => [...nftsForAccount, ...nftsForContract], [nftsForAccount, nftsForContract])
-  console.log('nfts', nfts)
-  console.log('nftsForContract', nftsForContract)
+  // console.log('nfts', nfts)
+  // console.log('nftsForContract', nftsForContract)
 
   const onStake = useCallback(
     (tokenId: string) => {
@@ -101,11 +101,11 @@ function AccountNFT() {
           MY<span className="py-0 px-1 text-rust">NFTS</span>
         </h1>
 
-        <div className="text-white">
+        {/* <div className="text-white">
           <p>{JSON.stringify(stateSafeTransferFrom)}</p>
           <hr />
           <p>{JSON.stringify(stateUnstake)}</p>
-        </div>
+        </div> */}
 
         <div className="hidden lg:block px-6 xl:px-2.5 my-6 sm:my-9">
           {nfts.length ? (

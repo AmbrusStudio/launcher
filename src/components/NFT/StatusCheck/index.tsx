@@ -49,13 +49,13 @@ const StatusCheck: FC<StatusCheckProps> = ({ nft, toggle, unstake }) => {
   const [visibleUpgrade, setVisibleUpgrade] = useState<boolean>(false)
 
   const upgradeDuration = useE4CRangerUpgradeDuration(ADDRESS_E4C_Ranger)
-  console.log('upgradeDuration', upgradeDuration)
+  // console.log('upgradeDuration', upgradeDuration)
 
   const lastStakingTime = useE4CRangerLastStakingTime(ADDRESS_E4C_Ranger, nft.tokenId)
   // 1661921882
-  console.log('lastStakingTime', lastStakingTime)
+  // console.log('lastStakingTime', lastStakingTime)
   const totalStakingTime = useE4CRangerTotalStakingTime(ADDRESS_E4C_Ranger, nft.tokenId)
-  console.log('totalStakingTime', totalStakingTime)
+  // console.log('totalStakingTime', totalStakingTime)
 
   // '33298'
   const stakingTime = useMemo<BigNumber>(() => {
