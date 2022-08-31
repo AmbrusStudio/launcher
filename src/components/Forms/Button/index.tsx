@@ -1,7 +1,7 @@
 import { ReactButtonProps } from '../../../types'
 import { classNames } from '../../../utils'
 
-type ButtonVariants = 'primary' | 'secondary'
+type ButtonVariants = 'primary' | 'secondary' | 'metamask'
 
 type ButtonProps = ReactButtonProps & {
   className?: string
@@ -11,6 +11,7 @@ type ButtonProps = ReactButtonProps & {
 const variants: Record<ButtonVariants, string> = {
   primary: '!bg-rust text-white hover:!bg-white hover:text-rust',
   secondary: '!bg-black-bg text-white hover:!bg-white hover:text-black-bg',
+  metamask: '!bg-white text-black hover:!bg-metamask hover:text-white',
 }
 
 export function Button(props: ButtonProps) {
