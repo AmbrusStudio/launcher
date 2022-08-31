@@ -1,5 +1,5 @@
 import { Falsy, useCall, useCalls, useContractFunction } from '@usedapp/core'
-import { Contract } from 'ethers'
+import { BigNumber, Contract } from 'ethers'
 
 import { ERC721__factory } from '../typechain/factories/@openzeppelin/contracts/token/ERC721/ERC721__factory'
 import { E4CRangerHolder__factory } from '../typechain/factories/contracts/E4CRangerHolder.sol/E4CRangerHolder__factory'
@@ -106,4 +106,74 @@ export function useOriginalOwners(tokenAddress: string, tokenIds: string[]): str
   })
   console.log('results', results)
   return results.map((result) => result?.value?.[0])
+}
+
+/**
+ * lastStakingTime
+ * @param tokenAddress
+ * @param tokenId
+ * @returns
+ */
+export function useE4CRangerLastStakingTime(tokenAddress: string | Falsy, tokenId: string | Falsy): BigNumber | Falsy {
+  const { value, error } =
+    useCall(
+      tokenAddress &&
+        tokenId && {
+          contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
+          method: 'lastStakingTime',
+          args: [tokenId],
+        }
+    ) ?? {}
+  if (error) {
+    console.error(error.message)
+    return undefined
+  }
+
+  return value?.[0]
+}
+
+/**
+ * totalStakingTime
+ * @param tokenAddress
+ * @param tokenId
+ * @returns
+ */
+export function useE4CRangerTotalStakingTime(tokenAddress: string | Falsy, tokenId: string | Falsy): BigNumber | Falsy {
+  const { value, error } =
+    useCall(
+      tokenAddress &&
+        tokenId && {
+          contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
+          method: 'totalStakingTime',
+          args: [tokenId],
+        }
+    ) ?? {}
+  if (error) {
+    console.error(error.message)
+    return undefined
+  }
+
+  return value?.[0]
+}
+
+/**
+ * upgradeDuration
+ * @param tokenAddress
+ * @returns
+ */
+export function useE4CRangerUpgradeDuration(tokenAddress: string | Falsy): BigNumber | Falsy {
+  const { value, error } =
+    useCall(
+      tokenAddress && {
+        contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
+        method: 'upgradeDuration',
+        args: [],
+      }
+    ) ?? {}
+  if (error) {
+    console.error(error.message)
+    return undefined
+  }
+
+  return value?.[0]
 }
