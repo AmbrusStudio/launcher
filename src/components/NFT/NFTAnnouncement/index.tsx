@@ -1,9 +1,9 @@
 import { FC } from 'react'
 
-import { StakeInfoDataAnnouncementType } from '../../../types'
+import { StakeAnnouncement } from '../../../types'
 
 interface NFTAnnouncementProps {
-  readonly data: StakeInfoDataAnnouncementType
+  readonly data: StakeAnnouncement
 }
 
 const NFTAnnouncement: FC<NFTAnnouncementProps> = ({ data }) => {
@@ -16,8 +16,8 @@ const NFTAnnouncement: FC<NFTAnnouncementProps> = ({ data }) => {
         {data.description}
       </h3>
       <ul className="font-normal text-sm xl:text-base leading-6 xl:leading-[30px] mr-0 mb-0 mt-3 ml-6 p-0 text-black not-italic list-disc">
-        {data?.list.map((item, indexJ) => (
-          <li key={indexJ}>{item.text}</li>
+        {data.list.map((item, index) => (
+          <li key={index}>{item.text}</li>
         ))}
       </ul>
     </div>

@@ -1,10 +1,14 @@
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
+import classNames from 'classnames'
 import { FC, useMemo, useState } from 'react'
 
-import { NFT } from '../../../types'
-import ModalCustom from '../../ModalCustom'
+import { stakeAnnouncement, statusCheckData } from '../../../data'
+import { NFTE4CRanger } from '../../../types'
 import CheckCard from '../CheckCard'
+import ConfirmUnstake from '../ConfirmUnstake'
+import ConfirmUpgrade from '../ConfirmUpgrade'
+import NFTAnnouncement from '../NFTAnnouncement'
 
 const InfoButton = styled.button<{ color: string }>`
   background: ${(p) => p.color || '#ff4125'};
@@ -33,92 +37,87 @@ const ConfirmationDescription = styled.p`
   padding: 0;
   margin: 0;
 `
+const WrapperInfo = styled.div`
+  color: #fff;
+  padding: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(12px);
+`
+const Title = styled.h3`
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  text-transform: uppercase;
+  color: #ffffff;
+  padding: 0;
+  margin: 0;
+`
 
 interface StatusCheckProps {
-  readonly nft: NFT
+  readonly nft: NFTE4CRanger
   toggle: (value: boolean) => void
+  unstake: () => void
 }
 
-const StatusCheck: FC<StatusCheckProps> = ({ nft, toggle }) => {
+const StatusCheck: FC<StatusCheckProps> = ({ nft, toggle, unstake }) => {
   const [visibleUnstake, setVisibleUnstake] = useState<boolean>(false)
   const [visibleUpgrade, setVisibleUpgrade] = useState<boolean>(false)
 
   const status = useMemo(() => {
-    return nft.upgradeInfo.upgradingStatusInfo?.stakeStatus && nft.upgradeInfo.upgradingStatusInfo?.badgeStatus
+    // return nft.upgradeInfo.upgradingStatusInfo?.stakeStatus && nft.upgradeInfo.upgradingStatusInfo?.badgeStatus
+    return true
   }, [nft])
 
   return (
-    <>
-      <p className="font-normal text-base leading-[30px] text-white not-italic mt-3 mb-auto">
-        You can upgrade this NFT when:
-      </p>
-
-      <div className="mt-6">
-        <CheckCard nft={nft} />
+    <div className="absolute top-0 right-0 bottom-0 left-0 flex">
+      <div className="lg:w-[600px] lg:h-[600px] overflow-auto bg-white p-6 grid gap-y-20.5">
+        {stakeAnnouncement.map((item, index) => (
+          <NFTAnnouncement data={item} key={index} />
+        ))}
       </div>
+      <WrapperInfo>
+        <Title>{statusCheckData.title}</Title>
+        <p className="font-normal text-base leading-[30px] text-white not-italic mt-3 mb-auto">
+          {statusCheckData.description}
+        </p>
 
-      <Stack
-        spacing={1.5}
-        sx={{
-          mt: 3,
-        }}
-      >
-        <InfoButton
-          color={status ? '#FF4125' : '#A0A4B0'}
-          onClick={() => {
-            status && setVisibleUpgrade(true)
-          }}
-        >
-          Upgrade
-        </InfoButton>
-        <InfoButton color="#2A2A2A" onClick={() => setVisibleUnstake(true)}>
-          Unstake
-        </InfoButton>
-        <InfoButton color="#2A2A2A" onClick={() => toggle(false)}>
-          Cancel
-        </InfoButton>
-      </Stack>
-      <ModalCustom
-        title={'Are you sure?'}
-        visible={visibleUnstake}
-        toggle={(value) => setVisibleUnstake(value)}
-        close={false}
-      >
+        <CheckCard nft={nft} />
+
         <Stack
-          spacing={3}
+          spacing={1.5}
           sx={{
-            p: 4.5,
-            overflow: 'auto',
+            mt: 3,
           }}
         >
-          <ConfirmationDescription>
-            Once unstaked, the upgrading status of this NFT will be reset. You can still upgrade this NFT in the future.
-          </ConfirmationDescription>
-          <InfoButton color="#2A2A2A">Yes, Reset upgrading status</InfoButton>
-          <InfoButton color="#2A2A2A" onClick={() => setVisibleUnstake(false)}>
+          <button
+            className={classNames('u-btn', {
+              'u-btn-primary': status,
+              'u-btn-disabled': !status,
+            })}
+            disabled={!status}
+            onClick={() => {
+              status && setVisibleUpgrade(true)
+            }}
+          >
+            Upgrade
+          </button>
+          <button className="u-btn" color="#2A2A2A" onClick={() => setVisibleUnstake(true)}>
+            Unstake
+          </button>
+          <button className="u-btn" color="#2A2A2A" onClick={() => toggle(false)}>
             Cancel
-          </InfoButton>
+          </button>
         </Stack>
-      </ModalCustom>
-      <ModalCustom title={'Upgrade your NFT?'} visible={visibleUpgrade} toggle={(value) => setVisibleUpgrade(value)}>
-        <Stack
-          spacing={3}
-          sx={{
-            p: 4.5,
-            overflow: 'auto',
-          }}
-        >
-          <ConfirmationDescription>
-            You’ll earn a lot more benefits after upgrading your NFT. You can only upgrade this NFT whilel it’s still
-            staked.
-          </ConfirmationDescription>
-          <InfoButton color="#FF4125">Upgrade and unstake</InfoButton>
-          <InfoButton color="#2A2A2A" onClick={() => setVisibleUpgrade(false)}>
-            Cancel
-          </InfoButton>
-        </Stack>
-      </ModalCustom>
-    </>
+
+        <ConfirmUnstake visible={visibleUnstake} toggle={setVisibleUnstake} unstake={unstake} />
+        <ConfirmUpgrade visible={visibleUpgrade} toggle={setVisibleUpgrade} unstake={unstake} />
+      </WrapperInfo>
+    </div>
   )
 }
 

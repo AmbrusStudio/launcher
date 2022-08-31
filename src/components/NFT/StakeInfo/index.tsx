@@ -2,25 +2,8 @@ import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import { FC } from 'react'
 
-import { stakeInfoData } from '../../../data'
+import { stakeAnnouncement, stakeToUpgrade } from '../../../data'
 import NFTAnnouncement from '../NFTAnnouncement'
-
-const InfoButton = styled.button<{ color: string }>`
-  background: ${(p) => p.color || '#ff4125'};
-  font-family: 'Montserrat', sans-serif;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 20px;
-  text-align: center;
-  text-transform: uppercase;
-  color: #ffffff;
-  border: none;
-  outline: none;
-  width: 100%;
-  min-height: 60px;
-  cursor: pointer;
-`
 
 const WrapperInfo = styled.div`
   color: #fff;
@@ -62,20 +45,20 @@ const StakeInfo: FC<StakeInfoProps> = ({ toggle, stake }) => {
   return (
     <div className="absolute top-0 right-0 bottom-0 left-0 flex">
       <div className="lg:w-[600px] lg:h-[600px] overflow-auto bg-white p-6 grid gap-y-20.5">
-        {stakeInfoData.announcement.map((item, index) => (
+        {stakeAnnouncement.map((item, index) => (
           <NFTAnnouncement data={item} key={index} />
         ))}
       </div>
       <WrapperInfo>
-        <Title>{stakeInfoData.title}</Title>
-        <Description>{stakeInfoData.description}</Description>
+        <Title>{stakeToUpgrade.title}</Title>
+        <Description>{stakeToUpgrade.description}</Description>
         <Stack spacing={1.5} className="mt-6">
-          <InfoButton color="#FF4125" onClick={() => stake()}>
+          <button className="u-btn u-btn-primary" onClick={() => stake()}>
             Start Staking Now
-          </InfoButton>
-          <InfoButton color="#A0A4B0" onClick={() => toggle(false)}>
+          </button>
+          <button className="u-btn" onClick={() => toggle(false)}>
             Cancel
-          </InfoButton>
+          </button>
         </Stack>
       </WrapperInfo>
     </div>

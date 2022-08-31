@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { Box, Stack } from '@mui/material'
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 import Progressbar from 'react-js-progressbar'
 
-import { NFT, NFTUpgradeState } from '../../../types'
+import { NFTE4CRanger } from '../../../types'
 import CloseCheck from '../../Icon/CloseCheck'
 import SuccessCheck from '../../Icon/SuccessCheck'
 
@@ -41,18 +41,22 @@ const CheckSuccess = styled(Box)`
 `
 
 interface CheckCardProps {
-  readonly nft: NFT
+  readonly nft: NFTE4CRanger
 }
 
 const CheckCard: FC<CheckCardProps> = ({ nft }) => {
+  const upgradeDuration = 60 // 60s
+  const totalStakingTime = 0 // 60s
+  const soulboundBadge = useMemo(() => false, [])
+
   return (
     <>
-      {nft.upgrade === NFTUpgradeState.CheckUpgradingStatus && nft.upgradeInfo.upgradingStatusInfo && (
+      {true && (
         <Stack spacing={1.5} direction="row">
           <Card spacing={1.5} className="p-3 xl:p-6">
             <div className="w-[108px] h-[108px] relative">
               <Progressbar
-                input={nft.upgradeInfo.upgradingStatusInfo.stakeValue}
+                input={upgradeDuration}
                 pathWidth={44}
                 pathColor={['#FF5925', '#FF00F5']} // use an array for gradient color.
                 trailWidth={44}
@@ -63,7 +67,7 @@ const CheckCard: FC<CheckCardProps> = ({ nft }) => {
                   duration: 0,
                 }}
               ></Progressbar>
-              {nft.upgradeInfo.upgradingStatusInfo.stakeStatus && (
+              {false && (
                 <div className="absolute left-0 top-0 right-0 bottom-0 flex items-center justify-center text-white">
                   <SuccessCheck
                     sx={{
@@ -76,13 +80,13 @@ const CheckCard: FC<CheckCardProps> = ({ nft }) => {
 
             <div>
               <p className="font-normal text-xs xl:text-base leading-5 text-center text-white not-italic">
-                {nft.upgradeInfo.upgradingStatusInfo.stakeDescription}
+                It has been staked for at least 90 days
               </p>
               <p className="font-normal text-xs leading-5 text-center text-rust not-italic">(24 days left)</p>
             </div>
           </Card>
           <Card spacing={1.5} className="p-3 xl:p-6">
-            {nft.upgradeInfo.upgradingStatusInfo.badgeStatus ? (
+            {soulboundBadge ? (
               <CheckSuccess>
                 <SuccessCheck
                   sx={{
@@ -101,7 +105,7 @@ const CheckCard: FC<CheckCardProps> = ({ nft }) => {
             )}
 
             <p className="font-normal text-xs xl:text-base leading-5 text-center text-white not-italic">
-              {nft.upgradeInfo.upgradingStatusInfo.badgeDescription}
+              You have claimed the “xxx” Soulbound Badge in our Discord
             </p>
           </Card>
         </Stack>

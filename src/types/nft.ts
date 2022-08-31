@@ -4,7 +4,7 @@ export enum NFTUpgradeInfoState {
   Cold = 'Cold',
 }
 
-export type StakeInfoDataAnnouncementType = {
+export type StakeAnnouncement = {
   title: string
   description: string
   list: {
@@ -15,7 +15,6 @@ export type StakeInfoDataAnnouncementType = {
 export type StakeInfoDataType = {
   title: string
   description: string
-  announcement: StakeInfoDataAnnouncementType[]
 }
 
 export type NFTUpgradeInfo = {

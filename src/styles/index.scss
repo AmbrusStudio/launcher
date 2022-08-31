@@ -9,3 +9,16 @@ body {
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
 }
+
+// components
+.u-btn {
+  @apply cursor-pointer font-semibold text-base leading-5 text-center text-white not-italic uppercase w-full outline-none border-none py-5 bg-[#2A2A2A];
+}
+
+.u-btn-primary {
+  @apply bg-rust;
+}
+
+.u-btn-disabled {
+  @apply bg-[#A0A4B0];
+}
