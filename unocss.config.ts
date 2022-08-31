@@ -24,7 +24,6 @@ export default defineConfig({
       greyMedium: '#A0A4B0',
       blackBg: '#2A2A2A',
       ligntGreen: '#CCFF00',
-      gameNavImg: 'linear-gradient(180deg, #3F3F3F 0%, #444444 100%)',
       metamask: '#F6851B',
       tips: '#4A4A4A',
     },
