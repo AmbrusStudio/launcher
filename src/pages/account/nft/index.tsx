@@ -8,7 +8,7 @@ import { useCallback, useMemo, useState } from 'react'
 
 import { PageLayout } from '../../../components/Layout'
 import NFTItem from '../../../components/NFT/NFTItem'
-import NFTModal from '../../../components/NFT/NFTModal'
+// import NFTModal from '../../../components/NFT/NFTModal'
 import NFTStar from '../../../components/NFT/NFTStar'
 import NFTUpgrade from '../../../components/NFT/NFTUpgrade'
 import SwiperToggle from '../../../components/NFT/SwiperToggle'
@@ -32,9 +32,12 @@ const Actions = styled(Stack)`
 
 function AccountNFT() {
   const { account } = useEthers()
+  // tokenId for owner
   const tokenId = useTokenId()
+  // tokenId for contract
   const tokenIdForContract = useTokenIdByContract()
   const upgraded = useUpgradeds(ADDRESS_E4C_Ranger, tokenId)
+  // tokenId original owner
   const originalOwner = useOriginalOwners(ADDRESS_E4C_Ranger, tokenIdForContract)
   const tokenIdForOriginalContract = useMemo(() => {
     const list: string[] = []
@@ -68,13 +71,14 @@ function AccountNFT() {
 
   const currentNFT_DATA = useMemo(() => NFT_DATA[currentIndex], [currentIndex])
   // owner nfts
-  const nfts = useMemo<NFTE4CRanger[]>(() => nftsForOwner(tokenId, upgraded, []), [tokenId, upgraded])
+  const nftsForAccount = useMemo<NFTE4CRanger[]>(() => nftsForOwner(tokenId, upgraded, []), [tokenId, upgraded])
   const nftsForContract = useMemo<NFTE4CRanger[]>(
     () => nftsForOwner(tokenIdForOriginalContract, upgradedForContract, originalOwner),
     [tokenIdForOriginalContract, upgradedForContract, originalOwner]
   )
-  console.log('nfts', nfts)
-  console.log('nftsForContract', nftsForContract)
+  const nfts = useMemo(() => [...nftsForAccount, ...nftsForContract], [nftsForAccount, nftsForContract])
+  // console.log('nfts', nfts)
+  // console.log('nftsForContract', nftsForContract)
 
   const onStake = useCallback(
     (tokenId: string) => {
@@ -97,16 +101,22 @@ function AccountNFT() {
           MY<span className="py-0 px-1 text-rust">NFTS</span>
         </h1>
 
+        {/* <div className="text-white">
+          <p>{JSON.stringify(stateSafeTransferFrom)}</p>
+          <hr />
+          <p>{JSON.stringify(stateUnstake)}</p>
+        </div> */}
+
         <div className="hidden lg:block px-6 xl:px-2.5 my-6 sm:my-9">
-          {[...nfts, ...nftsForContract].length ? (
+          {nfts.length ? (
             <Stack spacing={3}>
-              {[...nfts, ...nftsForContract].map((nft) => (
+              {nfts.map((nft) => (
                 <NFTItem
                   nft={nft}
                   key={nft.tokenId}
                   tokenId={nft.tokenId}
                   stake={(value) => onStake(value)}
-                  unstake={(value) => onUnstake(value)}
+                  unstake={() => onUnstake(nft.tokenId)}
                 />
               ))}
             </Stack>
@@ -133,7 +143,7 @@ function AccountNFT() {
             />
           </Actions>
 
-          <NFTModal visible={visibleModal} toggle={setVisibleModal} nft={NFT_DATA[1]} title="Stake to Upgrade" />
+          {/* <NFTModal visible={visibleModal} toggle={setVisibleModal} nft={nfts[0]} title="Stake to Upgrade" /> */}
         </div>
       </div>
     </PageLayout>

@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { FC, useState } from 'react'
 
-import { stakeInfoData } from '../../../data'
-import { NFT } from '../../../types'
+import { stakeAnnouncement } from '../../../data'
+import { NFTE4CRanger } from '../../../types'
 import { ArrowUp } from '../../Icon'
 import Close from '../../Icon/Close'
 import NFTAnnouncement from '../NFTAnnouncement'
@@ -42,7 +42,7 @@ const DrawerButton = styled.button<{ color: string }>`
 interface NFTModalProps {
   readonly visible: boolean
   readonly title: string
-  readonly nft: NFT
+  readonly nft: NFTE4CRanger
   toggle: (value: boolean) => void
 }
 
@@ -64,12 +64,12 @@ const NFTModal: FC<NFTModalProps> = ({ visible, toggle, title, nft }) => {
           </div>
           <div className="overflow-auto bg-black flex-1">
             <div className="bg-white backdrop-blur-md px-6 pt-6 pb-[109px] grid gap-y-[36px]">
-              {stakeInfoData.announcement.map((item, index) => (
+              {stakeAnnouncement.map((item, index) => (
                 <NFTAnnouncement data={item} key={index} />
               ))}
             </div>
             <div className="bg-black backdrop-blur-md p-6">
-              <p className="font-normal text-base leading-[30px] text-white not-italic">{stakeInfoData.description}</p>
+              <p className="font-normal text-base leading-[30px] text-white not-italic">-</p>
             </div>
           </div>
           {/* <Actions className="fixed left-6 bottom-6 right-6" color={'#ff4125'}>
@@ -97,7 +97,7 @@ const NFTModal: FC<NFTModalProps> = ({ visible, toggle, title, nft }) => {
                 <ArrowUp className="!text-base rotate-180" />
               </div>
               <div className="p-6 bg-black/70 backdrop-blur-[10px] shadow-statusCheck-drawer-modal">
-                <StatusCheck nft={nft} toggle={(value) => console.log(value)} />
+                <StatusCheck nft={nft} toggle={(value) => console.log(value)} unstake={() => console.log('unstake')} />
               </div>
             </div>
           )}

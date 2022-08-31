@@ -1,4 +1,14 @@
-import { NFT, NFTStarState, NFTTagState, NFTUpgradeState, PERK, PERKState, PERKTag, StakeInfoDataType } from '../types'
+import {
+  NFT,
+  NFTStarState,
+  NFTTagState,
+  NFTUpgradeState,
+  PERK,
+  PERKState,
+  PERKTag,
+  StakeAnnouncement,
+  StakeInfoDataType,
+} from '../types'
 
 export const NFT_DATA: NFT[] = [
   {
@@ -78,30 +88,35 @@ export const PERKS: PERK[] = [
   },
 ]
 
-export const stakeInfoData: StakeInfoDataType = {
-  announcement: [
-    {
-      title: 'Upgrade to Legendary Edition +',
-      description: 'And You’ll Get',
-      list: [
-        {
-          text: '12 more in-game loots',
-        },
-        {
-          text: '1 legendary skin for Rin in our game: E4C Final Salvation',
-        },
-      ],
-    },
-    {
-      title: 'Once the NFT is staked',
-      description: 'You’ll Get',
-      list: [
-        {
-          text: 'NFT Airdrop (Rangers Edition) from our upcoming E4C Rangers Series',
-        },
-      ],
-    },
-  ],
+export const stakeToUpgrade: StakeInfoDataType = {
   title: 'Stake to Upgrade',
   description: 'Staking Descriptions',
 }
+export const statusCheckData: StakeInfoDataType = {
+  title: 'Status Check',
+  description: 'You can upgrade this NFT when:',
+}
+
+export const stakeAnnouncement: StakeAnnouncement[] = [
+  {
+    title: 'Upgrade to Legendary Edition +',
+    description: 'And You’ll Get',
+    list: [
+      {
+        text: '12 more in-game loots',
+      },
+      {
+        text: '1 legendary skin for Rin in our game: E4C Final Salvation',
+      },
+    ],
+  },
+  {
+    title: 'Once the NFT is staked',
+    description: 'You’ll Get',
+    list: [
+      {
+        text: 'NFT Airdrop (Rangers Edition) from our upcoming E4C Rangers Series',
+      },
+    ],
+  },
+]

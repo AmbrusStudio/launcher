@@ -7,6 +7,7 @@ import { NFTE4CRanger } from '../../../types'
 import NFTDetails from '../NFTDetails'
 import NFTPerk from '../NFTPerk'
 import StakeInfo from '../StakeInfo'
+import StatusCheck from '../StatusCheck'
 
 const WrapperInfo = styled.div`
   color: #fff;
@@ -16,46 +17,17 @@ const WrapperInfo = styled.div`
   flex-direction: column;
 `
 
-const NFTInfoButton = styled.button`
-  padding: 0 20px;
-  background: #ff4125;
-  font-style: normal;
-  font-weight: 600;
-  text-align: center;
-  text-transform: uppercase;
-  color: #ffffff;
-  border: none;
-  outline: none;
-  width: 100%;
-  min-height: 60px;
-  cursor: pointer;
-`
-
-const NFTButtonUpgrade = styled(NFTInfoButton)`
-  font-size: 16px;
-  line-height: 20px;
-`
-const NFTButtonUnstake = styled(NFTInfoButton)`
-  font-size: 16px;
-  line-height: 20px;
-  background: #a0a4b0;
-`
-
-const NFTButtonStar = styled(NFTInfoButton)`
-  max-width: 120px;
-  position: relative;
-`
-
 interface NFTItemProps {
   readonly nft: NFTE4CRanger
   readonly tokenId: string
   click?: (value: string) => void
   stake: (value: string) => void
-  unstake: (value: string) => void
+  unstake: () => void
 }
 
 const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, stake, unstake }) => {
   const [visibleInfo, setVisibleInfo] = useState<boolean>(false)
+  const [visibleStatusCheck, setVisibleStatusCheck] = useState<boolean>(false)
   const [togglePerk, setTogglePerk] = useState<boolean>(false)
 
   return (
@@ -69,13 +41,17 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, stake, unstake }) => {
         <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
           {Number(tokenId) >= 16 && nft.upgraded === false && (
             <>
-              <NFTButtonStar>
+              <button className="u-btn u-btn-primary max-w-[120px] relative !py-0" onClick={() => unstake()}>
                 <Star sx={{ fontSize: '36px' }} />
-              </NFTButtonStar>
+              </button>
               {nft.staking ? (
-                <NFTButtonUnstake onClick={() => unstake(tokenId)}>Unstake</NFTButtonUnstake>
+                <button className="u-btn u-btn-primary" onClick={() => setVisibleStatusCheck(!visibleStatusCheck)}>
+                  Status Check
+                </button>
               ) : (
-                <NFTButtonUpgrade onClick={() => setVisibleInfo(!visibleInfo)}>Upgrade</NFTButtonUpgrade>
+                <button className="u-btn u-btn-primary" onClick={() => setVisibleInfo(!visibleInfo)}>
+                  Upgrade
+                </button>
               )}
             </>
           )}
@@ -83,6 +59,9 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, stake, unstake }) => {
       </WrapperInfo>
       <NFTPerk visible={togglePerk} toggle={(value) => setTogglePerk(value)} />
       {visibleInfo && <StakeInfo toggle={(value) => setVisibleInfo(value)} stake={() => stake(tokenId)} />}
+      {visibleStatusCheck && (
+        <StatusCheck nft={nft} toggle={(value) => setVisibleStatusCheck(value)} unstake={unstake} />
+      )}
     </div>
   )
 }

@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
 import { Box, Stack } from '@mui/material'
-import { FC } from 'react'
+import BigNumber from 'bignumber.js'
+import { FC, useMemo } from 'react'
 import Progressbar from 'react-js-progressbar'
 
-import { NFT, NFTUpgradeState } from '../../../types'
+import { NFTE4CRanger } from '../../../types'
 import CloseCheck from '../../Icon/CloseCheck'
 import SuccessCheck from '../../Icon/SuccessCheck'
 
@@ -41,72 +42,74 @@ const CheckSuccess = styled(Box)`
 `
 
 interface CheckCardProps {
-  readonly nft: NFT
+  readonly nft: NFTE4CRanger
+  readonly duration: BigNumber
+  readonly timeLeft: BigNumber
+  readonly stakedPercentage: number
+  readonly timeStatus: boolean
 }
 
-const CheckCard: FC<CheckCardProps> = ({ nft }) => {
+const CheckCard: FC<CheckCardProps> = ({ nft, duration, timeLeft, stakedPercentage, timeStatus }) => {
+  const soulboundBadgeStatus = useMemo(() => false, [])
+
   return (
-    <>
-      {nft.upgrade === NFTUpgradeState.CheckUpgradingStatus && nft.upgradeInfo.upgradingStatusInfo && (
-        <Stack spacing={1.5} direction="row">
-          <Card spacing={1.5} className="p-3 xl:p-6">
-            <div className="w-[108px] h-[108px] relative">
-              <Progressbar
-                input={nft.upgradeInfo.upgradingStatusInfo.stakeValue}
-                pathWidth={44}
-                pathColor={['#FF5925', '#FF00F5']} // use an array for gradient color.
-                trailWidth={44}
-                trailColor="rgba(255, 255, 255, 0.2)"
-                customText=""
-                pathLinecap="butt"
-                animation={{
-                  duration: 0,
+    <Stack spacing={1.5} direction="row">
+      <Card spacing={1.5} className="p-3 xl:p-6">
+        <div className="w-[108px] h-[108px] relative">
+          <Progressbar
+            input={stakedPercentage}
+            pathWidth={44}
+            pathColor={['#FF5925', '#FF00F5']}
+            trailWidth={44}
+            trailColor="rgba(255, 255, 255, 0.2)"
+            customText=""
+            pathLinecap="butt"
+            animation={{
+              duration: 0,
+            }}
+          ></Progressbar>
+          {timeStatus && (
+            <div className="absolute left-0 top-0 right-0 bottom-0 flex items-center justify-center text-white">
+              <SuccessCheck
+                sx={{
+                  fontSize: '36px',
                 }}
-              ></Progressbar>
-              {nft.upgradeInfo.upgradingStatusInfo.stakeStatus && (
-                <div className="absolute left-0 top-0 right-0 bottom-0 flex items-center justify-center text-white">
-                  <SuccessCheck
-                    sx={{
-                      fontSize: '36px',
-                    }}
-                  />
-                </div>
-              )}
+              />
             </div>
+          )}
+        </div>
 
-            <div>
-              <p className="font-normal text-xs xl:text-base leading-5 text-center text-white not-italic">
-                {nft.upgradeInfo.upgradingStatusInfo.stakeDescription}
-              </p>
-              <p className="font-normal text-xs leading-5 text-center text-rust not-italic">(24 days left)</p>
-            </div>
-          </Card>
-          <Card spacing={1.5} className="p-3 xl:p-6">
-            {nft.upgradeInfo.upgradingStatusInfo.badgeStatus ? (
-              <CheckSuccess>
-                <SuccessCheck
-                  sx={{
-                    fontSize: '36px',
-                  }}
-                />
-              </CheckSuccess>
-            ) : (
-              <CheckFail>
-                <CloseCheck
-                  sx={{
-                    fontSize: '50px',
-                  }}
-                />
-              </CheckFail>
-            )}
+        <div>
+          <p className="font-normal text-xs xl:text-base leading-5 text-center text-white not-italic">
+            It has been staked for at least {duration.toString()}
+          </p>
+          <p className="font-normal text-xs leading-5 text-center text-rust not-italic">({timeLeft.toString()} left)</p>
+        </div>
+      </Card>
+      <Card spacing={1.5} className="p-3 xl:p-6">
+        {soulboundBadgeStatus ? (
+          <CheckSuccess>
+            <SuccessCheck
+              sx={{
+                fontSize: '36px',
+              }}
+            />
+          </CheckSuccess>
+        ) : (
+          <CheckFail>
+            <CloseCheck
+              sx={{
+                fontSize: '50px',
+              }}
+            />
+          </CheckFail>
+        )}
 
-            <p className="font-normal text-xs xl:text-base leading-5 text-center text-white not-italic">
-              {nft.upgradeInfo.upgradingStatusInfo.badgeDescription}
-            </p>
-          </Card>
-        </Stack>
-      )}
-    </>
+        <p className="font-normal text-xs xl:text-base leading-5 text-center text-white not-italic">
+          You have claimed the “xxx” Soulbound Badge in our Discord
+        </p>
+      </Card>
+    </Stack>
   )
 }
 
