@@ -19,6 +19,8 @@ export default defineConfig({
   theme: {
     colors: {
       rust: '#FF4125',
+      rustDark: '#B7220C',
+      rustLight: '#FF5940',
       greyDark: '#465358',
       greyLight: '#A8A8A8',
       greyMedium: '#A0A4B0',
@@ -26,6 +28,7 @@ export default defineConfig({
       ligntGreen: '#CCFF00',
       metamask: '#F6851B',
       tips: '#4A4A4A',
+      card: '#333333',
     },
     boxShadow: {
       'nft-sale': '0px 4px 12px rgba(0, 0, 0, 0.15)',
