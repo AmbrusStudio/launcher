@@ -153,7 +153,7 @@ export function SignIn() {
       if (!account) return await connect()
       const res = await walletLogin()
       if (!res.isOk) return setSignInError(res.error.message)
-      if (wallet) openGameClient({ path: res.data.accessToken }, 1000)
+      if (wallet) openGameClient({ path: `accessToken=${res.data.accessToken}` }, 1000)
       setComplete(true)
     } finally {
       setMetamaskSigning(false)
