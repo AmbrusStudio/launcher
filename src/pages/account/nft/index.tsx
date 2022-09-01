@@ -2,11 +2,12 @@ import 'swiper/css'
 
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
-import { useEthers } from '@usedapp/core'
+import { shortenIfAddress, useEthers } from '@usedapp/core'
 import { getAddress } from 'ethers/lib/utils'
 import { useCallback, useMemo, useState } from 'react'
 
 import { PageLayout } from '../../../components/Layout'
+import { WalletButton } from '../../../components/Layout/WalletButton'
 import NFTItem from '../../../components/NFT/NFTItem'
 // import NFTModal from '../../../components/NFT/NFTModal'
 import NFTStar from '../../../components/NFT/NFTStar'
@@ -14,12 +15,8 @@ import NFTUpgrade from '../../../components/NFT/NFTUpgrade'
 import SwiperToggle from '../../../components/NFT/SwiperToggle'
 import { ADDRESS_ASR, ADDRESS_E4C_Ranger } from '../../../contracts'
 import { NFT_DATA } from '../../../data'
-import {
-  useE4CRangerUnstake,
-  useERC721SafeTransferFrom,
-  useOriginalOwners,
-  useUpgradeds,
-} from '../../../hooks/useE4CRanger'
+import { useWeb3Modal } from '../../../hooks'
+import { useOriginalOwners, useUpgradeds } from '../../../hooks/useE4CRanger'
 import { useERC721OwnerOfs } from '../../../hooks/useERC721'
 import { useTokenId, useTokenIdByContract } from '../../../hooks/useTokenId'
 import { NFTE4CRanger } from '../../../types'
@@ -31,7 +28,13 @@ const Actions = styled(Stack)`
 `
 
 function AccountNFT() {
-  const { account } = useEthers()
+  const { account, active } = useEthers()
+  const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
+
+  const handleWalletSwitchNetwork = useCallback(async () => {
+    if (chainIdMismatch) await switchNetwork()
+  }, [chainIdMismatch, switchNetwork])
+
   // tokenId for owner
   const tokenId = useTokenId()
   // tokenId for contract
@@ -63,9 +66,6 @@ function AccountNFT() {
   console.log('upgradedForContract', upgradedForContract)
   console.log('ownerOfForContract', ownerOfForContract)
 
-  const { state: stateSafeTransferFrom, send: safeTransferFrom } = useERC721SafeTransferFrom(ADDRESS_ASR)
-  const { state: stateUnstake, send: unstake } = useE4CRangerUnstake(ADDRESS_E4C_Ranger)
-
   const [visibleModal, setVisibleModal] = useState<boolean>(false)
   const [currentIndex, setCurrentIndex] = useState<number>(0)
 
@@ -80,20 +80,6 @@ function AccountNFT() {
   // console.log('nfts', nfts)
   // console.log('nftsForContract', nftsForContract)
 
-  const onStake = useCallback(
-    (tokenId: string) => {
-      safeTransferFrom(account, ADDRESS_E4C_Ranger, tokenId)
-    },
-    [account, safeTransferFrom]
-  )
-
-  const onUnstake = useCallback(
-    (tokenId: string) => {
-      unstake(tokenId)
-    },
-    [unstake]
-  )
-
   return (
     <PageLayout>
       <div className="my-0 mx-auto py-23 lg:py-32.5 max-w-[1140px] font-sans">
@@ -101,27 +87,30 @@ function AccountNFT() {
           MY<span className="py-0 px-1 text-rust">NFTS</span>
         </h1>
 
-        {/* <div className="text-white">
-          <p>{JSON.stringify(stateSafeTransferFrom)}</p>
-          <hr />
-          <p>{JSON.stringify(stateUnstake)}</p>
-        </div> */}
+        {!(account && active) && (
+          <div className="px-6 xl:px-2.5 my-6 sm:my-9">
+            <WalletButton
+              connected={!!(account && active)}
+              chainIdMismatch={chainIdMismatch}
+              onConnectClick={() => connect()}
+              onSwitchNetworkClick={handleWalletSwitchNetwork}
+            >
+              {shortenIfAddress(account)}
+            </WalletButton>
+          </div>
+        )}
+
+        {!!(account && active) && !nfts.length && (
+          <div className="px-6 xl:px-2.5 my-6 sm:my-9 text-white">No Data...</div>
+        )}
 
         <div className="hidden lg:block px-6 xl:px-2.5 my-6 sm:my-9">
-          {nfts.length ? (
+          {!!nfts.length && (
             <Stack spacing={3}>
               {nfts.map((nft) => (
-                <NFTItem
-                  nft={nft}
-                  key={nft.tokenId}
-                  tokenId={nft.tokenId}
-                  stake={(value) => onStake(value)}
-                  unstake={() => onUnstake(nft.tokenId)}
-                />
+                <NFTItem nft={nft} key={nft.tokenId} tokenId={nft.tokenId} />
               ))}
             </Stack>
-          ) : (
-            <span>No Data</span>
           )}
         </div>
 

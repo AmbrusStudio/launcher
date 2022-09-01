@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
+import classNames from 'classnames'
 import { FC } from 'react'
 
 import { stakeAnnouncement, stakeToUpgrade } from '../../../data'
@@ -37,11 +38,12 @@ const Description = styled.p`
 `
 
 interface StakeInfoProps {
+  readonly stakeLoading: boolean
   toggle: (value: boolean) => void
   stake: () => void
 }
 
-const StakeInfo: FC<StakeInfoProps> = ({ toggle, stake }) => {
+const StakeInfo: FC<StakeInfoProps> = ({ stakeLoading, toggle, stake }) => {
   return (
     <div className="absolute top-0 right-0 bottom-0 left-0 flex">
       <div className="lg:w-[600px] lg:h-[600px] overflow-auto bg-white p-6 grid gap-y-20.5">
@@ -53,7 +55,13 @@ const StakeInfo: FC<StakeInfoProps> = ({ toggle, stake }) => {
         <Title>{stakeToUpgrade.title}</Title>
         <Description>{stakeToUpgrade.description}</Description>
         <Stack spacing={1.5} className="mt-6">
-          <button className="u-btn u-btn-primary" onClick={() => stake()}>
+          <button
+            disabled={stakeLoading}
+            className={classNames('u-btn u-btn-primary', {
+              loading: stakeLoading,
+            })}
+            onClick={() => stake()}
+          >
             Start Staking Now
           </button>
           <button className="u-btn" onClick={() => toggle(false)}>

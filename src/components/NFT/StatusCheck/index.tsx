@@ -39,12 +39,13 @@ const Title = styled.h3`
 `
 
 interface StatusCheckProps {
+  readonly unstakeLoading: boolean
   readonly nft: NFTE4CRanger
   toggle: (value: boolean) => void
   unstake: () => void
 }
 
-const StatusCheck: FC<StatusCheckProps> = ({ nft, toggle, unstake }) => {
+const StatusCheck: FC<StatusCheckProps> = ({ unstakeLoading, nft, toggle, unstake }) => {
   const [visibleUnstake, setVisibleUnstake] = useState<boolean>(false)
   const [visibleUpgrade, setVisibleUpgrade] = useState<boolean>(false)
 
@@ -103,7 +104,7 @@ const StatusCheck: FC<StatusCheckProps> = ({ nft, toggle, unstake }) => {
       return stakingTime.gte(new BigNumber(upgradeDuration.toString()))
     }
   }, [upgradeDuration, stakingTime])
-  const soulboundBadgeStatus = useMemo<boolean>(() => false, [])
+  const soulboundBadgeStatus = useMemo<boolean>(() => true, [])
   const status = useMemo<boolean>(() => timeStatus && soulboundBadgeStatus, [timeStatus, soulboundBadgeStatus])
 
   return (
@@ -120,11 +121,11 @@ const StatusCheck: FC<StatusCheckProps> = ({ nft, toggle, unstake }) => {
         </p>
 
         <CheckCard
-          nft={nft}
           duration={duration}
           timeLeft={timeLeft}
           stakedPercentage={stakedPercentage}
           timeStatus={timeStatus}
+          soulboundBadgeStatus={soulboundBadgeStatus}
         />
 
         <Stack
@@ -137,24 +138,43 @@ const StatusCheck: FC<StatusCheckProps> = ({ nft, toggle, unstake }) => {
             className={classNames('u-btn', {
               'u-btn-primary': status,
               'u-btn-disabled': !status,
+              loading: unstakeLoading,
             })}
-            disabled={!status}
-            onClick={() => {
-              status && setVisibleUpgrade(true)
-            }}
+            disabled={!status || unstakeLoading}
+            onClick={() => setVisibleUpgrade(true)}
           >
             Upgrade
           </button>
-          <button className="u-btn" color="#2A2A2A" onClick={() => setVisibleUnstake(true)}>
+          <button
+            disabled={unstakeLoading}
+            className={classNames('u-btn', {
+              loading: unstakeLoading,
+            })}
+            onClick={() => setVisibleUnstake(true)}
+          >
             Unstake
           </button>
-          <button className="u-btn" color="#2A2A2A" onClick={() => toggle(false)}>
+          <button className="u-btn" onClick={() => toggle(false)}>
             Cancel
           </button>
         </Stack>
 
-        <ConfirmUnstake visible={visibleUnstake} toggle={setVisibleUnstake} unstake={unstake} />
-        <ConfirmUpgrade visible={visibleUpgrade} toggle={setVisibleUpgrade} unstake={unstake} />
+        <ConfirmUnstake
+          visible={visibleUnstake}
+          toggle={setVisibleUnstake}
+          confirm={() => {
+            setVisibleUnstake(false)
+            unstake()
+          }}
+        />
+        <ConfirmUpgrade
+          visible={visibleUpgrade}
+          toggle={setVisibleUpgrade}
+          confirm={() => {
+            setVisibleUpgrade(false)
+            unstake()
+          }}
+        />
       </WrapperInfo>
     </div>
   )

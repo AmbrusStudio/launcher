@@ -1,6 +1,7 @@
 import { Config as DAppConfig, DAppProvider, Mainnet, Rinkeby, Ropsten } from '@usedapp/core'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { getDefaultProvider } from 'ethers'
+import { SnackbarProvider } from 'notistack'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
@@ -65,7 +66,9 @@ export function Provider({ children }: ProvidersProps) {
   return (
     <DAppProvider config={dAppConfig}>
       <FormProvider {...formMethods}>
-        <WalletModalProvider>{children}</WalletModalProvider>
+        <WalletModalProvider>
+          <SnackbarProvider maxSnack={3}>{children}</SnackbarProvider>
+        </WalletModalProvider>
       </FormProvider>
     </DAppProvider>
   )
