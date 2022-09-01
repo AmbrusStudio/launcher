@@ -37,6 +37,13 @@ export type AccountForgotPasswordFormData = {
   confirmPassword: string
 }
 
+export type AccountInfoFormData = {
+  username: string
+  oldPassword: string
+  newPassword: string
+  confirmNewPassword: string
+}
+
 type ResultOk<T = unknown> = { isOk: true; data: T; error: null }
 type ResultErr<E = unknown> = { isOk: false; data: null; error: E }
 

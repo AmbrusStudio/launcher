@@ -39,6 +39,11 @@ export function getMaxLengthValidationRule(name: string, length: number): Valida
   }
 }
 
+export function getRequiredValidationRule(required: boolean, message: string): ValidationRule<boolean> | undefined {
+  if (!required) return undefined
+  return { value: true, message }
+}
+
 export function isAccountTokenExpired(token: string): boolean {
   const payload = getAccessTokenPayload(token)
   const now = Date.now()

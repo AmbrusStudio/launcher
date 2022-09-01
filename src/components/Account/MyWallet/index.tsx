@@ -24,7 +24,7 @@ type MyWalletProps = {
   onDisconnectClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
-export function MyWallet(props: MyWalletProps) {
+export function AccountMyWallet(props: MyWalletProps) {
   const { account, metamaskButtonDisabled, disconnectButtonDisabled } = props
   const { onMetamaskClick, onDisconnectClick } = props
   const buttonText = account ? account : 'Connect Wallet'
@@ -36,11 +36,7 @@ export function MyWallet(props: MyWalletProps) {
           to your wallet. Each account can be connected to one wallet.
         </p>
         <div className="flex flex-row flex-nowrap items-center">
-          <MetamaskButton
-            className={classNames(account && 'hover:!bg-white hover:!text-black')}
-            disabled={metamaskButtonDisabled}
-            onClick={onMetamaskClick}
-          >
+          <MetamaskButton disabled={metamaskButtonDisabled} onClick={onMetamaskClick}>
             {buttonText}
           </MetamaskButton>
           {account && (
