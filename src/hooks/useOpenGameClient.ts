@@ -1,20 +1,21 @@
 import React from 'react'
 
-import { openFallenArenaClient } from '../utils'
+import { downloadFileFromUrl, openFallenArenaClient } from '../utils'
 
 type Options = {
   path: string
   query?: Record<string, string | string[]> | undefined
 }
 
-type UseOpenGameClient = {
+type UseGameClient = {
   openGameClient: (options: Options, delay?: number) => void
+  downloadGameClient: (url: string, filename?: string) => void
 }
 
-export function useOpenGameClient(): UseOpenGameClient {
+export function useGameClient(): UseGameClient {
   const delayOpenGameClientTimerRef = React.useRef<ReturnType<typeof setTimeout>>()
 
-  const openGameClient = React.useCallback<UseOpenGameClient['openGameClient']>((options, delay = 0) => {
+  const openGameClient = React.useCallback<UseGameClient['openGameClient']>((options, delay = 0) => {
     if (delayOpenGameClientTimerRef.current) clearTimeout(delayOpenGameClientTimerRef.current)
     delayOpenGameClientTimerRef.current = setTimeout(() => {
       const { path, query } = options
@@ -23,5 +24,9 @@ export function useOpenGameClient(): UseOpenGameClient {
     }, delay)
   }, [])
 
-  return { openGameClient }
+  const downloadGameClient = React.useCallback<UseGameClient['downloadGameClient']>((url, filename) => {
+    downloadFileFromUrl(url, filename)
+  }, [])
+
+  return { openGameClient, downloadGameClient }
 }

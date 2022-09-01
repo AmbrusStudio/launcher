@@ -1,3 +1,5 @@
+import path from 'path'
+
 export function getMainSiteLink(path: string): string {
   const baseUrl: string | undefined = import.meta.env.VITE_MAIN_SITE_URL
   if (!baseUrl) throw new TypeError('VITE_MAIN_SITE_URL not set')
@@ -18,6 +20,20 @@ export function openFallenArenaClient(path: string, query?: Record<string, strin
   const _query = buildQuerySting(query)
   const _url = `fallenarena://${path}${_query}`
   if (window) window.location.assign(_url)
+}
+
+export function downloadFileFromUrl(url: string, filename?: string): void {
+  if (!document) return
+  // new URL('https://example.com/game/client.exe') => URL { href: "https://example.com/game/client.exe", pathname: "/game/client.exe", ... }
+  const fileUrl = new URL(url)
+  if (!filename) filename = path.basename(fileUrl.pathname)
+  const anchor = document.createElement('a')
+  anchor.style.display = 'none'
+  anchor.href = fileUrl.href
+  anchor.download = filename || ''
+  document.body.appendChild(anchor)
+  anchor.click()
+  anchor.remove()
 }
 
 export function redirectToSignIn(): void {

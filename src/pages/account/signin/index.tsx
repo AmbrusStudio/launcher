@@ -23,7 +23,7 @@ import {
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
 import { BasePageLayout } from '../../../components/Layout'
-import { useEmailAccount, useMetamaskAccount, useOpenGameClient, useQuery, useWeb3Modal } from '../../../hooks'
+import { useEmailAccount, useGameClient, useMetamaskAccount, useQuery, useWeb3Modal } from '../../../hooks'
 import { AccountForgotPasswordFormData, AccountSignInFormData, EmailVerificationTypes, StepInfo } from '../../../types'
 
 type StepSignInProps = AccountUsernameAndPasswordProps & {
@@ -99,7 +99,7 @@ export function SignIn() {
   const { handleSubmit: handleSignInSubmit } = useFormContext<AccountSignInFormData>()
   const { handleSubmit: handleFogotPasswordSubmit } = useFormContext<AccountForgotPasswordFormData>()
   const { account } = useEthers()
-  const { openGameClient } = useOpenGameClient()
+  const { openGameClient } = useGameClient()
   const { connect } = useWeb3Modal()
   const { walletLogin } = useMetamaskAccount()
   const { emailLogin, emailSendVerification, emailVerifyVerification, emailResetPassword } = useEmailAccount()
