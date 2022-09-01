@@ -30,7 +30,7 @@ export const GALLERYS_FILTERS: GALLERY_FILTER[] = Object.values(Trait).map((i) =
   }
   return {
     label: i,
-    list,
+    list: list.sort((a, b) => b.count - a.count),
   }
 })
 
