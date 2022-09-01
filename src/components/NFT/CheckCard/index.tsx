@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
 import { Box, Stack } from '@mui/material'
 import BigNumber from 'bignumber.js'
-import { FC, useMemo } from 'react'
+import { FC } from 'react'
 import Progressbar from 'react-js-progressbar'
 
-import { NFTE4CRanger } from '../../../types'
 import CloseCheck from '../../Icon/CloseCheck'
 import SuccessCheck from '../../Icon/SuccessCheck'
 
@@ -42,16 +41,14 @@ const CheckSuccess = styled(Box)`
 `
 
 interface CheckCardProps {
-  readonly nft: NFTE4CRanger
   readonly duration: BigNumber
   readonly timeLeft: BigNumber
   readonly stakedPercentage: number
   readonly timeStatus: boolean
+  readonly soulboundBadgeStatus: boolean
 }
 
-const CheckCard: FC<CheckCardProps> = ({ nft, duration, timeLeft, stakedPercentage, timeStatus }) => {
-  const soulboundBadgeStatus = useMemo(() => false, [])
-
+const CheckCard: FC<CheckCardProps> = ({ duration, timeLeft, stakedPercentage, timeStatus, soulboundBadgeStatus }) => {
   return (
     <Stack spacing={1.5} direction="row">
       <Card spacing={1.5} className="p-3 xl:p-6">

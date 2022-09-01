@@ -1,8 +1,13 @@
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
-import { FC, useState } from 'react'
+import { useEthers } from '@usedapp/core'
+import classNames from 'classnames'
+import { FC, useCallback, useEffect, useState } from 'react'
 
 import Star from '../../../components/Icon/Star'
+import { ADDRESS_ASR, ADDRESS_E4C_Ranger } from '../../../contracts'
+import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
+import { useHandleState } from '../../../hooks/useHandleState'
 import { NFTE4CRanger } from '../../../types'
 import NFTDetails from '../NFTDetails'
 import NFTPerk from '../NFTPerk'
@@ -20,15 +25,54 @@ const WrapperInfo = styled.div`
 interface NFTItemProps {
   readonly nft: NFTE4CRanger
   readonly tokenId: string
-  click?: (value: string) => void
-  stake: (value: string) => void
-  unstake: () => void
 }
 
-const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, stake, unstake }) => {
+const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
+  const { account } = useEthers()
+
   const [visibleInfo, setVisibleInfo] = useState<boolean>(false)
   const [visibleStatusCheck, setVisibleStatusCheck] = useState<boolean>(false)
   const [togglePerk, setTogglePerk] = useState<boolean>(false)
+  const [stakeLoading, setStakeLoading] = useState<boolean>(false)
+  const [unstakeLoading, setUnstakeLoading] = useState<boolean>(false)
+
+  const { state: stakeState, send: stake } = useERC721SafeTransferFrom(ADDRESS_ASR)
+  const { state: unstakeState, send: unstake } = useE4CRangerUnstake(ADDRESS_E4C_Ranger)
+
+  const handleState = useHandleState()
+
+  const onStake = useCallback(
+    (tokenId: string) => {
+      stake(account, ADDRESS_E4C_Ranger, tokenId)
+    },
+    [account, stake]
+  )
+
+  const onUnstake = useCallback(
+    (tokenId: string) => {
+      unstake(tokenId)
+    },
+    [unstake]
+  )
+
+  useEffect(() => {
+    handleState(stakeState)
+
+    if (stakeState.status === 'PendingSignature' || stakeState.status === 'Mining') {
+      setStakeLoading(true)
+    } else {
+      setStakeLoading(false)
+    }
+  }, [stakeState, handleState])
+  useEffect(() => {
+    handleState(unstakeState)
+
+    if (unstakeState.status === 'PendingSignature' || unstakeState.status === 'Mining') {
+      setUnstakeLoading(true)
+    } else {
+      setUnstakeLoading(false)
+    }
+  }, [unstakeState, handleState])
 
   return (
     <div className="flex-col lg:flex-row lg:flex h-auto lg:h-[600px] bg-black relative">
@@ -41,15 +85,27 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, stake, unstake }) => {
         <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
           {Number(tokenId) >= 16 && nft.upgraded === false && (
             <>
-              <button className="u-btn u-btn-primary max-w-[120px] relative !py-0" onClick={() => unstake()}>
+              <button className="u-btn u-btn-primary max-w-[120px] relative !py-0">
                 <Star sx={{ fontSize: '36px' }} />
               </button>
               {nft.staking ? (
-                <button className="u-btn u-btn-primary" onClick={() => setVisibleStatusCheck(!visibleStatusCheck)}>
-                  Status Check
+                <button
+                  disabled={unstakeLoading}
+                  className={classNames('u-btn u-btn-primary', {
+                    loading: unstakeLoading,
+                  })}
+                  onClick={() => setVisibleStatusCheck(!visibleStatusCheck)}
+                >
+                  Check Upgrading Status
                 </button>
               ) : (
-                <button className="u-btn u-btn-primary" onClick={() => setVisibleInfo(!visibleInfo)}>
+                <button
+                  disabled={stakeLoading}
+                  className={classNames('u-btn u-btn-primary', {
+                    loading: stakeLoading,
+                  })}
+                  onClick={() => setVisibleInfo(!visibleInfo)}
+                >
                   Upgrade
                 </button>
               )}
@@ -58,9 +114,20 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, stake, unstake }) => {
         </Stack>
       </WrapperInfo>
       <NFTPerk visible={togglePerk} toggle={(value) => setTogglePerk(value)} />
-      {visibleInfo && <StakeInfo toggle={(value) => setVisibleInfo(value)} stake={() => stake(tokenId)} />}
+      {visibleInfo && (
+        <StakeInfo
+          stakeLoading={stakeLoading}
+          toggle={(value) => setVisibleInfo(value)}
+          stake={() => onStake(tokenId)}
+        />
+      )}
       {visibleStatusCheck && (
-        <StatusCheck nft={nft} toggle={(value) => setVisibleStatusCheck(value)} unstake={unstake} />
+        <StatusCheck
+          unstakeLoading={unstakeLoading}
+          nft={nft}
+          toggle={(value) => setVisibleStatusCheck(value)}
+          unstake={() => onUnstake(tokenId)}
+        />
       )}
     </div>
   )

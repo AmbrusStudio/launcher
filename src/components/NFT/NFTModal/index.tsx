@@ -6,7 +6,7 @@ import { NFTE4CRanger } from '../../../types'
 import { ArrowUp } from '../../Icon'
 import Close from '../../Icon/Close'
 import NFTAnnouncement from '../NFTAnnouncement'
-import StatusCheck from '../StatusCheck'
+// import StatusCheck from '../StatusCheck'
 
 const InfoButton = styled.button<{ color: string }>`
   padding: 20px 0;
@@ -97,7 +97,7 @@ const NFTModal: FC<NFTModalProps> = ({ visible, toggle, title, nft }) => {
                 <ArrowUp className="!text-base rotate-180" />
               </div>
               <div className="p-6 bg-black/70 backdrop-blur-[10px] shadow-statusCheck-drawer-modal">
-                <StatusCheck nft={nft} toggle={(value) => console.log(value)} unstake={() => console.log('unstake')} />
+                {/* <StatusCheck nft={nft} toggle={(value) => console.log(value)} unstake={() => console.log('unstake')} /> */}
               </div>
             </div>
           )}
