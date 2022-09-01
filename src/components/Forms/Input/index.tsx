@@ -4,14 +4,32 @@ import { ReactInputProps } from '../../../types'
 import { classNames } from '../../../utils'
 import { IconInvisible, IconVisible } from '../../Icon'
 
+type InputVariants = 'light' | 'dark'
+
 type InputProps = ReactInputProps &
   Required<Pick<ReactInputProps, 'id'>> & {
     className?: string
-    label: string
+    label?: string
     error?: string
+    variant?: InputVariants
     labelRightElement?: React.ReactNode
     forwardedRef: React.ForwardedRef<HTMLInputElement>
   }
+
+const labelVariants: Record<InputVariants, string> = {
+  light: 'text-grey-dark',
+  dark: 'text-grey-medium',
+}
+
+const inputVariantsCommon: Record<InputVariants, string> = {
+  light: 'bg-white',
+  dark: 'bg-black-bg text-white',
+}
+
+const inputVariantsNormal: Record<InputVariants, string> = {
+  light: 'border-white hover:border-ligntGreen focus:border-ligntGreen',
+  dark: 'border-black-bg hover:border-white focus:border-white',
+}
 
 function calculateInputType(rawType: React.HTMLInputTypeAttribute, visible: boolean): React.HTMLInputTypeAttribute {
   if (rawType !== 'password') return rawType
@@ -20,8 +38,19 @@ function calculateInputType(rawType: React.HTMLInputTypeAttribute, visible: bool
 }
 
 function LabeledInput(props: InputProps) {
-  const { className, id, label, error, labelRightElement, forwardedRef, type = 'text', ...others } = props
+  const {
+    className,
+    id,
+    label,
+    error,
+    labelRightElement,
+    forwardedRef,
+    variant = 'light',
+    type = 'text',
+    ...others
+  } = props
   const [visible, setVisible] = React.useState(false)
+  const isLabelNeedGap = Boolean(label || error || labelRightElement)
   const calcType = calculateInputType(type, visible)
   const handleToggleVisible = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>((e) => {
     e.preventDefault()
@@ -30,7 +59,10 @@ function LabeledInput(props: InputProps) {
   }, [])
 
   return (
-    <label htmlFor={id} className="flex flex-col gap-12px text-grey-dark cursor-pointer">
+    <label
+      htmlFor={id}
+      className={classNames('flex flex-col cursor-pointer', labelVariants[variant], isLabelNeedGap && 'gap-12px')}
+    >
       <div className="flex flex-row flex-nowrap justify-between items-center text-12px leading-16px">
         <span className="font-bold uppercase">{label}</span>
         {error && <span className="font-normal text-rust">{error}</span>}
@@ -43,10 +75,11 @@ function LabeledInput(props: InputProps) {
           type={calcType}
           className={classNames(
             'flex flex-row flex-nowrap items-center w-full box-border border-1px',
-            'px-24px py-19px font-semibold text-16px leading-20px bg-white',
+            'px-24px py-19px font-semibold text-16px leading-20px',
             'placeholder:text-grey-medium hover:outline-none focus:outline-none',
+            inputVariantsCommon[variant],
             error && 'border-rust',
-            !error && 'border-white hover:border-ligntGreen focus:border-ligntGreen',
+            !error && inputVariantsNormal[variant],
             className
           )}
           ref={forwardedRef}
