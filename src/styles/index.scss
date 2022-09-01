@@ -5,6 +5,21 @@ body {
   background-position: top;
 }
 
+html,
+body,
+#root {
+  min-height: 100vh;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+#main {
+  flex-grow: 1;
+}
+
 .account-nft-actions {
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
@@ -12,7 +27,7 @@ body {
 
 // components
 .u-btn {
-  @apply cursor-pointer font-semibold text-base leading-5 text-center text-white not-italic uppercase w-full outline-none border-none py-5 bg-[#2A2A2A];
+  @apply inline-flex items-center justify-center flex-wrap select-none font-semibold text-base leading-5 text-center text-white not-italic uppercase w-full outline-none border-none py-5 bg-[#2A2A2A] cursor-pointer;
 }
 
 .u-btn-primary {
@@ -21,4 +36,37 @@ body {
 
 .u-btn-disabled {
   @apply bg-[#A0A4B0];
+}
+
+.u-btn.loading,
+.u-btn.loading:hover {
+  pointer-events: none;
+}
+.u-btn.loading:before {
+  margin-right: 0.5rem;
+  height: 1rem;
+  width: 1rem;
+  border-radius: 9999px;
+  border-width: 2px;
+  animation: spin 2s linear infinite;
+  content: '';
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-bottom-color: currentColor;
+  border-right-color: currentColor;
+  display: block;
+}
+.u-btn.loading,
+.u-btn-primary.loading {
+  filter: contrast(0.7);
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
