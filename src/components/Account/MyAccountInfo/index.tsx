@@ -11,6 +11,7 @@ import {
 } from '../../../utils'
 import { Button, Input } from '../../Forms'
 import { AccountCard } from '../Card'
+import { AccountTips } from '../Tips'
 
 type AccountMyAccountProps = {
   disabled?: boolean
@@ -37,6 +38,7 @@ export function AccountMyAccountInfo(props: AccountMyAccountProps) {
     dirtyFields.oldPassword || dirtyFields.newPassword || dirtyFields.confirmNewPassword
   )
   const isPasswordRequired = Boolean(isPasswordHasValue && isPasswordFieldsDirty)
+  const isPasswordHasError = Boolean(errors.newPassword || errors.confirmNewPassword)
   const oldPasswordRequired = getRequiredValidationRule(isPasswordRequired, 'You must specify a password.')
   const newPasswordRequired = getRequiredValidationRule(isPasswordRequired, 'You must specify a new password.')
   const newPasswordMinLength = getMinLengthValidationRule('Password', 8)
@@ -103,6 +105,14 @@ export function AccountMyAccountInfo(props: AccountMyAccountProps) {
             })}
             error={getFormErrorMessage(errors.confirmNewPassword)}
           />
+          {isPasswordRequired && isPasswordHasError && (
+            <AccountTips className="!text-white">
+              <ul>
+                <li>Must contain at least 1 letter and 1 number.</li>
+                <li>Password is at least 8 characters and cannot be longer than 20 characters.</li>
+              </ul>
+            </AccountTips>
+          )}
         </div>
         <Button variant="primary" type="submit" disabled={disabled}>
           Save

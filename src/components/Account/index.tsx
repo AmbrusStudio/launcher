@@ -1,3 +1,4 @@
+export * from './Block'
 export * from './ConnectWallet'
 export * from './ContinueWithMetamask'
 export * from './EmailAndAgreement'
