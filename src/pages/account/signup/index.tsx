@@ -23,7 +23,7 @@ import {
 import { Button } from '../../../components/Forms'
 import { BasePageLayout } from '../../../components/Layout'
 import { useEmailAccount, useMetamaskAccount, useWeb3Modal } from '../../../hooks'
-import { AccountSignUpFormData, EmailVerificationTypes, StepInfo } from '../../../types'
+import { AccountSignUpFormData, AccountStepInfo, EmailVerificationTypes } from '../../../types'
 
 type StepSignUpProps = AccountEmailAndAgreementProps & {
   account: string
@@ -72,7 +72,7 @@ function StepConnectWallet(props: StepConnectWalletProps) {
   return <AccountConnectWallet {...props} />
 }
 
-const signUpStepInfos: Record<number, StepInfo> = {
+const signUpStepInfos: Record<number, AccountStepInfo> = {
   0: { title: 'Sign Up', navBack: false },
   1: { title: 'Verify Your Email', navBack: true },
   2: { title: 'Choose A Username', navBack: true },
@@ -80,7 +80,7 @@ const signUpStepInfos: Record<number, StepInfo> = {
   4: { title: 'Connect Wallet', navBack: false },
 }
 
-function getStepInfo(step: number, complete?: boolean): StepInfo {
+function getStepInfo(step: number, complete?: boolean): AccountStepInfo {
   if (complete) return { title: 'You’re all set!', navBack: false }
   const info = signUpStepInfos[step]
   if (!info) return { title: 'Sign Up', navBack: false }

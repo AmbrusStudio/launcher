@@ -24,7 +24,12 @@ import {
 import { Button } from '../../../components/Forms'
 import { BasePageLayout } from '../../../components/Layout'
 import { useEmailAccount, useGameClient, useMetamaskAccount, useQuery, useWeb3Modal } from '../../../hooks'
-import { AccountForgotPasswordFormData, AccountSignInFormData, EmailVerificationTypes, StepInfo } from '../../../types'
+import {
+  AccountForgotPasswordFormData,
+  AccountSignInFormData,
+  AccountStepInfo,
+  EmailVerificationTypes,
+} from '../../../types'
 
 type StepSignInProps = AccountUsernameAndPasswordProps & {
   account: string
@@ -77,7 +82,7 @@ function StepResetComplete(props: StepResetCompleteProps) {
   return <AccountResetPasswordComplete {...props} />
 }
 
-const forgotPasswordStepInfos: Record<number, StepInfo> = {
+const forgotPasswordStepInfos: Record<number, AccountStepInfo> = {
   0: { title: 'Sign In', navBack: false },
   1: { title: 'Forgot Password', navBack: true },
   2: { title: 'Verify Your Email', navBack: true },
@@ -85,7 +90,7 @@ const forgotPasswordStepInfos: Record<number, StepInfo> = {
   4: { title: 'You’re all set!', navBack: false },
 }
 
-function getStepInfo(step: number, complete?: boolean): StepInfo {
+function getStepInfo(step: number, complete?: boolean): AccountStepInfo {
   if (complete) return { title: 'Signed In Successfully', navBack: false }
   const info = forgotPasswordStepInfos[step]
   if (!info) return { title: 'Sign In', navBack: false }
