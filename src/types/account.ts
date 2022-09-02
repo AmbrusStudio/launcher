@@ -2,7 +2,7 @@ import type { JWTPayload } from 'jose'
 
 import type { RemoveIndex } from './utils'
 
-export type StepInfo = {
+export type AccountStepInfo = {
   title: string
   navBack: boolean
 }
@@ -63,4 +63,9 @@ export type AccountAccessTokenJWTPayload = RemoveIndex<JWTPayload> & {
 export enum EmailVerificationTypes {
   Registration = 'registration',
   Recovery = 'recovery',
+}
+
+export type AccountAvatarInfo = {
+  id: number
+  image: string
 }
