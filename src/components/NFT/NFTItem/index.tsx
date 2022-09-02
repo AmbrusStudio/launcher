@@ -41,6 +41,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
 
   const handleState = useHandleState()
 
+  // handle stake
   const onStake = useCallback(
     (tokenId: string) => {
       stake(account, ADDRESS_E4C_Ranger, tokenId)
@@ -48,6 +49,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
     [account, stake]
   )
 
+  // handle unstake
   const onUnstake = useCallback(
     (tokenId: string) => {
       unstake(tokenId)
@@ -55,6 +57,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
     [unstake]
   )
 
+  // Watch stakeState
   useEffect(() => {
     handleState(stakeState)
 
@@ -64,6 +67,8 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
       setStakeLoading(false)
     }
   }, [stakeState, handleState])
+
+  // Watch unstakeState
   useEffect(() => {
     handleState(unstakeState)
 

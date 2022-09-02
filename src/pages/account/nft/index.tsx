@@ -13,11 +13,10 @@ import NFTItem from '../../../components/NFT/NFTItem'
 import NFTStar from '../../../components/NFT/NFTStar'
 import NFTUpgrade from '../../../components/NFT/NFTUpgrade'
 import SwiperToggle from '../../../components/NFT/SwiperToggle'
-import { ADDRESS_ASR, ADDRESS_E4C_Ranger } from '../../../contracts'
+import { ADDRESS_E4C_Ranger } from '../../../contracts'
 import { NFT_DATA } from '../../../data'
 import { useWeb3Modal } from '../../../hooks'
 import { useOriginalOwners, useUpgradeds } from '../../../hooks/useE4CRanger'
-import { useERC721OwnerOfs } from '../../../hooks/useERC721'
 import { useTokenId, useTokenIdByContract } from '../../../hooks/useTokenId'
 import { NFTE4CRanger } from '../../../types'
 import { nftsForOwner } from '../../../utils'
@@ -31,16 +30,13 @@ function AccountNFT() {
   const { account, active } = useEthers()
   const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
 
-  const handleWalletSwitchNetwork = useCallback(async () => {
-    if (chainIdMismatch) await switchNetwork()
-  }, [chainIdMismatch, switchNetwork])
-
   // tokenId for owner
   const tokenId = useTokenId()
   // tokenId for contract
   const tokenIdForContract = useTokenIdByContract()
   const upgraded = useUpgradeds(ADDRESS_E4C_Ranger, tokenId)
   // tokenId original owner
+  // originalOwner replaces ownerOf to judge staking state
   const originalOwner = useOriginalOwners(ADDRESS_E4C_Ranger, tokenIdForContract)
   const tokenIdForOriginalContract = useMemo(() => {
     const list: string[] = []
@@ -56,15 +52,11 @@ function AccountNFT() {
     return list
   }, [account, originalOwner, tokenIdForContract])
   const upgradedForContract = useUpgradeds(ADDRESS_E4C_Ranger, tokenIdForOriginalContract)
-  // replace with ownerOf
-  const ownerOfForContract = useERC721OwnerOfs(ADDRESS_ASR, tokenIdForContract)
-
   // console.log('upgraded', upgraded)
   console.log('tokenIdForContract', tokenIdForContract)
   console.log('originalOwner', originalOwner)
   console.log('tokenIdForOriginalContract', tokenIdForOriginalContract)
   console.log('upgradedForContract', upgradedForContract)
-  console.log('ownerOfForContract', ownerOfForContract)
 
   const [visibleModal, setVisibleModal] = useState<boolean>(false)
   const [currentIndex, setCurrentIndex] = useState<number>(0)
@@ -79,6 +71,11 @@ function AccountNFT() {
   const nfts = useMemo(() => [...nftsForAccount, ...nftsForContract], [nftsForAccount, nftsForContract])
   // console.log('nfts', nfts)
   // console.log('nftsForContract', nftsForContract)
+
+  // Handle wallet switchNetwork
+  const handleWalletSwitchNetwork = useCallback(async () => {
+    if (chainIdMismatch) await switchNetwork()
+  }, [chainIdMismatch, switchNetwork])
 
   return (
     <PageLayout>
