@@ -4,7 +4,7 @@ import { Dispatch, FC, SetStateAction } from 'react'
 
 import ModalGallery from '../../../components/ModalGallery'
 import { Metadata } from '../../../types'
-import { parseTokenId } from '../../../utils'
+import { imageSizeConversion, parseTokenId } from '../../../utils'
 
 interface ModalGalleryInfoProps {
   readonly metadata?: Metadata
@@ -22,7 +22,11 @@ const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ metadata, visible, setVis
     >
       <Box className="flex flex-1 lg:flex-none flex-col lg:flex-row overflow-hidden lg:overflow-auto bg-white lg:bg-white/80 backdrop-blur-[20px] transition-none">
         <div className="lg:w-[600px] lg:h-[600px] overflow-hidden border-4 border-white">
-          <img className="h-full object-cover w-full" src={metadata?.image} alt="logo" />
+          <img
+            className="h-full object-cover w-full"
+            src={imageSizeConversion(metadata?.image || '', 2000)}
+            alt="logo"
+          />
         </div>
         <div className="flex flex-col flex-grow p-9 text-white overflow-auto">
           <div className="grid grid-cols-2 gap-6 mb-auto">

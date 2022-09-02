@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { Box, Stack } from '@mui/material'
-import BigNumber from 'bignumber.js'
 import { FC } from 'react'
 import Progressbar from 'react-js-progressbar'
 
+import { formatSeconds } from '../../../utils'
 import CloseCheck from '../../Icon/CloseCheck'
 import SuccessCheck from '../../Icon/SuccessCheck'
 
@@ -41,8 +41,8 @@ const CheckSuccess = styled(Box)`
 `
 
 interface CheckCardProps {
-  readonly duration: BigNumber
-  readonly timeLeft: BigNumber
+  readonly duration: string
+  readonly timeLeft: string
   readonly stakedPercentage: number
   readonly timeStatus: boolean
   readonly soulboundBadgeStatus: boolean
@@ -78,9 +78,11 @@ const CheckCard: FC<CheckCardProps> = ({ duration, timeLeft, stakedPercentage, t
 
         <div>
           <p className="font-normal text-xs xl:text-base leading-5 text-center text-white not-italic">
-            It has been staked for at least {duration.toString()}
+            It has been staked for at least {formatSeconds(duration) || '-'}
           </p>
-          <p className="font-normal text-xs leading-5 text-center text-rust not-italic">({timeLeft.toString()} left)</p>
+          <p className="font-normal text-xs leading-5 text-center text-rust not-italic">
+            ({formatSeconds(timeLeft) || '0 second'} left)
+          </p>
         </div>
       </Card>
       <Card spacing={1.5} className="p-3 xl:p-6">
