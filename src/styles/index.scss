@@ -70,3 +70,8 @@ body,
     transform: rotate(360deg);
   }
 }
+
+// scrollbar
+.filter-category-scrollbar {
+  @apply scrollbar scrollbar-thumb-color-black scrollbar-track-color-black scrollbar-w-0;
+}
