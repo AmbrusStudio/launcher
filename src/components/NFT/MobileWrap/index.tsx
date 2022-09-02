@@ -1,42 +1,39 @@
+import 'swiper/css'
+
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import { useEthers } from '@usedapp/core'
 import classNames from 'classnames'
-import { FC, useCallback, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 
 import Star from '../../../components/Icon/Star'
+import NFTDetails from '../../../components/NFT/NFTDetails'
+// import NFTModal from '../../../components/NFT/NFTModal'
+import SwiperToggle from '../../../components/NFT/SwiperToggle'
 import { ADDRESS_ASR, ADDRESS_E4C_Ranger } from '../../../contracts'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
 import { useHandleState } from '../../../hooks/useHandleState'
 import { NFTE4CRanger } from '../../../types'
-import { imageSizeConversion } from '../../../utils'
-import NFTDetails from '../NFTDetails'
-import NFTPerk from '../NFTPerk'
-import StakeInfo from '../StakeInfo'
-import StatusCheck from '../StatusCheck'
 
-const WrapperInfo = styled.div`
-  color: #fff;
-  padding: 24px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+const Actions = styled(Stack)`
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
 `
 
-interface NFTItemProps {
-  readonly nft: NFTE4CRanger
-  readonly tokenId: string
+interface MobileWrapProps {
+  nfts: NFTE4CRanger[]
 }
 
-const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
+const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
   const { account } = useEthers()
 
-  const [visibleInfo, setVisibleInfo] = useState<boolean>(false)
-  const [visibleStatusCheck, setVisibleStatusCheck] = useState<boolean>(false)
-  const [togglePerk, setTogglePerk] = useState<boolean>(false)
+  const [currentIndex, setCurrentIndex] = useState<number>(0)
+  const [visibleModal, setVisibleModal] = useState<boolean>(false)
 
   const [stakeLoading, setStakeLoading] = useState<boolean>(false)
   const [unstakeLoading, setUnstakeLoading] = useState<boolean>(false)
+
+  const nft = useMemo(() => nfts[currentIndex], [nfts, currentIndex])
 
   const { state: stakeState, send: stake } = useERC721SafeTransferFrom(ADDRESS_ASR)
   const { state: unstakeState, send: unstake } = useE4CRangerUnstake(ADDRESS_E4C_Ranger)
@@ -82,15 +79,17 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
   }, [unstakeState, handleState])
 
   return (
-    <div className="flex-col lg:flex-row lg:flex h-auto lg:h-[600px] bg-black relative">
-      <div className="lg:w-[600px] lg:h-[600px] overflow-hidden">
-        <img className="h-full object-cover w-full" src={imageSizeConversion(nft.image, 2000)} alt={nft.name} />
+    <div className="block lg:hidden">
+      <div className="min-h-160px my-6">
+        <SwiperToggle nfts={nfts} currentIndex={currentIndex} toggle={(value) => setCurrentIndex(value)} />
       </div>
-      <WrapperInfo>
-        <NFTDetails nft={nft} tokenId={tokenId} />
 
-        {Number(tokenId) >= 16 && nft.upgraded === false && (
-          <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
+      {nfts?.[currentIndex] && (
+        <>
+          <div className="px-6 xl:px-2.5">
+            <NFTDetails nft={nfts[currentIndex]} tokenId={nfts[currentIndex].tokenId} />
+          </div>
+          <Actions sx={{ marginTop: 'auto' }} direction="row" spacing={1.5} className="fixed left-6 bottom-6 right-6">
             <button className="u-btn u-btn-primary max-w-[120px] relative !py-0">
               <Star sx={{ fontSize: '36px' }} />
             </button>
@@ -100,9 +99,9 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
                 className={classNames('u-btn u-btn-primary', {
                   loading: unstakeLoading,
                 })}
-                onClick={() => setVisibleStatusCheck(!visibleStatusCheck)}
+                onClick={() => onUnstake(nft.tokenId)}
               >
-                Check Upgrading Status
+                Unstake
               </button>
             ) : (
               <button
@@ -110,32 +109,18 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
                 className={classNames('u-btn u-btn-primary', {
                   loading: stakeLoading,
                 })}
-                onClick={() => setVisibleInfo(!visibleInfo)}
+                onClick={() => onStake(nft.tokenId)}
               >
                 Upgrade
               </button>
             )}
-          </Stack>
-        )}
-      </WrapperInfo>
-      <NFTPerk visible={togglePerk} toggle={(value) => setTogglePerk(value)} />
-      {visibleInfo && (
-        <StakeInfo
-          stakeLoading={stakeLoading}
-          toggle={(value) => setVisibleInfo(value)}
-          stake={() => onStake(tokenId)}
-        />
+          </Actions>
+        </>
       )}
-      {visibleStatusCheck && (
-        <StatusCheck
-          unstakeLoading={unstakeLoading}
-          nft={nft}
-          toggle={(value) => setVisibleStatusCheck(value)}
-          unstake={() => onUnstake(tokenId)}
-        />
-      )}
+
+      {/* <NFTModal visible={visibleModal} toggle={setVisibleModal} nft={nfts[0]} title="Stake to Upgrade" /> */}
     </div>
   )
 }
 
-export default NFTItem
+export default MobileWrap

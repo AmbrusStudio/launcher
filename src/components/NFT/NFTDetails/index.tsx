@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Box, Stack } from '@mui/material'
+import { Stack } from '@mui/material'
 import { FC } from 'react'
 
 import { NFTE4CRanger } from '../../../types'
@@ -45,27 +45,22 @@ interface NFTDetailsProps {
 const NFTDetails: FC<NFTDetailsProps> = ({ nft, tokenId }) => {
   return (
     <>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-        }}
-      >
-        <section>
-          <span className="font-bold text-6.5 lg:text-9 not-italic uppercase leading-11 font-sans text-rust break-all">
+      <section className="flex items-start justify-between">
+        <section className="mr-2">
+          <span className="font-bold text-base lg:text-9 not-italic uppercase leading-5 lg:leading-11 font-sans text-rust break-all">
             {nft.name}
           </span>
           <Stack spacing={2} direction="row">
-            <span className="font-bold text-6.5 lg:text-9 not-italic uppercase leading-11 font-sans text-white break-all">
+            <span className="font-bold text-base lg:text-9 not-italic uppercase leading-5 lg:leading-11 font-sans text-white break-all">
               {nft.description || '-'}
             </span>
-            <span className="font-bold text-6.5 lg:text-9 not-italic uppercase leading-11 font-sans text-white">
+            <span className="font-bold text-base lg:text-9 not-italic uppercase leading-5 lg:leading-11 font-sans text-white">
               #{tokenId}
             </span>
           </Stack>
         </section>
         {nft.upgraded !== undefined && <NFTTag content={getEdition(Number(tokenId), nft.upgraded)} />}
-      </Box>
+      </section>
 
       <NFTInfoContent>
         {nft.attributes.map((trait, index) => (

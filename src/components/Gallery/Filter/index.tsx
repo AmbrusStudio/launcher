@@ -43,7 +43,7 @@ const GalleryFilter: FC<GalleryFilterProps> = ({ filter, toggleFilterTab, toggle
             )}
           </div>
           {item.is_open && (
-            <ul className="max-h-[252px] overflow-auto">
+            <ul className="max-h-[252px] overflow-auto filter-category-scrollbar">
               {item.list.map((tab: FilterList, indexJ) => (
                 <li
                   key={indexJ}

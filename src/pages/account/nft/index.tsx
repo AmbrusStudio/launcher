@@ -1,36 +1,19 @@
-import 'swiper/css'
-
-import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback } from 'react'
 
 import { PageLayout } from '../../../components/Layout'
 import { WalletButton } from '../../../components/Layout/WalletButton'
+import MobileWrap from '../../../components/NFT/MobileWrap'
 import NFTItem from '../../../components/NFT/NFTItem'
-// import NFTModal from '../../../components/NFT/NFTModal'
-import NFTStar from '../../../components/NFT/NFTStar'
-import NFTUpgrade from '../../../components/NFT/NFTUpgrade'
-import SwiperToggle from '../../../components/NFT/SwiperToggle'
-import { NFT_DATA } from '../../../data'
 import { useWeb3Modal } from '../../../hooks'
 import { useERC721List } from '../../../hooks/useERC721List'
-
-const Actions = styled(Stack)`
-  padding-bottom: constant(safe-area-inset-bottom);
-  padding-bottom: env(safe-area-inset-bottom);
-`
 
 function AccountNFT() {
   const { account, active } = useEthers()
   const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
 
   const { nfts } = useERC721List()
-
-  const [visibleModal, setVisibleModal] = useState<boolean>(false)
-  const [currentIndex, setCurrentIndex] = useState<number>(0)
-
-  const currentNFT_DATA = useMemo(() => NFT_DATA[currentIndex], [currentIndex])
 
   // Handle wallet switchNetwork
   const handleWalletSwitchNetwork = useCallback(async () => {
@@ -71,26 +54,7 @@ function AccountNFT() {
           )}
         </div>
 
-        <div className="block lg:hidden">
-          <div className="min-h-160px my-6">
-            <SwiperToggle currentIndex={currentIndex} toggle={(value) => setCurrentIndex(value)} />
-          </div>
-
-          <div className="px-6 xl:px-2.5">{/* <NFTDetails nft={nfts[0]} tokenId={'1'} /> */}</div>
-
-          <Actions sx={{ marginTop: 'auto' }} direction="row" spacing={1.5} className="fixed left-6 bottom-6 right-6">
-            <NFTStar nft={currentNFT_DATA} toggle={(value) => console.log(value)} />
-            <NFTUpgrade
-              nft={currentNFT_DATA}
-              toggle={(value) => {
-                console.log(value)
-                setVisibleModal(true)
-              }}
-            />
-          </Actions>
-
-          {/* <NFTModal visible={visibleModal} toggle={setVisibleModal} nft={nfts[0]} title="Stake to Upgrade" /> */}
-        </div>
+        <MobileWrap nfts={nfts} />
       </div>
     </PageLayout>
   )

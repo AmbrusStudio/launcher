@@ -1,4 +1,5 @@
 import { defineConfig, presetUno, presetWebFonts, transformerDirectives } from 'unocss'
+import { presetScrollbar } from 'unocss-preset-scrollbar'
 
 export default defineConfig({
   presets: [
@@ -13,6 +14,9 @@ export default defineConfig({
           italic: true,
         },
       },
+    }),
+    presetScrollbar({
+      // config
     }),
   ],
   transformers: [transformerDirectives()],
