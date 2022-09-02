@@ -133,3 +133,20 @@ export const handleFilterFn = (filter: Filter[], searchId: string): Metadata[] =
 
   return result
 }
+
+/**
+ * Image Size Conversion
+ * @param image
+ * @param size
+ * @returns
+ */
+export const imageSizeConversion = (image: string, size: 800 | 2000): string => {
+  if (!image) return image
+
+  const sizeList = {
+    800: 'Images_800',
+    2000: 'Images_2000',
+  }
+
+  return image.replace('Images', sizeList[size]).replace('.png', '.jpeg')
+}

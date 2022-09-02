@@ -183,7 +183,7 @@ function Gallery() {
         </div>
       </div>
 
-      <ModalGalleryInfo visible={visibleNFT} setVisible={setVisibleNFT} metadata={currentNFTInfo} />
+      {currentNFTInfo && <ModalGalleryInfo visible={visibleNFT} setVisible={setVisibleNFT} metadata={currentNFTInfo} />}
       <DrawerFilter
         visibleDrawer={visibleDrawer}
         setVisibleDrawer={setVisibleDrawer}
