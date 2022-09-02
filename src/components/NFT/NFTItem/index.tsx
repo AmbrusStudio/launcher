@@ -9,6 +9,7 @@ import { ADDRESS_ASR, ADDRESS_E4C_Ranger } from '../../../contracts'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
 import { useHandleState } from '../../../hooks/useHandleState'
 import { NFTE4CRanger } from '../../../types'
+import { imageSizeConversion } from '../../../utils'
 import NFTDetails from '../NFTDetails'
 import NFTPerk from '../NFTPerk'
 import StakeInfo from '../StakeInfo'
@@ -82,41 +83,39 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
   return (
     <div className="flex-col lg:flex-row lg:flex h-auto lg:h-[600px] bg-black relative">
       <div className="lg:w-[600px] lg:h-[600px] overflow-hidden">
-        <img className="h-full object-cover w-full" src={nft.image} alt={nft.name} />
+        <img className="h-full object-cover w-full" src={imageSizeConversion(nft.image, 2000)} alt={nft.name} />
       </div>
       <WrapperInfo>
         <NFTDetails nft={nft} tokenId={tokenId} />
 
-        <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
-          {Number(tokenId) >= 16 && nft.upgraded === false && (
-            <>
-              <button className="u-btn u-btn-primary max-w-[120px] relative !py-0">
-                <Star sx={{ fontSize: '36px' }} />
+        {Number(tokenId) >= 16 && nft.upgraded === false && (
+          <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
+            <button className="u-btn u-btn-primary max-w-[120px] relative !py-0">
+              <Star sx={{ fontSize: '36px' }} />
+            </button>
+            {nft.staking ? (
+              <button
+                disabled={unstakeLoading}
+                className={classNames('u-btn u-btn-primary', {
+                  loading: unstakeLoading,
+                })}
+                onClick={() => setVisibleStatusCheck(!visibleStatusCheck)}
+              >
+                Check Upgrading Status
               </button>
-              {nft.staking ? (
-                <button
-                  disabled={unstakeLoading}
-                  className={classNames('u-btn u-btn-primary', {
-                    loading: unstakeLoading,
-                  })}
-                  onClick={() => setVisibleStatusCheck(!visibleStatusCheck)}
-                >
-                  Check Upgrading Status
-                </button>
-              ) : (
-                <button
-                  disabled={stakeLoading}
-                  className={classNames('u-btn u-btn-primary', {
-                    loading: stakeLoading,
-                  })}
-                  onClick={() => setVisibleInfo(!visibleInfo)}
-                >
-                  Upgrade
-                </button>
-              )}
-            </>
-          )}
-        </Stack>
+            ) : (
+              <button
+                disabled={stakeLoading}
+                className={classNames('u-btn u-btn-primary', {
+                  loading: stakeLoading,
+                })}
+                onClick={() => setVisibleInfo(!visibleInfo)}
+              >
+                Upgrade
+              </button>
+            )}
+          </Stack>
+        )}
       </WrapperInfo>
       <NFTPerk visible={togglePerk} toggle={(value) => setTogglePerk(value)} />
       {visibleInfo && (

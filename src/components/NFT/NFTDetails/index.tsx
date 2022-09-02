@@ -11,7 +11,7 @@ const NFTInfoContent = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 24px;
-  max-height: 252px;
+  /* max-height: 252px; */
   overflow: auto;
 `
 
@@ -52,11 +52,11 @@ const NFTDetails: FC<NFTDetailsProps> = ({ nft, tokenId }) => {
         }}
       >
         <section>
-          <span className="font-bold text-6.5 lg:text-9 not-italic uppercase leading-11 font-sans text-rust">
+          <span className="font-bold text-6.5 lg:text-9 not-italic uppercase leading-11 font-sans text-rust break-all">
             {nft.name}
           </span>
           <Stack spacing={2} direction="row">
-            <span className="font-bold text-6.5 lg:text-9 not-italic uppercase leading-11 font-sans text-white">
+            <span className="font-bold text-6.5 lg:text-9 not-italic uppercase leading-11 font-sans text-white break-all">
               {nft.description || '-'}
             </span>
             <span className="font-bold text-6.5 lg:text-9 not-italic uppercase leading-11 font-sans text-white">

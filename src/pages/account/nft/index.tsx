@@ -3,7 +3,6 @@ import 'swiper/css'
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
-import { getAddress } from 'ethers/lib/utils'
 import { useCallback, useMemo, useState } from 'react'
 
 import { PageLayout } from '../../../components/Layout'
@@ -13,13 +12,9 @@ import NFTItem from '../../../components/NFT/NFTItem'
 import NFTStar from '../../../components/NFT/NFTStar'
 import NFTUpgrade from '../../../components/NFT/NFTUpgrade'
 import SwiperToggle from '../../../components/NFT/SwiperToggle'
-import { ADDRESS_E4C_Ranger } from '../../../contracts'
 import { NFT_DATA } from '../../../data'
 import { useWeb3Modal } from '../../../hooks'
-import { useOriginalOwners, useUpgradeds } from '../../../hooks/useE4CRanger'
-import { useTokenId, useTokenIdByContract } from '../../../hooks/useTokenId'
-import { NFTE4CRanger } from '../../../types'
-import { nftsForOwner } from '../../../utils'
+import { useERC721List } from '../../../hooks/useERC721List'
 
 const Actions = styled(Stack)`
   padding-bottom: constant(safe-area-inset-bottom);
@@ -30,47 +25,12 @@ function AccountNFT() {
   const { account, active } = useEthers()
   const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
 
-  // tokenId for owner
-  const tokenId = useTokenId()
-  // tokenId for contract
-  const tokenIdForContract = useTokenIdByContract()
-  const upgraded = useUpgradeds(ADDRESS_E4C_Ranger, tokenId)
-  // tokenId original owner
-  // originalOwner replaces ownerOf to judge staking state
-  const originalOwner = useOriginalOwners(ADDRESS_E4C_Ranger, tokenIdForContract)
-  const tokenIdForOriginalContract = useMemo(() => {
-    const list: string[] = []
-    originalOwner.forEach((item, index) => {
-      if (account && item && getAddress(item) === getAddress(account)) {
-        list.push(tokenIdForContract[index])
-      }
-      // if (account && item) {
-      //   list.push(tokenIdForContract[index])
-      // }
-    })
-
-    return list
-  }, [account, originalOwner, tokenIdForContract])
-  const upgradedForContract = useUpgradeds(ADDRESS_E4C_Ranger, tokenIdForOriginalContract)
-  // console.log('upgraded', upgraded)
-  console.log('tokenIdForContract', tokenIdForContract)
-  console.log('originalOwner', originalOwner)
-  console.log('tokenIdForOriginalContract', tokenIdForOriginalContract)
-  console.log('upgradedForContract', upgradedForContract)
+  const { nfts } = useERC721List()
 
   const [visibleModal, setVisibleModal] = useState<boolean>(false)
   const [currentIndex, setCurrentIndex] = useState<number>(0)
 
   const currentNFT_DATA = useMemo(() => NFT_DATA[currentIndex], [currentIndex])
-  // owner nfts
-  const nftsForAccount = useMemo<NFTE4CRanger[]>(() => nftsForOwner(tokenId, upgraded, []), [tokenId, upgraded])
-  const nftsForContract = useMemo<NFTE4CRanger[]>(
-    () => nftsForOwner(tokenIdForOriginalContract, upgradedForContract, originalOwner),
-    [tokenIdForOriginalContract, upgradedForContract, originalOwner]
-  )
-  const nfts = useMemo(() => [...nftsForAccount, ...nftsForContract], [nftsForAccount, nftsForContract])
-  // console.log('nfts', nfts)
-  // console.log('nftsForContract', nftsForContract)
 
   // Handle wallet switchNetwork
   const handleWalletSwitchNetwork = useCallback(async () => {
