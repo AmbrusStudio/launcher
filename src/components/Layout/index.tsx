@@ -3,6 +3,7 @@ import { Fragment } from 'react'
 import { classNames } from '../../utils'
 import { PageFooter } from './Footer'
 import { PageHeader } from './Header'
+import { PageSidebar } from './Sidebar'
 
 type PageLayoutProps = {
   className?: string
@@ -32,8 +33,8 @@ export function AccountCenterPageLayout(props: React.PropsWithChildren<PageLayou
   const { className, children } = props
   return (
     <BasePageLayout className="grid grid-cols-[auto_1fr]">
-      <div className="min-h-screen min-w-108px"></div>
-      <div className={classNames('p-36px', className)}>{children}</div>
+      <PageSidebar className="fixed h-screen min-w-108px" />
+      <div className={classNames('ml-108px p-36px', className)}>{children}</div>
     </BasePageLayout>
   )
 }
