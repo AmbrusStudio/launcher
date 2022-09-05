@@ -1,10 +1,11 @@
 import numbro from 'numbro'
 import { useCallback, useMemo, useState } from 'react'
+import { compose } from 'redux'
 
 import logo from '../../assets/images/logo.png'
 import DrawerFilter from '../../components/Gallery/DrawerFilter'
 import GalleryFilter from '../../components/Gallery/Filter'
-import GalleryItem from '../../components/Gallery/GalleryItem'
+import GalleryWrapper from '../../components/Gallery/GalleryWrapper'
 import ModalGalleryInfo from '../../components/Gallery/ModalGalleryInfo'
 import FilterSliderClose from '../../components/Icon/FilterSliderClose'
 import FilterSliderLine from '../../components/Icon/FilterSliderLine'
@@ -29,16 +30,26 @@ function Gallery() {
   const [searchId, setSearchId] = useNumStrState()
 
   // Drawer has filter
-  const hasFilter = useMemo(() => {
+  const hasFilter = useMemo<boolean>(() => {
     const isChecked = (element: Filter) => (element.list as FilterList[]).find((i) => i.is_checked)
 
     return filter.some(isChecked)
   }, [filter])
 
   // Current gallery
-  const currentGallery = useMemo(() => {
+  const currentGallery = useMemo<Metadata[]>(() => {
     return handleFilterFn(filter, searchId)
   }, [searchId, filter])
+
+  // Filter checked category
+  const checkedFilterCategory = useMemo<string[]>(() => {
+    const listChecked = (data: Filter[]): FilterList[][] =>
+      data.map((i) => [...i.list.filter((j: FilterList) => j.is_checked)])
+
+    const listFlat = (data: FilterList[][]): string[] => data.flatMap((i) => i.map((j) => j.label))
+
+    return compose(listFlat, listChecked)(filter)
+  }, [filter])
 
   // Toggle Filter children open
   const toggleFilterTab = useCallback(
@@ -160,25 +171,13 @@ function Gallery() {
                 {numbro(currentGallery.length).format({ thousandSeparated: true })} items
               </p>
             </div>
-            {
-              <div className="mt-3 lg:mt-6">
-                {!!currentGallery.length && (
-                  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 max-h-[928px] overflow-auto">
-                    {currentGallery.map((gallery, index) => (
-                      <GalleryItem
-                        key={index}
-                        data={gallery}
-                        onClick={() => {
-                          setCurrentNFTInfo(currentGallery[index])
-                          setVisibleNFT(true)
-                        }}
-                      />
-                    ))}
-                  </div>
-                )}
-                {!currentGallery.length && <div className="text-lg py-6 text-center text-white">No Item</div>}
-              </div>
-            }
+            <GalleryWrapper
+              allToken={currentGallery}
+              setCurrentNFTInfo={setCurrentNFTInfo}
+              setVisibleNFT={setVisibleNFT}
+              searchId={searchId}
+              checkedFilterCategory={checkedFilterCategory}
+            />
           </div>
         </div>
       </div>

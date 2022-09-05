@@ -14,7 +14,7 @@ interface GalleryFilterProps {
 
 const GalleryFilter: FC<GalleryFilterProps> = ({ filter, toggleFilterTab, toggleFilterTagChecked }) => {
   return (
-    <ul className="select-none">
+    <ul className="select-none overflow-auto filter-category-scrollbar">
       {filter.map((item, index) => (
         <li key={index}>
           <div
