@@ -2,6 +2,7 @@ import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import Axios, { AxiosError } from 'axios'
 
 import { LSK_ACCESS_TOKEN } from '../constants'
+import { redirectToSignIn } from '../utils'
 
 class MainBackendRequest {
   public readonly client: AxiosInstance
@@ -56,6 +57,7 @@ class AccountBackendRequest {
       validateStatus: () => true,
     })
     this.client.interceptors.request.use(this.onRequestFulfilled.bind(this))
+    this.client.interceptors.response.use(this.onResponseFulfilled.bind(this))
   }
 
   private async onRequestFulfilled(config: AxiosRequestConfig): Promise<AxiosRequestConfig> {
@@ -66,6 +68,14 @@ class AccountBackendRequest {
       }
     }
     return config
+  }
+
+  private async onResponseFulfilled(response: AxiosResponse): Promise<AxiosResponse> {
+    if (response.status === 401 && response.data?.message === 'Unauthorized') {
+      redirectToSignIn()
+      return Promise.reject(response.data)
+    }
+    return response
   }
 }
 
