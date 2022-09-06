@@ -10,15 +10,17 @@ import {
   registerWithEmail,
   resetPassword,
   sendVerifyEmail,
+  unbindMetamaskAddress,
   verifyVerificationCode,
 } from '../api'
 import { LSK_ACCESS_TOKEN } from '../constants'
-import { AccountAccessToken, AccountApiResult, EmailVerificationTypes } from '../types'
-import { getDefaultChainId } from '../utils'
+import { AccountAccessToken, AccountAccessTokenJWTPayload, AccountApiResult, EmailVerificationTypes } from '../types'
+import { getAccessTokenPayload, getDefaultChainId, isAccountTokenExpired } from '../utils'
 
 type UseMetamaskAccount = {
   walletLogin: () => Promise<AccountApiResult<AccountAccessToken>>
-  walletBind: () => Promise<AccountApiResult<void>>
+  walletBind: () => Promise<AccountApiResult<AccountAccessToken>>
+  walletUnbind: () => Promise<AccountApiResult<AccountAccessToken>>
 }
 
 export function useMetamaskAccount(): UseMetamaskAccount {
@@ -66,10 +68,18 @@ export function useMetamaskAccount(): UseMetamaskAccount {
     if (!code) return { isOk: false, data: null, error: new Error('No signature code.') }
     const sig = await getMetamaskSignSignature(code)
     if (!sig) return { isOk: false, data: null, error: new Error('No sign signature.') }
-    return await bindMetamaskAddress(account, sig)
-  }, [account, getMetamaskSignCode, getMetamaskSignSignature])
+    const res = await bindMetamaskAddress(account, sig)
+    if (res.isOk) setAccessToken(res.data.accessToken)
+    return res
+  }, [account, getMetamaskSignCode, getMetamaskSignSignature, setAccessToken])
 
-  return { walletLogin, walletBind }
+  const walletUnbind = React.useCallback<UseMetamaskAccount['walletUnbind']>(async () => {
+    const res = await unbindMetamaskAddress()
+    if (res.isOk) setAccessToken(res.data.accessToken)
+    return res
+  }, [setAccessToken])
+
+  return { walletLogin, walletBind, walletUnbind }
 }
 
 type EmailRegisterParams = {
@@ -137,4 +147,25 @@ export function useEmailAccount(): UseEmailAccount {
   )
 
   return { emailSendVerification, emailVerifyVerification, emailLogin, emailRegister, emailResetPassword }
+}
+
+type UseAccountInfo = {
+  account?: AccountAccessTokenJWTPayload
+  expired: boolean
+}
+
+export function useAccountInfo(): UseAccountInfo {
+  const [accessToken] = useLocalStorageState<string>(LSK_ACCESS_TOKEN)
+
+  const account = React.useMemo(() => {
+    if (!accessToken) return undefined
+    return getAccessTokenPayload(accessToken)
+  }, [accessToken])
+
+  const expired = React.useMemo(() => {
+    if (!accessToken) return true
+    return isAccountTokenExpired(accessToken)
+  }, [accessToken])
+
+  return { account, expired }
 }

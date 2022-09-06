@@ -1,8 +1,11 @@
+import { shortenIfAddress, useEthers } from '@usedapp/core'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
+import { Navigate } from 'react-router-dom'
 
 import { AccountMyAccountInfo, AccountMyAvatar, AccountMyWallet, AccountTitie } from '../../../components/Account'
 import { AccountCenterPageLayout } from '../../../components/Layout'
+import { useAccountInfo, useMetamaskAccount, useSnackbarTR, useWeb3Modal } from '../../../hooks'
 import { AccountAvatarInfo, AccountInfoFormData } from '../../../types'
 
 const demoData: AccountAvatarInfo[] = [
@@ -26,11 +29,16 @@ const demoData: AccountAvatarInfo[] = [
 ]
 
 export function Settings() {
-  const { handleSubmit } = useFormContext<AccountInfoFormData>()
+  const { setValue, handleSubmit } = useFormContext<AccountInfoFormData>()
+  const { account } = useEthers()
+  const { connect } = useWeb3Modal()
+  const { walletBind, walletUnbind } = useMetamaskAccount()
+  const { account: userInfo, expired: sessionExpired } = useAccountInfo()
+  const showSnackbar = useSnackbarTR()
 
   const [updateSending, setUpdateSending] = React.useState(false)
   const [selectedAvatar, setSelectedAvatar] = React.useState<AccountAvatarInfo>()
-  const [account, setAccount] = React.useState<string>()
+  const [metamaskBinding, setMetamaskBinding] = React.useState(false)
 
   const handleSaveButtonSubmit = React.useCallback(
     async (data: AccountInfoFormData) => {
@@ -46,11 +54,26 @@ export function Settings() {
   )
 
   const handleBindWalletClick = React.useCallback(async () => {
-    setAccount('0x8000…2E417')
-  }, [])
+    if (metamaskBinding) return
+    try {
+      setMetamaskBinding(true)
+      if (!account) return connect()
+      const res = await walletBind()
+      if (!res.isOk) return showSnackbar(res.error.message, 'error')
+    } finally {
+      setMetamaskBinding(false)
+    }
+  }, [account, connect, metamaskBinding, showSnackbar, walletBind])
   const handleUnbindWalletClick = React.useCallback(async () => {
-    setAccount(undefined)
-  }, [])
+    if (metamaskBinding) return
+    try {
+      setMetamaskBinding(true)
+      const res = await walletUnbind()
+      if (!res.isOk) return showSnackbar(res.error.message, 'error')
+    } finally {
+      setMetamaskBinding(false)
+    }
+  }, [metamaskBinding, showSnackbar, walletUnbind])
 
   const handleAvatarSelect = React.useCallback(async (avatar: AccountAvatarInfo) => {
     console.log('handleAvatarSelect', avatar)
@@ -58,22 +81,31 @@ export function Settings() {
   }, [])
 
   React.useEffect(() => {
+    if (userInfo?.nickname) {
+      setValue('username', userInfo.nickname)
+    }
     const selectedAvatar = demoData.find((a) => a.id === 2)
     setSelectedAvatar(selectedAvatar)
-  }, [])
+  }, [setValue, userInfo?.nickname])
 
   return (
-    <AccountCenterPageLayout className="flex flex-col gap-36px max-w-1332px">
-      <AccountTitie subtitle="Management" />
-      <div className="grid grid-cols-1 xl:grid-cols-[600px_1fr] gap-36px">
-        <AccountMyAccountInfo disabled={updateSending} onSaveButtonSubmit={handleSubmit(handleSaveButtonSubmit)} />
-        <AccountMyAvatar data={demoData} selected={selectedAvatar} onAvatarSelect={handleAvatarSelect} />
-      </div>
-      <AccountMyWallet
-        account={account}
-        onMetamaskClick={handleBindWalletClick}
-        onDisconnectClick={handleUnbindWalletClick}
-      />
-    </AccountCenterPageLayout>
+    <React.Fragment>
+      {sessionExpired && <Navigate to="/account/signin" replace={true} />}
+      <AccountCenterPageLayout className="flex flex-col gap-36px max-w-1332px">
+        <AccountTitie subtitle="Management" />
+        <div className="grid grid-cols-1 xl:grid-cols-[600px_1fr] gap-36px">
+          <AccountMyAccountInfo disabled={updateSending} onSaveButtonSubmit={handleSubmit(handleSaveButtonSubmit)} />
+          <AccountMyAvatar data={demoData} selected={selectedAvatar} onAvatarSelect={handleAvatarSelect} />
+        </div>
+        <AccountMyWallet
+          bindAccount={shortenIfAddress(userInfo?.wallet)}
+          walletAccount={shortenIfAddress(account)}
+          metamaskButtonDisabled={metamaskBinding}
+          disconnectButtonDisabled={metamaskBinding}
+          onMetamaskClick={handleBindWalletClick}
+          onDisconnectClick={handleUnbindWalletClick}
+        />
+      </AccountCenterPageLayout>
+    </React.Fragment>
   )
 }

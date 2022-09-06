@@ -47,6 +47,6 @@ export function getRequiredValidationRule(required: boolean, message: string): V
 export function isAccountTokenExpired(token: string): boolean {
   const payload = getAccessTokenPayload(token)
   const now = Date.now()
-  if (!payload.exp || payload.exp <= now) return true
+  if (!payload.exp || payload.exp * 1000 <= now) return true
   return false
 }

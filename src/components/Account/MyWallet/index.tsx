@@ -1,3 +1,5 @@
+import React from 'react'
+
 import { ReactButtonProps } from '../../../types'
 import { classNames } from '../../../utils'
 import { Button } from '../../Forms'
@@ -17,7 +19,8 @@ function MetamaskButton(props: MetamaskButtonProps) {
 }
 
 type MyWalletProps = {
-  account?: string
+  bindAccount?: string
+  walletAccount?: string
   metamaskButtonDisabled?: boolean
   disconnectButtonDisabled?: boolean
   onMetamaskClick?: React.MouseEventHandler<HTMLButtonElement>
@@ -25,9 +28,19 @@ type MyWalletProps = {
 }
 
 export function AccountMyWallet(props: MyWalletProps) {
-  const { account, metamaskButtonDisabled, disconnectButtonDisabled } = props
+  const { bindAccount, walletAccount, metamaskButtonDisabled, disconnectButtonDisabled } = props
   const { onMetamaskClick, onDisconnectClick } = props
-  const buttonText = account ? account : 'Connect Wallet'
+  const buttonText = bindAccount ? bindAccount : walletAccount ? `Continue with ${walletAccount}` : 'Connect Wallet'
+
+  const handleMetamaskClick = React.useCallback(() => {
+    if (bindAccount) return
+    onMetamaskClick && onMetamaskClick
+  }, [bindAccount, onMetamaskClick])
+  const handleDisconnectClick = React.useCallback(() => {
+    if (!bindAccount) return
+    onDisconnectClick && onDisconnectClick
+  }, [bindAccount, onDisconnectClick])
+
   return (
     <AccountCard title="My Wallet" className="gap-24px">
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_624px] gap-36px">
@@ -36,15 +49,15 @@ export function AccountMyWallet(props: MyWalletProps) {
           to your wallet. Each account can be connected to one wallet.
         </p>
         <div className="flex flex-row flex-nowrap items-center">
-          <MetamaskButton disabled={metamaskButtonDisabled} onClick={onMetamaskClick}>
+          <MetamaskButton disabled={metamaskButtonDisabled} onClick={handleMetamaskClick}>
             {buttonText}
           </MetamaskButton>
-          {account && (
+          {bindAccount && (
             <Button
               variant="primary"
               className="w-233px hover:!bg-rust/85 hover:!text-white"
               disabled={disconnectButtonDisabled}
-              onClick={onDisconnectClick}
+              onClick={handleDisconnectClick}
             >
               Disconnect
             </Button>

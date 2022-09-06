@@ -21,12 +21,23 @@ export async function doMetamaskLogin(address: string, signature: string): Promi
   return { isOk: false, data: null, error: new Error('Unkonwn error') }
 }
 
-export async function bindMetamaskAddress(address: string, signature: string): Promise<AccountApiResult<void>> {
-  const res = await accountBackendRequest.post<void>('/metamask/bind', { address, signature })
-  if (res.status === 200) return { isOk: true, data: res.data, error: null }
+export async function bindMetamaskAddress(
+  address: string,
+  signature: string
+): Promise<AccountApiResult<MetamaskLogin>> {
+  const res = await accountBackendRequest.post<MetamaskLogin>('/metamask/bind', { address, signature })
+  if (res.status === 201) return { isOk: true, data: res.data, error: null }
   if (res.status === 400) return { isOk: false, data: null, error: new Error('No preceding code request') }
   if (res.status === 401) return { isOk: false, data: null, error: new Error('Unauthorized or Invalid signature') }
   if (res.status === 409) return { isOk: false, data: null, error: new Error('Wallet used') }
+  return { isOk: false, data: null, error: new Error('Unkonwn error') }
+}
+
+export async function unbindMetamaskAddress(): Promise<AccountApiResult<MetamaskLogin>> {
+  const res = await accountBackendRequest.post<MetamaskLogin>('/metamask/unbind')
+  if (res.status === 201) return { isOk: true, data: res.data, error: null }
+  if (res.status === 401) return { isOk: false, data: null, error: new Error('Unauthorized or Account not found') }
+  if (res.status === 409) return { isOk: false, data: null, error: new Error('Not available for non email account') }
   return { isOk: false, data: null, error: new Error('Unkonwn error') }
 }
 
