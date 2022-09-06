@@ -32,14 +32,20 @@ export function AccountMyWallet(props: MyWalletProps) {
   const { onMetamaskClick, onDisconnectClick } = props
   const buttonText = bindAccount ? bindAccount : walletAccount ? `Continue with ${walletAccount}` : 'Connect Wallet'
 
-  const handleMetamaskClick = React.useCallback(() => {
-    if (bindAccount) return
-    onMetamaskClick && onMetamaskClick
-  }, [bindAccount, onMetamaskClick])
-  const handleDisconnectClick = React.useCallback(() => {
-    if (!bindAccount) return
-    onDisconnectClick && onDisconnectClick
-  }, [bindAccount, onDisconnectClick])
+  const handleMetamaskClick = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
+    (e) => {
+      if (bindAccount) return
+      onMetamaskClick && onMetamaskClick(e)
+    },
+    [bindAccount, onMetamaskClick]
+  )
+  const handleDisconnectClick = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
+    (e) => {
+      if (!bindAccount) return
+      onDisconnectClick && onDisconnectClick(e)
+    },
+    [bindAccount, onDisconnectClick]
+  )
 
   return (
     <AccountCard title="My Wallet" className="gap-24px">
