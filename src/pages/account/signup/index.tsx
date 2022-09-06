@@ -123,7 +123,7 @@ export function SignUp() {
     navigate(`/account/signin`)
   }, [navigate])
   const handleCompleteClick = React.useCallback(() => {
-    navigate(`/account/center`)
+    navigate(`/account/home`)
   }, [navigate])
 
   const handleMetamaskSignUpClick = React.useCallback(async () => {

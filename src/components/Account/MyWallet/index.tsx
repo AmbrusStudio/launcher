@@ -30,7 +30,7 @@ export function AccountMyWallet(props: MyWalletProps) {
   const buttonText = account ? account : 'Connect Wallet'
   return (
     <AccountCard title="My Wallet" className="gap-24px">
-      <div className="grid grid-cols-[1fr_624px] gap-36px">
+      <div className="grid grid-cols-1 xl:grid-cols-[1fr_624px] gap-36px">
         <p className="font-normal text-16px leading-30px text-greyMedium">
           To play with your rangers and weapons in games, or to set your E4C Rangers NFT as your avatar, please connect
           to your wallet. Each account can be connected to one wallet.

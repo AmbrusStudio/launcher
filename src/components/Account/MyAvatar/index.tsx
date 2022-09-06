@@ -18,7 +18,8 @@ function AvatarItem(props: AvatarItemProps) {
     <div
       className={classNames(
         'flex flex-row flex-nowrap items-center cursor-pointer',
-        'w-120px h-120px rounded-full box-border relative',
+        'min-w-80px min-h-80px max-w-120px max-h-120px',
+        'xl:w-120px xl:h-120px rounded-full box-border relative',
         !selected && 'border-1px border-grey-dark',
         selected && 'border-4px border-white',
         className
@@ -26,7 +27,7 @@ function AvatarItem(props: AvatarItemProps) {
       onClick={onItemClick}
     >
       <img
-        className="w-full h-full rounded-full object-cover select-none"
+        className="block max-w-full h-auto rounded-full object-cover select-none"
         src={image}
         alt="Avatar Image"
         loading="lazy"
@@ -63,7 +64,7 @@ export function AccountMyAvatar(props: AccountMyAvatarProps) {
     <AccountCard>
       <div className="mb-12px text-12px leading-16px text-grey-medium font-bold uppercase">Select your Avatar</div>
       <BoxWithCustomizedScrollbar className="flex max-h-550px overflow-y-auto">
-        <div className="grid grid-cols-[repeat(auto-fill,_120px)] gap-16px w-full">
+        <div className="grid grid-cols-[repeat(auto-fit,_minmax(80px,_1fr))] xl:grid-cols-[repeat(auto-fit,_120px)] gap-16px w-full">
           {data.map((avatar, index) => (
             <AvatarItem
               key={`avatar-${avatar.id}-${index}`}

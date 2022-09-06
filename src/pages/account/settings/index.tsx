@@ -65,7 +65,7 @@ export function Settings() {
   return (
     <AccountCenterPageLayout className="flex flex-col gap-36px max-w-1332px">
       <AccountTitie subtitle="Management" />
-      <div className="grid grid-cols-[600px_1fr] gap-36px">
+      <div className="grid grid-cols-1 xl:grid-cols-[600px_1fr] gap-36px">
         <AccountMyAccountInfo disabled={updateSending} onSaveButtonSubmit={handleSubmit(handleSaveButtonSubmit)} />
         <AccountMyAvatar data={demoData} selected={selectedAvatar} onAvatarSelect={handleAvatarSelect} />
       </div>
