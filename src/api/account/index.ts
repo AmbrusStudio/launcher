@@ -95,3 +95,10 @@ export async function resetPassword(code: string, address: string, password: str
   if (res.status === 404) return { isOk: false, data: null, error: new Error('Verification code expired') }
   return { isOk: false, data: null, error: new Error('Unkonwn error') }
 }
+
+export async function updatePassword(oldPassword: string, newPassword: string): Promise<AccountApiResult<void>> {
+  const res = await accountBackendRequest.put<void>('/email/password', { oldPassword, newPassword })
+  if (res.status === 200) return { isOk: true, data: res.data, error: null }
+  if (res.status === 401) return { isOk: false, data: null, error: new Error('Incorrect old password') }
+  return { isOk: false, data: null, error: new Error('Unkonwn error') }
+}

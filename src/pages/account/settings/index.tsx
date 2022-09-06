@@ -5,7 +5,7 @@ import { Navigate } from 'react-router-dom'
 
 import { AccountMyAccountInfo, AccountMyAvatar, AccountMyWallet, AccountTitie } from '../../../components/Account'
 import { AccountCenterPageLayout } from '../../../components/Layout'
-import { useAccountInfo, useMetamaskAccount, useSnackbarTR, useWeb3Modal } from '../../../hooks'
+import { useAccountInfo, useEmailAccount, useMetamaskAccount, useSnackbarTR, useWeb3Modal } from '../../../hooks'
 import { AccountAvatarInfo, AccountInfoFormData } from '../../../types'
 
 const demoData: AccountAvatarInfo[] = [
@@ -29,10 +29,11 @@ const demoData: AccountAvatarInfo[] = [
 ]
 
 export function Settings() {
-  const { setValue, handleSubmit } = useFormContext<AccountInfoFormData>()
+  const { setValue, reset, handleSubmit } = useFormContext<AccountInfoFormData>()
   const { account } = useEthers()
   const { connect } = useWeb3Modal()
   const { walletBind, walletUnbind } = useMetamaskAccount()
+  const { emailUpdatePassword } = useEmailAccount()
   const { account: userInfo, expired: sessionExpired } = useAccountInfo()
   const showSnackbar = useSnackbarTR()
 
@@ -45,12 +46,21 @@ export function Settings() {
       if (updateSending) return
       try {
         setUpdateSending(true)
-        console.log('handleSaveButtonSubmit', data)
+        const { oldPassword, newPassword } = data
+        if (oldPassword && newPassword) {
+          const res = await emailUpdatePassword(oldPassword, newPassword)
+          if (!res.isOk) return showSnackbar(res.error.message, 'error')
+          reset(
+            { oldPassword: '', newPassword: '', confirmNewPassword: '' },
+            { keepDirty: false, keepErrors: false, keepValues: false }
+          )
+        }
+        showSnackbar('Update successful', 'success')
       } finally {
         setUpdateSending(false)
       }
     },
-    [updateSending]
+    [emailUpdatePassword, reset, showSnackbar, updateSending]
   )
 
   const handleBindWalletClick = React.useCallback(async () => {

@@ -11,6 +11,7 @@ import {
   resetPassword,
   sendVerifyEmail,
   unbindMetamaskAddress,
+  updatePassword,
   verifyVerificationCode,
 } from '../api'
 import { LSK_ACCESS_TOKEN } from '../constants'
@@ -99,6 +100,7 @@ type UseEmailAccount = {
   emailLogin: (address: string, password: string) => Promise<AccountApiResult<AccountAccessToken>>
   emailRegister: (params: EmailRegisterParams) => Promise<AccountApiResult<AccountAccessToken>>
   emailResetPassword: (code: string, address: string, password: string) => Promise<AccountApiResult<void>>
+  emailUpdatePassword: (oldPassword: string, newPassword: string) => Promise<AccountApiResult<void>>
 }
 
 export function useEmailAccount(): UseEmailAccount {
@@ -146,7 +148,21 @@ export function useEmailAccount(): UseEmailAccount {
     [removeItem]
   )
 
-  return { emailSendVerification, emailVerifyVerification, emailLogin, emailRegister, emailResetPassword }
+  const emailUpdatePassword = React.useCallback<UseEmailAccount['emailUpdatePassword']>(
+    async (oldPassword, newPassword) => {
+      return await updatePassword(oldPassword, newPassword)
+    },
+    []
+  )
+
+  return {
+    emailSendVerification,
+    emailVerifyVerification,
+    emailLogin,
+    emailRegister,
+    emailResetPassword,
+    emailUpdatePassword,
+  }
 }
 
 type UseAccountInfo = {
