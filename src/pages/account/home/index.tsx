@@ -6,7 +6,7 @@ import BannerFinalSalvation from '../../../assets/images/banners/final-salvation
 import Loot from '../../../assets/images/banners/loot.png'
 import SessionPass from '../../../assets/images/banners/session-pass.png'
 import BannerUgcTool from '../../../assets/images/banners/ugc-tool.png'
-import { AccountTitie } from '../../../components/Account'
+import { AccountTitleWithAccountInfo } from '../../../components/Account'
 import { AccountBlock } from '../../../components/Account/Block'
 import { AccountMyAsset } from '../../../components/Account/MyAsset'
 import { AccountCenterPageLayout } from '../../../components/Layout'
@@ -34,7 +34,7 @@ const demoData = [
 export function Home() {
   return (
     <AccountCenterPageLayout className="flex flex-col gap-36px max-w-1332px">
-      <AccountTitie subtitle="Center" />
+      <AccountTitleWithAccountInfo subtitle="Center" />
       <div className="flex flex-col gap-36px">
         <AccountBlock title="E4C Games">
           <div className="flex gap-36px">

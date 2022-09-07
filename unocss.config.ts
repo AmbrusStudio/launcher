@@ -28,6 +28,7 @@ export default defineConfig({
       greyDark: '#465358',
       greyLight: '#A8A8A8',
       greyMedium: '#A0A4B0',
+      greyBorder: '#F0F0F0',
       blackBg: '#2A2A2A',
       ligntGreen: '#CCFF00',
       metamask: '#F6851B',
