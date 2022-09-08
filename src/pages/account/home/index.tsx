@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { AccountShopCard } from '../../..//components/Account/ShopCard'
-import BannerFallenArena from '../../../assets/images/banners/fallen-arena.png'
+import { getAllGames } from '../../../api'
 import BannerFinalSalvation from '../../../assets/images/banners/final-salvation.png'
 import Loot from '../../../assets/images/banners/loot.png'
 import SessionPass from '../../../assets/images/banners/session-pass.png'
@@ -9,7 +9,9 @@ import BannerUgcTool from '../../../assets/images/banners/ugc-tool.png'
 import { AccountTitleWithAccountInfo } from '../../../components/Account'
 import { AccountBlock } from '../../../components/Account/Block'
 import { AccountMyAsset } from '../../../components/Account/MyAsset'
+import { GameBanner } from '../../../components/Game'
 import { AccountCenterPageLayout } from '../../../components/Layout'
+import { GameInfo } from '../../../types'
 
 const demoData = [
   { id: 1, src: 'https://i.imgur.com/OJGH11v.png' },
@@ -32,24 +34,28 @@ const demoData = [
 ]
 
 export function Home() {
+  const [games, setGames] = React.useState<GameInfo[]>([])
+  const fetchAllGames = React.useCallback(async () => {
+    const games = await getAllGames()
+    console.log(games)
+    setGames(games)
+  }, [])
+
+  React.useEffect(() => {
+    fetchAllGames()
+  }, [fetchAllGames])
+
   return (
     <AccountCenterPageLayout className="flex flex-col gap-36px max-w-1332px">
       <AccountTitleWithAccountInfo subtitle="Center" />
       <div className="flex flex-col gap-36px">
         <AccountBlock title="E4C Games">
           <div className="flex gap-36px">
-            <div className="w-[100%] h-[100%] cursor-pointer">
-              <img src={BannerFinalSalvation} className="w-[100%] h-[100%] object-cover" />
-            </div>
-            <div className="w-[100%] h-[100%] cursor-pointer">
-              <img src={BannerFallenArena} className="w-[100%] h-[100%] object-cover" />
-            </div>
-            <div className="w-[100%] h-[100%] relative cursor-pointer">
-              <img src={BannerUgcTool} className="w-[100%] h-[100%] object-cover" />
-              <div className="absolute left-0 bottom-0 w-[100%] h-[60px] flex items-center justify-center bg-black/50">
-                <p className="text-sm font-bold leading-4.25 uppercase text-white">Coming Soon</p>
-              </div>
-            </div>
+            <GameBanner src={BannerFinalSalvation} active />
+            {games.map((game) => (
+              <GameBanner key={game.id} src={game.banner} active={game.active} />
+            ))}
+            <GameBanner src={BannerUgcTool} />
           </div>
         </AccountBlock>
         <AccountBlock title="My Assets">

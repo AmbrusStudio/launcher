@@ -1,5 +1,6 @@
 export * from './account'
 export * from './block'
+export * from './games'
 export * from './metadata'
 export * from './nft'
 export * from './react'
