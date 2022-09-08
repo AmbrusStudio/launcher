@@ -236,30 +236,30 @@ const _abi = [
   // {
   //   inputs: [
   //     {
-  //       internalType: 'address',
-  //       name: 'from',
-  //       type: 'address',
+  //       internalType: "address",
+  //       name: "from",
+  //       type: "address",
   //     },
   //     {
-  //       internalType: 'address',
-  //       name: 'to',
-  //       type: 'address',
+  //       internalType: "address",
+  //       name: "to",
+  //       type: "address",
   //     },
   //     {
-  //       internalType: 'uint256',
-  //       name: 'tokenId',
-  //       type: 'uint256',
+  //       internalType: "uint256",
+  //       name: "tokenId",
+  //       type: "uint256",
   //     },
   //     {
-  //       internalType: 'bytes',
-  //       name: 'data',
-  //       type: 'bytes',
+  //       internalType: "bytes",
+  //       name: "data",
+  //       type: "bytes",
   //     },
   //   ],
-  //   name: 'safeTransferFrom',
+  //   name: "safeTransferFrom",
   //   outputs: [],
-  //   stateMutability: 'nonpayable',
-  //   type: 'function',
+  //   stateMutability: "nonpayable",
+  //   type: "function",
   // },
   {
     inputs: [

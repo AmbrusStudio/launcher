@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js'
 import { useMemo } from 'react'
 
 import { ADDRESS_E4C_Ranger } from '../contracts'
-import { useE4CRangerLastStakingTime, useE4CRangerTotalStakingTime, useE4CRangerUpgradeDuration } from './useE4CRanger'
+import { useE4CRangerTotalStakingTime, useE4CRangerUpgradeDuration } from './useE4CRanger'
 
 /**
  * Staking status
@@ -13,25 +13,12 @@ export function useStatusCheck(tokenId: string) {
   const upgradeDuration = useE4CRangerUpgradeDuration(ADDRESS_E4C_Ranger)
   // console.log('upgradeDuration', upgradeDuration)
 
-  // 1661921882
-  const lastStakingTime = useE4CRangerLastStakingTime(ADDRESS_E4C_Ranger, tokenId)
-  // console.log('lastStakingTime', lastStakingTime)
-
+  // totalStakingTime
   const totalStakingTime = useE4CRangerTotalStakingTime(ADDRESS_E4C_Ranger, tokenId)
-  // console.log('totalStakingTime', totalStakingTime)
-
-  // Staking time
-  const stakingTime = useMemo<BigNumber>(() => {
-    if (!lastStakingTime || !totalStakingTime) {
-      return new BigNumber(0)
-    }
-    const nowTime = Math.floor(Date.now() / 1000) // ms to s
-
-    // now - lastStakingTime + totalStakingTime
-    return new BigNumber(nowTime).minus(
-      new BigNumber(lastStakingTime.toString()).plus(new BigNumber(totalStakingTime.toString()))
-    )
-  }, [lastStakingTime, totalStakingTime])
+  const stakingTime = useMemo<BigNumber>(
+    () => (totalStakingTime ? new BigNumber(totalStakingTime.toString()) : new BigNumber(0)),
+    [totalStakingTime]
+  )
   // console.log('stakingTime', stakingTime)
 
   // Staking time percentage
@@ -41,7 +28,7 @@ export function useStatusCheck(tokenId: string) {
     } else if (stakingTime.gte(new BigNumber(upgradeDuration.toString()))) {
       return 100
     } else {
-      const result = new BigNumber(stakingTime.toString()).div(new BigNumber(upgradeDuration.toString())).toNumber()
+      const result = stakingTime.div(new BigNumber(upgradeDuration.toString())).toNumber()
       return Math.round(result * 10000) / 100.0
     }
   }, [upgradeDuration, stakingTime])
@@ -55,7 +42,7 @@ export function useStatusCheck(tokenId: string) {
     if (!upgradeDuration || !stakingTime || stakingTime.gte(new BigNumber(upgradeDuration.toString()))) {
       return '0'
     } else {
-      return new BigNumber(upgradeDuration.toString()).minus(new BigNumber(stakingTime.toString())).toString()
+      return new BigNumber(upgradeDuration.toString()).minus(stakingTime).toString()
     }
   }, [upgradeDuration, stakingTime])
   // console.log('timeLeft', timeLeft)

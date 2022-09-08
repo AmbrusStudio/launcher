@@ -32,6 +32,7 @@ export interface TestERC721Interface extends utils.Interface {
     'hasRole(bytes32,address)': FunctionFragment
     'isApprovedForAll(address,address)': FunctionFragment
     'mint(address,uint256)': FunctionFragment
+    'mint(address)': FunctionFragment
     'name()': FunctionFragment
     'ownerOf(uint256)': FunctionFragment
     'renounceRole(bytes32,address)': FunctionFragment
@@ -61,7 +62,8 @@ export interface TestERC721Interface extends utils.Interface {
       | 'grantRole'
       | 'hasRole'
       | 'isApprovedForAll'
-      | 'mint'
+      | 'mint(address,uint256)'
+      | 'mint(address)'
       | 'name'
       | 'ownerOf'
       | 'renounceRole'
@@ -95,7 +97,11 @@ export interface TestERC721Interface extends utils.Interface {
     functionFragment: 'isApprovedForAll',
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string
-  encodeFunctionData(functionFragment: 'mint', values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]): string
+  encodeFunctionData(
+    functionFragment: 'mint(address,uint256)',
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string
+  encodeFunctionData(functionFragment: 'mint(address)', values: [PromiseOrValue<string>]): string
   encodeFunctionData(functionFragment: 'name', values?: undefined): string
   encodeFunctionData(functionFragment: 'ownerOf', values: [PromiseOrValue<BigNumberish>]): string
   encodeFunctionData(
@@ -140,7 +146,8 @@ export interface TestERC721Interface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'grantRole', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'hasRole', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'isApprovedForAll', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'mint', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'mint(address,uint256)', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'mint(address)', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'name', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'ownerOf', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'renounceRole', data: BytesLike): Result
@@ -295,9 +302,14 @@ export interface TestERC721 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>
 
-    mint(
+    'mint(address,uint256)'(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>
+
+    'mint(address)'(
+      to: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>
 
@@ -404,9 +416,14 @@ export interface TestERC721 extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>
 
-  mint(
+  'mint(address,uint256)'(
     to: PromiseOrValue<string>,
     tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>
+
+  'mint(address)'(
+    to: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>
 
@@ -507,7 +524,13 @@ export interface TestERC721 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>
 
-    mint(to: PromiseOrValue<string>, tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
+    'mint(address,uint256)'(
+      to: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>
+
+    'mint(address)'(to: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>
 
     name(overrides?: CallOverrides): Promise<string>
 
@@ -679,9 +702,14 @@ export interface TestERC721 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>
 
-    mint(
+    'mint(address,uint256)'(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>
+
+    'mint(address)'(
+      to: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>
 
@@ -793,9 +821,14 @@ export interface TestERC721 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>
 
-    mint(
+    'mint(address,uint256)'(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>
+
+    'mint(address)'(
+      to: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>
 

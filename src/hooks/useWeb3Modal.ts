@@ -6,7 +6,6 @@ import { web3ModalProviderOptions } from '../components/Provider'
 import { getDefaultChainId } from '../utils'
 
 const web3Modal = new Web3Modal({
-  cacheProvider: true,
   providerOptions: web3ModalProviderOptions,
 })
 
