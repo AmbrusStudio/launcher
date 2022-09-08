@@ -1,8 +1,8 @@
 import CircularProgress from '@mui/material/CircularProgress'
-import { useInfiniteScroll } from 'ahooks'
-import { Dispatch, FC, SetStateAction, useRef } from 'react'
+import { cloneDeep } from 'lodash'
+import { Dispatch, FC, SetStateAction, useCallback, useState } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
-import { ALL_METADATA } from '../../../data'
 import { Metadata } from '../../../types'
 import { parseTokenId } from '../../../utils'
 import GalleryItem from '../GalleryItem'
@@ -15,97 +15,87 @@ interface Props {
   setVisibleNFT: Dispatch<SetStateAction<boolean>>
 }
 
-interface InfiniteScrollResult {
-  list: Metadata[]
-  total: number
-}
-
-const PAGE_SIZE = 16
-
-function getLoadMoreList(page: number, pageSize: number): Promise<InfiniteScrollResult> {
-  const start = (page - 1) * pageSize
-  const end = page * pageSize
-  const list = ALL_METADATA.slice(start, end)
-  return new Promise((resolve) => {
-    resolve({
-      list: list,
-      total: ALL_METADATA.length,
-    })
-  })
-}
+const LIMIT = 16
 
 const GalleryWrapper: FC<Props> = ({ allToken, searchId, checkedFilterCategory, setCurrentNFTInfo, setVisibleNFT }) => {
-  const ref = useRef<HTMLDivElement>(null)
+  const loading = false
+  const noMore = false
 
-  const { data, loading, loadMore, loadingMore, noMore } = useInfiniteScroll(
-    (d) => {
-      const page = d ? Math.ceil(d.list.length / PAGE_SIZE) + 1 : 1
-      return getLoadMoreList(page, PAGE_SIZE)
-    },
-    {
-      target: ref,
-      isNoMore: (d) => !!(d?.list && d.list.length >= d.total),
-    }
-  )
+  const [items, setItems] = useState<Metadata[]>([])
+
+  const fetchMoreData = useCallback(() => {
+    setTimeout(() => {
+      const list = cloneDeep(items)
+      setItems(list.concat(allToken.slice(0, 20)))
+    }, 1000)
+  }, [items, allToken])
 
   return (
-    <div className="mt-3 lg:mt-6 h-[928px] filter-category-scrollbar overflow-auto" ref={ref}>
-      {checkedFilterCategory.length || searchId ? (
-        <>
-          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-            {allToken.map((item, index) => (
-              <GalleryItem
-                key={parseTokenId(item.name)}
-                data={item}
-                onClick={() => {
-                  setCurrentNFTInfo(allToken[index])
-                  setVisibleNFT(true)
-                }}
-              />
-            ))}
-          </div>
-          {!allToken.length && (
-            <div className="py-6 text-center">
-              <span className="text-base text-white">No more data</span>
-            </div>
-          )}
-        </>
-      ) : (
-        <>
-          {loading ? (
-            <div className="text-center">
-              <CircularProgress
-                sx={{
-                  color: 'white',
-                }}
-              />
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-              {data?.list?.map((item, index) => (
+    <div>
+      <div className="mt-3 lg:mt-6">
+        {checkedFilterCategory.length || searchId ? (
+          <>
+            <InfiniteScroll
+              dataLength={items.length}
+              next={fetchMoreData}
+              hasMore={true}
+              loader={<div className="text-base text-white">Loading...</div>}
+              className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"
+            >
+              {items.map((item, index) => (
                 <GalleryItem
                   key={parseTokenId(item.name)}
                   data={item}
                   onClick={() => {
-                    setCurrentNFTInfo(allToken[index])
+                    setCurrentNFTInfo(items[index])
                     setVisibleNFT(true)
                   }}
                 />
               ))}
-            </div>
-          )}
-
-          <div className="py-6 text-center">
-            {!noMore && (
-              <button type="button" onClick={loadMore} disabled={loadingMore} className="text-base text-white">
-                {loadingMore ? 'Loading more...' : 'Click to load more'}
-              </button>
+            </InfiniteScroll>
+            {!allToken.length && (
+              <div className="py-6 text-center">
+                <span className="text-base text-white">No more data</span>
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            {loading ? (
+              <div className="text-center">
+                <CircularProgress
+                  sx={{
+                    color: 'white',
+                  }}
+                />
+              </div>
+            ) : (
+              <InfiniteScroll
+                dataLength={items.length}
+                next={fetchMoreData}
+                hasMore={true}
+                loader={<div className="text-base text-white">Loading...</div>}
+                className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"
+              >
+                {items.map((item, index) => (
+                  <GalleryItem
+                    key={parseTokenId(item.name)}
+                    data={item}
+                    onClick={() => {
+                      setCurrentNFTInfo(items[index])
+                      setVisibleNFT(true)
+                    }}
+                  />
+                ))}
+              </InfiniteScroll>
             )}
 
-            {/* {noMore && <span className="text-base text-white">No more data</span>} */}
-          </div>
-        </>
-      )}
+            <div className="py-6 text-center">
+              {noMore && <span className="text-base text-white">No more data</span>}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   )
 }
