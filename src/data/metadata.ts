@@ -1,4 +1,7 @@
 import { Metadata } from '../types'
-import metadada from './E4C_Rangers.json'
+import metadadaGoldEdition from './Gold_Edition/E4C_Rangers.json'
+// import metadadaRangersEdition from './Rangers_Edition/E4C_Rangers.json'
 
-export const ALL_METADATA: Metadata[] = metadada as Metadata[]
+// Gold Trait 14
+// Rangers Trait 15(one more "Particles" trait)
+export const ALL_METADATA: Metadata[] = [...metadadaGoldEdition] as Metadata[]
