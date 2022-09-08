@@ -132,6 +132,18 @@ export function SignIn() {
   const stepIncrement = React.useCallback(() => setStep((s) => (s += 1)), [])
   const stepDecrement = React.useCallback(() => setStep((s) => (s -= 1)), [])
 
+  const delayToAccountCenterTimerRef = React.useRef<ReturnType<typeof setTimeout>>()
+  const toAccountCenter = React.useCallback(
+    (delay = 0) => {
+      if (delayToAccountCenterTimerRef.current) clearTimeout(delayToAccountCenterTimerRef.current)
+      delayToAccountCenterTimerRef.current = setTimeout(() => {
+        navigate(`/account/home`)
+        clearTimeout(delayToAccountCenterTimerRef.current)
+      }, delay)
+    },
+    [navigate]
+  )
+
   const handleNavBackClick = React.useCallback(() => {
     stepDecrement()
   }, [stepDecrement])
@@ -158,12 +170,16 @@ export function SignIn() {
       if (!account) return await connect()
       const res = await walletLogin()
       if (!res.isOk) return setSignInError(res.error.message)
-      if (wallet) openGameClient({ path: `accessToken=${res.data.accessToken}` }, 1000)
       setComplete(true)
+      if (wallet) {
+        openGameClient({ path: `accessToken=${res.data.accessToken}` }, 1000)
+      } else {
+        toAccountCenter(1500)
+      }
     } finally {
       setMetamaskSigning(false)
     }
-  }, [account, connect, metamaskSigning, openGameClient, signInError, wallet, walletLogin])
+  }, [account, connect, metamaskSigning, openGameClient, signInError, toAccountCenter, wallet, walletLogin])
 
   const handleNormalSignInSubmit = React.useCallback(
     async (data: AccountSignInFormData) => {
@@ -174,11 +190,12 @@ export function SignIn() {
         const res = await emailLogin(data.email, data.password)
         if (!res.isOk) return setSignInError(res.error.message)
         setComplete(true)
+        toAccountCenter(1500)
       } finally {
         setEmailSigning(false)
       }
     },
-    [emailLogin, emailSigning, signInError]
+    [emailLogin, emailSigning, signInError, toAccountCenter]
   )
 
   /** For step 1, send email for verify user can reset password. */
