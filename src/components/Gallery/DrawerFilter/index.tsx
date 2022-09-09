@@ -9,11 +9,12 @@ import { toggleFilterCheckedFn, toggleFilterOpenFn } from '../../../utils'
 
 interface DrawerFilterProps {
   readonly visibleDrawer: boolean
+  readonly isFixed: boolean
   setVisibleDrawer: Dispatch<SetStateAction<boolean>>
   applyFilter: (filter: Filter[]) => void
 }
 
-const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, setVisibleDrawer, applyFilter }) => {
+const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, isFixed, setVisibleDrawer, applyFilter }) => {
   // Filter
   const [filter, setFilter] = useState<Filter[]>(GALLERYS_FILTERS_STATUS)
 
@@ -86,6 +87,7 @@ const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, setVisibleDrawer, 
         </div>
         <GalleryFilter
           filter={filter}
+          isFixed={isFixed}
           toggleFilterTab={toggleFilterTab}
           toggleFilterTagChecked={toggleFilterTagChecked}
         />

@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import numbro from 'numbro'
 import { FC } from 'react'
 
@@ -8,19 +9,25 @@ import FilterOpen from '../../Icon/FilterOpen'
 
 interface GalleryFilterProps {
   readonly filter: Filter[]
+  readonly isFixed: boolean
   toggleFilterTab: (index: number) => void
   toggleFilterTagChecked: (parentIndex: number, childrenIndex: number) => void
 }
 
-const GalleryFilter: FC<GalleryFilterProps> = ({ filter, toggleFilterTab, toggleFilterTagChecked }) => {
+const GalleryFilter: FC<GalleryFilterProps> = ({ filter, isFixed, toggleFilterTab, toggleFilterTagChecked }) => {
   return (
-    <ul className="select-none">
+    <ul
+      className={classNames('select-none overflow-auto max-height-category filter-category-scrollbar', {
+        'bg-[#252525]': isFixed,
+      })}
+    >
       {filter.map((item, index) => (
         <li key={index}>
           <div
-            className={`border-b-1 border-[#465358] p-y-4 flex items-center justify-between${
-              item.list.length && ' ' + 'cursor-pointer'
-            }`}
+            className={classNames('border-b-1 border-[#465358] py-4 flex items-center justify-between', {
+              'cursor-pointer': !!item.list.length,
+              'px-3': isFixed,
+            })}
             onClick={() => toggleFilterTab(index)}
           >
             <span className="text-sm leading-[17px] uppercase text-white">{item.label}</span>

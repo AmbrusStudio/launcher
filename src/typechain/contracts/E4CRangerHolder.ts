@@ -13,13 +13,12 @@ import type {
   Signer,
   utils,
 } from 'ethers'
-import type { FunctionFragment, Result } from '@ethersproject/abi'
+import type { FunctionFragment, Result, EventFragment } from '@ethersproject/abi'
 import type { Listener, Provider } from '@ethersproject/providers'
 import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent, PromiseOrValue } from '../common'
 
 export interface E4CRangerHolderInterface extends utils.Interface {
   functions: {
-    'lastStakingTime(uint256)': FunctionFragment
     'nft()': FunctionFragment
     'onERC721Received(address,address,uint256,bytes)': FunctionFragment
     'originalOwner(uint256)': FunctionFragment
@@ -31,7 +30,6 @@ export interface E4CRangerHolderInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
-      | 'lastStakingTime'
       | 'nft'
       | 'onERC721Received'
       | 'originalOwner'
@@ -41,7 +39,6 @@ export interface E4CRangerHolderInterface extends utils.Interface {
       | 'upgraded'
   ): FunctionFragment
 
-  encodeFunctionData(functionFragment: 'lastStakingTime', values: [PromiseOrValue<BigNumberish>]): string
   encodeFunctionData(functionFragment: 'nft', values?: undefined): string
   encodeFunctionData(
     functionFragment: 'onERC721Received',
@@ -53,7 +50,6 @@ export interface E4CRangerHolderInterface extends utils.Interface {
   encodeFunctionData(functionFragment: 'upgradeDuration', values?: undefined): string
   encodeFunctionData(functionFragment: 'upgraded', values: [PromiseOrValue<BigNumberish>]): string
 
-  decodeFunctionResult(functionFragment: 'lastStakingTime', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'nft', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'onERC721Received', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'originalOwner', data: BytesLike): Result
@@ -62,8 +58,30 @@ export interface E4CRangerHolderInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'upgradeDuration', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'upgraded', data: BytesLike): Result
 
-  events: {}
+  events: {
+    'Staked(address,uint256)': EventFragment
+    'Withdrawn(address,uint256)': EventFragment
+  }
+
+  getEvent(nameOrSignatureOrTopic: 'Staked'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'Withdrawn'): EventFragment
 }
+
+export interface StakedEventObject {
+  user: string
+  tokenId: BigNumber
+}
+export type StakedEvent = TypedEvent<[string, BigNumber], StakedEventObject>
+
+export type StakedEventFilter = TypedEventFilter<StakedEvent>
+
+export interface WithdrawnEventObject {
+  user: string
+  tokenId: BigNumber
+}
+export type WithdrawnEvent = TypedEvent<[string, BigNumber], WithdrawnEventObject>
+
+export type WithdrawnEventFilter = TypedEventFilter<WithdrawnEvent>
 
 export interface E4CRangerHolder extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this
@@ -88,8 +106,6 @@ export interface E4CRangerHolder extends BaseContract {
   removeListener: OnEvent<this>
 
   functions: {
-    lastStakingTime(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<[BigNumber]>
-
     nft(overrides?: CallOverrides): Promise<[string]>
 
     onERC721Received(
@@ -102,7 +118,7 @@ export interface E4CRangerHolder extends BaseContract {
 
     originalOwner(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<[string]>
 
-    totalStakingTime(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<[BigNumber]>
+    totalStakingTime(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<[BigNumber]>
 
     unstake(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -113,8 +129,6 @@ export interface E4CRangerHolder extends BaseContract {
 
     upgraded(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<[boolean]>
   }
-
-  lastStakingTime(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>
 
   nft(overrides?: CallOverrides): Promise<string>
 
@@ -128,7 +142,7 @@ export interface E4CRangerHolder extends BaseContract {
 
   originalOwner(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>
 
-  totalStakingTime(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>
+  totalStakingTime(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>
 
   unstake(
     tokenId: PromiseOrValue<BigNumberish>,
@@ -140,8 +154,6 @@ export interface E4CRangerHolder extends BaseContract {
   upgraded(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<boolean>
 
   callStatic: {
-    lastStakingTime(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>
-
     nft(overrides?: CallOverrides): Promise<string>
 
     onERC721Received(
@@ -154,7 +166,7 @@ export interface E4CRangerHolder extends BaseContract {
 
     originalOwner(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>
 
-    totalStakingTime(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>
+    totalStakingTime(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>
 
     unstake(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
 
@@ -163,11 +175,15 @@ export interface E4CRangerHolder extends BaseContract {
     upgraded(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<boolean>
   }
 
-  filters: {}
+  filters: {
+    'Staked(address,uint256)'(user?: PromiseOrValue<string> | null, tokenId?: null): StakedEventFilter
+    Staked(user?: PromiseOrValue<string> | null, tokenId?: null): StakedEventFilter
+
+    'Withdrawn(address,uint256)'(user?: PromiseOrValue<string> | null, tokenId?: null): WithdrawnEventFilter
+    Withdrawn(user?: PromiseOrValue<string> | null, tokenId?: null): WithdrawnEventFilter
+  }
 
   estimateGas: {
-    lastStakingTime(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>
-
     nft(overrides?: CallOverrides): Promise<BigNumber>
 
     onERC721Received(
@@ -180,7 +196,7 @@ export interface E4CRangerHolder extends BaseContract {
 
     originalOwner(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>
 
-    totalStakingTime(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>
+    totalStakingTime(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>
 
     unstake(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -193,8 +209,6 @@ export interface E4CRangerHolder extends BaseContract {
   }
 
   populateTransaction: {
-    lastStakingTime(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<PopulatedTransaction>
-
     nft(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     onERC721Received(
@@ -207,7 +221,7 @@ export interface E4CRangerHolder extends BaseContract {
 
     originalOwner(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    totalStakingTime(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+    totalStakingTime(tokenId: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     unstake(
       tokenId: PromiseOrValue<BigNumberish>,

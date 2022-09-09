@@ -1,4 +1,3 @@
-import { Stack } from '@mui/material'
 import { Box } from '@mui/system'
 import { Dispatch, FC, SetStateAction } from 'react'
 
@@ -42,7 +41,7 @@ const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ metadata, visible, setVis
             ))}
           </div>
 
-          <Stack className="mt-9" spacing={4.5} direction="row">
+          {/* <Stack className="mt-9" spacing={4.5} direction="row">
             <a
               className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
               href={''}
@@ -67,7 +66,7 @@ const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ metadata, visible, setVis
             >
               Etherscan
             </a>
-          </Stack>
+          </Stack> */}
         </div>
       </Box>
     </ModalGallery>

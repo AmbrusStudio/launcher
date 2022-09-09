@@ -13,6 +13,7 @@ export enum Trait {
   Weapon = 'Weapon',
   Edition = 'Edition',
   Zodiac = 'Zodiac',
+  Name = 'Name',
 }
 
 export type TraitItem = { trait_type: Trait; value: string }

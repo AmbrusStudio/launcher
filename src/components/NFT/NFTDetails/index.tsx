@@ -52,7 +52,7 @@ const NFTDetails: FC<NFTDetailsProps> = ({ nft, tokenId }) => {
           </span>
           <Stack spacing={2} direction="row">
             <span className="font-bold text-base lg:text-9 not-italic uppercase leading-5 lg:leading-11 font-sans text-white break-all">
-              {nft.description || '-'}
+              {'-'}
             </span>
             <span className="font-bold text-base lg:text-9 not-italic uppercase leading-5 lg:leading-11 font-sans text-white">
               #{tokenId}

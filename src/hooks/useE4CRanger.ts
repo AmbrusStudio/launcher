@@ -110,30 +110,6 @@ export function useOriginalOwners(tokenAddress: string, tokenIds: string[]): str
 }
 
 /**
- * lastStakingTime
- * @param tokenAddress
- * @param tokenId
- * @returns
- */
-export function useE4CRangerLastStakingTime(tokenAddress: string | Falsy, tokenId: string | Falsy): BigNumber | Falsy {
-  const { value, error } =
-    useCall(
-      tokenAddress &&
-        tokenId && {
-          contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
-          method: 'lastStakingTime',
-          args: [tokenId],
-        }
-    ) ?? {}
-  if (error) {
-    console.error(error.message)
-    return undefined
-  }
-
-  return value?.[0]
-}
-
-/**
  * totalStakingTime
  * @param tokenAddress
  * @param tokenId

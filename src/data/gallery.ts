@@ -1,5 +1,6 @@
 import { groupBy } from 'lodash'
 
+import { OPENSEA_URL } from '../contracts'
 import { Trait } from '../types'
 import { GALLERY_FILTER, GALLERY_FILTER_LIST, GALLERY_INFO_TYPE } from '../types/gallery'
 import { ALL_METADATA } from './metadata'
@@ -7,7 +8,7 @@ import { ALL_METADATA } from './metadata'
 export const GALLERY_INFO: GALLERY_INFO_TYPE = {
   title: 'E4C Rangers',
   description: 'Gallery',
-  opensea_url: 'https://opensea.io/collection/e4c',
+  opensea_url: OPENSEA_URL,
 }
 
 // Handle Filter Property
