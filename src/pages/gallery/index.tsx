@@ -1,11 +1,14 @@
+import { useScroll } from 'ahooks'
+import classNames from 'classnames'
 import numbro from 'numbro'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { compose } from 'redux'
 
 import logo from '../../assets/images/logo.png'
 import DrawerFilter from '../../components/Gallery/DrawerFilter'
 import GalleryFilter from '../../components/Gallery/Filter'
 import GalleryWrapper from '../../components/Gallery/GalleryWrapper'
+import GalleryWrapperFilter from '../../components/Gallery/GalleryWrapperFilter'
 import ModalGalleryInfo from '../../components/Gallery/ModalGalleryInfo'
 import FilterSliderClose from '../../components/Icon/FilterSliderClose'
 import FilterSliderLine from '../../components/Icon/FilterSliderLine'
@@ -28,6 +31,16 @@ function Gallery() {
   const [visibleDrawer, setVisibleDrawer] = useState<boolean>(false)
   // Search by ID
   const [searchId, setSearchId] = useNumStrState()
+
+  const headRef = useRef<HTMLDivElement>(null)
+  const scroll = useScroll(document)
+
+  const isFixedHead = useMemo(() => {
+    // console.log('headRef', headRef?.current?.offsetTop)
+    // console.log('headRef current', headRef?.current)
+    // console.log('scroll', scroll)
+    return scroll && headRef?.current ? scroll.top >= headRef.current?.offsetTop - 100 : false
+  }, [headRef, scroll])
 
   // Drawer has filter
   const hasFilter = useMemo<boolean>(() => {
@@ -105,8 +118,13 @@ function Gallery() {
           </a>
         </div>
 
-        <div className="flex flex-col lg:flex-row justify-between my-3 lg:my-[48px]">
-          <div className="lg:w-[300px] lg:shrink-0 m-r-9">
+        <div className="flex flex-col lg:flex-row justify-between my-3 lg:my-[48px]" ref={headRef}>
+          <div
+            className={classNames('lg:w-[300px] lg:shrink-0 m-r-9 absolute', {
+              'fixed top-[100px] z-1': isFixedHead,
+              'max-height overflow-hidden': true,
+            })}
+          >
             <div className="flex m-b-6 lg:m-b-4.5">
               {hasFilter ? (
                 <div
@@ -157,8 +175,12 @@ function Gallery() {
               />
             </div>
           </div>
-          <div className="w-full">
-            <div className="flex items-center	justify-between">
+          <div className="w-full ml-[336px]">
+            <div
+              className={classNames('flex items-center justify-between sticky top-[100px] z-1', {
+                'bg-[#252525]': isFixedHead,
+              })}
+            >
               <div
                 className="p-x-4 p-y-2 rounded-2xl bg-white/10 hidden lg:flex items-center justify-center cursor-pointer"
                 onClick={() => {
@@ -171,13 +193,20 @@ function Gallery() {
                 {numbro(currentGallery.length).format({ thousandSeparated: true })} items
               </p>
             </div>
-            <GalleryWrapper
-              allToken={currentGallery}
-              setCurrentNFTInfo={setCurrentNFTInfo}
-              setVisibleNFT={setVisibleNFT}
-              searchId={searchId}
-              checkedFilterCategory={checkedFilterCategory}
-            />
+
+            {checkedFilterCategory.length || searchId ? (
+              <GalleryWrapperFilter
+                allToken={currentGallery}
+                setCurrentNFTInfo={setCurrentNFTInfo}
+                setVisibleNFT={setVisibleNFT}
+              />
+            ) : (
+              <GalleryWrapper
+                allToken={currentGallery}
+                setCurrentNFTInfo={setCurrentNFTInfo}
+                setVisibleNFT={setVisibleNFT}
+              />
+            )}
           </div>
         </div>
       </div>
