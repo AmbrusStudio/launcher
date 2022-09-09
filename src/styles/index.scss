@@ -18,6 +18,7 @@ body,
 
 #main {
   flex-grow: 1;
+  min-height: 100vh;
 }
 
 .account-nft-actions {
@@ -74,4 +75,12 @@ body,
 // scrollbar
 .filter-category-scrollbar {
   @apply scrollbar scrollbar-thumb-color-black scrollbar-track-color-black scrollbar-w-0;
+}
+
+// gallery
+.max-height {
+  max-height: calc(100vh - 100px);
+}
+.max-height-category {
+  max-height: calc(100vh - 100px - 60px - 92px - 18px);
 }
