@@ -13,22 +13,20 @@ interface Props {
   setVisibleNFT: Dispatch<SetStateAction<boolean>>
 }
 
-interface Result {
+interface ListResult {
   list: Metadata[]
   total: number
 }
 
-function getLoadMoreList(page: number, pageSize: number, data: Metadata[]): Promise<Result> {
+function getLoadMoreList(page: number, pageSize: number, data: Metadata[]): Promise<ListResult> {
   const start = (page - 1) * pageSize
   const end = page * pageSize
   const list = data.slice(start, end)
   return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        list,
-        total: data.length,
-      })
-    }, 0)
+    resolve({
+      list,
+      total: data.length,
+    })
   })
 }
 
@@ -53,27 +51,30 @@ const GalleryWrapper: FC<Props> = ({ allToken, setCurrentNFTInfo, setVisibleNFT 
           />
         </div>
       ) : (
-        <InfiniteScroll
-          dataLength={data?.list.length || 0}
-          next={loadMore}
-          hasMore={hasMore}
-          loader={<div className="text-base text-white">Loading...</div>}
-          className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"
-        >
-          {data?.list.map((item) => (
-            <GalleryItem
-              key={parseTokenId(item.name)}
-              data={item}
-              onClick={() => {
-                setCurrentNFTInfo(item)
-                setVisibleNFT(true)
-              }}
-            />
-          ))}
-        </InfiniteScroll>
+        <>
+          <InfiniteScroll
+            dataLength={data?.list.length || 0}
+            next={loadMore}
+            hasMore={hasMore}
+            loader={<div className="text-base text-white">Loading...</div>}
+            className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"
+          >
+            {data?.list.map((item) => (
+              <GalleryItem
+                key={parseTokenId(item.name)}
+                data={item}
+                onClick={() => {
+                  setCurrentNFTInfo(item)
+                  setVisibleNFT(true)
+                }}
+              />
+            ))}
+          </InfiniteScroll>
+          <div className="py-6 text-center">
+            {!hasMore && <span className="text-base text-white">No more data</span>}
+          </div>
+        </>
       )}
-
-      <div className="py-6 text-center">{!hasMore && <span className="text-base text-white">No more data</span>}</div>
     </div>
   )
 }
