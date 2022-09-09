@@ -5,10 +5,6 @@ import Web3Modal from 'web3modal'
 import { web3ModalProviderOptions } from '../components/Provider'
 import { getDefaultChainId } from '../utils'
 
-const web3Modal = new Web3Modal({
-  providerOptions: web3ModalProviderOptions,
-})
-
 const defaultChainId = getDefaultChainId()
 
 type UseWeb3Modal = {
@@ -23,6 +19,15 @@ export function useWeb3Modal(): UseWeb3Modal {
   const chainIdMismatch = chainId !== defaultChainId
 
   const connect = React.useCallback(async () => {
+    const web3Modal = new Web3Modal({
+      providerOptions: web3ModalProviderOptions,
+    })
+
+    // remove historical influence
+    if (web3Modal.cachedProvider) {
+      web3Modal.clearCachedProvider()
+    }
+
     const provider = await web3Modal.connect()
     await activate(provider)
   }, [activate])
