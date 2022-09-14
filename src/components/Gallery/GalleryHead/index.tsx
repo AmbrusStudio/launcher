@@ -4,7 +4,7 @@ import Opensea from '../../Icon/Opensea'
 
 const GalleryHead = () => {
   return (
-    <div className="flex justify-between p-6">
+    <div className="flex justify-between">
       <img src={logo} className="hidden lg:block w-[60px] h-[60px] mr-3 mt-[9px]" />
       <div>
         <p className="text-[32px] lg:text-[64px] leading-[39px] lg:leading-[78px] font-bold uppercase text-white">

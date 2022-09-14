@@ -88,13 +88,13 @@ function Gallery() {
 
   return (
     <PageLayout>
-      <div className="max-w-[1312px] m-x-auto mt-[68px] lg:mt-[98px] xl:mt-[188px] p-6">
+      <div className="max-w-[1312px] m-x-auto mt-[92px] lg:mt-[156px] xl:mt-[188px] px-6">
         <GalleryHead />
 
         <div className="flex flex-col lg:flex-row justify-between my-3 lg:my-[48px]" ref={wrapperRef}>
           <div
-            className={classNames('lg:w-[300px] lg:shrink-0 sticky lg:absolute', {
-              'lg:fixed top-[68px] lg:top-[100px] z-1': isFixed,
+            className={classNames('lg:w-[300px] lg:shrink-0 lg:absolute', {
+              'sticky lg:fixed top-[68px] xl:top-[100px] z-1': isFixed,
               'max-height overflow-hidden': true,
             })}
           >
