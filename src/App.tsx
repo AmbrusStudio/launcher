@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 
 import { Games } from './pages/account/games'
 import { Home } from './pages/account/home'
@@ -11,7 +11,7 @@ import Gallery from './pages/gallery'
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Gallery />} />
+      <Route path="/" element={<Navigate to="/gallery" replace />}></Route>
       <Route path="/account/nft" element={<AccountNFT />} />
       <Route path="/account/signin" element={<SignIn />} />
       <Route path="/account/signup" element={<SignUp />} />
