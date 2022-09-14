@@ -22,9 +22,11 @@ export function SideNav() {
             <IconHome className="w-36px h-36px" />
           </SideNavItem>
         </Link>
-        <SideNavItem name="Games">
-          <IconESports className="w-36px h-36px" />
-        </SideNavItem>
+        <Link to="/account/games">
+          <SideNavItem name="Games" active={isActive('/account/games')}>
+            <IconESports className="w-36px h-36px" />
+          </SideNavItem>
+        </Link>
         <SideNavItem name="My NFTs">
           <IconAccount className="w-36px h-36px" />
         </SideNavItem>

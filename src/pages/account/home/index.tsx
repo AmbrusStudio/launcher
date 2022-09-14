@@ -1,11 +1,10 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { AccountShopCard } from '../../..//components/Account/ShopCard'
 import { getAllGames } from '../../../api'
-import BannerFinalSalvation from '../../../assets/images/banners/final-salvation.png'
 import Loot from '../../../assets/images/banners/loot.png'
 import SessionPass from '../../../assets/images/banners/session-pass.png'
-import BannerUgcTool from '../../../assets/images/banners/ugc-tool.png'
 import { AccountTitleWithAccountInfo } from '../../../components/Account'
 import { AccountBlock } from '../../../components/Account/Block'
 import { AccountMyAsset } from '../../../components/Account/MyAsset'
@@ -34,15 +33,27 @@ const demoData = [
 ]
 
 export function Home() {
+  const navigate = useNavigate()
+
   const [games, setGames] = React.useState<GameInfo[]>([])
-  const fetchAllGames = React.useCallback(async () => {
-    const games = await getAllGames()
-    console.log(games)
+  const fetchAllGames = React.useCallback(async (signal: AbortSignal) => {
+    const games = await getAllGames(signal)
     setGames(games)
   }, [])
 
+  const handleGameBannerClick = React.useCallback(
+    (e: React.MouseEvent<HTMLDivElement, MouseEvent>, id: number | string) => {
+      e.preventDefault()
+      e.stopPropagation()
+      navigate('/account/games', { state: { gameId: id } })
+    },
+    [navigate]
+  )
+
   React.useEffect(() => {
-    fetchAllGames()
+    const abortController = new AbortController()
+    fetchAllGames(abortController.signal)
+    return () => abortController.abort()
   }, [fetchAllGames])
 
   return (
@@ -51,11 +62,14 @@ export function Home() {
       <div className="flex flex-col gap-36px">
         <AccountBlock title="E4C Games">
           <div className="flex gap-36px">
-            <GameBanner src={BannerFinalSalvation} active />
             {games.map((game) => (
-              <GameBanner key={game.id} src={game.banner} active={game.active} />
+              <GameBanner
+                key={game.id}
+                src={game.banner}
+                active={game.active}
+                onBannerClick={(e) => handleGameBannerClick(e, game.id)}
+              />
             ))}
-            <GameBanner src={BannerUgcTool} />
           </div>
         </AccountBlock>
         <AccountBlock title="My Assets">

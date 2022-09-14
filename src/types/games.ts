@@ -23,11 +23,11 @@ type BaseGameInfo = {
   banner: string | string[]
   background: string | string[]
   video?: GameVideo
-  downloadLink?: string
 }
 
 type NormalGameInfo = BaseGameInfo & {
   type: Exclude<GameType, 'mobile'>
+  downloadLink?: string
 }
 
 type MobileGameInfo = BaseGameInfo & {

@@ -50,3 +50,13 @@ export function isAccountTokenExpired(token: string): boolean {
   if (!payload.exp || payload.exp * 1000 <= now) return true
   return false
 }
+
+type GameLocationState = {
+  gameId: string | number
+}
+export function isGameLocationState(state: unknown): state is GameLocationState {
+  if (typeof state === 'object' && state && 'gameId' in state) {
+    return true
+  }
+  return false
+}
