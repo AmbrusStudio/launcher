@@ -114,12 +114,14 @@ function Gallery() {
               <div className="border-y-2 border-rust py-4 text-xl font-bold leading-6 uppercase text-white">
                 Filters
               </div>
-              <GalleryFilter
-                filter={filter}
-                isFixed={isFixed}
-                toggleFilterTab={toggleFilterTab}
-                toggleFilterTagChecked={toggleFilterTagCheckedChange}
-              />
+              <div className={classNames({ 'bg-[#252525]': isFixed })}>
+                <GalleryFilter
+                  filter={filter}
+                  isFixed={isFixed}
+                  toggleFilterTab={toggleFilterTab}
+                  toggleFilterTagChecked={toggleFilterTagCheckedChange}
+                />
+              </div>
             </div>
           </div>
           <div className="w-full lg:ml-[336px]">

@@ -16,11 +16,7 @@ interface GalleryFilterProps {
 
 const GalleryFilter: FC<GalleryFilterProps> = ({ filter, isFixed, toggleFilterTab, toggleFilterTagChecked }) => {
   return (
-    <ul
-      className={classNames('select-none overflow-auto max-height-category filter-category-scrollbar', {
-        'bg-[#252525]': isFixed,
-      })}
-    >
+    <ul className={classNames('select-none overflow-auto max-height-category filter-category-scrollbar')}>
       {filter.map((item, index) => (
         <li key={index}>
           <div
