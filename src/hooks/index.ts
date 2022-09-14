@@ -1,6 +1,6 @@
 export * from './useAccount'
+export * from './useGameClient'
 export * from './useNumStrState'
-export * from './useOpenGameClient'
 export * from './useRouterDom'
 export * from './useSnackbar'
 export * from './useWalletModal'

@@ -5,6 +5,8 @@ import { downloadFileFromUrl, openFallenArenaClient } from '../utils'
 type Options = {
   path: string
   query?: Record<string, string | string[]> | undefined
+  fallback?: () => void | Promise<void>
+  fallbackDelay?: number
 }
 
 type UseGameClient = {
@@ -18,8 +20,28 @@ export function useGameClient(): UseGameClient {
   const openGameClient = React.useCallback<UseGameClient['openGameClient']>((options, delay = 0) => {
     if (delayOpenGameClientTimerRef.current) clearTimeout(delayOpenGameClientTimerRef.current)
     delayOpenGameClientTimerRef.current = setTimeout(() => {
-      const { path, query } = options
+      const { path, query, fallback, fallbackDelay = delay + 1000 } = options
+      let continueFallback = true
+      const handleWindowBlur = () => {
+        continueFallback = false
+        console.debug('handleWindowBlur::continueFallback', continueFallback)
+      }
+
+      if (fallback && typeof fallback === 'function') {
+        if (!window) return
+        window.addEventListener('blur', handleWindowBlur)
+        const delayFallbackTimer = setTimeout(async () => {
+          try {
+            if (continueFallback) await fallback()
+          } finally {
+            window.removeEventListener('blur', handleWindowBlur)
+            clearTimeout(delayFallbackTimer)
+          }
+        }, fallbackDelay)
+      }
+
       openFallenArenaClient(path, query)
+
       clearTimeout(delayOpenGameClientTimerRef.current)
     }, delay)
   }, [])
