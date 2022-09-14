@@ -18,16 +18,9 @@ const GalleryHead = () => {
         href={GALLERY_INFO.opensea_url}
         target="_blank"
         rel="noopener noreferrer"
-        className="ml-auto mt-[3.75px] block w-[52.5px] h-[52.5px]"
+        className="ml-auto mt-[3.75px] block w-[31.5px] h-[31.5px] lg:w-[52.5px] lg:h-[52.5px]"
       >
-        <Opensea
-          sx={{
-            fontSize: {
-              xs: '31.5px',
-              lg: '52.5px',
-            },
-          }}
-        />
+        <Opensea className="!text-[31.5px] !lg:text-[52.5px]" />
       </a>
     </div>
   )
