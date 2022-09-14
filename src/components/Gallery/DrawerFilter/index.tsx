@@ -68,7 +68,7 @@ const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, isFixed, setVisibl
         },
       }}
     >
-      <div className="w-[348px] p-x-6 p-t-[45px] p-b-[129px] overflow-auto">
+      <div className="w-[348px] h-full p-x-6 pt-[45px] pb-6 overflow-hidden">
         <div className="flex">
           <div className="flex-1 border-y-2 border-rust p-y-3 text-xl font-bold leading-6 uppercase text-white">
             Filters
