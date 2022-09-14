@@ -15,10 +15,16 @@ function fileName(file: string): string {
 }
 
 function parseImageSize(url: string): string {
+  const matchRegex = new RegExp(/@\dx/)
   const filename = fileName(urlPathname(url))
-  if (filename.includes('@')) {
-    const size = filename.split('@')[1]
-    return `${url} ${size}`
+  if (matchRegex.test(filename)) {
+    const match = matchRegex.exec(filename)
+    if (match) {
+      const size = match[0]
+      if (size.includes('@')) return `${url} ${size.replace('@', '')}`
+      return `${url} ${size}`
+    }
+    return url
   }
   return url
 }
