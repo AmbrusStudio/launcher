@@ -5,7 +5,8 @@ function urlPathname(url: string): string {
     const _url = new URL(url)
     return _url.pathname
   } catch (error) {
-    if (error instanceof TypeError && error.message.includes('Invalid URL')) return url
+    // Safari throw `TypeError: Type error` message, Chrome & Edge throw `TypeError: Invalid URL` message
+    if (error instanceof TypeError) return url
     throw error
   }
 }
