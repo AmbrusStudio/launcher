@@ -82,7 +82,7 @@ body,
   max-height: calc(100vh - 100px);
 }
 .max-height-category {
-  max-height: calc(100vh - 90px - 52px - 60px);
+  max-height: calc(100% - 52px - 60px);
   @media (min-width: 640px) {
     max-height: calc(100vh - 100px - 60px - 92px - 18px);
   }

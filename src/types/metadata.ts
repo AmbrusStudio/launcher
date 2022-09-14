@@ -1,19 +1,20 @@
+// Fixed sort order
 export enum Trait {
-  WaistAccessory = 'Waist Accessory',
-  Background = 'Background',
-  Earrings = 'Earrings',
-  Eyes = 'Eyes',
-  Hair = 'Hair',
-  Jacket = 'Jacket',
-  Makeup = 'Makeup',
-  Mask = 'Mask',
-  Particles = 'Particles',
-  RoboticArms = 'Robotic Arms',
-  ShoulderArmor = 'Shoulder Armor',
-  Weapon = 'Weapon',
+  Name = 'Name',
   Edition = 'Edition',
   Zodiac = 'Zodiac',
-  Name = 'Name',
+  Hair = 'Hair',
+  Earrings = 'Earrings',
+  Eyes = 'Eyes',
+  Makeup = 'Makeup',
+  Mask = 'Mask',
+  RoboticArms = 'Robotic Arms',
+  ShoulderArmor = 'Shoulder Armor',
+  Jacket = 'Jacket',
+  Weapon = 'Weapon',
+  WaistAccessory = 'Waist Accessory',
+  Background = 'Background',
+  Particles = 'Particles',
 }
 
 export type TraitItem = { trait_type: Trait; value: string }
