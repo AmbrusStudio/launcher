@@ -1,11 +1,11 @@
 import SwipeableDrawer from '@mui/material/SwipeableDrawer'
 import { Dispatch, FC, SetStateAction, useCallback, useEffect, useState } from 'react'
 
-import GalleryFilter from '../../../components/Gallery/Filter'
-import FilterSliderLineClear from '../../../components/Icon/FilterSliderLineClear'
 import { GALLERYS_FILTERS_STATUS } from '../../../data'
 import { Filter } from '../../../types/gallery'
 import { toggleFilterCheckedFn, toggleFilterOpenFn } from '../../../utils'
+import GalleryFilter from '../../Gallery/Filter'
+import FilterSliderLineClear from '../../Icon/FilterSliderLineClear'
 
 interface DrawerFilterProps {
   readonly visibleDrawer: boolean
@@ -68,7 +68,7 @@ const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, isFixed, setVisibl
         },
       }}
     >
-      <div className="w-[348px] p-x-6 p-t-[45px] p-b-[129px] overflow-auto">
+      <div className="w-[348px] h-full p-x-6 pt-[45px] pb-6 overflow-hidden">
         <div className="flex">
           <div className="flex-1 border-y-2 border-rust p-y-3 text-xl font-bold leading-6 uppercase text-white">
             Filters
@@ -92,7 +92,7 @@ const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, isFixed, setVisibl
           toggleFilterTagChecked={toggleFilterTagChecked}
         />
         <button
-          className="p-y-5 bg-rust leading-5 uppercase text-white text-base font-semibold absolute bottom-6 left-6 right-6"
+          className="u-btn u-btn-primary !w-auto absolute bottom-6 left-6 right-6"
           onClick={() => {
             applyFilter(filter)
           }}

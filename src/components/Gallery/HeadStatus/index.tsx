@@ -11,8 +11,8 @@ interface Props {
 const HeadStatus: FC<Props> = ({ isFixed, count, clearFilter }) => {
   return (
     <div
-      className={classNames('flex items-center justify-between sticky top-[100px] z-1', {
-        'bg-[#252525]': isFixed,
+      className={classNames('flex items-center justify-between sticky top-[120px] lg:top-[68px] xl:top-[100px] z-1', {
+        'bg-[#252525] py-3': isFixed,
       })}
     >
       <div
