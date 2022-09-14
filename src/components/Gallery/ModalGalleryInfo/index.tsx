@@ -20,14 +20,14 @@ const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ metadata, visible, setVis
       toggle={(value) => setVisible(value)}
     >
       <Box className="flex flex-1 lg:flex-none flex-col lg:flex-row overflow-hidden lg:overflow-auto bg-white lg:bg-white/80 backdrop-blur-[20px] transition-none">
-        <div className="lg:w-[600px] lg:h-[600px] overflow-hidden border-4 border-white">
+        <div className="w-[100vw] h-[100vw] lg:w-[600px] lg:h-[600px] border-4 border-white">
           <img
             className="h-full object-cover w-full"
             src={imageSizeConversion(metadata?.image || '', 2000)}
             alt="logo"
           />
         </div>
-        <div className="flex flex-col flex-grow p-9 text-white overflow-auto">
+        <div className="flex flex-1 flex-col flex-grow p-9 text-white overflow-auto max-height-modal-info">
           <div className="grid grid-cols-2 gap-6 mb-auto">
             {metadata?.attributes.map((trait, index: number) => (
               <section key={index}>
