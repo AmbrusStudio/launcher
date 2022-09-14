@@ -11,7 +11,7 @@ interface GalleryItemProps {
 const GalleryItem: FC<GalleryItemProps> = ({ data, onClick }) => {
   return (
     <div className="w-[100%] h-[100%] rounded overflow-hidden relative cursor-pointer bg-[#383838]" onClick={onClick}>
-      <img src={imageSizeConversion(data.image, 800)} className="w-[100%] h-[100%] object-cover" />
+      <img src={imageSizeConversion(data.image, 800)} className="w-[100%] h-[100%] object-cover" loading="lazy" />
       <p className="absolute left-3 bottom-3 text-sm font-bold leading-4.25 uppercase text-white">
         #{parseTokenId(data.name)}
       </p>
