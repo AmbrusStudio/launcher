@@ -27,7 +27,7 @@ function AccountNFT() {
       <div className="my-0 mx-auto py-23 lg:py-32.5 max-w-[1140px] font-sans">
         <Head />
 
-        {!(account && active) && (
+        {!(account && active) ? (
           <div className="px-6 xl:px-2.5 my-6 sm:my-9">
             <WalletButton
               connected={!!(account && active)}
@@ -38,9 +38,7 @@ function AccountNFT() {
               {shortenIfAddress(account)}
             </WalletButton>
           </div>
-        )}
-
-        {account && active && loading && (
+        ) : account && active && loading ? (
           <div className="text-center py-6">
             <CircularProgress
               sx={{
@@ -48,21 +46,17 @@ function AccountNFT() {
               }}
             />
           </div>
-        )}
-
-        {account && active && !loading && !nfts.length ? (
+        ) : account && active && !loading && !nfts.length ? (
           <div className="px-6 xl:px-2.5 my-6 sm:my-9 text-white">No Data...</div>
-        ) : (
+        ) : account && active && !loading && !!nfts.length ? (
           <div className="hidden lg:block px-6 xl:px-2.5 my-6 sm:my-9">
-            {!!nfts.length && (
-              <Stack spacing={3}>
-                {nfts.map((nft) => (
-                  <NFTItem nft={nft} key={nft.tokenId} tokenId={nft.tokenId} />
-                ))}
-              </Stack>
-            )}
+            <Stack spacing={3}>
+              {nfts.map((nft) => (
+                <NFTItem nft={nft} key={nft.tokenId} tokenId={nft.tokenId} />
+              ))}
+            </Stack>
           </div>
-        )}
+        ) : null}
 
         <MobileWrap nfts={nfts} />
       </div>
