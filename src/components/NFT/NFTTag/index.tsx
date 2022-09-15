@@ -23,7 +23,7 @@ const NFTTag: FC<NFTTagProps> = ({ content }) => {
   return (
     <Wrapper
       state={content}
-      className="max-w-[100px] lg:max-w[140px]  p-2 lg:p-3 text-xs lg:text-sm leading-[15px] lg:leading-[17px] flex items-center justify-between font-bold text-white not-italic uppercase"
+      className="max-w-[100px] lg:max-w[140px] p-2 lg:p-3 text-xs lg:text-sm leading-[15px] lg:leading-[17px] flex items-center justify-between font-bold text-white not-italic uppercase"
     >
       <span className="break-words">{content}</span>
       {content === NFTEdition.GoldPlusEdition ? (

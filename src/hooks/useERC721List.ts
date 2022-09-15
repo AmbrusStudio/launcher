@@ -16,7 +16,7 @@ export function useERC721List() {
   const { account } = useEthers()
 
   // tokenId for owner
-  const tokenId = useTokenId()
+  const { tokenId, loading } = useTokenId()
 
   // tokenId by contract
   const tokenIdByContract = useTokenIdByContract()
@@ -59,10 +59,11 @@ export function useERC721List() {
     [tokenIdForContract, upgradedForContract, originalOwner]
   )
   // console.log('nftsForContract', nftsForContract)
-  const nfts = useMemo(() => [...nftsForAccount, ...nftsForContract], [nftsForAccount, nftsForContract])
+  const nfts = useMemo<NFTE4CRanger[]>(() => [...nftsForAccount, ...nftsForContract], [nftsForAccount, nftsForContract])
   // console.log('nfts', nfts)
 
   return {
     nfts,
+    loading: loading,
   }
 }

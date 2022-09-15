@@ -1,9 +1,11 @@
 import { Stack } from '@mui/material'
+import CircularProgress from '@mui/material/CircularProgress'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
 import { useCallback } from 'react'
 
 import { PageLayout } from '../../../components/Layout'
 import { WalletButton } from '../../../components/Layout/WalletButton'
+import Head from '../../../components/NFT/Head'
 import MobileWrap from '../../../components/NFT/MobileWrap'
 import NFTItem from '../../../components/NFT/NFTItem'
 import { useWeb3Modal } from '../../../hooks'
@@ -13,7 +15,7 @@ function AccountNFT() {
   const { account, active } = useEthers()
   const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
 
-  const { nfts } = useERC721List()
+  const { nfts, loading } = useERC721List()
 
   // Handle wallet switchNetwork
   const handleWalletSwitchNetwork = useCallback(async () => {
@@ -23,9 +25,7 @@ function AccountNFT() {
   return (
     <PageLayout>
       <div className="my-0 mx-auto py-23 lg:py-32.5 max-w-[1140px] font-sans">
-        <h1 className="font-bold text-8 sm:text-16 text-white not-italic uppercase leading-[39px] sm:leading-19.5 px-6 xl:px-2.5 ">
-          MY<span className="py-0 px-1 text-rust">NFTS</span>
-        </h1>
+        <Head />
 
         {!(account && active) && (
           <div className="px-6 xl:px-2.5 my-6 sm:my-9">
@@ -40,19 +40,29 @@ function AccountNFT() {
           </div>
         )}
 
-        {!!(account && active) && !nfts.length && (
-          <div className="px-6 xl:px-2.5 my-6 sm:my-9 text-white">No Data...</div>
+        {account && active && loading && (
+          <div className="text-center py-6">
+            <CircularProgress
+              sx={{
+                color: 'white',
+              }}
+            />
+          </div>
         )}
 
-        <div className="hidden lg:block px-6 xl:px-2.5 my-6 sm:my-9">
-          {!!nfts.length && (
-            <Stack spacing={3}>
-              {nfts.map((nft) => (
-                <NFTItem nft={nft} key={nft.tokenId} tokenId={nft.tokenId} />
-              ))}
-            </Stack>
-          )}
-        </div>
+        {account && active && !loading && !nfts.length ? (
+          <div className="px-6 xl:px-2.5 my-6 sm:my-9 text-white">No Data...</div>
+        ) : (
+          <div className="hidden lg:block px-6 xl:px-2.5 my-6 sm:my-9">
+            {!!nfts.length && (
+              <Stack spacing={3}>
+                {nfts.map((nft) => (
+                  <NFTItem nft={nft} key={nft.tokenId} tokenId={nft.tokenId} />
+                ))}
+              </Stack>
+            )}
+          </div>
+        )}
 
         <MobileWrap nfts={nfts} />
       </div>
