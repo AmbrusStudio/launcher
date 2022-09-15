@@ -10,10 +10,12 @@ import {
 import { Button, Input } from '../../Forms'
 import { AccountTips } from '../Tips'
 
-export type AccountUsernameInputProps = AccountCommonProps
+export type AccountUsernameInputProps = AccountCommonProps & {
+  disabled?: boolean
+}
 
 export function AccountUsernameInput(props: AccountUsernameInputProps) {
-  const { onNextButtonSubmit } = props
+  const { disabled, onNextButtonSubmit } = props
   const {
     register,
     formState: { errors },
@@ -34,7 +36,7 @@ export function AccountUsernameInput(props: AccountUsernameInputProps) {
         {...register('username', { required: 'You must specify an username.', minLength, maxLength, pattern })}
         error={getFormErrorMessage(errors.username)}
       />
-      <Button variant="primary" type="submit">
+      <Button variant="primary" type="submit" disabled={disabled}>
         Next
       </Button>
     </form>

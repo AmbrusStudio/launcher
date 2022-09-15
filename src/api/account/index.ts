@@ -113,3 +113,14 @@ export async function updatePassword(oldPassword: string, newPassword: string): 
   if (res.status === 401) return { isOk: false, data: null, error: new Error('Incorrect old password') }
   return { isOk: false, data: null, error: new Error('Unkonwn error') }
 }
+
+type NicknameAvailable = {
+  result: boolean
+}
+
+export async function checkNickname(nickname: string): Promise<AccountApiResult<NicknameAvailable>> {
+  const res = await accountBackendRequest.post<NicknameAvailable>('/account/nickname/is-available', { nickname })
+  if (res.status === 201 && res.data.result) return { isOk: true, data: res.data, error: null }
+  if (res.status === 201 && !res.data.result) return { isOk: false, data: null, error: new Error('Username used') }
+  return { isOk: false, data: null, error: new Error('Unkonwn error') }
+}

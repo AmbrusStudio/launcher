@@ -93,7 +93,7 @@ export function SignUp() {
   const { getValues, trigger, handleSubmit } = useFormContext<AccountSignUpFormData>()
   const { connect } = useWeb3Modal()
   const { walletLogin, walletBind } = useMetamaskAccount()
-  const { emailSendVerification, emailVerifyVerification, emailRegister } = useEmailAccount()
+  const { emailSendVerification, emailVerifyVerification, emailRegister, emailCheckUsername } = useEmailAccount()
 
   const shortAccount = shortenIfAddress(account)
 
@@ -103,6 +103,7 @@ export function SignUp() {
   const [metamaskBinding, setMetamaskBinding] = React.useState(false)
   const [metamaskSigning, setMetamaskSigning] = React.useState(false)
   const [verifySending, setVerifySending] = React.useState(false)
+  const [usernameChecking, setUsernameChecking] = React.useState(false)
   const [emailSigning, setEmailSigning] = React.useState(false)
 
   const { title, navBack } = getStepInfo(step, complete)
@@ -184,10 +185,18 @@ export function SignUp() {
   /** For step 2, set an username. */
   const handleUsernameSubmit = React.useCallback(
     async (data: AccountSignUpFormData) => {
-      if (!data.username) return
-      stepIncrement()
+      if (!data.username || usernameChecking) return
+      try {
+        setUsernameChecking(true)
+        if (signUpError) setSignUpError('')
+        const check = await emailCheckUsername(data.username)
+        if (!check.isOk) return setSignUpError(check.error.message)
+        stepIncrement()
+      } finally {
+        setUsernameChecking(false)
+      }
     },
-    [stepIncrement]
+    [emailCheckUsername, signUpError, stepIncrement, usernameChecking]
   )
   /** For step 3, set a password */
   const handlePasswordSubmit = React.useCallback(
@@ -254,7 +263,9 @@ export function SignUp() {
             onResendClick={handleResendEmailVerifyCodeClick}
           />
         )}
-        {isStep(2) && <StepChooseAUsername onNextButtonSubmit={handleSubmit(handleUsernameSubmit)} />}
+        {isStep(2) && (
+          <StepChooseAUsername disabled={usernameChecking} onNextButtonSubmit={handleSubmit(handleUsernameSubmit)} />
+        )}
         {isStep(3) && (
           <StepEnterPassword disabled={emailSigning} onNextButtonSubmit={handleSubmit(handlePasswordSubmit)} />
         )}

@@ -4,6 +4,7 @@ import useLocalStorageState from 'use-local-storage-state'
 
 import {
   bindMetamaskAddress,
+  checkNickname,
   doEmailLogin,
   doMetamaskLogin,
   getMetamaskCode,
@@ -90,6 +91,10 @@ type EmailRegisterParams = {
   nickname: string
 }
 
+type UsernameAvailable = {
+  result: boolean
+}
+
 type UseEmailAccount = {
   emailSendVerification: (
     type: EmailVerificationTypes,
@@ -101,6 +106,7 @@ type UseEmailAccount = {
   emailRegister: (params: EmailRegisterParams) => Promise<AccountApiResult<AccountAccessToken>>
   emailResetPassword: (code: string, address: string, password: string) => Promise<AccountApiResult<void>>
   emailUpdatePassword: (oldPassword: string, newPassword: string) => Promise<AccountApiResult<void>>
+  emailCheckUsername: (username: string) => Promise<AccountApiResult<UsernameAvailable>>
 }
 
 export function useEmailAccount(): UseEmailAccount {
@@ -132,6 +138,8 @@ export function useEmailAccount(): UseEmailAccount {
 
   const emailRegister = React.useCallback<UseEmailAccount['emailRegister']>(
     async (params) => {
+      const check = await checkNickname(params.nickname)
+      if (!check.isOk) return check
       const res = await registerWithEmail(params)
       if (res.isOk) setAccessToken(res.data.accessToken)
       return res
@@ -155,6 +163,10 @@ export function useEmailAccount(): UseEmailAccount {
     []
   )
 
+  const emailCheckUsername = React.useCallback<UseEmailAccount['emailCheckUsername']>(async (username) => {
+    return await checkNickname(username)
+  }, [])
+
   return {
     emailSendVerification,
     emailVerifyVerification,
@@ -162,6 +174,7 @@ export function useEmailAccount(): UseEmailAccount {
     emailRegister,
     emailResetPassword,
     emailUpdatePassword,
+    emailCheckUsername,
   }
 }
 
