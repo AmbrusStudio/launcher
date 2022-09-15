@@ -138,8 +138,6 @@ export function useEmailAccount(): UseEmailAccount {
 
   const emailRegister = React.useCallback<UseEmailAccount['emailRegister']>(
     async (params) => {
-      const check = await checkNickname(params.nickname)
-      if (!check.isOk) return check
       const res = await registerWithEmail(params)
       if (res.isOk) setAccessToken(res.data.accessToken)
       return res
