@@ -13,8 +13,8 @@ export function getEmailValidationPattern(): ValidationRule<RegExp> {
 
 export function getUsernameValidationPattern(): ValidationRule<RegExp> {
   return {
-    value: /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/,
-    message: 'Username must contain only alphanumeric and _ or - characters.',
+    value: /^[a-zA-Z0-9]*$/,
+    message: 'Username must contain only alphanumeric.',
   }
 }
 
