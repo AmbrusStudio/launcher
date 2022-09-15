@@ -1,6 +1,12 @@
 import { AccountAccessToken, AccountApiResult, EmailVerificationTypes } from '../../types'
 import { accountBackendRequest } from '../axios'
 
+type AccountResponseError = {
+  statusCode: number
+  message: string
+  error?: string
+}
+
 type MetamaskCode = {
   code: string
 }
@@ -70,11 +76,16 @@ type RegisterWithEmailParams = {
 }
 
 export async function registerWithEmail(params: RegisterWithEmailParams): Promise<AccountApiResult<EmailRegister>> {
-  const res = await accountBackendRequest.post<EmailRegister>('/email/register', params)
-  if (res.status === 201) return { isOk: true, data: res.data, error: null }
+  const res = await accountBackendRequest.post<EmailRegister | AccountResponseError>('/email/register', params)
+  if (res.status === 201) return { isOk: true, data: res.data as EmailRegister, error: null }
   if (res.status === 400) return { isOk: false, data: null, error: new Error('Email mismatch') }
   if (res.status === 404) return { isOk: false, data: null, error: new Error('Verification code expired') }
-  if (res.status === 409) return { isOk: false, data: null, error: new Error('Email used') }
+  if (res.status === 409)
+    return {
+      isOk: false,
+      data: null,
+      error: new Error((res.data as AccountResponseError).message || 'Email or Username used'),
+    }
   return { isOk: false, data: null, error: new Error('Unkonwn error') }
 }
 
