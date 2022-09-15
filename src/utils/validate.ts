@@ -20,7 +20,7 @@ export function getUsernameValidationPattern(): ValidationRule<RegExp> {
 
 export function getPasswordValidationPattern(): ValidationRule<RegExp> {
   return {
-    value: /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/,
+    value: /^(?=.*[a-z])(?=.*\d).*$/i,
     message: 'Password must contain at least 1 letter and 1 number.',
   }
 }
