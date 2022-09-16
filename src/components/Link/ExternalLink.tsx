@@ -1,5 +1,7 @@
+import React from 'react'
+
 type ExternalLinkProps = {
-  to: string
+  to?: string
   blank?: boolean
   className?: string
   title?: string
@@ -10,8 +12,17 @@ export function ExternalLink(props: React.PropsWithChildren<ExternalLinkProps>) 
   const target = blank ? '_blank' : undefined
   const rel = blank ? 'noopener' : undefined
   return (
-    <a className={className} href={to} target={target} rel={rel} title={title}>
-      {children}
-    </a>
+    <React.Fragment>
+      {to && (
+        <a className={className} href={to} target={target} rel={rel} title={title}>
+          {children}
+        </a>
+      )}
+      {!to && (
+        <span className={className} title={title}>
+          {children}
+        </span>
+      )}
+    </React.Fragment>
   )
 }

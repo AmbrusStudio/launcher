@@ -36,13 +36,20 @@ export function GamesNav(props: GamesNavProps) {
                 to={game.url}
                 name={game.name}
                 active={game.url === gameInfoActive?.url}
+                soon={game.soon}
                 onMouseOver={() => handleButtonHover(game)}
               />
             ))}
           </div>
           <div className="flex flex-col gap-24px mt-32px xl:hidden">
             {gameInfo?.games?.map((game, index) => (
-              <GameNavImage key={`${game.url}-${index}`} to={game.url} title={game.name} img={game.img} />
+              <GameNavImage
+                key={`${game.url}-${index}`}
+                to={game.url}
+                title={game.name}
+                img={game.img}
+                soon={game.soon}
+              />
             ))}
           </div>
         </div>
@@ -55,13 +62,19 @@ export function GamesNav(props: GamesNavProps) {
                 to={exp.url}
                 name={exp.name}
                 active={exp.url === gameInfoActive?.url}
+                soon={exp.soon}
                 onMouseOver={() => handleButtonHover(exp)}
               />
             ))}
           </div>
         </div>
         <div className="hidden xl:block pt-28px">
-          <GameNavImage to={gameInfoActive?.url} title={gameInfoActive?.name} img={gameInfoActive?.img} />
+          <GameNavImage
+            to={gameInfoActive?.url}
+            title={gameInfoActive?.name}
+            img={gameInfoActive?.img}
+            soon={gameInfoActive?.soon}
+          />
         </div>
       </nav>
     </div>

@@ -7,6 +7,7 @@ type GameNavButtonProps = {
   to: string
   name: string
   active?: boolean
+  soon?: boolean
   onMouseOver?: React.MouseEventHandler<HTMLParagraphElement>
 }
 
@@ -21,9 +22,10 @@ const NavContent = styled.p`
 `
 
 export function GameNavButton(props: GameNavButtonProps) {
-  const { to, name, active, onMouseOver } = props
+  const { to, name, active, soon, onMouseOver } = props
+  const href = soon ? undefined : getMainSiteLink(to)
   return (
-    <ExternalLink to={getMainSiteLink(to)} title={name}>
+    <ExternalLink to={href} title={name}>
       <NavContent
         className={classNames(
           'game-nav-button flex flex-row flex-nowrap items-center xl:px-24px rounded-8px font-bold text-20px leading-60px text-white text-left uppercase cursor-pointer hover:bg-black-bg',

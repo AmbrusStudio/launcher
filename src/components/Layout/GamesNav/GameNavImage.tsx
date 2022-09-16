@@ -5,12 +5,14 @@ type GameNavImageProps = {
   img: string
   to: string
   title: string
+  soon?: boolean
 }
 
 export function GameNavImage(props: GameNavImageProps) {
-  const { img, to, title } = props
+  const { img, to, title, soon } = props
+  const href = soon ? undefined : getMainSiteLink(to)
   return (
-    <ExternalLink to={getMainSiteLink(to)} title={title}>
+    <ExternalLink to={href} title={title}>
       <img
         className={classNames(
           'box-border xl:h-360px border-2px border-grey-medium/20 rounded-4px',
