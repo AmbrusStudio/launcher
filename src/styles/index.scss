@@ -95,3 +95,12 @@ body,
     max-height: initial;
   }
 }
+
+// slider
+.sliderWrapper .slick-slide div {
+  transition: all 0.3s ease;
+}
+
+.sliderWrapper .slick-center div {
+  opacity: 1;
+}

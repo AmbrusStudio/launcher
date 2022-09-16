@@ -49,16 +49,19 @@ function AccountNFT() {
         ) : account && active && !loading && !nfts.length ? (
           <div className="px-6 xl:px-2.5 my-6 sm:my-9 text-white">No Data...</div>
         ) : account && active && !loading && !!nfts.length ? (
-          <div className="hidden lg:block px-6 xl:px-2.5 my-6 sm:my-9">
-            <Stack spacing={3}>
-              {nfts.map((nft) => (
-                <NFTItem nft={nft} key={nft.tokenId} tokenId={nft.tokenId} />
-              ))}
-            </Stack>
-          </div>
+          <>
+            <div className="hidden lg:block px-6 xl:px-2.5 my-6 sm:my-9">
+              <Stack spacing={3}>
+                {nfts.map((nft) => (
+                  <NFTItem nft={nft} key={nft.tokenId} tokenId={nft.tokenId} />
+                ))}
+              </Stack>
+            </div>
+            <div className="block lg:hidden">
+              <MobileWrap nfts={nfts} />
+            </div>
+          </>
         ) : null}
-
-        <MobileWrap nfts={nfts} />
       </div>
     </PageLayout>
   )

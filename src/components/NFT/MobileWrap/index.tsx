@@ -6,14 +6,15 @@ import { useEthers } from '@usedapp/core'
 import classNames from 'classnames'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 
-import Star from '../../../components/Icon/Star'
-import NFTDetails from '../../../components/NFT/NFTDetails'
-// import NFTModal from '../../../components/NFT/NFTModal'
-import SwiperToggle from '../../../components/NFT/SwiperToggle'
 import { ADDRESS_ASR, ADDRESS_E4C_Ranger } from '../../../contracts'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
 import { useHandleState } from '../../../hooks/useHandleState'
 import { NFTE4CRanger } from '../../../types'
+import Star from '../../Icon/Star'
+import NFTDetails from '../NFTDetails'
+import Slider from '../Slider'
+import StakeInfoModal from '../StakeInfoModal'
+import StatusCheckModal from '../StatusCheckModal'
 
 const Actions = styled(Stack)`
   padding-bottom: constant(safe-area-inset-bottom);
@@ -27,13 +28,14 @@ interface MobileWrapProps {
 const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
   const { account } = useEthers()
 
-  const [currentIndex, setCurrentIndex] = useState<number>(0)
-  const [visibleModal, setVisibleModal] = useState<boolean>(false)
+  const [active, setActive] = useState<number>(0)
+  const [visibleStakeInfoModal, setVisibleStakeInfoModal] = useState<boolean>(false)
+  const [visibleStatusCheckModal, setVisibleStatusCheckModal] = useState<boolean>(false)
 
   const [stakeLoading, setStakeLoading] = useState<boolean>(false)
   const [unstakeLoading, setUnstakeLoading] = useState<boolean>(false)
 
-  const nft = useMemo(() => nfts[currentIndex], [nfts, currentIndex])
+  const nft = useMemo<NFTE4CRanger>(() => nfts[active], [nfts, active])
 
   const { state: stakeState, send: stake } = useERC721SafeTransferFrom(ADDRESS_ASR)
   const { state: unstakeState, send: unstake } = useE4CRangerUnstake(ADDRESS_E4C_Ranger)
@@ -79,47 +81,61 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
   }, [unstakeState, handleState])
 
   return (
-    <div className="block lg:hidden">
-      <div className="min-h-160px my-6">
-        <SwiperToggle nfts={nfts} currentIndex={currentIndex} toggle={(value) => setCurrentIndex(value)} />
+    <>
+      <div className="w-full max-h-160px my-6 mx-auto">
+        <Slider nfts={nfts} setActive={setActive} />
       </div>
 
-      {nfts?.[currentIndex] && (
+      {nft && (
         <>
           <div className="px-6 xl:px-2.5">
-            <NFTDetails nft={nfts[currentIndex]} tokenId={nfts[currentIndex].tokenId} />
+            <NFTDetails nft={nft} tokenId={nft.tokenId} />
           </div>
-          <Actions sx={{ marginTop: 'auto' }} direction="row" spacing={1.5} className="fixed left-6 bottom-6 right-6">
-            <button className="u-btn u-btn-primary max-w-[120px] relative !py-0">
-              <Star sx={{ fontSize: '36px' }} />
-            </button>
-            {nft.staking ? (
-              <button
-                disabled={unstakeLoading}
-                className={classNames('u-btn u-btn-primary', {
-                  loading: unstakeLoading,
-                })}
-                onClick={() => onUnstake(nft.tokenId)}
-              >
-                Unstake
+          {Number(nft.tokenId) >= 16 && nft.upgraded === false && (
+            <Actions sx={{ marginTop: 'auto' }} direction="row" spacing={1.5} className="fixed left-6 bottom-6 right-6">
+              <button className="u-btn u-btn-primary max-w-[120px] relative !py-0">
+                <Star sx={{ fontSize: '36px' }} />
               </button>
-            ) : (
-              <button
-                disabled={stakeLoading}
-                className={classNames('u-btn u-btn-primary', {
-                  loading: stakeLoading,
-                })}
-                onClick={() => onStake(nft.tokenId)}
-              >
-                Upgrade
-              </button>
-            )}
-          </Actions>
+              {nft.staking ? (
+                <button
+                  disabled={unstakeLoading}
+                  className={classNames('u-btn u-btn-primary', {
+                    loading: unstakeLoading,
+                  })}
+                  onClick={() => setVisibleStatusCheckModal(true)}
+                >
+                  Status Check
+                </button>
+              ) : (
+                <button
+                  disabled={stakeLoading}
+                  className={classNames('u-btn u-btn-primary', {
+                    loading: stakeLoading,
+                  })}
+                  onClick={() => setVisibleStakeInfoModal(true)}
+                >
+                  Upgrade
+                </button>
+              )}
+            </Actions>
+          )}
         </>
       )}
 
-      {/* <NFTModal visible={visibleModal} toggle={setVisibleModal} nft={nfts[0]} title="Stake to Upgrade" /> */}
-    </div>
+      <StakeInfoModal
+        visible={visibleStakeInfoModal}
+        loading={stakeLoading}
+        toggle={setVisibleStakeInfoModal}
+        stake={() => onStake(nft.tokenId)}
+      />
+      <StatusCheckModal
+        visible={visibleStatusCheckModal}
+        loading={unstakeLoading}
+        toggle={setVisibleStatusCheckModal}
+        stake={() => onUnstake(nft.tokenId)}
+        nft={nft}
+      />
+    </>
   )
 }
 
