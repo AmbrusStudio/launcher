@@ -11,7 +11,7 @@ import Gallery from './pages/gallery'
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/gallery" replace />}></Route>
+      <Route path="/" element={<Navigate to="/gallery" replace />} />
       <Route path="/account/nft" element={<AccountNFT />} />
       <Route path="/account/signin" element={<SignIn />} />
       <Route path="/account/signup" element={<SignUp />} />
@@ -19,6 +19,7 @@ function App() {
       <Route path="/account/home" element={<Home />} />
       <Route path="/account/games" element={<Games />} />
       <Route path="/gallery" element={<Gallery />} />
+      <Route path="*" element={<Navigate to="/gallery" replace />} />
     </Routes>
   )
 }

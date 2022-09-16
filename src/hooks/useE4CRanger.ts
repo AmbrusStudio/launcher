@@ -80,7 +80,7 @@ export function useUpgradeds(tokenAddress: string, tokenIds: string[]): (boolean
       console.error(`Error encountered calling 'upgraded' on ${calls[idx]?.contract.address}: ${result.error.message}`)
     }
   })
-  console.log('results', results)
+  console.log('useUpgradeds results', results)
   return results.map((result) => result?.value?.[0])
 }
 
@@ -105,7 +105,7 @@ export function useOriginalOwners(tokenAddress: string, tokenIds: string[]): str
       )
     }
   })
-  console.log('results', results)
+  console.log('useOriginalOwners results', results)
   return results.map((result) => result?.value?.[0])
 }
 
@@ -130,6 +130,7 @@ export function useE4CRangerTotalStakingTime(tokenAddress: string | Falsy, token
     return undefined
   }
 
+  console.log('useE4CRangerTotalStakingTime value', value)
   return value?.[0]
 }
 
@@ -151,6 +152,8 @@ export function useE4CRangerUpgradeDuration(tokenAddress: string | Falsy): BigNu
     console.error(error.message)
     return undefined
   }
+
+  console.log('useE4CRangerUpgradeDuration value', value)
 
   return value?.[0]
 }

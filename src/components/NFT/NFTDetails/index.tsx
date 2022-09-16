@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
+import Skeleton from '@mui/material/Skeleton'
 import { FC } from 'react'
 
 import { NFTE4CRanger } from '../../../types'
@@ -59,7 +60,15 @@ const NFTDetails: FC<NFTDetailsProps> = ({ nft, tokenId }) => {
             </span>
           </Stack>
         </section>
-        {nft.upgraded !== undefined && <NFTTag content={getEdition(Number(tokenId), nft.upgraded)} />}
+        {nft.upgraded === undefined ? (
+          <Skeleton
+            variant="rectangular"
+            sx={{ bgcolor: '#454545' }}
+            className="w-[100px] lg:w[140px] !h-[40px] !lg:h-[58px]"
+          />
+        ) : (
+          <NFTTag content={getEdition(Number(tokenId), nft.upgraded)} />
+        )}
       </section>
 
       <NFTInfoContent>

@@ -22,15 +22,19 @@ const initAlchemy = (): Alchemy => {
  */
 export function useTokenId() {
   const [tokenId, setTokenId] = useState<string[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
   const { account } = useEthers()
 
   // Fetch nfts for owner
   const nftsForOwner = useCallback(async () => {
     if (!account) {
+      setLoading(false)
       return
     }
 
     const alchemy = initAlchemy()
+
+    setLoading(true)
 
     const nftsForOwnerResult = await alchemy.nft.getNftsForOwner(account)
     console.log('nftsForOwnerResult', nftsForOwnerResult)
@@ -42,13 +46,17 @@ export function useTokenId() {
     // console.log('list', list)
 
     setTokenId(list)
+    setLoading(false)
   }, [account])
 
   useEffect(() => {
     nftsForOwner()
   }, [nftsForOwner])
 
-  return tokenId
+  return {
+    tokenId,
+    loading,
+  }
 }
 
 /**
