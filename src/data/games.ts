@@ -16,6 +16,9 @@ export const ALL_GAMES: GameInfo[] = [
     icon: { src: GameIconFA, activeColor: '#465358' },
     banner: [GameBannerFA, GameBannerFA2x, GameBannerFA3x],
     background: [GameBackgroundFA, GameBackgroundFA2x, GameBackgroundFA3x],
-    downloadLink: 'https://code.visualstudio.com/sha/download?build=stable&os=darwin-universal',
+    downloadLink: {
+      win: 'https://download.ambrus.studio/Fallen_Arena_Setup_latest.exe',
+      mac: 'https://download.ambrus.studio/FallenArena_macOS.zip',
+    },
   },
 ]

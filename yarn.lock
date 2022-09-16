@@ -1489,6 +1489,11 @@
   resolved "https://registry.yarnpkg.com/@types/trusted-types/-/trusted-types-2.0.2.tgz#fc25ad9943bcac11cceb8168db4f275e0e72e756"
   integrity sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==
 
+"@types/ua-parser-js@^0.7.36":
+  version "0.7.36"
+  resolved "https://registry.yarnpkg.com/@types/ua-parser-js/-/ua-parser-js-0.7.36.tgz#9bd0b47f26b5a3151be21ba4ce9f5fa457c5f190"
+  integrity sha512-N1rW+njavs70y2cApeIw1vLMYXRwfBy+7trgavGuuTfOd7j1Yh7QTRc/yqsPl6ncokt72ZXuxEU0PiCp9bSwNQ==
+
 "@types/yargs-parser@*":
   version "21.0.0"
   resolved "https://registry.yarnpkg.com/@types/yargs-parser/-/yargs-parser-21.0.0.tgz#0c60e537fa790f5f9472ed2776c2b71ec117351b"
@@ -1612,7 +1617,7 @@
 
 "@unocss/core@0.31.17":
   version "0.31.17"
-  resolved "https://registry.npmmirror.com/@unocss/core/-/core-0.31.17.tgz#e4f74f0495b8c395f6b0090dbcb371d3ce5d40c7"
+  resolved "https://registry.yarnpkg.com/@unocss/core/-/core-0.31.17.tgz#e4f74f0495b8c395f6b0090dbcb371d3ce5d40c7"
   integrity sha512-DJ3Uk2ePVXvV1qQmgoLK44aqB6f0s+naOEvouI97nzVXDZgxDQPBxIPB/L4vvE4U+gQxEiHwwE3gJ75iPqVzXw==
 
 "@unocss/core@0.45.9":
@@ -1653,7 +1658,7 @@
 
 "@unocss/preset-mini@^0.31.13":
   version "0.31.17"
-  resolved "https://registry.npmmirror.com/@unocss/preset-mini/-/preset-mini-0.31.17.tgz#847168f1abe55d44f3e9aa6128ad3cb516ba471b"
+  resolved "https://registry.yarnpkg.com/@unocss/preset-mini/-/preset-mini-0.31.17.tgz#847168f1abe55d44f3e9aa6128ad3cb516ba471b"
   integrity sha512-gVgMTOKLt3O1ym348QIBmR5sS9W0Ozkk5xelhH6e0VXcpg0dXDPDrl4hFErMy4x6IB86yyJG6Dz5JhcwQB13Ig==
   dependencies:
     "@unocss/core" "0.31.17"
@@ -6813,6 +6818,11 @@ typescript@^4.6.4, typescript@^4.7.4:
   resolved "https://registry.npmmirror.com/typescript/-/typescript-4.7.4.tgz#1a88596d1cf47d59507a1bcdfb5b9dfe4d488235"
   integrity sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==
 
+ua-parser-js@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-1.0.2.tgz#e2976c34dbfb30b15d2c300b2a53eac87c57a775"
+  integrity sha512-00y/AXhx0/SsnI51fTc0rLRmafiGOM4/O+ny10Ps7f+j/b8p/ZY11ytMgznXkOVo4GQ+KwQG5UQLkLGirsACRg==
+
 ufo@^0.8.4:
   version "0.8.5"
   resolved "https://registry.yarnpkg.com/ufo/-/ufo-0.8.5.tgz#e367b4205ece9d9723f2fa54f887d43ed1bce5d0"
@@ -6849,7 +6859,7 @@ universalify@^2.0.0:
 
 unocss-preset-scrollbar@^0.2.1:
   version "0.2.1"
-  resolved "https://registry.npmmirror.com/unocss-preset-scrollbar/-/unocss-preset-scrollbar-0.2.1.tgz#6de889c2522122e2f0222f392b02bdcd8033d306"
+  resolved "https://registry.yarnpkg.com/unocss-preset-scrollbar/-/unocss-preset-scrollbar-0.2.1.tgz#6de889c2522122e2f0222f392b02bdcd8033d306"
   integrity sha512-7ubHdOaUwr7xBn1glPpICNNsM2SZGjvWK5uRPNiQYsrZ9YFjsCGHk9x5S2R8pTkuMDQeiaSa/UQbYhjC8Fra5g==
   dependencies:
     "@unocss/preset-mini" "^0.31.13"

@@ -1,3 +1,5 @@
+import { PlatformOs } from './os'
+
 export type GameIcon = {
   src: string
   activeColor: string
@@ -15,6 +17,8 @@ export type GameStoreLink = {
   googlePlay: string
 }
 
+export type GameClientDownloadLink = Partial<Record<PlatformOs, string>>
+
 type BaseGameInfo = {
   id: number
   active: boolean
@@ -27,7 +31,7 @@ type BaseGameInfo = {
 
 type NormalGameInfo = BaseGameInfo & {
   type: Exclude<GameType, 'mobile'>
-  downloadLink?: string
+  downloadLink: GameClientDownloadLink
 }
 
 type MobileGameInfo = BaseGameInfo & {

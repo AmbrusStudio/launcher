@@ -1,6 +1,7 @@
 import React from 'react'
 
-import { downloadFileFromUrl, openFallenArenaClient } from '../utils'
+import { GameClientDownloadLink } from '../types'
+import { downloadFileFromUrl, getPlatformOs, openFallenArenaClient } from '../utils'
 
 type Options = {
   path: string
@@ -11,7 +12,7 @@ type Options = {
 
 type UseGameClient = {
   openGameClient: (options: Options, delay?: number) => void
-  downloadGameClient: (url: string, filename?: string) => void
+  downloadGameClient: (downloadLink: GameClientDownloadLink) => void
 }
 
 export function useGameClient(): UseGameClient {
@@ -46,8 +47,12 @@ export function useGameClient(): UseGameClient {
     }, delay)
   }, [])
 
-  const downloadGameClient = React.useCallback<UseGameClient['downloadGameClient']>((url, filename) => {
-    downloadFileFromUrl(url, filename)
+  const downloadGameClient = React.useCallback<UseGameClient['downloadGameClient']>((downloadLink) => {
+    const os = getPlatformOs()
+    if (!os || typeof os === 'undefined') return
+    const url = downloadLink[os]
+    if (!url) return
+    downloadFileFromUrl(url)
   }, [])
 
   return { openGameClient, downloadGameClient }
