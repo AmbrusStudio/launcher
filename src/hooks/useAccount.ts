@@ -4,7 +4,7 @@ import useLocalStorageState from 'use-local-storage-state'
 
 import {
   bindMetamaskAddress,
-  checkNickname,
+  checkUsername,
   doEmailLogin,
   doMetamaskLogin,
   getMetamaskCode,
@@ -88,7 +88,7 @@ type EmailRegisterParams = {
   address: string
   password: string
   code: string
-  nickname: string
+  username: string
 }
 
 type UsernameAvailable = {
@@ -162,7 +162,7 @@ export function useEmailAccount(): UseEmailAccount {
   )
 
   const emailCheckUsername = React.useCallback<UseEmailAccount['emailCheckUsername']>(async (username) => {
-    return await checkNickname(username)
+    return await checkUsername(username)
   }, [])
 
   return {

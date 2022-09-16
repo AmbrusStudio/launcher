@@ -91,12 +91,12 @@ export function Settings() {
   }, [])
 
   React.useEffect(() => {
-    if (userInfo?.nickname) {
-      setValue('username', userInfo.nickname)
+    if (userInfo?.username) {
+      setValue('username', userInfo.username)
     }
     const selectedAvatar = demoData.find((a) => a.id === 2)
     setSelectedAvatar(selectedAvatar)
-  }, [setValue, userInfo?.nickname])
+  }, [setValue, userInfo?.username])
 
   return (
     <React.Fragment>

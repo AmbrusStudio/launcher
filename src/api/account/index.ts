@@ -72,7 +72,7 @@ type RegisterWithEmailParams = {
   address: string
   password: string
   code: string
-  nickname: string
+  username: string
 }
 
 export async function registerWithEmail(params: RegisterWithEmailParams): Promise<AccountApiResult<EmailRegister>> {
@@ -114,12 +114,12 @@ export async function updatePassword(oldPassword: string, newPassword: string): 
   return { isOk: false, data: null, error: new Error('Unkonwn error') }
 }
 
-type NicknameAvailable = {
+type UsernameAvailable = {
   result: boolean
 }
 
-export async function checkNickname(nickname: string): Promise<AccountApiResult<NicknameAvailable>> {
-  const res = await accountBackendRequest.post<NicknameAvailable>('/account/nickname/is-available', { nickname })
+export async function checkUsername(username: string): Promise<AccountApiResult<UsernameAvailable>> {
+  const res = await accountBackendRequest.post<UsernameAvailable>('/account/username/is-available', { username })
   if (res.status === 201 && res.data.result) return { isOk: true, data: res.data, error: null }
   if (res.status === 201 && !res.data.result) return { isOk: false, data: null, error: new Error('Username used') }
   return { isOk: false, data: null, error: new Error('Unkonwn error') }

@@ -76,9 +76,9 @@ export function AccountInfo() {
   const navigate = useNavigate()
 
   const name =
-    userInfo?.nickname && userInfo.nickname.startsWith('0x')
-      ? shortenIfAddress(userInfo?.nickname)
-      : userInfo?.nickname || 'Name'
+    userInfo?.username && userInfo.username.startsWith('0x')
+      ? shortenIfAddress(userInfo?.username)
+      : userInfo?.username || 'Name'
   const email = userInfo?.email || shortenIfAddress(userInfo?.wallet)
 
   const [menuOpen, setMenuOpen] = React.useState(false)

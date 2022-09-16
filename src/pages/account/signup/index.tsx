@@ -209,7 +209,7 @@ export function SignUp() {
           address: data.email,
           password: data.password,
           code: data.verifyCode,
-          nickname: data.username,
+          username: data.username,
         })
         if (!res.isOk) return setSignUpError(res.error.message)
         stepIncrement()
