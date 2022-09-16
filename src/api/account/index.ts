@@ -79,6 +79,7 @@ export async function registerWithEmail(params: RegisterWithEmailParams): Promis
   const res = await accountBackendRequest.post<EmailRegister | AccountResponseError>('/email/register', params)
   if (res.status === 201) return { isOk: true, data: res.data as EmailRegister, error: null }
   if (res.status === 400) return { isOk: false, data: null, error: new Error('Email mismatch') }
+  if (res.status === 403) return { isOk: false, data: null, error: new Error('Username contains illegal characters') }
   if (res.status === 404) return { isOk: false, data: null, error: new Error('Verification code expired') }
   if (res.status === 409)
     return {
@@ -122,5 +123,6 @@ export async function checkUsername(username: string): Promise<AccountApiResult<
   const res = await accountBackendRequest.post<UsernameAvailable>('/account/username/is-available', { username })
   if (res.status === 201 && res.data.result) return { isOk: true, data: res.data, error: null }
   if (res.status === 201 && !res.data.result) return { isOk: false, data: null, error: new Error('Username used') }
+  if (res.status === 403) return { isOk: false, data: null, error: new Error('Username contains illegal characters') }
   return { isOk: false, data: null, error: new Error('Unkonwn error') }
 }
