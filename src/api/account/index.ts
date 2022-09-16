@@ -115,14 +115,10 @@ export async function updatePassword(oldPassword: string, newPassword: string): 
   return { isOk: false, data: null, error: new Error('Unkonwn error') }
 }
 
-type UsernameAvailable = {
-  result: boolean
-}
-
-export async function checkUsername(username: string): Promise<AccountApiResult<UsernameAvailable>> {
-  const res = await accountBackendRequest.post<UsernameAvailable>('/account/username/is-available', { username })
-  if (res.status === 201 && res.data.result) return { isOk: true, data: res.data, error: null }
-  if (res.status === 201 && !res.data.result) return { isOk: false, data: null, error: new Error('Username used') }
+export async function checkUsername(username: string): Promise<AccountApiResult<void>> {
+  const res = await accountBackendRequest.post<void>('/account/username/is-available', { username })
+  if (res.status === 201) return { isOk: true, data: res.data, error: null }
   if (res.status === 403) return { isOk: false, data: null, error: new Error('Username contains illegal characters') }
+  if (res.status === 409) return { isOk: false, data: null, error: new Error('Username not available') }
   return { isOk: false, data: null, error: new Error('Unkonwn error') }
 }

@@ -91,10 +91,6 @@ type EmailRegisterParams = {
   username: string
 }
 
-type UsernameAvailable = {
-  result: boolean
-}
-
 type UseEmailAccount = {
   emailSendVerification: (
     type: EmailVerificationTypes,
@@ -106,7 +102,7 @@ type UseEmailAccount = {
   emailRegister: (params: EmailRegisterParams) => Promise<AccountApiResult<AccountAccessToken>>
   emailResetPassword: (code: string, address: string, password: string) => Promise<AccountApiResult<void>>
   emailUpdatePassword: (oldPassword: string, newPassword: string) => Promise<AccountApiResult<void>>
-  emailCheckUsername: (username: string) => Promise<AccountApiResult<UsernameAvailable>>
+  emailCheckUsername: (username: string) => Promise<AccountApiResult<void>>
 }
 
 export function useEmailAccount(): UseEmailAccount {
