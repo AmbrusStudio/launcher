@@ -17,8 +17,8 @@ export const ALL_GAMES: GameInfo[] = [
     banner: [GameBannerFA, GameBannerFA2x, GameBannerFA3x],
     background: [GameBackgroundFA, GameBackgroundFA2x, GameBackgroundFA3x],
     downloadLink: {
-      win: 'https://download.ambrus.studio/Fallen_Arena_Setup_latest.exe',
-      mac: 'https://download.ambrus.studio/FallenArena_macOS.zip',
+      win: 'https://download.ambrus.studio/Fallen_Arena_Setup_1.0.1_PC.exe',
+      mac: 'https://download.ambrus.studio/Fallen_Arena_Setup_1.0.1_Mac.zip',
     },
   },
 ]
