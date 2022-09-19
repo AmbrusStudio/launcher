@@ -1,13 +1,10 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { AccountShopCard } from '../../..//components/Account/ShopCard'
 import { getAllGames } from '../../../api'
-import Loot from '../../../assets/images/banners/loot.png'
-import SessionPass from '../../../assets/images/banners/session-pass.png'
 import { AccountTitleWithAccountInfo } from '../../../components/Account'
 import { AccountBlock } from '../../../components/Account/Block'
-import { AccountMyAsset } from '../../../components/Account/MyAsset'
+import AssetsSlider from '../../../components/Account/MyAsset'
 import { GameBanner } from '../../../components/Game'
 import { AccountCenterPageLayout } from '../../../components/Layout'
 import { GameInfo } from '../../../types'
@@ -73,23 +70,7 @@ export function Home() {
           </div>
         </AccountBlock>
         <AccountBlock title="My Assets">
-          <AccountMyAsset data={demoData} />
-        </AccountBlock>
-        <AccountBlock title="E4C Shop">
-          <div className="flex gap-36px">
-            <AccountShopCard
-              src={SessionPass}
-              category="E4C Fallen Arena"
-              title="Season 1 Battle Pass"
-              details="Earn more rewards in E4C Fallen Arena"
-            />
-            <AccountShopCard
-              src={Loot}
-              category="E4C Fallen Arena"
-              title="E4C Fallen Arena Loot"
-              details="In-game content for E4C Fallen Arena"
-            />
-          </div>
+          <AssetsSlider data={demoData} />
         </AccountBlock>
       </div>
     </AccountCenterPageLayout>
