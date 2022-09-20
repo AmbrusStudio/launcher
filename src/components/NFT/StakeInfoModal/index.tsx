@@ -8,13 +8,13 @@ import NFTAnnouncement from '../NFTAnnouncement'
 interface Props {
   readonly visible: boolean
   readonly loading?: boolean
-  toggle: (value: boolean) => void
+  close: () => void
   stake: () => void
 }
 
-const StakeInfoModal: FC<Props> = ({ visible, loading = false, toggle, stake }) => {
+const StakeInfoModal: FC<Props> = ({ visible, loading = false, close, stake }) => {
   return (
-    <Modal visible={visible} title={stakeToUpgrade.title} close={() => toggle(false)}>
+    <Modal visible={visible} title={stakeToUpgrade.title} close={close}>
       <div className="bg-white backdrop-blur-md px-6 pt-6 pb-[109px] grid gap-y-[36px]">
         {stakeAnnouncement.map((item, index) => (
           <NFTAnnouncement data={item} key={index} />
