@@ -36,7 +36,7 @@ export function AccountEmailAndAgreement(props: AccountEmailAndAgreementProps) {
           error={getFormErrorMessage(errors.agreement)}
         >
           Check this box after you read and agree to our{' '}
-          <ExternalLink to="#" blank>
+          <ExternalLink to="https://docs.ambrus.studio/terms/" blank>
             Terms & Conditions
           </ExternalLink>
         </Checkbox>
