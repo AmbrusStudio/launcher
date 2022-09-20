@@ -1,4 +1,6 @@
 import {
+  ConfirmUnstakeDataType,
+  ConfirmUpgradeDataType,
   NFT,
   NFTStarState,
   NFTTagState,
@@ -95,6 +97,16 @@ export const stakeToUpgrade: StakeInfoDataType = {
 export const statusCheckData: StakeInfoDataType = {
   title: 'Status Check',
   description: 'You can upgrade this NFT when:',
+}
+
+export const confirmUnstakeData: ConfirmUnstakeDataType = {
+  description:
+    'Once unstaked, the upgrading status of this NFT will be reset. You can still upgrade this NFT in the future.',
+}
+
+export const confirmUpgradeData: ConfirmUpgradeDataType = {
+  description:
+    'You’ll earn a lot more benefits after upgrading your NFT. You can only upgrade this NFT whilel it’s still staked.',
 }
 
 export const stakeAnnouncement: StakeAnnouncement[] = [
