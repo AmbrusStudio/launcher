@@ -34,8 +34,7 @@ export function AccountEmailAndAgreement(props: AccountEmailAndAgreementProps) {
           {...register('agreement', { required: true })}
           error={getFormErrorMessage(errors.agreement)}
         >
-          Check this box after you read and agree to our <a href="#">Privacy Policy</a> and{' '}
-          <a href="#">User Agreement</a>
+          Check this box after you read and agree to our <a href="#">Terms & Conditions</a>
         </Checkbox>
         <Checkbox
           id="newsletter"
