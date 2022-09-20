@@ -60,6 +60,7 @@ export function AccountMyAccountInfo(props: AccountMyAccountProps) {
           placeholder="Username"
           autoComplete="username"
           required
+          disabled
           {...register('username', {
             required: 'You must specify an username.',
             minLength: usernameMinLength,

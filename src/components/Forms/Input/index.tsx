@@ -21,14 +21,19 @@ const labelVariants: Record<InputVariants, string> = {
   dark: 'text-grey-medium',
 }
 
-const inputVariantsCommon: Record<InputVariants, string> = {
-  light: 'bg-white',
-  dark: 'bg-black-bg text-white',
+const inputVariantsNormal: Record<InputVariants, string> = {
+  light: 'bg-white border-white hover:border-ligntGreen focus:border-ligntGreen',
+  dark: 'bg-black-bg text-white border-black-bg hover:border-white focus:border-white',
 }
 
-const inputVariantsNormal: Record<InputVariants, string> = {
-  light: 'border-white hover:border-ligntGreen focus:border-ligntGreen',
-  dark: 'border-black-bg hover:border-white focus:border-white',
+const inputVariantsError: Record<InputVariants, string> = {
+  light: 'bg-white border-rust',
+  dark: 'bg-black-bg text-white border-rust',
+}
+
+const inputVariantsDisabled: Record<InputVariants, string> = {
+  light: 'border-transparent',
+  dark: 'border-transparent',
 }
 
 function calculateInputType(rawType: React.HTMLInputTypeAttribute, visible: boolean): React.HTMLInputTypeAttribute {
@@ -47,6 +52,7 @@ function LabeledInput(props: InputProps) {
     forwardedRef,
     variant = 'light',
     type = 'text',
+    disabled = false,
     ...others
   } = props
   const [visible, setVisible] = React.useState(false)
@@ -77,11 +83,12 @@ function LabeledInput(props: InputProps) {
             'flex flex-row flex-nowrap items-center w-full box-border border-1px',
             'px-24px py-19px font-semibold text-16px leading-20px',
             'placeholder:text-grey-medium hover:outline-none focus:outline-none',
-            inputVariantsCommon[variant],
-            error && 'border-rust',
-            !error && inputVariantsNormal[variant],
+            !disabled && !error && inputVariantsNormal[variant],
+            disabled && inputVariantsDisabled[variant],
+            error && inputVariantsError[variant],
             className
           )}
+          disabled={disabled}
           ref={forwardedRef}
         />
         {type === 'password' && (
