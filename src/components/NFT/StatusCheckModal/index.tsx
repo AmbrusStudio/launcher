@@ -4,7 +4,6 @@ import { FC, useState } from 'react'
 
 import { stakeAnnouncement, statusCheckData } from '../../../data'
 import { useStatusCheck } from '../../../hooks/useStatusCheck'
-import { NFTE4CRanger } from '../../../types'
 import { ArrowUp } from '../../Icon'
 import CheckCard from '../CheckCard'
 import Modal from '../Modal'
@@ -13,17 +12,18 @@ import NFTAnnouncement from '../NFTAnnouncement'
 interface Props {
   readonly visible: boolean
   readonly loading?: boolean
-  readonly nft: NFTE4CRanger
-  toggle: (value: boolean) => void
-  stake: () => void
+  readonly tokenId: string
+  close: () => void
+  upgrade: () => void
+  unstake: () => void
 }
 
-const StatusCheckModal: FC<Props> = ({ visible, loading = false, toggle, stake, nft }) => {
+const StatusCheckModal: FC<Props> = ({ visible, loading = false, close, upgrade, unstake, tokenId }) => {
   const [drawer, setDrawer] = useState<boolean>(false)
-  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(nft.tokenId)
+  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(tokenId)
 
   return (
-    <Modal visible={visible} title={statusCheckData.title} close={() => toggle(false)}>
+    <Modal visible={visible} title={statusCheckData.title} close={close}>
       <div className="bg-white backdrop-blur-md px-6 pt-6 pb-[109px] grid gap-y-[36px]">
         {stakeAnnouncement.map((item, index) => (
           <NFTAnnouncement data={item} key={index} />
@@ -64,7 +64,7 @@ const StatusCheckModal: FC<Props> = ({ visible, loading = false, toggle, stake, 
                   loading: loading,
                 })}
                 disabled={!status || loading}
-                onClick={() => stake()}
+                onClick={() => upgrade()}
               >
                 Upgrade
               </button>
@@ -73,7 +73,7 @@ const StatusCheckModal: FC<Props> = ({ visible, loading = false, toggle, stake, 
                 className={classNames('u-btn', {
                   loading: loading,
                 })}
-                onClick={() => stake()}
+                onClick={() => unstake()}
               >
                 Unstake
               </button>

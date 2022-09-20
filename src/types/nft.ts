@@ -17,6 +17,14 @@ export type StakeInfoDataType = {
   description: string
 }
 
+export type ConfirmUnstakeDataType = {
+  description: string
+}
+
+export type ConfirmUpgradeDataType = {
+  description: string
+}
+
 export type NFTUpgradeInfo = {
   upgradingStatusInfo: {
     stakeStatus: boolean
