@@ -3,6 +3,7 @@ import { useFormContext } from 'react-hook-form'
 import { AccountCommonProps, AccountSignUpFormData } from '../../../types'
 import { getEmailValidationPattern, getFormErrorMessage, getMaxLengthValidationRule } from '../../../utils'
 import { Button, Checkbox, Input } from '../../Forms'
+import { ExternalLink } from '../../Link'
 
 export type AccountEmailAndAgreementProps = AccountCommonProps & {
   disabled?: boolean
@@ -34,14 +35,17 @@ export function AccountEmailAndAgreement(props: AccountEmailAndAgreementProps) {
           {...register('agreement', { required: true })}
           error={getFormErrorMessage(errors.agreement)}
         >
-          Check this box after you read and agree to our <a href="#">Terms & Conditions</a>
+          Check this box after you read and agree to our{' '}
+          <ExternalLink to="#" blank>
+            Terms & Conditions
+          </ExternalLink>
         </Checkbox>
         <Checkbox
           id="newsletter"
           {...register('newsletter', { value: false })}
           error={getFormErrorMessage(errors.newsletter)}
         >
-          Check this box to subscribe to your newsletter
+          Check this box to subscribe to our newsletter
         </Checkbox>
       </div>
       <Button variant="primary" type="submit" disabled={disabled}>

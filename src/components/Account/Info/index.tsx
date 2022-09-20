@@ -2,6 +2,7 @@ import { shortenIfAddress } from '@usedapp/core'
 import React from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 
+import AvatarDefault from '../../../assets/images/avatar/avatar-default.png'
 import { useAccountInfo } from '../../../hooks'
 import { ReactButtonProps } from '../../../types'
 import { classNames } from '../../../utils'
@@ -59,7 +60,7 @@ type InfoTitleProps = {
 
 function InfoTitle(props: React.PropsWithChildren<InfoTitleProps>) {
   const { className, children } = props
-  return <div className={classNames('font-bold text-16px leading-30px text-black', className)}>{children}</div>
+  return <div className={classNames('font-bold text-16px leading-30px text-black truncate', className)}>{children}</div>
 }
 
 type InfoSubtitleProps = {
@@ -68,7 +69,11 @@ type InfoSubtitleProps = {
 
 function InfoSubtitle(props: React.PropsWithChildren<InfoSubtitleProps>) {
   const { className, children } = props
-  return <div className={classNames('font-normal text-12px leading-20px text-grey-medium', className)}>{children}</div>
+  return (
+    <div className={classNames('font-normal text-12px leading-20px text-grey-medium truncate', className)}>
+      {children}
+    </div>
+  )
 }
 
 export function AccountInfo() {
@@ -99,8 +104,8 @@ export function AccountInfo() {
 
   return (
     <div className="z-30 relative">
-      {sessionExpired && <Navigate to="/account/signin" replace={true} />}
-      <AvatarItem image="https://i.imgur.com/KH0HhIo.png" onClick={toggleMenuOpen} />
+      {sessionExpired && <Navigate to="/account/signup" replace={true} />}
+      <AvatarItem image={AvatarDefault} onClick={toggleMenuOpen} />
       <div
         className={classNames(
           'flex flex-col opacity-0 overflow-hidden transition-opacity',
@@ -110,7 +115,7 @@ export function AccountInfo() {
         )}
       >
         <InfoItem className="h-100px">
-          <div className="flex flex-col">
+          <div className="flex flex-col truncate mr-76px text-left">
             <InfoTitle>{name}</InfoTitle>
             <InfoSubtitle>{email}</InfoSubtitle>
           </div>

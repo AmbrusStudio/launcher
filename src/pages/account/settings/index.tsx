@@ -3,30 +3,13 @@ import React from 'react'
 import { useFormContext } from 'react-hook-form'
 import { Navigate } from 'react-router-dom'
 
+import AvatarDefault from '../../../assets/images/avatar/avatar-default.png'
 import { AccountMyAccountInfo, AccountMyAvatar, AccountMyWallet, AccountTitie } from '../../../components/Account'
 import { AccountCenterPageLayout } from '../../../components/Layout'
 import { useAccountInfo, useEmailAccount, useMetamaskAccount, useSnackbarTR, useWeb3Modal } from '../../../hooks'
 import { AccountAvatarInfo, AccountInfoFormData } from '../../../types'
 
-const demoData: AccountAvatarInfo[] = [
-  { id: 1, image: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 2, image: 'https://i.imgur.com/KH0HhIo.png' },
-  { id: 3, image: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 4, image: 'https://i.imgur.com/KH0HhIo.png' },
-  { id: 5, image: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 6, image: 'https://i.imgur.com/KH0HhIo.png' },
-  { id: 7, image: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 8, image: 'https://i.imgur.com/KH0HhIo.png' },
-  { id: 9, image: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 10, image: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 11, image: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 12, image: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 13, image: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 14, image: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 15, image: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 16, image: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 17, image: 'https://i.imgur.com/OJGH11v.png' },
-]
+const demoData: AccountAvatarInfo[] = [{ id: 1, image: AvatarDefault }]
 
 export function Settings() {
   const { setValue, reset, handleSubmit } = useFormContext<AccountInfoFormData>()
@@ -94,7 +77,7 @@ export function Settings() {
     if (userInfo?.username) {
       setValue('username', userInfo.username)
     }
-    const selectedAvatar = demoData.find((a) => a.id === 2)
+    const selectedAvatar = demoData.find((a) => a.id === 1)
     setSelectedAvatar(selectedAvatar)
   }, [setValue, userInfo?.username])
 

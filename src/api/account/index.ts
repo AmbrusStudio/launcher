@@ -93,7 +93,7 @@ export async function registerWithEmail(params: RegisterWithEmailParams): Promis
 type EmailLogin = AccountAccessToken
 
 export async function doEmailLogin(address: string, password: string): Promise<AccountApiResult<EmailLogin>> {
-  const res = await accountBackendRequest.post<MetamaskLogin>('/email/login', { address, password })
+  const res = await accountBackendRequest.post<EmailLogin>('/email/login', { address, password })
   if (res.status === 200) return { isOk: true, data: res.data, error: null }
   if (res.status === 401) return { isOk: false, data: null, error: new Error('Incorrect email or password') }
   return { isOk: false, data: null, error: new Error('Unkonwn error') }
