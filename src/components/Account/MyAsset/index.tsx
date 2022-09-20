@@ -1,6 +1,8 @@
 import { FC } from 'react'
 import Slider from 'react-slick'
 
+import { IconArrowDown } from '../../Icon'
+
 type AssetItemProps = {
   src: string
   onItemClick: React.MouseEventHandler<HTMLDivElement>
@@ -38,7 +40,9 @@ function SampleNextArrow(props: any) {
         transform: 'translate(-43px, -50%)',
       }}
       onClick={onClick}
-    />
+    >
+      <IconArrowDown className="text-white rotate-270 w-4 h-4" />
+    </div>
   )
 }
 
@@ -60,7 +64,9 @@ function SamplePrevArrow(props: any) {
         transform: 'translate(43px, -50%)',
       }}
       onClick={onClick}
-    />
+    >
+      <IconArrowDown className="text-white rotate-90 w-4 h-4" />
+    </div>
   )
 }
 
@@ -70,6 +76,7 @@ type AccountMyAssetProps = {
 
 const AssetsSlider: FC<AccountMyAssetProps> = ({ data }) => {
   const settings = {
+    className: 'assetsSliderWrapper',
     dots: false,
     infinite: true,
     speed: 500,
@@ -80,8 +87,8 @@ const AssetsSlider: FC<AccountMyAssetProps> = ({ data }) => {
   }
 
   return (
-    <div className="overflow-hidden	">
-      <Slider {...settings} className="mx-[-18px]">
+    <div className="overflow-hidden">
+      <Slider {...settings}>
         {data.map((asset) => (
           <AssetItem key={`asset-${asset.id}`} src={asset.src} onItemClick={() => null} />
         ))}
