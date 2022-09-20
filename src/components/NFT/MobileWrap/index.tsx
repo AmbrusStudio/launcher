@@ -87,7 +87,7 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
 
   return (
     <>
-      <div className="w-full max-h-160px my-6 mx-auto">
+      <div className="w-full my-6 mx-auto">
         <Slider nfts={nfts} setActive={setActive} />
       </div>
 

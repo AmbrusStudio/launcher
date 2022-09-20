@@ -50,14 +50,14 @@ function AccountNFT() {
           <div className="px-6 xl:px-2.5 my-6 sm:my-9 text-white">No Data...</div>
         ) : account && active && !loading && !!nfts.length ? (
           <>
-            <div className="hidden lg:block px-6 xl:px-2.5 my-6 sm:my-9">
+            <div className="hidden md:block px-6 xl:px-2.5 my-6 sm:my-9">
               <Stack spacing={3}>
                 {nfts.map((nft) => (
                   <NFTItem nft={nft} key={nft.tokenId} tokenId={nft.tokenId} />
                 ))}
               </Stack>
             </div>
-            <div className="block lg:hidden">
+            <div className="block md:hidden">
               <MobileWrap nfts={nfts} />
             </div>
           </>
