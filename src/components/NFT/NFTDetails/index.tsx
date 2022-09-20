@@ -12,7 +12,7 @@ const NFTInfoContent = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 24px;
-  /* max-height: 252px; */
+  max-height: 190px;
   overflow: auto;
 `
 

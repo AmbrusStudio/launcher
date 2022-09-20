@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import { useEthers } from '@usedapp/core'
 import classNames from 'classnames'
@@ -14,14 +13,6 @@ import NFTDetails from '../NFTDetails'
 import NFTPerk from '../NFTPerk'
 import StakeInfo from '../StakeInfo'
 import StatusCheck from '../StatusCheck'
-
-const WrapperInfo = styled.div`
-  color: #fff;
-  padding: 24px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-`
 
 interface NFTItemProps {
   readonly nft: NFTE4CRanger
@@ -82,11 +73,11 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
   }, [unstakeState, handleState])
 
   return (
-    <div className="flex-col lg:flex-row lg:flex h-auto lg:h-[600px] bg-black relative">
-      <div className="lg:w-[600px] lg:h-[600px] overflow-hidden">
+    <div className="bg-black relative">
+      <div className="w-[53.5%] overflow-hidden float-left">
         <img className="h-full object-cover w-full" src={imageSizeConversion(nft.image, 2000)} alt={nft.name} />
       </div>
-      <WrapperInfo>
+      <div className="w-[46.5%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0">
         <NFTDetails nft={nft} tokenId={tokenId} />
 
         {Number(tokenId) >= 16 && nft.upgraded === false && (
@@ -102,7 +93,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
                 })}
                 onClick={() => setVisibleStatusCheck(!visibleStatusCheck)}
               >
-                Check Upgrading Status
+                Status Check
               </button>
             ) : (
               <button
@@ -117,7 +108,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
             )}
           </Stack>
         )}
-      </WrapperInfo>
+      </div>
       <NFTPerk visible={togglePerk} toggle={(value) => setTogglePerk(value)} />
       {visibleInfo && (
         <StakeInfo

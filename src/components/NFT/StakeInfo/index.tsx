@@ -7,11 +7,6 @@ import { stakeAnnouncement, stakeToUpgrade } from '../../../data'
 import NFTAnnouncement from '../NFTAnnouncement'
 
 const WrapperInfo = styled.div`
-  color: #fff;
-  padding: 24px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(12px);
 `
@@ -46,12 +41,12 @@ interface StakeInfoProps {
 const StakeInfo: FC<StakeInfoProps> = ({ stakeLoading, toggle, stake }) => {
   return (
     <div className="absolute top-0 right-0 bottom-0 left-0 flex">
-      <div className="lg:w-[600px] lg:h-[600px] overflow-auto bg-white p-6 grid gap-y-20.5">
+      <div className="w-[53.5%] overflow-hidden float-left bg-white p-6 grid gap-y-20.5">
         {stakeAnnouncement.map((item, index) => (
           <NFTAnnouncement data={item} key={index} />
         ))}
       </div>
-      <WrapperInfo>
+      <WrapperInfo className="w-[46.5%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0 overflow-auto">
         <Title>{stakeToUpgrade.title}</Title>
         <Description>{stakeToUpgrade.description}</Description>
         <Stack spacing={1.5} className="mt-6">
