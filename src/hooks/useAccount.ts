@@ -175,10 +175,12 @@ export function useEmailAccount(): UseEmailAccount {
 type UseAccountInfo = {
   account?: AccountAccessTokenJWTPayload
   expired: boolean
+  remove: () => void
 }
 
 export function useAccountInfo(): UseAccountInfo {
-  const [accessToken] = useLocalStorageState<string>(LSK_ACCESS_TOKEN)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [accessToken, _, { removeItem }] = useLocalStorageState<string>(LSK_ACCESS_TOKEN)
 
   const account = React.useMemo(() => {
     if (!accessToken) return undefined
@@ -190,5 +192,9 @@ export function useAccountInfo(): UseAccountInfo {
     return isAccountTokenExpired(accessToken)
   }, [accessToken])
 
-  return { account, expired }
+  const remove = React.useCallback(() => {
+    removeItem()
+  }, [removeItem])
+
+  return { account, expired, remove }
 }

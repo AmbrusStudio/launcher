@@ -10,6 +10,7 @@ type SideNavItemProps = {
   active?: boolean
   disabled?: boolean
   variant?: Variants
+  onNavClick?: React.MouseEventHandler<HTMLDivElement>
 }
 
 const normalVariants: Record<Variants, string> = {
@@ -28,7 +29,7 @@ const hoverVariants: Record<Variants, string> = {
 }
 
 export function SideNavItem(props: React.PropsWithChildren<SideNavItemProps>) {
-  const { active, className, children, disabled, name, variant = 'rounded' } = props
+  const { active, className, children, disabled, name, variant = 'rounded', onNavClick } = props
   return (
     <div
       className={classNames(
@@ -42,6 +43,7 @@ export function SideNavItem(props: React.PropsWithChildren<SideNavItemProps>) {
       )}
       role="button"
       aria-label={name}
+      onClick={onNavClick}
     >
       {children}
       <div

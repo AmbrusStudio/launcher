@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom'
+import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
-import { useRouterActive } from '../../../hooks'
+import { useAccountInfo, useRouterActive } from '../../../hooks'
 import { getMainSiteLink } from '../../../utils'
 import { IconAccount, IconAmbrus2, IconESports, IconExit, IconHome, IconSettings, IconWidgets } from '../../Icon'
 import { ExternalLink } from '../../Link'
@@ -8,6 +9,13 @@ import { SideNavItem } from './SideNavItem'
 
 export function SideNav() {
   const { isActive } = useRouterActive()
+  const navigate = useNavigate()
+  const { remove: removeAccount } = useAccountInfo()
+
+  const handleSignOutClick = React.useCallback(() => {
+    removeAccount()
+    navigate('/account/signin', { replace: true })
+  }, [navigate, removeAccount])
 
   return (
     <nav className="flex flex-col justify-between h-full z-20" title="Sidebar Nav">
@@ -40,7 +48,7 @@ export function SideNav() {
             <IconSettings className="w-36px h-36px" />
           </SideNavItem>
         </Link>
-        <SideNavItem name="Log Out" variant="transparent">
+        <SideNavItem name="Log Out" variant="transparent" onNavClick={handleSignOutClick}>
           <IconExit className="w-36px h-36px" />
         </SideNavItem>
       </div>
