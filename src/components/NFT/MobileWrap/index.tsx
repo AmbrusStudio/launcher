@@ -11,6 +11,8 @@ import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/u
 import { useHandleState } from '../../../hooks/useHandleState'
 import { NFTE4CRanger } from '../../../types'
 import Star from '../../Icon/Star'
+import ConfirmUnstakeModal from '../ConfirmUnstakeModal'
+import ConfirmUpgradeModal from '../ConfirmUpgradeModal'
 import NFTDetails from '../NFTDetails'
 import Slider from '../Slider'
 import StakeInfoModal from '../StakeInfoModal'
@@ -31,6 +33,9 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
   const [active, setActive] = useState<number>(0)
   const [visibleStakeInfoModal, setVisibleStakeInfoModal] = useState<boolean>(false)
   const [visibleStatusCheckModal, setVisibleStatusCheckModal] = useState<boolean>(false)
+
+  const [visibleConfirmUnstake, setVisibleConfirmUnstake] = useState<boolean>(false)
+  const [visibleConfirmUpgrade, setVisibleConfirmUpgrade] = useState<boolean>(false)
 
   const [stakeLoading, setStakeLoading] = useState<boolean>(false)
   const [unstakeLoading, setUnstakeLoading] = useState<boolean>(false)
@@ -125,15 +130,28 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
       <StakeInfoModal
         visible={visibleStakeInfoModal}
         loading={stakeLoading}
-        toggle={setVisibleStakeInfoModal}
+        close={() => setVisibleStakeInfoModal(false)}
         stake={() => onStake(nft.tokenId)}
       />
       <StatusCheckModal
         visible={visibleStatusCheckModal}
         loading={unstakeLoading}
-        toggle={setVisibleStatusCheckModal}
-        stake={() => onUnstake(nft.tokenId)}
-        nft={nft}
+        close={() => setVisibleStatusCheckModal(false)}
+        upgrade={() => setVisibleConfirmUpgrade(true)}
+        unstake={() => setVisibleConfirmUnstake(true)}
+        tokenId={nft.tokenId}
+      />
+      <ConfirmUnstakeModal
+        visible={visibleConfirmUnstake}
+        loading={unstakeLoading}
+        close={() => setVisibleConfirmUnstake(false)}
+        confirm={() => onUnstake(nft.tokenId)}
+      />
+      <ConfirmUpgradeModal
+        visible={visibleConfirmUpgrade}
+        loading={unstakeLoading}
+        close={() => setVisibleConfirmUpgrade(false)}
+        confirm={() => onUnstake(nft.tokenId)}
       />
     </>
   )
