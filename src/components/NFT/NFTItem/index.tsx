@@ -73,7 +73,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
   }, [unstakeState, handleState])
 
   return (
-    <div className="bg-black relative">
+    <div className="bg-black relative min-h-300px">
       <div className="w-[53.5%] overflow-hidden float-left">
         <img className="h-full object-cover w-full" src={imageSizeConversion(nft.image, 2000)} alt={nft.name} />
       </div>
