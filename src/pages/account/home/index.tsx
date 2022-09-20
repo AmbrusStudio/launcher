@@ -9,25 +9,7 @@ import { GameBanner } from '../../../components/Game'
 import { AccountCenterPageLayout } from '../../../components/Layout'
 import { GameInfo } from '../../../types'
 
-const demoData = [
-  { id: 1, src: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 2, src: 'https://i.imgur.com/KH0HhIo.png' },
-  { id: 3, src: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 4, src: 'https://i.imgur.com/KH0HhIo.png' },
-  { id: 5, src: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 6, src: 'https://i.imgur.com/KH0HhIo.png' },
-  { id: 7, src: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 8, src: 'https://i.imgur.com/KH0HhIo.png' },
-  { id: 9, src: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 10, src: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 11, src: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 12, src: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 13, src: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 14, src: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 15, src: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 16, src: 'https://i.imgur.com/OJGH11v.png' },
-  { id: 17, src: 'https://i.imgur.com/OJGH11v.png' },
-]
+const demoData: { id: number; src: string }[] = []
 
 export function Home() {
   const navigate = useNavigate()
@@ -70,7 +52,11 @@ export function Home() {
           </div>
         </AccountBlock>
         <AccountBlock title="My Assets">
-          <AssetsSlider data={demoData} />
+          {demoData.length ? (
+            <AssetsSlider data={demoData} />
+          ) : (
+            <span className="text-base text-white">No more data</span>
+          )}
         </AccountBlock>
       </div>
     </AccountCenterPageLayout>

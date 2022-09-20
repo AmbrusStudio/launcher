@@ -104,3 +104,13 @@ body,
 .sliderWrapper .slick-center div {
   opacity: 1;
 }
+
+// assets slider
+.assetsSliderWrapper {
+  margin-left: -18px;
+  margin-right: -18px;
+}
+.assetsSliderWrapper .slick-prev:before,
+.assetsSliderWrapper .slick-next:before {
+  display: none;
+}
