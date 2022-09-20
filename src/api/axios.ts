@@ -85,8 +85,14 @@ function getAPIBaseUrl(path: string): string {
   return new URL(path, baseUrl).href
 }
 
+function getAccountBackendAPIPath(): string {
+  const apiPath: string | undefined = import.meta.env.VITE_ACCOUNT_BACKEND_API_PATH
+  if (!apiPath) throw new TypeError('VITE_ACCOUNT_BACKEND_API_PATH not set')
+  return apiPath
+}
+
 const _mainBackendRequest = new MainBackendRequest(getAPIBaseUrl('/api/v1'))
 export const mainBackendRequest = _mainBackendRequest.client
 
-const _accountBackendRequest = new AccountBackendRequest(getAPIBaseUrl('/account-dev'))
+const _accountBackendRequest = new AccountBackendRequest(getAPIBaseUrl(getAccountBackendAPIPath()))
 export const accountBackendRequest = _accountBackendRequest.client
