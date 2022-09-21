@@ -1,9 +1,5 @@
 import { Metadata, TraitItem } from './metadata'
 
-export enum NFTUpgradeInfoState {
-  Cold = 'Cold',
-}
-
 export type StakeAnnouncement = {
   title: string
   description: string

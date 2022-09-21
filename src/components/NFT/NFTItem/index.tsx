@@ -10,7 +10,6 @@ import { useHandleState } from '../../../hooks/useHandleState'
 import { NFTE4CRanger } from '../../../types'
 import { imageSizeConversion } from '../../../utils'
 import NFTDetails from '../NFTDetails'
-import NFTPerk from '../NFTPerk'
 import StakeInfo from '../StakeInfo'
 import StatusCheck from '../StatusCheck'
 
@@ -24,7 +23,6 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
 
   const [visibleInfo, setVisibleInfo] = useState<boolean>(false)
   const [visibleStatusCheck, setVisibleStatusCheck] = useState<boolean>(false)
-  const [togglePerk, setTogglePerk] = useState<boolean>(false)
 
   const [stakeLoading, setStakeLoading] = useState<boolean>(false)
   const [unstakeLoading, setUnstakeLoading] = useState<boolean>(false)
@@ -109,7 +107,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
           </Stack>
         )}
       </div>
-      <NFTPerk visible={togglePerk} toggle={(value) => setTogglePerk(value)} />
+
       {visibleInfo && (
         <StakeInfo
           stakeLoading={stakeLoading}
