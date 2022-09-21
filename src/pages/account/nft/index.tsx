@@ -19,8 +19,8 @@ function AccountNFT() {
   const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
 
   const { nfts, loading } = useERC721List()
-  const [visiblePerk, setVisiblePerk] = useState<boolean>(true)
-  const [visiblePerkModal, setVisiblePerkModal] = useState<boolean>(true)
+  const [visiblePerk, setVisiblePerk] = useState<boolean>(false)
+  const [visiblePerkModal, setVisiblePerkModal] = useState<boolean>(false)
 
   // Handle wallet switchNetwork
   const handleWalletSwitchNetwork = useCallback(async () => {
