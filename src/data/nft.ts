@@ -1,55 +1,12 @@
 import {
   ConfirmUnstakeDataType,
   ConfirmUpgradeDataType,
-  NFT,
-  NFTStarState,
-  NFTTagState,
-  NFTUpgradeState,
   PERK,
   PERKState,
   PERKTag,
   StakeAnnouncement,
   StakeInfoDataType,
 } from '../types'
-
-export const NFT_DATA: NFT[] = [
-  {
-    tokenId: '16',
-    cover: 'https://ambrus.s3.amazonaws.com/1657877346203_0.92_206.jpg',
-    title: 'E4C Rangers',
-    subtitle: 'Series 1',
-    description: 'Staking Descriptions',
-    id: 537,
-    tag: 'Gold Edition',
-    tagState: NFTTagState.Cold,
-    trait: [],
-    star: 12,
-    starState: NFTStarState.Default,
-    upgrade: NFTUpgradeState.Upgrade,
-    remainingDays: new Date('2022,8,30'),
-    upgradeInfo: {
-      upgradingStatusInfo: null,
-    },
-  },
-  {
-    tokenId: '1',
-    cover: 'https://ambrus.s3.amazonaws.com/1657877346203_0.92_206.jpg',
-    title: 'E4C Rangers',
-    subtitle: 'Series 1',
-    description: 'Staking Descriptions',
-    id: 537,
-    tag: 'Ultimate Edition',
-    tagState: NFTTagState.Cold,
-    trait: [],
-    star: 12,
-    starState: NFTStarState.Default,
-    upgrade: NFTUpgradeState.Upgrade,
-    remainingDays: new Date('2022,8,30'),
-    upgradeInfo: {
-      upgradingStatusInfo: null,
-    },
-  },
-]
 
 export const PERKS: PERK[] = [
   {
