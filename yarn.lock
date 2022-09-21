@@ -5858,6 +5858,11 @@ react-js-progressbar@^1.1.1:
   dependencies:
     request-animation-number "^1.0.6"
 
+react-photo-view@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.npmmirror.com/react-photo-view/-/react-photo-view-1.2.2.tgz#deaed9af83ec5ccc1f240c58a62bffeb0a6c0187"
+  integrity sha512-/xsOiDuiR23hKxpmF73EDKPvsBvcWogolXvnBhMZV4CUhd9tnXF91amjKnuQe9BmLaR9CbNxXDOI9SNKeXT5ew==
+
 react-refresh@^0.14.0:
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.14.0.tgz#4e02825378a5f227079554d4284889354e5f553e"
