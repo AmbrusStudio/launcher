@@ -1,13 +1,16 @@
 import { Stack } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
+import { isBrowser } from 'react-device-detect'
 
 import { PageLayout } from '../../../components/Layout'
 import { WalletButton } from '../../../components/Layout/WalletButton'
 import Head from '../../../components/NFT/Head'
 import MobileWrap from '../../../components/NFT/MobileWrap'
 import NFTItem from '../../../components/NFT/NFTItem'
+import Perk from '../../../components/NFT/Perk'
+import PerkModal from '../../../components/NFT/PerkModal'
 import { useWeb3Modal } from '../../../hooks'
 import { useERC721List } from '../../../hooks/useERC721List'
 
@@ -16,6 +19,8 @@ function AccountNFT() {
   const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
 
   const { nfts, loading } = useERC721List()
+  const [visiblePerk, setVisiblePerk] = useState<boolean>(false)
+  const [visiblePerkModal, setVisiblePerkModal] = useState<boolean>(false)
 
   // Handle wallet switchNetwork
   const handleWalletSwitchNetwork = useCallback(async () => {
@@ -50,19 +55,24 @@ function AccountNFT() {
           <div className="px-6 xl:px-2.5 my-6 sm:my-9 text-white">No Data...</div>
         ) : account && active && !loading && !!nfts.length ? (
           <>
-            <div className="hidden md:block px-6 xl:px-2.5 my-6 sm:my-9">
-              <Stack spacing={3}>
+            {isBrowser ? (
+              <Stack spacing={3} className="px-6 xl:px-2.5 my-6 sm:my-9">
                 {nfts.map((nft) => (
                   <NFTItem nft={nft} key={nft.tokenId} tokenId={nft.tokenId} />
                 ))}
               </Stack>
-            </div>
-            <div className="block md:hidden">
+            ) : (
               <MobileWrap nfts={nfts} />
-            </div>
+            )}
           </>
         ) : null}
       </div>
+
+      {isBrowser ? (
+        <Perk visible={visiblePerk} close={(value) => setVisiblePerk(value)} />
+      ) : (
+        <PerkModal visible={visiblePerkModal} close={() => setVisiblePerkModal(false)} />
+      )}
     </PageLayout>
   )
 }

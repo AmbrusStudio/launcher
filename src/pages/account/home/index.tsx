@@ -36,7 +36,7 @@ export function Home() {
   }, [fetchAllGames])
 
   return (
-    <AccountCenterPageLayout className="flex flex-col gap-36px max-w-1332px">
+    <AccountCenterPageLayout className="flex flex-col gap-36px">
       <AccountTitleWithAccountInfo subtitle="Center" />
       <div className="flex flex-col gap-36px">
         <AccountBlock title="E4C Games">

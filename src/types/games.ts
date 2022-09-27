@@ -31,7 +31,7 @@ type BaseGameInfo = {
 
 type NormalGameInfo = BaseGameInfo & {
   type: Exclude<GameType, 'mobile'>
-  downloadLink: GameClientDownloadLink
+  download: GameClientDownloadLink
 }
 
 type MobileGameInfo = BaseGameInfo & {

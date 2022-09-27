@@ -34,7 +34,7 @@ export function AccountCenterPageLayout(props: React.PropsWithChildren<PageLayou
   return (
     <BasePageLayout className="grid grid-cols-[auto_1fr]">
       <PageSidebar className="fixed h-screen min-w-108px" />
-      <div className={classNames('ml-108px p-36px', className)}>{children}</div>
+      <div className={classNames('ml-108px p-36px max-w-1332px xl:w-1332px', className)}>{children}</div>
     </BasePageLayout>
   )
 }

@@ -1,15 +1,18 @@
 import 'swiper/css'
+import 'react-photo-view/dist/react-photo-view.css'
 
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import { useEthers } from '@usedapp/core'
 import classNames from 'classnames'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import { PhotoProvider, PhotoView } from 'react-photo-view'
 
 import { ADDRESS_ASR, ADDRESS_E4C_Ranger } from '../../../contracts'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
 import { useHandleState } from '../../../hooks/useHandleState'
 import { NFTE4CRanger } from '../../../types'
+import { imageSizeConversion } from '../../../utils'
 import Star from '../../Icon/Star'
 import ConfirmUnstakeModal from '../ConfirmUnstakeModal'
 import ConfirmUpgradeModal from '../ConfirmUpgradeModal'
@@ -88,7 +91,17 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
   return (
     <>
       <div className="w-full my-6 mx-auto">
-        <Slider nfts={nfts} setActive={setActive} />
+        <Slider
+          nfts={nfts}
+          setActive={(index) => {
+            if (index === active) {
+              const dom = document.querySelector<HTMLButtonElement>('#image-viewer')
+              dom?.click()
+            }
+
+            setActive(index)
+          }}
+        />
       </div>
 
       {nft && (
@@ -153,6 +166,14 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
         close={() => setVisibleConfirmUpgrade(false)}
         confirm={() => onUnstake(nft.tokenId)}
       />
+
+      <PhotoProvider>
+        <PhotoView src={imageSizeConversion(nft.image, 2000)}>
+          <button id="image-viewer" className="text-white fixed left-0 top-0 translate-x-[-100%]">
+            Click
+          </button>
+        </PhotoView>
+      </PhotoProvider>
     </>
   )
 }
