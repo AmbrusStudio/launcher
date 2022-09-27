@@ -33,7 +33,7 @@ export function Games() {
   }, [fetchGame])
 
   return (
-    <AccountCenterPageLayout className="flex flex-col gap-24px max-w-1332px">
+    <AccountCenterPageLayout className="flex flex-col gap-24px">
       <AccountTitleWithAccountInfo subtitle="Center" />
       <div className="flex flex-col w-full xl:w-1260px">
         <GameIconBar games={allGames} active={activeGame} />

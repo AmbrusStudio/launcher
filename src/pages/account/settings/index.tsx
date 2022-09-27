@@ -84,7 +84,7 @@ export function Settings() {
   return (
     <React.Fragment>
       {sessionExpired && <Navigate to="/account/signin" replace={true} />}
-      <AccountCenterPageLayout className="flex flex-col gap-36px max-w-1332px">
+      <AccountCenterPageLayout className="flex flex-col gap-36px">
         <AccountTitie subtitle="Management" />
         <div className="grid grid-cols-1 xl:grid-cols-[600px_1fr] gap-36px">
           <AccountMyAccountInfo disabled={updateSending} onSaveButtonSubmit={handleSubmit(handleSaveButtonSubmit)} />
