@@ -12,7 +12,7 @@ import { useTokenId, useTokenIdByContract } from './useTokenId'
  * useERC721 List
  * @returns
  */
-export function useERC721List() {
+export function useERC721ListState() {
   const { account } = useEthers()
 
   // tokenId for owner
@@ -59,6 +59,46 @@ export function useERC721List() {
     [tokenIdForContract, upgradedForContract, originalOwner]
   )
   // console.log('nftsForContract', nftsForContract)
+  const nfts = useMemo<NFTE4CRanger[]>(() => [...nftsForAccount, ...nftsForContract], [nftsForAccount, nftsForContract])
+  // console.log('nfts', nfts)
+
+  return {
+    nfts,
+    loading: loading,
+  }
+}
+
+export function useERC721List() {
+  const { account } = useEthers()
+
+  // TokenId for owner
+  const { tokenId, loading } = useTokenId()
+
+  // TokenId by contract
+  const tokenIdByContract = useTokenIdByContract()
+
+  // TokenId original owner
+  // originalOwner replaces ownerOf to judge staking state
+  const originalOwner = useOriginalOwners(ADDRESS_E4C_Ranger, tokenIdByContract)
+
+  const tokenIdForContract = useMemo(() => {
+    const list: string[] = []
+    // Determine the NFT that the current user has staked based on the "originalOwner"
+    originalOwner.forEach((item, index) => {
+      if (account && item && getAddress(item) === getAddress(account)) {
+        list.push(tokenIdByContract[index])
+      }
+    })
+
+    return list
+  }, [account, originalOwner, tokenIdByContract])
+
+  // Nfts for account
+  const nftsForAccount = useMemo<NFTE4CRanger[]>(() => nftsForOwner(tokenId, [], []), [tokenId])
+
+  // Nfts for contract
+  const nftsForContract = useMemo<NFTE4CRanger[]>(() => nftsForOwner(tokenIdForContract, [], []), [tokenIdForContract])
+
   const nfts = useMemo<NFTE4CRanger[]>(() => [...nftsForAccount, ...nftsForContract], [nftsForAccount, nftsForContract])
   // console.log('nfts', nfts)
 

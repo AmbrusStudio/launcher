@@ -1,6 +1,8 @@
 import { FC } from 'react'
 import Slider from 'react-slick'
 
+import { NFTE4CRanger } from '../../../types'
+import { imageSizeConversion } from '../../../utils'
 import { IconArrowDown } from '../../Icon'
 
 type AssetItemProps = {
@@ -71,7 +73,7 @@ function SamplePrevArrow(props: any) {
 }
 
 type AccountMyAssetProps = {
-  data: { id: number; src: string }[]
+  data: NFTE4CRanger[]
 }
 
 const AssetsSlider: FC<AccountMyAssetProps> = ({ data }) => {
@@ -80,7 +82,7 @@ const AssetsSlider: FC<AccountMyAssetProps> = ({ data }) => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: 5,
     slidesToScroll: 1,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
@@ -90,7 +92,11 @@ const AssetsSlider: FC<AccountMyAssetProps> = ({ data }) => {
     <div className="overflow-hidden">
       <Slider {...settings}>
         {data.map((asset) => (
-          <AssetItem key={`asset-${asset.id}`} src={asset.src} onItemClick={() => null} />
+          <AssetItem
+            key={`asset-${asset.tokenId}`}
+            src={imageSizeConversion(asset.image, 800)}
+            onItemClick={() => null}
+          />
         ))}
       </Slider>
     </div>

@@ -1,7 +1,7 @@
 import { Stack } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { isBrowser } from 'react-device-detect'
 
 import { PageLayout } from '../../../components/Layout'
@@ -12,20 +12,15 @@ import NFTItem from '../../../components/NFT/NFTItem'
 import Perk from '../../../components/NFT/Perk'
 import PerkModal from '../../../components/NFT/PerkModal'
 import { useWeb3Modal } from '../../../hooks'
-import { useERC721List } from '../../../hooks/useERC721List'
+import { useERC721ListState } from '../../../hooks/useERC721List'
 
 function AccountNFT() {
   const { account, active } = useEthers()
   const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
 
-  const { nfts, loading } = useERC721List()
+  const { nfts, loading } = useERC721ListState()
   const [visiblePerk, setVisiblePerk] = useState<boolean>(false)
   const [visiblePerkModal, setVisiblePerkModal] = useState<boolean>(false)
-
-  // Handle wallet switchNetwork
-  const handleWalletSwitchNetwork = useCallback(async () => {
-    if (chainIdMismatch) await switchNetwork()
-  }, [chainIdMismatch, switchNetwork])
 
   return (
     <PageLayout>
@@ -38,7 +33,7 @@ function AccountNFT() {
               connected={!!(account && active)}
               chainIdMismatch={chainIdMismatch}
               onConnectClick={() => connect()}
-              onSwitchNetworkClick={handleWalletSwitchNetwork}
+              onSwitchNetworkClick={switchNetwork}
             >
               {shortenIfAddress(account)}
             </WalletButton>
@@ -53,7 +48,7 @@ function AccountNFT() {
           </div>
         ) : account && active && !loading && !nfts.length ? (
           <div className="px-6 xl:px-2.5 my-6 sm:my-9 text-white">No Data...</div>
-        ) : account && active && !loading && !!nfts.length ? (
+        ) : (
           <>
             {isBrowser ? (
               <Stack spacing={3} className="px-6 xl:px-2.5 my-6 sm:my-9">
@@ -65,7 +60,7 @@ function AccountNFT() {
               <MobileWrap nfts={nfts} />
             )}
           </>
-        ) : null}
+        )}
       </div>
 
       {isBrowser ? (
