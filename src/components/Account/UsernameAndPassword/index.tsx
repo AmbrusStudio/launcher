@@ -16,7 +16,12 @@ type FogotPasswordProps = {
 function FogotPassword(props: FogotPasswordProps) {
   const { onFogotPasswordClick } = props
   return (
-    <button className="font-normal text-rust underline uppercase" onClick={onFogotPasswordClick}>
+    <button
+      className="font-normal text-rust underline uppercase"
+      type="button"
+      autoFocus={false}
+      onClick={onFogotPasswordClick}
+    >
       Forgot Password?
     </button>
   )

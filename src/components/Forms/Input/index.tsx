@@ -95,6 +95,7 @@ function LabeledInput(props: InputProps) {
           <button
             className="absolute right-24px top-1/2 -translate-y-1/2 text-grey-medium"
             title="Toggle Password Visible"
+            type="button"
             onClick={handleToggleVisible}
           >
             {visible && <IconInvisible className="w-24px h-auto" aria-label="Make password invisible" />}
