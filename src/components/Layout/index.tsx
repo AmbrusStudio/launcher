@@ -32,9 +32,9 @@ export function PageLayout(props: React.PropsWithChildren<PageLayoutProps>) {
 export function AccountCenterPageLayout(props: React.PropsWithChildren<PageLayoutProps>) {
   const { className, children } = props
   return (
-    <BasePageLayout className="grid grid-cols-[auto_1fr]">
+    <BasePageLayout className="flex flex-row flex-nowrap">
       <PageSidebar className="fixed h-screen min-w-108px" />
-      <div className={classNames('ml-108px p-36px max-w-1332px xl:w-1332px', className)}>{children}</div>
+      <div className={classNames('ml-108px p-36px w-full max-w-1332px', className)}>{children}</div>
     </BasePageLayout>
   )
 }
