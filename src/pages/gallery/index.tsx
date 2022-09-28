@@ -94,7 +94,7 @@ function Gallery() {
         <div className="my-3 lg:my-[48px]" ref={wrapperRef}>
           <div
             className={classNames('hidden lg:block absolute w-[300px] max-height overflow-hidden', {
-              'fixed top-[100px]': isFixed,
+              'fixed lg:top-[68px] xl:top-[100px]': isFixed,
             })}
           >
             <div className={'flex m-b-3 lg:m-b-4.5'}>
