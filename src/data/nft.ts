@@ -72,7 +72,7 @@ export const stakeAnnouncement: StakeAnnouncement[] = [
     description: 'You get',
     list: [
       {
-        text: '5% in-game IP dividend ownership* of the corresponding champions&skins',
+        text: '5% in-game IP dividend ownership of the corresponding champions&skins',
       },
       {
         text: 'Exclusive airdrop of the corresponding champion in game E4C: Final Salvation',
@@ -93,7 +93,7 @@ export const stakeAnnouncement: StakeAnnouncement[] = [
     description: 'You will Get',
     list: [
       {
-        text: '3% additional in-game IP dividend ownership* of the corresponding champions&skins',
+        text: '3% additional in-game IP dividend ownership of the corresponding champions & skins',
       },
       {
         text: 'Exclusive airdrop of the corresponding champion in game E4C: Final Salvation',
