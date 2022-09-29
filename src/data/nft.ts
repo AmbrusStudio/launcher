@@ -89,7 +89,7 @@ export const stakeAnnouncement: StakeAnnouncement[] = [
     ],
   },
   {
-    title: 'Once the NFT is upgraded to Gold+',
+    title: 'Once the NFT is upgraded to Gold+ Edition',
     description: 'You will Get',
     list: [
       {
