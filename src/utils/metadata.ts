@@ -50,19 +50,12 @@ export const nftsForOwner = (
 }
 
 /**
- * get edition
- * @param tokenId
- * @returns
+ * Get Edition
  */
-export const getEdition = (tokenId: number, upgraded: NFTE4CRangerUpgraded): NFTEdition => {
-  if (tokenId >= 1 && tokenId <= 15) {
-    return NFTEdition.UltimateEdition
-  } else if (tokenId >= 16 && upgraded) {
+export const getEdition = (upgraded: NFTE4CRangerUpgraded): NFTEdition => {
+  if (upgraded) {
     return NFTEdition.GoldPlusEdition
-  } else if (tokenId >= 16 && !upgraded) {
-    return NFTEdition.GoldEdition
   } else {
-    // default
     return NFTEdition.GoldEdition
   }
 }
