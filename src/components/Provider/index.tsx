@@ -1,15 +1,24 @@
-import { DAppProvider } from '@usedapp/core'
+import { Config as DAppConfig, DAppProvider, Mainnet, Rinkeby, Ropsten } from '@usedapp/core'
 import WalletConnectProvider from '@walletconnect/web3-provider'
+import { getDefaultProvider } from 'ethers'
 import { SnackbarProvider } from 'notistack'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import { WalletModalContext } from '../../context'
-import { DAPP_CONFIG } from '../../contracts'
 import WalletModal from '../WalletModal'
 
 type ProvidersProps = {
   children: React.ReactNode
+}
+
+const dAppConfig: DAppConfig = {
+  readOnlyChainId: Mainnet.chainId,
+  readOnlyUrls: {
+    [Mainnet.chainId]: getDefaultProvider('mainnet'),
+    [Rinkeby.chainId]: getDefaultProvider('rinkeby'),
+    [Ropsten.chainId]: getDefaultProvider('ropsten'),
+  },
 }
 
 /**
@@ -55,7 +64,7 @@ function WalletModalProvider({ children }: ProvidersProps) {
 export function Provider({ children }: ProvidersProps) {
   const formMethods = useForm()
   return (
-    <DAppProvider config={DAPP_CONFIG}>
+    <DAppProvider config={dAppConfig}>
       <FormProvider {...formMethods}>
         <WalletModalProvider>
           <SnackbarProvider maxSnack={3}>{children}</SnackbarProvider>
