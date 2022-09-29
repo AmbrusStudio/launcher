@@ -55,8 +55,9 @@ export function useStatusCheck(tokenId: string) {
       return stakingTime.gte(new BigNumber(upgradeDuration.toString()))
     }
   }, [upgradeDuration, stakingTime])
+
   // Soulbound Badge Status
-  const soulboundBadgeStatus = useMemo<boolean>(() => true, [])
+  const soulboundBadgeStatus = useMemo<boolean>(() => false, [])
 
   const status = useMemo<boolean>(() => timeStatus && soulboundBadgeStatus, [timeStatus, soulboundBadgeStatus])
 
