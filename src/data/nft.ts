@@ -49,7 +49,7 @@ export const PERKS: PERK[] = [
 
 export const stakeToUpgrade: StakeInfoDataType = {
   title: 'Stake to Upgrade',
-  description: 'You can upgrade your NFT by staking for 35 days, and claiming a community badge by completing a specific task. Your NFT can only be staked to upgrade once.',
+  description: 'You can upgrade your NFT by staking it for 35 days, and claiming a community badge by completing a specific task. Your NFT can only be staked to upgrade once.',
 }
 export const statusCheckData: StakeInfoDataType = {
   title: 'Status Check',
