@@ -11,7 +11,7 @@ import GalleryWrapperFilter from '../../components/Gallery/GalleryWrapperFilter'
 import HeadStatus from '../../components/Gallery/HeadStatus'
 import ModalGalleryInfo from '../../components/Gallery/ModalGalleryInfo'
 import Search from '../../components/Gallery/Search'
-import SearchActionButton from '../../components/Gallery/SearchActionButton'
+import SearchAction from '../../components/Gallery/SearchAction'
 import { PageLayout } from '../../components/Layout'
 import { GALLERYS_FILTERS_STATUS } from '../../data'
 import { useNumStrState } from '../../hooks/useNumStrState'
@@ -35,7 +35,7 @@ function Gallery() {
   const scroll = useScroll(document)
 
   const isFixed = useMemo(() => {
-    const headerDom: HTMLDivElement | null = document.querySelector('#header')
+    const headerDom = document.querySelector<HTMLDivElement>('#header')
     const headerHeight = headerDom?.offsetHeight || 100
     return scroll && wrapperRef?.current ? scroll.top >= wrapperRef.current?.offsetTop - headerHeight : false
   }, [wrapperRef, scroll])
@@ -91,23 +91,13 @@ function Gallery() {
       <div className="max-w-[1312px] m-x-auto mt-[92px] lg:mt-[156px] xl:mt-[188px] px-6">
         <GalleryHead />
 
-        <div className="flex flex-col lg:flex-row justify-between my-3 lg:my-[48px]" ref={wrapperRef}>
+        <div className="my-3 lg:my-[48px]" ref={wrapperRef}>
           <div
-            className={classNames('lg:w-[300px] lg:shrink-0 lg:absolute', {
-              'sticky lg:fixed top-[68px] xl:top-[100px] z-1': isFixed,
-              'max-height overflow-hidden': true,
+            className={classNames('hidden lg:block absolute w-[300px] max-height overflow-hidden', {
+              'fixed lg:top-[68px] xl:top-[100px]': isFixed,
             })}
           >
-            <div
-              className={classNames('flex m-b-6 lg:m-b-4.5', {
-                'bg-[#252525] lg:bg-transparent': isFixed,
-              })}
-            >
-              <SearchActionButton
-                isFilter={isFilter}
-                clearFilter={() => clearFilter()}
-                showFilter={() => setVisibleDrawer(true)}
-              />
+            <div className={'flex m-b-3 lg:m-b-4.5'}>
               <Search searchId={searchId} setSearchId={setSearchId} />
             </div>
             <div className="hidden lg:block">
@@ -124,8 +114,21 @@ function Gallery() {
               </div>
             </div>
           </div>
-          <div className="w-full lg:ml-[336px]">
-            <HeadStatus isFixed={isFixed} count={currentGallery.length} clearFilter={clearFilter} />
+          <div className="lg:ml-[336px]">
+            <SearchAction
+              searchId={searchId}
+              isFilter={isFilter}
+              setSearchId={setSearchId}
+              clearFilter={clearFilter}
+              setVisibleDrawer={setVisibleDrawer}
+            />
+
+            <HeadStatus
+              scroll={scroll}
+              wrapperRef={wrapperRef}
+              count={currentGallery.length}
+              clearFilter={clearFilter}
+            />
 
             {checkedFilterCategory.length || searchId ? (
               <GalleryWrapperFilter

@@ -1,4 +1,6 @@
-import React from 'react'
+import CircularProgress from '@mui/material/CircularProgress'
+import { shortenIfAddress, useEthers } from '@usedapp/core'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { getAllGames } from '../../../api'
@@ -7,20 +9,25 @@ import { AccountBlock } from '../../../components/Account/Block'
 import AssetsSlider from '../../../components/Account/MyAsset'
 import { GameBanner } from '../../../components/Game'
 import { AccountCenterPageLayout } from '../../../components/Layout'
+import { WalletButton } from '../../../components/Layout/WalletButton'
+import { useWeb3Modal } from '../../../hooks'
+import { useERC721List } from '../../../hooks/useERC721List'
 import { GameInfo } from '../../../types'
-
-const demoData: { id: number; src: string }[] = []
 
 export function Home() {
   const navigate = useNavigate()
+  const { account, active } = useEthers()
+  const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
 
-  const [games, setGames] = React.useState<GameInfo[]>([])
-  const fetchAllGames = React.useCallback(async (signal: AbortSignal) => {
+  const [games, setGames] = useState<GameInfo[]>([])
+  const { nfts, loading } = useERC721List()
+
+  const fetchAllGames = useCallback(async (signal: AbortSignal) => {
     const games = await getAllGames(signal)
     setGames(games)
   }, [])
 
-  const handleGameBannerClick = React.useCallback(
+  const handleGameBannerClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement, MouseEvent>, id: number | string) => {
       e.preventDefault()
       e.stopPropagation()
@@ -29,7 +36,7 @@ export function Home() {
     [navigate]
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     const abortController = new AbortController()
     fetchAllGames(abortController.signal)
     return () => abortController.abort()
@@ -52,10 +59,27 @@ export function Home() {
           </div>
         </AccountBlock>
         <AccountBlock title="My Assets">
-          {demoData.length ? (
-            <AssetsSlider data={demoData} />
-          ) : (
+          {!(account && active) ? (
+            <WalletButton
+              connected={!!(account && active)}
+              chainIdMismatch={chainIdMismatch}
+              onConnectClick={() => connect()}
+              onSwitchNetworkClick={switchNetwork}
+            >
+              {shortenIfAddress(account)}
+            </WalletButton>
+          ) : account && active && loading ? (
+            <div className="text-center py-6">
+              <CircularProgress
+                sx={{
+                  color: 'white',
+                }}
+              />
+            </div>
+          ) : account && active && !loading && !nfts.length ? (
             <span className="text-base text-white">No more data</span>
+          ) : (
+            <AssetsSlider data={nfts} />
           )}
         </AccountBlock>
       </div>
