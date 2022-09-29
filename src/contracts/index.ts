@@ -8,7 +8,7 @@ const defaultChainId = getDefaultChainId()
 
 // Holder
 export const ADDRESS_E4C_Rangers = {
-  [Mainnet.chainId]: '',
+  [Mainnet.chainId]: '0x90beaE50fd8E840c680b27A772024B8a15EFE2a1',
   [Rinkeby.chainId]: '0x243A98FA4D9F277aF9C0D89BBf7661aF42Ae742f',
   [Goerli.chainId]: '0xE90547570ee95e6929A0DF0434FF9b5fC8050B6E',
 }
