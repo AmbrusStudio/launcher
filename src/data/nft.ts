@@ -68,23 +68,47 @@ export const confirmUpgradeData: ConfirmUpgradeDataType = {
 
 export const stakeAnnouncement: StakeAnnouncement[] = [
   {
-    title: 'Upgrade to Legendary Edition +',
-    description: 'And You’ll Get',
+    title: 'With a Gold Edition NFT',
+    description: 'You get',
     list: [
       {
-        text: '12 more in-game loots',
+        text: '5% in-game IP dividend ownership* of the corresponding champions&skins',
       },
       {
-        text: '1 legendary skin for Rin in our game: E4C Final Salvation',
+        text: 'Exclusive airdrop of the corresponding champion in game E4C: Final Salvation',
+      },
+      {
+        text: 'Gold Loot Box containing in-game champions and skins',
+      },
+      {
+        text: '10% discount on in-game purchases',
+      },
+      {
+        text: 'Complementary gifts to 1 friend',
       },
     ],
   },
   {
-    title: 'Once the NFT is staked',
-    description: 'You’ll Get',
+    title: 'Once the NFT is upgraded to Gold+',
+    description: 'You will Get',
     list: [
       {
-        text: 'NFT Airdrop (Rangers Edition) from our upcoming E4C Rangers Series',
+        text: '3% additional in-game IP dividend ownership* of the corresponding champions&skins',
+      },
+      {
+        text: 'Exclusive airdrop of the corresponding champion in game E4C: Final Salvation',
+      },
+      {
+        text: 'E4C token airdrop',
+      },
+      {
+        text: 'Gold+ Loot Box containing in-game champions and skins',
+      },
+      {
+        text: '15% discount on in-game purchases',
+      },
+      {
+        text: 'Complementary gifts to 3 friends',
       },
     ],
   },
