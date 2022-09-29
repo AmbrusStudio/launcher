@@ -16,7 +16,7 @@ export const ADDRESS_E4C_Ranger = ADDRESS_E4C_Rangers[defaultChainId]
 
 // AmbrusStudioRanger
 export const ADDRESS_ASRS = {
-  [Mainnet.chainId]: '',
+  [Mainnet.chainId]: '0x5e81f795EE26A4053F2DD04a5acF671B5f725618',
   [Rinkeby.chainId]: '0x19Dd9D7899Cb03c3a0e12911121ADaED7a4648B8',
   [Goerli.chainId]: '0x77dc43876D49382863297889dFa238c5f8b74020',
 }

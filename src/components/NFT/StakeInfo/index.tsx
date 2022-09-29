@@ -41,7 +41,7 @@ interface StakeInfoProps {
 const StakeInfo: FC<StakeInfoProps> = ({ stakeLoading, toggle, stake }) => {
   return (
     <div className="absolute top-0 right-0 bottom-0 left-0 flex">
-      <div className="w-[53.5%] overflow-hidden float-left bg-white p-6 grid gap-y-20.5">
+      <div className="w-[53.5%] overflow-auto float-left bg-white p-6 grid gap-y-20.5">
         {stakeAnnouncement.map((item, index) => (
           <NFTAnnouncement data={item} key={index} />
         ))}
