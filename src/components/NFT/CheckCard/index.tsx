@@ -78,7 +78,7 @@ const CheckCard: FC<CheckCardProps> = ({ duration, timeLeft, stakedPercentage, t
 
         <div>
           <p className="font-normal text-xs xl:text-base leading-5 text-center text-white not-italic">
-            It has been staked for at least {formatSeconds(duration) || '-'}
+            It has been staked for at least 35 days
           </p>
           <p className="font-normal text-xs leading-5 text-center text-rust not-italic">
             ({formatSeconds(timeLeft) || '0 second'} left)
