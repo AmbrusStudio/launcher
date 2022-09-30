@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import Slider from 'react-slick'
 
+import { BlindBoxPictures } from '../../../constants'
 import { NFTE4CRanger } from '../../../types'
 import { imageSizeConversion } from '../../../utils'
 import { IconArrowDown } from '../../Icon'
@@ -16,7 +17,7 @@ function AssetItem(props: AssetItemProps) {
     <div className="mx-[18px]" onClick={onItemClick}>
       <img
         className="w-full h-full rounded-12px object-cover select-none border-1 border-white"
-        src={src}
+        src={BlindBoxPictures}
         alt="Asset Image"
         loading="lazy"
       />
