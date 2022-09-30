@@ -1,13 +1,28 @@
 import { FC } from 'react'
 import Slider from 'react-slick'
 
+import { BlindBoxPictures } from '../../../constants'
 import { NFTE4CRanger } from '../../../types'
-import BlindBox from '../../BlindBox'
+import { imageSizeConversion } from '../../../utils'
 import { IconArrowDown } from '../../Icon'
 
 type AssetItemProps = {
   src: string
   onItemClick: React.MouseEventHandler<HTMLDivElement>
+}
+
+function AssetItem(props: AssetItemProps) {
+  const { src, onItemClick } = props
+  return (
+    <div className="mx-[18px]" onClick={onItemClick}>
+      <img
+        className="w-full h-full rounded-12px object-cover select-none border-1 border-white"
+        src={BlindBoxPictures}
+        alt="Asset Image"
+        loading="lazy"
+      />
+    </div>
+  )
 }
 
 function SampleNextArrow(props: any) {
@@ -62,15 +77,13 @@ type AccountMyAssetProps = {
   data: NFTE4CRanger[]
 }
 
-const slidesToShow = 5
-
 const AssetsSlider: FC<AccountMyAssetProps> = ({ data }) => {
   const settings = {
     className: 'assetsSliderWrapper',
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: slidesToShow,
+    slidesToShow: 5,
     slidesToScroll: 1,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
@@ -78,28 +91,15 @@ const AssetsSlider: FC<AccountMyAssetProps> = ({ data }) => {
 
   return (
     <div className="overflow-hidden">
-      {data.length <= slidesToShow ? (
-        <div className="flex flex-wrap w-full">
-          {data.map((asset) => (
-            <div
-              className="w-[240px] h-[240px] mr-9 mb-9 rounded-12px object-cover select-none border-1 border-white last-of-type:mr-0 box-border overflow-hidden"
-              key={`asset-${asset.tokenId}`}
-            >
-              <BlindBox />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <Slider {...settings}>
-          {data.map((asset) => (
-            <div className="px-[18px]" key={`asset-${asset.tokenId}`}>
-              <div className="w-full h-full rounded-12px object-cover select-none border-1 border-white box-border overflow-hidden">
-                <BlindBox />
-              </div>
-            </div>
-          ))}
-        </Slider>
-      )}
+      <Slider {...settings}>
+        {data.map((asset) => (
+          <AssetItem
+            key={`asset-${asset.tokenId}`}
+            src={imageSizeConversion(asset.image, 800)}
+            onItemClick={() => null}
+          />
+        ))}
+      </Slider>
     </div>
   )
 }
