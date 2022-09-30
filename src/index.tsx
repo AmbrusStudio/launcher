@@ -2,8 +2,6 @@ import 'uno.css'
 import '@unocss/reset/tailwind.css'
 import './styles/base.css'
 import './styles/index.scss'
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
 
 import CssBaseline from '@mui/material/CssBaseline'
 import React from 'react'

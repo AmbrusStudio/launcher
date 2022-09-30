@@ -8,12 +8,12 @@ import classNames from 'classnames'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { PhotoProvider, PhotoView } from 'react-photo-view'
 
-import { BlindBoxPictures } from '../../../constants'
 import { ADDRESS_ASR, ADDRESS_E4C_Ranger } from '../../../contracts'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
 import { useHandleState } from '../../../hooks/useHandleState'
 import { NFTE4CRanger } from '../../../types'
-// import Star from '../../Icon/Star'
+import { imageSizeConversion } from '../../../utils'
+import Star from '../../Icon/Star'
 import ConfirmUnstakeModal from '../ConfirmUnstakeModal'
 import ConfirmUpgradeModal from '../ConfirmUpgradeModal'
 import NFTDetails from '../NFTDetails'
@@ -109,11 +109,11 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
           <div className="px-6 xl:px-2.5">
             <NFTDetails nft={nft} tokenId={nft.tokenId} />
           </div>
-          {nft.upgraded === false && (
+          {Number(nft.tokenId) >= 16 && nft.upgraded === false && (
             <Actions sx={{ marginTop: 'auto' }} direction="row" spacing={1.5} className="fixed left-6 bottom-6 right-6">
-              {/* <button className="u-btn u-btn-primary max-w-[120px] relative !py-0">
+              <button className="u-btn u-btn-primary max-w-[120px] relative !py-0">
                 <Star sx={{ fontSize: '36px' }} />
-              </button> */}
+              </button>
               {nft.staking ? (
                 <button
                   disabled={unstakeLoading}
@@ -168,7 +168,7 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
       />
 
       <PhotoProvider>
-        <PhotoView src={BlindBoxPictures}>
+        <PhotoView src={imageSizeConversion(nft.image, 2000)}>
           <button id="image-viewer" className="text-white fixed left-0 top-0 translate-x-[-100%]">
             Click
           </button>
