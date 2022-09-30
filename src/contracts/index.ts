@@ -8,7 +8,7 @@ const defaultChainId = getDefaultChainId()
 
 // Holder
 export const ADDRESS_E4C_Rangers = {
-  [Mainnet.chainId]: '0x90beaE50fd8E840c680b27A772024B8a15EFE2a1',
+  [Mainnet.chainId]: '0x9c18beA91AE053397918410311dbB89295baE18b',
   [Rinkeby.chainId]: '0x243A98FA4D9F277aF9C0D89BBf7661aF42Ae742f',
   [Goerli.chainId]: '0xE90547570ee95e6929A0DF0434FF9b5fC8050B6E',
 }
@@ -16,7 +16,7 @@ export const ADDRESS_E4C_Ranger = ADDRESS_E4C_Rangers[defaultChainId]
 
 // AmbrusStudioRanger
 export const ADDRESS_ASRS = {
-  [Mainnet.chainId]: '0x5e81f795EE26A4053F2DD04a5acF671B5f725618',
+  [Mainnet.chainId]: '0xba265b93519e6473f34f46ee35f4b23970f41a3f',
   [Rinkeby.chainId]: '0x19Dd9D7899Cb03c3a0e12911121ADaED7a4648B8',
   [Goerli.chainId]: '0x77dc43876D49382863297889dFa238c5f8b74020',
 }
