@@ -3,12 +3,12 @@ import { useEthers } from '@usedapp/core'
 import classNames from 'classnames'
 import { FC, useCallback, useEffect, useState } from 'react'
 
-import { BlindBoxPictures, BlindBoxVideo } from '../../../constants'
 // import Star from '../../../components/Icon/Star'
 import { ADDRESS_ASR, ADDRESS_E4C_Ranger } from '../../../contracts'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
 import { useHandleState } from '../../../hooks/useHandleState'
 import { NFTE4CRanger } from '../../../types'
+import BlindBox from '../../BlindBox'
 import NFTDetails from '../NFTDetails'
 import StakeInfo from '../StakeInfo'
 import StatusCheck from '../StatusCheck'
@@ -73,14 +73,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
   return (
     <div className="bg-black relative min-h-300px">
       <div className="w-[53.5%] overflow-hidden float-left">
-        <video
-          className="h-full w-full"
-          src={BlindBoxVideo}
-          autoPlay
-          loop
-          disablePictureInPicture
-          poster={BlindBoxPictures}
-        ></video>
+        <BlindBox />
       </div>
       <div className="w-[46.5%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0">
         <NFTDetails nft={nft} tokenId={tokenId} />
