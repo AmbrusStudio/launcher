@@ -35,9 +35,11 @@ export function SideNav() {
             <IconESports className="w-36px h-36px" />
           </SideNavItem>
         </Link>
-        <SideNavItem name="My NFTs">
-          <IconAccount className="w-36px h-36px" />
-        </SideNavItem>
+        <Link to="/account/nft">
+          <SideNavItem name="My NFTs">
+            <IconAccount className="w-36px h-36px" />
+          </SideNavItem>
+        </Link>
         <SideNavItem name="My Game Assets">
           <IconWidgets className="w-36px h-36px" />
         </SideNavItem>
