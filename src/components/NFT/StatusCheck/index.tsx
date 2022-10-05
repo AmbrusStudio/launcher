@@ -3,9 +3,10 @@ import { Stack } from '@mui/material'
 import classNames from 'classnames'
 import { FC, useState } from 'react'
 
-import { stakeAnnouncement, statusCheckData } from '../../../data'
+import { statusCheckData } from '../../../data'
 import { useStatusCheck } from '../../../hooks/useStatusCheck'
 import { NFTE4CRanger } from '../../../types'
+import { getHolderByAddress, getStakeAnnouncement } from '../../../utils'
 import CheckCard from '../CheckCard'
 import ConfirmUnstake from '../ConfirmUnstake'
 import ConfirmUpgrade from '../ConfirmUpgrade'
@@ -38,12 +39,15 @@ const StatusCheck: FC<StatusCheckProps> = ({ unstakeLoading, nft, toggle, unstak
   const [visibleUnstake, setVisibleUnstake] = useState<boolean>(false)
   const [visibleUpgrade, setVisibleUpgrade] = useState<boolean>(false)
 
-  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(nft.tokenId)
+  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(
+    nft.tokenId,
+    getHolderByAddress(nft.address)
+  )
 
   return (
     <div className="absolute top-0 right-0 bottom-0 left-0 flex">
       <div className="w-[53.5%] overflow-auto float-left bg-white p-6 grid gap-y-20.5">
-        {stakeAnnouncement.map((item, index) => (
+        {getStakeAnnouncement(nft.address).map((item, index) => (
           <NFTAnnouncement data={item} key={index} />
         ))}
       </div>

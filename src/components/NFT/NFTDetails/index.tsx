@@ -75,7 +75,7 @@ const NFTDetails: FC<NFTDetailsProps> = ({ nft, tokenId }) => {
             className="w-[100px] lg:w[140px] !h-[40px] !lg:h-[58px]"
           />
         ) : (
-          <NFTTag content={getEdition(nft.upgraded)} />
+          <NFTTag content={getEdition(nft.upgraded, nft.address)} />
         )}
       </section>
 

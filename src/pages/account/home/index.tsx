@@ -1,6 +1,6 @@
 import CircularProgress from '@mui/material/CircularProgress'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { getAllGames } from '../../../api'
@@ -10,6 +10,12 @@ import AssetsSlider from '../../../components/Account/MyAsset'
 import { GameBanner } from '../../../components/Game'
 import { AccountCenterPageLayout } from '../../../components/Layout'
 import { WalletButton } from '../../../components/Layout/WalletButton'
+import {
+  ADDRESS_E4C_Ranger_Gold_Edition,
+  ADDRESS_E4C_Ranger_Rangers_Edition,
+  ADDRESS_E4CRanger_Gold_Holder,
+  ADDRESS_E4CRanger_Rangers_Holder,
+} from '../../../contracts'
 import { useWeb3Modal } from '../../../hooks'
 import { useERC721List } from '../../../hooks/useERC721List'
 import { GameInfo } from '../../../types'
@@ -20,7 +26,17 @@ export function Home() {
   const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
 
   const [games, setGames] = useState<GameInfo[]>([])
-  const { nfts, loading } = useERC721List()
+  const { nfts: nftsGold, loading: loadingGold } = useERC721List({
+    holderAddress: ADDRESS_E4CRanger_Gold_Holder,
+    tokenAddress: ADDRESS_E4C_Ranger_Gold_Edition,
+  })
+  const { nfts: nftsRangers, loading: loadingRangers } = useERC721List({
+    holderAddress: ADDRESS_E4CRanger_Rangers_Holder,
+    tokenAddress: ADDRESS_E4C_Ranger_Rangers_Edition,
+  })
+
+  const nfts = useMemo(() => [...nftsGold, ...nftsRangers], [nftsGold, nftsRangers])
+  const loading = useMemo(() => loadingGold && loadingRangers, [loadingGold, loadingRangers])
 
   const fetchAllGames = useCallback(async (signal: AbortSignal) => {
     const games = await getAllGames(signal)

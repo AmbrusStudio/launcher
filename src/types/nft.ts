@@ -87,14 +87,18 @@ export type PERK = {
 }
 
 export enum NFTEdition {
+  Default = '-',
   GoldEdition = 'Gold Edition',
   GoldPlusEdition = 'Gold Plus Edition',
+  RangersEdition = 'Rangers Edition',
+  RangersPlusEdition = 'Rangers Plus Edition',
   UltimateEdition = 'Ultimate Edition',
 }
 
 export type NFTE4CRangerUpgraded = boolean | undefined
 
 export type NFTE4CRanger = {
+  address: string
   tokenId: string
   upgraded: NFTE4CRangerUpgraded
   staking: boolean
