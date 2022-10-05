@@ -117,7 +117,7 @@ export const stakeAnnouncementGold: StakeAnnouncement[] = [
 
 export const stakeAnnouncementRangers: StakeAnnouncement[] = [
   {
-    title: 'With a Gold Edition NFT',
+    title: 'With a Rangers Edition NFT',
     description: 'You get',
     list: [
       {
@@ -138,7 +138,7 @@ export const stakeAnnouncementRangers: StakeAnnouncement[] = [
     ],
   },
   {
-    title: 'Once upgraded to Gold+ Edition',
+    title: 'Once upgraded to Rangers+ Edition',
     description: 'You will Get',
     list: [
       {
