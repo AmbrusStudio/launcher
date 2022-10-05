@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import { FC, useCallback, useEffect, useState } from 'react'
 
 // import Star from '../../../components/Icon/Star'
-import { ADDRESS_ASR, ADDRESS_E4C_Ranger } from '../../../contracts'
+import { ADDRESS_E4C_Ranger_Gold_Edition, ADDRESS_E4CRanger_Gold_Holder } from '../../../contracts'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
 import { useHandleState } from '../../../hooks/useHandleState'
 import { NFTE4CRanger } from '../../../types'
@@ -27,15 +27,15 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
   const [stakeLoading, setStakeLoading] = useState<boolean>(false)
   const [unstakeLoading, setUnstakeLoading] = useState<boolean>(false)
 
-  const { state: stakeState, send: stake } = useERC721SafeTransferFrom(ADDRESS_ASR)
-  const { state: unstakeState, send: unstake } = useE4CRangerUnstake(ADDRESS_E4C_Ranger)
+  const { state: stakeState, send: stake } = useERC721SafeTransferFrom(ADDRESS_E4C_Ranger_Gold_Edition)
+  const { state: unstakeState, send: unstake } = useE4CRangerUnstake(ADDRESS_E4CRanger_Gold_Holder)
 
   const handleState = useHandleState()
 
   // handle stake
   const onStake = useCallback(
     (tokenId: string) => {
-      stake(account, ADDRESS_E4C_Ranger, tokenId)
+      stake(account, ADDRESS_E4CRanger_Gold_Holder, tokenId)
     },
     [account, stake]
   )

@@ -3,7 +3,7 @@ import { Alchemy } from 'alchemy-sdk'
 import { getAddress } from 'ethers/lib/utils'
 import { useCallback, useEffect, useState } from 'react'
 
-import { ADDRESS_ASR, ADDRESS_E4C_Ranger, AlchemyNetwork } from '../contracts'
+import { ADDRESS_E4C_Ranger_Gold_Edition, ADDRESS_E4CRanger_Gold_Holder, AlchemyNetwork } from '../contracts'
 
 const initAlchemy = (): Alchemy => {
   const ALCHEMY_API_KEY: string | undefined = import.meta.env.VITE_ALCHEMY_API_KEY
@@ -20,7 +20,7 @@ const initAlchemy = (): Alchemy => {
  * Get NFT tokenId
  * @returns
  */
-export function useTokenId() {
+export function useTokenId({ tokenAddress }: { tokenAddress: string }) {
   const [tokenId, setTokenId] = useState<string[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const { account } = useEthers()
@@ -40,14 +40,14 @@ export function useTokenId() {
     console.log('nftsForOwnerResult', nftsForOwnerResult)
 
     const list = nftsForOwnerResult.ownedNfts
-      .filter((item) => getAddress(item.contract.address) === getAddress(ADDRESS_ASR))
+      .filter((item) => getAddress(item.contract.address) === getAddress(tokenAddress))
       .map((item) => item.tokenId)
 
     // console.log('list', list)
 
     setTokenId(list)
     setLoading(false)
-  }, [account])
+  }, [account, tokenAddress])
 
   useEffect(() => {
     nftsForOwner()
@@ -68,16 +68,16 @@ export function useTokenIdByContract() {
 
   // Fetch nfts for owner
   const nftsForOwner = useCallback(async () => {
-    if (!ADDRESS_E4C_Ranger) {
+    if (!ADDRESS_E4CRanger_Gold_Holder) {
       return
     }
     const alchemy = initAlchemy()
 
-    const nftsForOwnerResult = await alchemy.nft.getNftsForOwner(ADDRESS_E4C_Ranger)
+    const nftsForOwnerResult = await alchemy.nft.getNftsForOwner(ADDRESS_E4CRanger_Gold_Holder)
     console.log('nftsForOwnerResult by contract', nftsForOwnerResult)
 
     const list = nftsForOwnerResult.ownedNfts
-      .filter((item) => getAddress(item.contract.address) === getAddress(ADDRESS_ASR))
+      .filter((item) => getAddress(item.contract.address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition))
       .map((item) => item.tokenId)
 
     // console.log('list', list)

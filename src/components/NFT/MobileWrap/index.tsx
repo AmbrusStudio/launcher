@@ -9,7 +9,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { PhotoProvider, PhotoView } from 'react-photo-view'
 
 import { BlindBoxPictures } from '../../../constants'
-import { ADDRESS_ASR, ADDRESS_E4C_Ranger } from '../../../contracts'
+import { ADDRESS_E4C_Ranger_Gold_Edition, ADDRESS_E4CRanger_Gold_Holder } from '../../../contracts'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
 import { useHandleState } from '../../../hooks/useHandleState'
 import { NFTE4CRanger } from '../../../types'
@@ -45,15 +45,15 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
 
   const nft = useMemo<NFTE4CRanger>(() => nfts[active], [nfts, active])
 
-  const { state: stakeState, send: stake } = useERC721SafeTransferFrom(ADDRESS_ASR)
-  const { state: unstakeState, send: unstake } = useE4CRangerUnstake(ADDRESS_E4C_Ranger)
+  const { state: stakeState, send: stake } = useERC721SafeTransferFrom(ADDRESS_E4C_Ranger_Gold_Edition)
+  const { state: unstakeState, send: unstake } = useE4CRangerUnstake(ADDRESS_E4CRanger_Gold_Holder)
 
   const handleState = useHandleState()
 
   // handle stake
   const onStake = useCallback(
     (tokenId: string) => {
-      stake(account, ADDRESS_E4C_Ranger, tokenId)
+      stake(account, ADDRESS_E4CRanger_Gold_Holder, tokenId)
     },
     [account, stake]
   )

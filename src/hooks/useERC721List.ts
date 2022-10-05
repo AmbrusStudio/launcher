@@ -2,7 +2,6 @@ import { useEthers } from '@usedapp/core'
 import { getAddress } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 
-import { ADDRESS_E4C_Ranger } from '../contracts'
 import { NFTE4CRanger } from '../types'
 import { nftsForOwner } from '../utils'
 import { useOriginalOwners, useUpgradeds } from './useE4CRanger'
@@ -12,20 +11,20 @@ import { useTokenId, useTokenIdByContract } from './useTokenId'
  * useERC721 List
  * @returns
  */
-export function useERC721ListState() {
+export function useERC721ListState({ holderAddress, tokenAddress }: { holderAddress: string; tokenAddress: string }) {
   const { account } = useEthers()
 
   // tokenId for owner
-  const { tokenId, loading } = useTokenId()
+  const { tokenId, loading } = useTokenId({ tokenAddress })
 
   // tokenId by contract
   const tokenIdByContract = useTokenIdByContract()
 
-  const upgraded = useUpgradeds(ADDRESS_E4C_Ranger, tokenId)
+  const upgraded = useUpgradeds(holderAddress, tokenId)
 
   // tokenId original owner
   // originalOwner replaces ownerOf to judge staking state
-  const originalOwner = useOriginalOwners(ADDRESS_E4C_Ranger, tokenIdByContract)
+  const originalOwner = useOriginalOwners(holderAddress, tokenIdByContract)
 
   const tokenIdForContract = useMemo(() => {
     const list: string[] = []
@@ -42,7 +41,7 @@ export function useERC721ListState() {
     return list
   }, [account, originalOwner, tokenIdByContract])
 
-  const upgradedForContract = useUpgradeds(ADDRESS_E4C_Ranger, tokenIdForContract)
+  const upgradedForContract = useUpgradeds(holderAddress, tokenIdForContract)
   // console.log('upgraded', upgraded)
   // console.log('tokenIdByContract', tokenIdByContract)
   // console.log('originalOwner', originalOwner)
@@ -68,18 +67,20 @@ export function useERC721ListState() {
   }
 }
 
-export function useERC721List() {
+export function useERC721List({ holderAddress, tokenAddress }: { holderAddress: string; tokenAddress: string }) {
   const { account } = useEthers()
 
   // TokenId for owner
-  const { tokenId, loading } = useTokenId()
+  const { tokenId, loading } = useTokenId({
+    tokenAddress,
+  })
 
   // TokenId by contract
   const tokenIdByContract = useTokenIdByContract()
 
   // TokenId original owner
   // originalOwner replaces ownerOf to judge staking state
-  const originalOwner = useOriginalOwners(ADDRESS_E4C_Ranger, tokenIdByContract)
+  const originalOwner = useOriginalOwners(holderAddress, tokenIdByContract)
 
   const tokenIdForContract = useMemo(() => {
     const list: string[] = []
