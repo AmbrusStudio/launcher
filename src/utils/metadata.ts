@@ -2,7 +2,12 @@ import { constants } from 'ethers'
 import { getAddress } from 'ethers/lib/utils'
 import { compose } from 'redux'
 
-import { ADDRESS_E4C_Ranger_Gold_Edition, ADDRESS_E4C_Ranger_Rangers_Edition } from '../contracts'
+import {
+  ADDRESS_E4C_Ranger_Gold_Edition,
+  ADDRESS_E4C_Ranger_Rangers_Edition,
+  ADDRESS_E4CRanger_Gold_Holder,
+  ADDRESS_E4CRanger_Rangers_Holder,
+} from '../contracts'
 import { ALL_METADATA, stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
 import { Metadata, NFTE4CRanger, NFTE4CRangerUpgraded, NFTEdition, StakeAnnouncement } from '../types'
 
@@ -89,5 +94,20 @@ export const getStakeAnnouncement = (address: string): StakeAnnouncement[] => {
     return stakeAnnouncementRangers
   } else {
     return []
+  }
+}
+
+/**
+ * Get Holder By Address
+ * @param address
+ * @returns
+ */
+export const getHolderByAddress = (address: string): string => {
+  if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition)) {
+    return ADDRESS_E4CRanger_Gold_Holder
+  } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition)) {
+    return ADDRESS_E4CRanger_Rangers_Holder
+  } else {
+    throw new Error('holder not found')
   }
 }

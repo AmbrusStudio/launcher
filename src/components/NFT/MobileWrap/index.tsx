@@ -9,10 +9,10 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { PhotoProvider, PhotoView } from 'react-photo-view'
 
 import { BlindBoxPictures } from '../../../constants'
-import { ADDRESS_E4C_Ranger_Gold_Edition, ADDRESS_E4CRanger_Gold_Holder } from '../../../contracts'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
 import { useHandleState } from '../../../hooks/useHandleState'
 import { NFTE4CRanger } from '../../../types'
+import { getHolderByAddress } from '../../../utils'
 // import Star from '../../Icon/Star'
 import ConfirmUnstakeModal from '../ConfirmUnstakeModal'
 import ConfirmUpgradeModal from '../ConfirmUpgradeModal'
@@ -45,17 +45,17 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
 
   const nft = useMemo<NFTE4CRanger>(() => nfts[active], [nfts, active])
 
-  const { state: stakeState, send: stake } = useERC721SafeTransferFrom(ADDRESS_E4C_Ranger_Gold_Edition)
-  const { state: unstakeState, send: unstake } = useE4CRangerUnstake(ADDRESS_E4CRanger_Gold_Holder)
+  const { state: stakeState, send: stake } = useERC721SafeTransferFrom(nft.address)
+  const { state: unstakeState, send: unstake } = useE4CRangerUnstake(getHolderByAddress(nft.address))
 
   const handleState = useHandleState()
 
   // handle stake
   const onStake = useCallback(
     (tokenId: string) => {
-      stake(account, ADDRESS_E4CRanger_Gold_Holder, tokenId)
+      stake(account, getHolderByAddress(nft.address), tokenId)
     },
-    [account, stake]
+    [account, stake, nft.address]
   )
 
   // handle unstake
