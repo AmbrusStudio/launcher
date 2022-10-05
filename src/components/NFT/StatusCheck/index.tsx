@@ -3,6 +3,7 @@ import { Stack } from '@mui/material'
 import classNames from 'classnames'
 import { FC, useState } from 'react'
 
+import { ADDRESS_E4CRanger_Gold_Holder } from '../../../contracts'
 import { stakeAnnouncement, statusCheckData } from '../../../data'
 import { useStatusCheck } from '../../../hooks/useStatusCheck'
 import { NFTE4CRanger } from '../../../types'
@@ -38,7 +39,10 @@ const StatusCheck: FC<StatusCheckProps> = ({ unstakeLoading, nft, toggle, unstak
   const [visibleUnstake, setVisibleUnstake] = useState<boolean>(false)
   const [visibleUpgrade, setVisibleUpgrade] = useState<boolean>(false)
 
-  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(nft.tokenId)
+  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(
+    nft.tokenId,
+    ADDRESS_E4CRanger_Gold_Holder
+  )
 
   return (
     <div className="absolute top-0 right-0 bottom-0 left-0 flex">

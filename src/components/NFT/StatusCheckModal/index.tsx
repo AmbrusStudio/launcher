@@ -2,6 +2,7 @@ import { Stack } from '@mui/material'
 import classNames from 'classnames'
 import { FC, useState } from 'react'
 
+import { ADDRESS_E4CRanger_Gold_Holder } from '../../../contracts'
 import { stakeAnnouncement, statusCheckData } from '../../../data'
 import { useStatusCheck } from '../../../hooks/useStatusCheck'
 import { ArrowUp } from '../../Icon'
@@ -20,7 +21,10 @@ interface Props {
 
 const StatusCheckModal: FC<Props> = ({ visible, loading = false, close, upgrade, unstake, tokenId }) => {
   const [drawer, setDrawer] = useState<boolean>(false)
-  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(tokenId)
+  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(
+    tokenId,
+    ADDRESS_E4CRanger_Gold_Holder
+  )
 
   return (
     <Modal visible={visible} title={statusCheckData.title} close={close}>

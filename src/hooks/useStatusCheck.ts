@@ -1,7 +1,6 @@
 import BigNumber from 'bignumber.js'
 import { useMemo } from 'react'
 
-import { ADDRESS_E4CRanger_Gold_Holder } from '../contracts'
 import { useE4CRangerTotalStakingTime, useE4CRangerUpgradeDuration } from './useE4CRanger'
 
 /**
@@ -9,12 +8,12 @@ import { useE4CRangerTotalStakingTime, useE4CRangerUpgradeDuration } from './use
  * @param tokenId
  * @returns
  */
-export function useStatusCheck(tokenId: string) {
-  const upgradeDuration = useE4CRangerUpgradeDuration(ADDRESS_E4CRanger_Gold_Holder)
+export function useStatusCheck(tokenId: string, address: string) {
+  const upgradeDuration = useE4CRangerUpgradeDuration(address)
   // console.log('upgradeDuration', upgradeDuration)
 
   // totalStakingTime
-  const totalStakingTime = useE4CRangerTotalStakingTime(ADDRESS_E4CRanger_Gold_Holder, tokenId)
+  const totalStakingTime = useE4CRangerTotalStakingTime(address, tokenId)
   const stakingTime = useMemo<BigNumber>(
     () => (totalStakingTime ? new BigNumber(totalStakingTime.toString()) : new BigNumber(0)),
     [totalStakingTime]
