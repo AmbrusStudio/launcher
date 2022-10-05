@@ -1,8 +1,8 @@
 import classNames from 'classnames'
 import { FC } from 'react'
 
-import { ADDRESS_E4C_Ranger_Gold_Edition } from '../../../contracts'
 import { stakeToUpgrade } from '../../../data'
+import { NFTE4CRanger } from '../../../types'
 import { getStakeAnnouncement } from '../../../utils'
 import Modal from '../Modal'
 import NFTAnnouncement from '../NFTAnnouncement'
@@ -10,15 +10,16 @@ import NFTAnnouncement from '../NFTAnnouncement'
 interface Props {
   readonly visible: boolean
   readonly loading?: boolean
+  readonly nft: NFTE4CRanger
   close: () => void
   stake: () => void
 }
 
-const StakeInfoModal: FC<Props> = ({ visible, loading = false, close, stake }) => {
+const StakeInfoModal: FC<Props> = ({ visible, loading = false, nft, close, stake }) => {
   return (
     <Modal visible={visible} title={stakeToUpgrade.title} close={close}>
       <div className="bg-white backdrop-blur-md px-6 pt-6 pb-[109px] grid gap-y-[36px]">
-        {getStakeAnnouncement(ADDRESS_E4C_Ranger_Gold_Edition).map((item, index) => (
+        {getStakeAnnouncement(nft.address).map((item, index) => (
           <NFTAnnouncement data={item} key={index} />
         ))}
       </div>

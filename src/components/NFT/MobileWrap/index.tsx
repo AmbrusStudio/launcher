@@ -143,6 +143,7 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
       <StakeInfoModal
         visible={visibleStakeInfoModal}
         loading={stakeLoading}
+        nft={nft}
         close={() => setVisibleStakeInfoModal(false)}
         stake={() => onStake(nft.tokenId)}
       />
@@ -152,7 +153,7 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
         close={() => setVisibleStatusCheckModal(false)}
         upgrade={() => setVisibleConfirmUpgrade(true)}
         unstake={() => setVisibleConfirmUnstake(true)}
-        tokenId={nft.tokenId}
+        nft={nft}
       />
       <ConfirmUnstakeModal
         visible={visibleConfirmUnstake}

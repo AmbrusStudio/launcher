@@ -113,6 +113,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
           stakeLoading={stakeLoading}
           toggle={(value) => setVisibleInfo(value)}
           stake={() => onStake(tokenId)}
+          nft={nft}
         />
       )}
       {visibleStatusCheck && (
