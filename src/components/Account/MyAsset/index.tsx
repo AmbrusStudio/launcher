@@ -5,11 +5,6 @@ import { NFTE4CRanger } from '../../../types'
 import BlindBox from '../../BlindBox'
 import { IconArrowDown } from '../../Icon'
 
-type AssetItemProps = {
-  src: string
-  onItemClick: React.MouseEventHandler<HTMLDivElement>
-}
-
 function SampleNextArrow(props: any) {
   const { className, style, onClick } = props
   return (

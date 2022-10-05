@@ -26,7 +26,7 @@ export function useTokenId({ tokenAddress }: { tokenAddress: string }) {
   const { account } = useEthers()
 
   // Fetch nfts for owner
-  const nftsForOwner = useCallback(async () => {
+  const getNftsForOwner = useCallback(async () => {
     if (!account) {
       setLoading(false)
       return
@@ -50,8 +50,8 @@ export function useTokenId({ tokenAddress }: { tokenAddress: string }) {
   }, [account, tokenAddress])
 
   useEffect(() => {
-    nftsForOwner()
-  }, [nftsForOwner])
+    getNftsForOwner()
+  }, [getNftsForOwner])
 
   return {
     tokenId,
@@ -67,7 +67,7 @@ export function useTokenIdByContract({ holderAddress, tokenAddress }: { holderAd
   const [tokenId, setTokenId] = useState<string[]>([])
 
   // Fetch nfts for owner
-  const nftsForOwner = useCallback(async () => {
+  const getNftsForOwner = useCallback(async () => {
     if (!holderAddress) {
       return
     }
@@ -86,8 +86,8 @@ export function useTokenIdByContract({ holderAddress, tokenAddress }: { holderAd
   }, [holderAddress, tokenAddress])
 
   useEffect(() => {
-    nftsForOwner()
-  }, [nftsForOwner])
+    getNftsForOwner()
+  }, [getNftsForOwner])
 
   return tokenId
 }

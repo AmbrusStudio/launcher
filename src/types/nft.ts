@@ -98,6 +98,7 @@ export enum NFTEdition {
 export type NFTE4CRangerUpgraded = boolean | undefined
 
 export type NFTE4CRanger = {
+  address: string
   tokenId: string
   upgraded: NFTE4CRangerUpgraded
   staking: boolean

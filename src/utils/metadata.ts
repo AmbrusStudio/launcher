@@ -22,6 +22,7 @@ export const parseTokenId = (name: string): string => {
  * @returns
  */
 export const nftsForOwner = (
+  address: string,
   tokenIds: string[],
   upgradeds: NFTE4CRangerUpgraded[],
   originalOwners: string[]
@@ -41,6 +42,7 @@ export const nftsForOwner = (
     data.map((item) => {
       const tokenId = parseTokenId(item.name)
       return {
+        address,
         tokenId: tokenId,
         upgraded: tokenIdPairUpgraded.get(tokenId),
         staking: !!tokenIdPairStaking.get(tokenId),
