@@ -2,8 +2,10 @@ import { Stack } from '@mui/material'
 import classNames from 'classnames'
 import { FC, useState } from 'react'
 
-import { stakeAnnouncement, statusCheckData } from '../../../data'
+import { statusCheckData } from '../../../data'
 import { useStatusCheck } from '../../../hooks/useStatusCheck'
+import { NFTE4CRanger } from '../../../types'
+import { getHolderByAddress, getStakeAnnouncement } from '../../../utils'
 import { ArrowUp } from '../../Icon'
 import CheckCard from '../CheckCard'
 import Modal from '../Modal'
@@ -12,20 +14,23 @@ import NFTAnnouncement from '../NFTAnnouncement'
 interface Props {
   readonly visible: boolean
   readonly loading?: boolean
-  readonly tokenId: string
+  readonly nft: NFTE4CRanger
   close: () => void
   upgrade: () => void
   unstake: () => void
 }
 
-const StatusCheckModal: FC<Props> = ({ visible, loading = false, close, upgrade, unstake, tokenId }) => {
+const StatusCheckModal: FC<Props> = ({ visible, loading = false, nft, close, upgrade, unstake }) => {
   const [drawer, setDrawer] = useState<boolean>(false)
-  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(tokenId)
+  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(
+    nft.tokenId,
+    getHolderByAddress(nft.address)
+  )
 
   return (
     <Modal visible={visible} title={statusCheckData.title} close={close}>
       <div className="bg-white backdrop-blur-md px-6 pt-6 pb-[109px] grid gap-y-[36px]">
-        {stakeAnnouncement.map((item, index) => (
+        {getStakeAnnouncement(nft.address).map((item, index) => (
           <NFTAnnouncement data={item} key={index} />
         ))}
       </div>

@@ -1,8 +1,15 @@
 import { constants } from 'ethers'
+import { getAddress } from 'ethers/lib/utils'
 import { compose } from 'redux'
 
-import { ALL_METADATA } from '../data'
-import { Metadata, NFTE4CRanger, NFTE4CRangerUpgraded, NFTEdition } from '../types'
+import {
+  ADDRESS_E4C_Ranger_Gold_Edition,
+  ADDRESS_E4C_Ranger_Rangers_Edition,
+  ADDRESS_E4CRanger_Gold_Holder,
+  ADDRESS_E4CRanger_Rangers_Holder,
+} from '../contracts'
+import { ALL_METADATA, stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
+import { Metadata, NFTE4CRanger, NFTE4CRangerUpgraded, NFTEdition, StakeAnnouncement } from '../types'
 
 /**
  * parse tokenId by name
@@ -20,6 +27,7 @@ export const parseTokenId = (name: string): string => {
  * @returns
  */
 export const nftsForOwner = (
+  address: string,
   tokenIds: string[],
   upgradeds: NFTE4CRangerUpgraded[],
   originalOwners: string[]
@@ -39,6 +47,7 @@ export const nftsForOwner = (
     data.map((item) => {
       const tokenId = parseTokenId(item.name)
       return {
+        address,
         tokenId: tokenId,
         upgraded: tokenIdPairUpgraded.get(tokenId),
         staking: !!tokenIdPairStaking.get(tokenId),
@@ -51,11 +60,54 @@ export const nftsForOwner = (
 
 /**
  * Get Edition
+ * @param upgraded
+ * @param address
+ * @returns
  */
-export const getEdition = (upgraded: NFTE4CRangerUpgraded): NFTEdition => {
-  if (upgraded) {
-    return NFTEdition.GoldPlusEdition
+export const getEdition = (upgraded: NFTE4CRangerUpgraded, address: string): NFTEdition => {
+  if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition)) {
+    if (upgraded) {
+      return NFTEdition.GoldPlusEdition
+    } else {
+      return NFTEdition.GoldEdition
+    }
+  } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition)) {
+    if (upgraded) {
+      return NFTEdition.RangersPlusEdition
+    } else {
+      return NFTEdition.RangersEdition
+    }
   } else {
-    return NFTEdition.GoldEdition
+    return NFTEdition.Default
+  }
+}
+
+/**
+ * Get Stake Announcement
+ * @param address
+ * @returns
+ */
+export const getStakeAnnouncement = (address: string): StakeAnnouncement[] => {
+  if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition)) {
+    return stakeAnnouncementGold
+  } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition)) {
+    return stakeAnnouncementRangers
+  } else {
+    return []
+  }
+}
+
+/**
+ * Get Holder By Address
+ * @param address
+ * @returns
+ */
+export const getHolderByAddress = (address: string): string => {
+  if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition)) {
+    return ADDRESS_E4CRanger_Gold_Holder
+  } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition)) {
+    return ADDRESS_E4CRanger_Rangers_Holder
+  } else {
+    throw new Error('holder not found')
   }
 }
