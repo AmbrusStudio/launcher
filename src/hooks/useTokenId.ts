@@ -3,7 +3,7 @@ import { Alchemy } from 'alchemy-sdk'
 import { getAddress } from 'ethers/lib/utils'
 import { useCallback, useEffect, useState } from 'react'
 
-import { ADDRESS_E4C_Ranger_Gold_Edition, ADDRESS_E4CRanger_Gold_Holder, AlchemyNetwork } from '../contracts'
+import { AlchemyNetwork } from '../contracts'
 
 const initAlchemy = (): Alchemy => {
   const ALCHEMY_API_KEY: string | undefined = import.meta.env.VITE_ALCHEMY_API_KEY
@@ -63,21 +63,21 @@ export function useTokenId({ tokenAddress }: { tokenAddress: string }) {
  * Get NFT tokenId By Contract
  * @returns
  */
-export function useTokenIdByContract() {
+export function useTokenIdByContract({ holderAddress, tokenAddress }: { holderAddress: string; tokenAddress: string }) {
   const [tokenId, setTokenId] = useState<string[]>([])
 
   // Fetch nfts for owner
   const nftsForOwner = useCallback(async () => {
-    if (!ADDRESS_E4CRanger_Gold_Holder) {
+    if (!holderAddress) {
       return
     }
     const alchemy = initAlchemy()
 
-    const nftsForOwnerResult = await alchemy.nft.getNftsForOwner(ADDRESS_E4CRanger_Gold_Holder)
+    const nftsForOwnerResult = await alchemy.nft.getNftsForOwner(holderAddress)
     console.log('nftsForOwnerResult by contract', nftsForOwnerResult)
 
     const list = nftsForOwnerResult.ownedNfts
-      .filter((item) => getAddress(item.contract.address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition))
+      .filter((item) => getAddress(item.contract.address) === getAddress(tokenAddress))
       .map((item) => item.tokenId)
 
     // console.log('list', list)

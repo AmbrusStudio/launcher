@@ -18,7 +18,10 @@ export function useERC721ListState({ holderAddress, tokenAddress }: { holderAddr
   const { tokenId, loading } = useTokenId({ tokenAddress })
 
   // tokenId by contract
-  const tokenIdByContract = useTokenIdByContract()
+  const tokenIdByContract = useTokenIdByContract({
+    holderAddress,
+    tokenAddress,
+  })
 
   const upgraded = useUpgradeds(holderAddress, tokenId)
 
@@ -76,7 +79,10 @@ export function useERC721List({ holderAddress, tokenAddress }: { holderAddress: 
   })
 
   // TokenId by contract
-  const tokenIdByContract = useTokenIdByContract()
+  const tokenIdByContract = useTokenIdByContract({
+    holderAddress,
+    tokenAddress,
+  })
 
   // TokenId original owner
   // originalOwner replaces ownerOf to judge staking state
