@@ -83,7 +83,7 @@ export function useTokenIdByContract({ holderAddress, tokenAddress }: { holderAd
     // console.log('list', list)
 
     setTokenId(list)
-  }, [])
+  }, [holderAddress, tokenAddress])
 
   useEffect(() => {
     nftsForOwner()
