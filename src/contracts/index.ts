@@ -16,7 +16,7 @@ export const ADDRESS_E4CRanger_Gold_Holder = ADDRESS_E4CRanger_Gold_Holders[defa
 
 // Rangers E4CRangerHolder
 export const ADDRESS_E4CRanger_Rangers_Holders = {
-  [Mainnet.chainId]: '0x9c18beA91AE053397918410311dbB89295baE18b',
+  [Mainnet.chainId]: '0xAdf4343f4E8eB6Faf88c06A97ed6e0c229566E1d',
   [Rinkeby.chainId]: '0x243A98FA4D9F277aF9C0D89BBf7661aF42Ae742f',
   [Goerli.chainId]: '0xE90547570ee95e6929A0DF0434FF9b5fC8050B6E',
 }
