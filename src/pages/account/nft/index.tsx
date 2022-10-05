@@ -36,6 +36,8 @@ function AccountNFT() {
   const nfts = useMemo(() => [...nftsGold, ...nftsRangers], [nftsGold, nftsRangers])
   const loading = useMemo(() => loadingGold && loadingRangers, [loadingGold, loadingRangers])
 
+  console.log('nfts', nfts)
+
   const [visiblePerk, setVisiblePerk] = useState<boolean>(false)
   const [visiblePerkModal, setVisiblePerkModal] = useState<boolean>(false)
 
@@ -70,7 +72,7 @@ function AccountNFT() {
             {isBrowser ? (
               <Stack spacing={3} className="px-6 xl:px-2.5 my-6 sm:my-9">
                 {nfts.map((nft) => (
-                  <NFTItem nft={nft} key={nft.tokenId} tokenId={nft.tokenId} />
+                  <NFTItem nft={nft} key={`${nft.address}_${nft.tokenId}`} tokenId={nft.tokenId} />
                 ))}
               </Stack>
             ) : (

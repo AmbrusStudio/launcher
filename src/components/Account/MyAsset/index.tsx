@@ -75,10 +75,10 @@ const AssetsSlider: FC<AccountMyAssetProps> = ({ data }) => {
     <div className="overflow-hidden">
       {data.length <= slidesToShow ? (
         <div className="flex flex-wrap w-full">
-          {data.map((asset) => (
+          {data.map((nft) => (
             <div
               className="w-[240px] h-[240px] mr-9 mb-9 rounded-12px object-cover select-none border-1 border-white last-of-type:mr-0 box-border overflow-hidden"
-              key={`asset-${asset.tokenId}`}
+              key={`${nft.address}_${nft.tokenId}`}
             >
               <BlindBox />
             </div>
@@ -86,8 +86,8 @@ const AssetsSlider: FC<AccountMyAssetProps> = ({ data }) => {
         </div>
       ) : (
         <Slider {...settings}>
-          {data.map((asset) => (
-            <div className="px-[18px]" key={`asset-${asset.tokenId}`}>
+          {data.map((nft) => (
+            <div className="px-[18px]" key={`${nft.address}_${nft.tokenId}`}>
               <div className="w-full h-full rounded-12px object-cover select-none border-1 border-white box-border overflow-hidden">
                 <BlindBox />
               </div>
