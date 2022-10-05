@@ -3,6 +3,7 @@ import { Stack } from '@mui/material'
 import Skeleton from '@mui/material/Skeleton'
 import { FC, useMemo } from 'react'
 
+import { ADDRESS_E4C_Ranger_Rangers_Edition } from '../../../contracts'
 import { NFTE4CRanger, Trait, TraitItem } from '../../../types'
 import { getEdition } from '../../../utils'
 import NFTTag from '../NFTTag'
@@ -75,7 +76,7 @@ const NFTDetails: FC<NFTDetailsProps> = ({ nft, tokenId }) => {
             className="w-[100px] lg:w[140px] !h-[40px] !lg:h-[58px]"
           />
         ) : (
-          <NFTTag content={getEdition(nft.upgraded)} />
+          <NFTTag content={getEdition(nft.upgraded, ADDRESS_E4C_Ranger_Rangers_Edition)} />
         )}
       </section>
 

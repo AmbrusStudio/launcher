@@ -2,9 +2,10 @@ import { Stack } from '@mui/material'
 import classNames from 'classnames'
 import { FC, useState } from 'react'
 
-import { ADDRESS_E4CRanger_Gold_Holder } from '../../../contracts'
-import { stakeAnnouncement, statusCheckData } from '../../../data'
+import { ADDRESS_E4C_Ranger_Gold_Edition, ADDRESS_E4CRanger_Gold_Holder } from '../../../contracts'
+import { statusCheckData } from '../../../data'
 import { useStatusCheck } from '../../../hooks/useStatusCheck'
+import { getStakeAnnouncement } from '../../../utils'
 import { ArrowUp } from '../../Icon'
 import CheckCard from '../CheckCard'
 import Modal from '../Modal'
@@ -29,7 +30,7 @@ const StatusCheckModal: FC<Props> = ({ visible, loading = false, close, upgrade,
   return (
     <Modal visible={visible} title={statusCheckData.title} close={close}>
       <div className="bg-white backdrop-blur-md px-6 pt-6 pb-[109px] grid gap-y-[36px]">
-        {stakeAnnouncement.map((item, index) => (
+        {getStakeAnnouncement(ADDRESS_E4C_Ranger_Gold_Edition).map((item, index) => (
           <NFTAnnouncement data={item} key={index} />
         ))}
       </div>

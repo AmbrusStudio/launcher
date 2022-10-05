@@ -87,8 +87,11 @@ export type PERK = {
 }
 
 export enum NFTEdition {
+  Default = '-',
   GoldEdition = 'Gold Edition',
   GoldPlusEdition = 'Gold Plus Edition',
+  RangersEdition = 'Rangers Edition',
+  RangersPlusEdition = 'Rangers Plus Edition',
   UltimateEdition = 'Ultimate Edition',
 }
 

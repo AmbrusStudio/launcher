@@ -1,7 +1,9 @@
 import classNames from 'classnames'
 import { FC } from 'react'
 
-import { stakeAnnouncement, stakeToUpgrade } from '../../../data'
+import { ADDRESS_E4C_Ranger_Gold_Edition } from '../../../contracts'
+import { stakeToUpgrade } from '../../../data'
+import { getStakeAnnouncement } from '../../../utils'
 import Modal from '../Modal'
 import NFTAnnouncement from '../NFTAnnouncement'
 
@@ -16,7 +18,7 @@ const StakeInfoModal: FC<Props> = ({ visible, loading = false, close, stake }) =
   return (
     <Modal visible={visible} title={stakeToUpgrade.title} close={close}>
       <div className="bg-white backdrop-blur-md px-6 pt-6 pb-[109px] grid gap-y-[36px]">
-        {stakeAnnouncement.map((item, index) => (
+        {getStakeAnnouncement(ADDRESS_E4C_Ranger_Gold_Edition).map((item, index) => (
           <NFTAnnouncement data={item} key={index} />
         ))}
       </div>
