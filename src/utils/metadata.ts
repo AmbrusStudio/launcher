@@ -1,6 +1,5 @@
 import { constants } from 'ethers'
 import { getAddress } from 'ethers/lib/utils'
-import { compose } from 'redux'
 
 import {
   ADDRESS_E4C_Ranger_Gold_Edition,
@@ -8,7 +7,7 @@ import {
   ADDRESS_E4CRanger_Gold_Holder,
   ADDRESS_E4CRanger_Rangers_Holder,
 } from '../contracts'
-import { METADATA_ALL, stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
+import { METADATA_GOLD, METADATA_RANGERS, stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
 import { Metadata, NFTE4CRanger, NFTE4CRangerUpgraded, NFTEdition, StakeAnnouncement } from '../types'
 
 /**
@@ -32,30 +31,20 @@ export const nftsForOwner = (
   upgradeds: NFTE4CRangerUpgraded[],
   originalOwners: string[]
 ): NFTE4CRanger[] => {
-  // tokenId: upgraded
-  const tokenIdPairUpgraded = new Map<string, NFTE4CRangerUpgraded>()
-  const tokenIdPairStaking = new Map<string, boolean>()
-  for (let i = 0; i < tokenIds.length; i++) {
-    tokenIdPairUpgraded.set(tokenIds[i], upgradeds?.[i])
-    tokenIdPairStaking.set(tokenIds[i], originalOwners?.[i] ? originalOwners?.[i] !== constants.AddressZero : false)
-  }
+  const data = getMetadataByAddress(address)
+  const result = tokenIds.map((tokenId, index) => {
+    const item = data[Number(tokenId) - 1]
 
-  const metadataFilter = (data: Metadata[]): Metadata[] =>
-    data.filter((item) => tokenIds.includes(parseTokenId(item.name)))
+    return {
+      address,
+      tokenId: tokenId,
+      upgraded: upgradeds?.[index],
+      staking: originalOwners?.[index] ? originalOwners[index] !== constants.AddressZero : false,
+      ...item,
+    }
+  })
 
-  const metadataFormat = (data: Metadata[]): NFTE4CRanger[] =>
-    data.map((item) => {
-      const tokenId = parseTokenId(item.name)
-      return {
-        address,
-        tokenId: tokenId,
-        upgraded: tokenIdPairUpgraded.get(tokenId),
-        staking: !!tokenIdPairStaking.get(tokenId),
-        ...item,
-      }
-    })
-
-  return compose(metadataFormat, metadataFilter)(METADATA_ALL)
+  return result
 }
 
 /**
@@ -109,5 +98,20 @@ export const getHolderByAddress = (address: string): string => {
     return ADDRESS_E4CRanger_Rangers_Holder
   } else {
     throw new Error('holder not found')
+  }
+}
+
+/**
+ * Get Metadata By Address
+ * @param address
+ * @returns
+ */
+export const getMetadataByAddress = (address: string): Metadata[] => {
+  if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition)) {
+    return METADATA_GOLD
+  } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition)) {
+    return METADATA_RANGERS
+  } else {
+    throw new Error('metadata not found')
   }
 }
