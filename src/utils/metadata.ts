@@ -8,7 +8,7 @@ import {
   ADDRESS_E4CRanger_Gold_Holder,
   ADDRESS_E4CRanger_Rangers_Holder,
 } from '../contracts'
-import { ALL_METADATA, stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
+import { METADATA_ALL, stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
 import { Metadata, NFTE4CRanger, NFTE4CRangerUpgraded, NFTEdition, StakeAnnouncement } from '../types'
 
 /**
@@ -55,7 +55,7 @@ export const nftsForOwner = (
       }
     })
 
-  return compose(metadataFormat, metadataFilter)(ALL_METADATA)
+  return compose(metadataFormat, metadataFilter)(METADATA_ALL)
 }
 
 /**

@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash'
 
-import { ALL_METADATA } from '../data'
+import { METADATA_ALL } from '../data'
 import { Metadata, Trait, TraitItem } from '../types'
 import { Filter, FilterList, GALLERY_MAP } from '../types/gallery'
 import { parseTokenId } from './metadata'
@@ -104,8 +104,8 @@ const convertTraitToArray = (data: GALLERY_MAP[]): Metadata[] => {
 export const handleFilterFn = (filter: Filter[], searchId: string): Metadata[] => {
   // Search filter
   const gallery = searchId
-    ? ALL_METADATA.filter((item) => String(parseTokenId(item.name)).includes(searchId))
-    : ALL_METADATA
+    ? METADATA_ALL.filter((item) => String(parseTokenId(item.name)).includes(searchId))
+    : METADATA_ALL
 
   const filterChecked = convertFilterToMap(filter)
   // No filter

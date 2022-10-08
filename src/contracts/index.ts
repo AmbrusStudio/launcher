@@ -17,8 +17,8 @@ export const ADDRESS_E4CRanger_Gold_Holder = ADDRESS_E4CRanger_Gold_Holders[defa
 // Rangers E4CRangerHolder
 export const ADDRESS_E4CRanger_Rangers_Holders = {
   [Mainnet.chainId]: '0xAdf4343f4E8eB6Faf88c06A97ed6e0c229566E1d',
-  [Rinkeby.chainId]: '0x243A98FA4D9F277aF9C0D89BBf7661aF42Ae742f',
-  [Goerli.chainId]: '0xE90547570ee95e6929A0DF0434FF9b5fC8050B6E',
+  [Rinkeby.chainId]: '',
+  [Goerli.chainId]: '0x5f9f4D516F24b47A6d233f11Be32Ebbfe115Cdb7',
 }
 export const ADDRESS_E4CRanger_Rangers_Holder = ADDRESS_E4CRanger_Rangers_Holders[defaultChainId]
 
@@ -33,8 +33,8 @@ export const ADDRESS_E4C_Ranger_Gold_Edition = ADDRESS_E4C_Ranger_Gold_Editions[
 // E4C Ranger Rangers Edition
 export const ADDRESS_E4C_Ranger_Rangers_Editions = {
   [Mainnet.chainId]: '0xC17Aa29c43e4cE0c349749C8986a03B2734813fa',
-  [Rinkeby.chainId]: '0x19Dd9D7899Cb03c3a0e12911121ADaED7a4648B8',
-  [Goerli.chainId]: '0x77dc43876D49382863297889dFa238c5f8b74020',
+  [Rinkeby.chainId]: '',
+  [Goerli.chainId]: '0xB6D62797468E7ec16e57229e79501e551970c841',
 }
 export const ADDRESS_E4C_Ranger_Rangers_Edition = ADDRESS_E4C_Ranger_Rangers_Editions[defaultChainId]
 
