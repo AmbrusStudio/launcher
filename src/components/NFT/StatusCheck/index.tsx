@@ -6,11 +6,11 @@ import { FC, useState } from 'react'
 import { statusCheckData } from '../../../data'
 import { useStatusCheck } from '../../../hooks/useStatusCheck'
 import { NFTE4CRanger } from '../../../types'
-import { getHolderByAddress, getStakeAnnouncement } from '../../../utils'
+import { getHolderByAddress } from '../../../utils'
+import Announcements from '../Announcements'
 import CheckCard from '../CheckCard'
 import ConfirmUnstake from '../ConfirmUnstake'
 import ConfirmUpgrade from '../ConfirmUpgrade'
-import NFTAnnouncement from '../NFTAnnouncement'
 
 const WrapperInfo = styled.div`
   background: rgba(0, 0, 0, 0.7);
@@ -47,9 +47,7 @@ const StatusCheck: FC<StatusCheckProps> = ({ unstakeLoading, nft, toggle, unstak
   return (
     <div className="absolute top-0 right-0 bottom-0 left-0 flex">
       <div className="w-[53.5%] overflow-auto float-left bg-white p-6 grid gap-y-20.5">
-        {getStakeAnnouncement(nft.address).map((item, index) => (
-          <NFTAnnouncement data={item} key={index} />
-        ))}
+        <Announcements address={nft.address} />
       </div>
       <WrapperInfo className="w-[46.5%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0 overflow-auto">
         <Title>{statusCheckData.title}</Title>

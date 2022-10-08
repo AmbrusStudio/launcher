@@ -3,7 +3,7 @@ import { groupBy } from 'lodash'
 import { OPENSEA_URL } from '../contracts'
 import { Trait } from '../types'
 import { GALLERY_FILTER, GALLERY_FILTER_LIST, GALLERY_INFO_TYPE } from '../types/gallery'
-import { ALL_METADATA } from './metadata'
+import { METADATA_ALL } from './metadata'
 
 export const GALLERY_INFO: GALLERY_INFO_TYPE = {
   title: 'E4C Rangers',
@@ -12,7 +12,7 @@ export const GALLERY_INFO: GALLERY_INFO_TYPE = {
 }
 
 // Handle Filter Property
-const allTrait = ALL_METADATA.flatMap((i) => i.attributes)
+const allTrait = METADATA_ALL.flatMap((i) => i.attributes)
 const allTraitGroup = groupBy(allTrait, 'trait_type')
 
 export const GALLERYS_FILTERS: GALLERY_FILTER[] = Object.values(Trait).map((i) => {

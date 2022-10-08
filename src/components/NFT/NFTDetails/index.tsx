@@ -3,6 +3,7 @@ import { Stack } from '@mui/material'
 import Skeleton from '@mui/material/Skeleton'
 import { FC, useMemo } from 'react'
 
+import { BlindBoxMode, BlindBoxTrait } from '../../../constants'
 import { NFTE4CRanger, Trait, TraitItem } from '../../../types'
 import { getEdition } from '../../../utils'
 import NFTTag from '../NFTTag'
@@ -84,7 +85,7 @@ const NFTDetails: FC<NFTDetailsProps> = ({ nft, tokenId }) => {
           <section key={index}>
             <NFTInfoIntroductionTitle>{trait.trait_type}</NFTInfoIntroductionTitle>
             <NFTInfoIntroductionContent>
-              {trait.trait_type === Trait.Name ? trait.value : 'unknown'}
+              {!BlindBoxMode || BlindBoxTrait.includes(trait.trait_type) ? trait.value : 'unknown'}
             </NFTInfoIntroductionContent>
           </section>
         ))}

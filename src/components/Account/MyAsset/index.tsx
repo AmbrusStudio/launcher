@@ -2,8 +2,9 @@ import { FC } from 'react'
 import Slider from 'react-slick'
 
 import { NFTE4CRanger } from '../../../types'
-import BlindBox from '../../BlindBox'
+import { imageSizeConversion } from '../../../utils'
 import { IconArrowDown } from '../../Icon'
+import TokenMedia from '../../TokenMedia'
 
 function SampleNextArrow(props: any) {
   const { className, style, onClick } = props
@@ -80,7 +81,7 @@ const AssetsSlider: FC<AccountMyAssetProps> = ({ data }) => {
               className="w-[240px] h-[240px] mr-9 mb-9 rounded-12px object-cover select-none border-1 border-white last-of-type:mr-0 box-border overflow-hidden"
               key={`${nft.address}_${nft.tokenId}`}
             >
-              <BlindBox />
+              <TokenMedia src={imageSizeConversion(nft.image, 2000)} />
             </div>
           ))}
         </div>
@@ -89,7 +90,7 @@ const AssetsSlider: FC<AccountMyAssetProps> = ({ data }) => {
           {data.map((nft) => (
             <div className="px-[18px]" key={`${nft.address}_${nft.tokenId}`}>
               <div className="w-full h-full rounded-12px object-cover select-none border-1 border-white box-border overflow-hidden">
-                <BlindBox />
+                <TokenMedia src={imageSizeConversion(nft.image, 2000)} />
               </div>
             </div>
           ))}
