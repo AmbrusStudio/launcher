@@ -1,4 +1,5 @@
 import { Config as DAppConfig, Goerli, Mainnet, Rinkeby } from '@usedapp/core'
+import WalletConnectProvider from '@walletconnect/web3-provider'
 import { Network } from 'alchemy-sdk'
 import { getDefaultProvider } from 'ethers'
 
@@ -63,4 +64,24 @@ const DAPP_CONFIG_URLS = {
 export const DAPP_CONFIG: DAppConfig = {
   readOnlyChainId: Mainnet.chainId,
   readOnlyUrls: DAPP_CONFIG_URLS,
+}
+
+// Web3Modal providerOptions
+const infuraId: string | undefined = import.meta.env.VITE_INFURA_API_KEY
+if (!infuraId) throw new TypeError('VITE_INFURA_API_KEY not set')
+export const web3ModalProviderOptions = {
+  injected: {
+    display: {
+      name: 'Metamask',
+      description: 'Connect with the provider in your Browser',
+    },
+    package: null,
+  },
+  walletconnect: {
+    package: WalletConnectProvider,
+    options: {
+      bridge: 'https://bridge.walletconnect.org',
+      infuraId: infuraId,
+    },
+  },
 }
