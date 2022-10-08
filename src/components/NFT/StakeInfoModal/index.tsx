@@ -3,9 +3,8 @@ import { FC } from 'react'
 
 import { stakeToUpgrade } from '../../../data'
 import { NFTE4CRanger } from '../../../types'
-import { getStakeAnnouncement } from '../../../utils'
+import Announcements from '../Announcements'
 import Modal from '../Modal'
-import NFTAnnouncement from '../NFTAnnouncement'
 
 interface Props {
   readonly visible: boolean
@@ -19,9 +18,7 @@ const StakeInfoModal: FC<Props> = ({ visible, loading = false, nft, close, stake
   return (
     <Modal visible={visible} title={stakeToUpgrade.title} close={close}>
       <div className="bg-white backdrop-blur-md px-6 pt-6 pb-[109px] grid gap-y-[36px]">
-        {getStakeAnnouncement(nft.address).map((item, index) => (
-          <NFTAnnouncement data={item} key={index} />
-        ))}
+        <Announcements address={nft.address} />
       </div>
       <div className="bg-black backdrop-blur-md p-6">
         <p className="font-normal text-base leading-[30px] text-white not-italic">{stakeToUpgrade.description}</p>

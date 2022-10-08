@@ -5,11 +5,11 @@ import { FC, useState } from 'react'
 import { statusCheckData } from '../../../data'
 import { useStatusCheck } from '../../../hooks/useStatusCheck'
 import { NFTE4CRanger } from '../../../types'
-import { getHolderByAddress, getStakeAnnouncement } from '../../../utils'
+import { getHolderByAddress } from '../../../utils'
 import { ArrowUp } from '../../Icon'
+import Announcements from '../Announcements'
 import CheckCard from '../CheckCard'
 import Modal from '../Modal'
-import NFTAnnouncement from '../NFTAnnouncement'
 
 interface Props {
   readonly visible: boolean
@@ -30,9 +30,7 @@ const StatusCheckModal: FC<Props> = ({ visible, loading = false, nft, close, upg
   return (
     <Modal visible={visible} title={statusCheckData.title} close={close}>
       <div className="bg-white backdrop-blur-md px-6 pt-6 pb-[109px] grid gap-y-[36px]">
-        {getStakeAnnouncement(nft.address).map((item, index) => (
-          <NFTAnnouncement data={item} key={index} />
-        ))}
+        <Announcements address={nft.address} />
       </div>
       <div className="bg-black backdrop-blur-md p-6"></div>
       <button className="u-btn u-btn-primary !w-auto fixed left-6 bottom-6 right-6" onClick={() => setDrawer(true)}>
