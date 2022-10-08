@@ -5,8 +5,7 @@ import { FC } from 'react'
 
 import { stakeToUpgrade } from '../../../data'
 import { NFTE4CRanger } from '../../../types'
-import { getStakeAnnouncement } from '../../../utils'
-import NFTAnnouncement from '../NFTAnnouncement'
+import Announcements from '../Announcements'
 
 const WrapperInfo = styled.div`
   background: rgba(0, 0, 0, 0.7);
@@ -45,9 +44,7 @@ const StakeInfo: FC<StakeInfoProps> = ({ stakeLoading, nft, toggle, stake }) => 
   return (
     <div className="absolute top-0 right-0 bottom-0 left-0 flex">
       <div className="w-[53.5%] overflow-auto float-left bg-white p-6 grid gap-y-20.5">
-        {getStakeAnnouncement(nft.address).map((item, index) => (
-          <NFTAnnouncement data={item} key={index} />
-        ))}
+        <Announcements address={nft.address} />
       </div>
       <WrapperInfo className="w-[46.5%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0 overflow-auto">
         <Title>{stakeToUpgrade.title}</Title>
