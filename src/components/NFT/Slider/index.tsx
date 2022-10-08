@@ -2,7 +2,8 @@ import { Dispatch, FC, SetStateAction } from 'react'
 import Slider from 'react-slick'
 
 import { NFTE4CRanger } from '../../../types'
-import BlindBox from '../../BlindBox'
+import { imageSizeConversion } from '../../../utils'
+import TokenMedia from '../../TokenMedia'
 
 interface Props {
   readonly nfts: NFTE4CRanger[]
@@ -34,7 +35,7 @@ const SimpleSlider: FC<Props> = ({ nfts, setActive }) => {
               onClick={() => setActive(index)}
               className="opacity-50 border-2 border-white border-solid mx-[6px] text-center bg-[#2A2A2A] box-border"
             >
-              <BlindBox />
+              <TokenMedia src={imageSizeConversion(nft.image, 2000)} />
             </div>
           ))}
         </div>
@@ -43,7 +44,7 @@ const SimpleSlider: FC<Props> = ({ nfts, setActive }) => {
           {nfts.map((nft, index) => (
             <div key={index}>
               <div className="opacity-50 border-2 border-white border-solid mx-[6px] text-center bg-[#2A2A2A] box-border">
-                <BlindBox />
+                <TokenMedia src={imageSizeConversion(nft.image, 2000)} />
               </div>
             </div>
           ))}

@@ -2,7 +2,7 @@ import { useEthers } from '@usedapp/core'
 import React from 'react'
 import Web3Modal from 'web3modal'
 
-import { web3ModalProviderOptions } from '../components/Provider'
+import { web3ModalProviderOptions } from '../contracts'
 import { getDefaultChainId } from '../utils'
 
 const defaultChainId = getDefaultChainId()
