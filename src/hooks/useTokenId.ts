@@ -3,14 +3,14 @@ import { Alchemy } from 'alchemy-sdk'
 import { getAddress } from 'ethers/lib/utils'
 import { useCallback, useEffect, useState } from 'react'
 
-import { AlchemyNetwork } from '../contracts'
+import { ALCHEMY_NETWORK } from '../contracts'
 
 const initAlchemy = (): Alchemy => {
   const ALCHEMY_API_KEY: string | undefined = import.meta.env.VITE_ALCHEMY_API_KEY
   if (!ALCHEMY_API_KEY) throw new TypeError('VITE_ALCHEMY_API_KEY not set')
   const settings = {
     apiKey: ALCHEMY_API_KEY,
-    network: AlchemyNetwork,
+    network: ALCHEMY_NETWORK,
   }
 
   return new Alchemy(settings)
@@ -79,8 +79,6 @@ export function useTokenIdByContract({ holderAddress, tokenAddress }: { holderAd
     const list = nftsForOwnerResult.ownedNfts
       .filter((item) => getAddress(item.contract.address) === getAddress(tokenAddress))
       .map((item) => item.tokenId)
-
-    // console.log('list', list)
 
     setTokenId(list)
   }, [holderAddress, tokenAddress])

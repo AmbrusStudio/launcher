@@ -36,9 +36,6 @@ export function useERC721ListState({ holderAddress, tokenAddress }: { holderAddr
       if (account && item && getAddress(item) === getAddress(account)) {
         list.push(tokenIdByContract[index])
       }
-      // if (account && item) {
-      //   list.push(tokenIdByContract[index])
-      // }
     })
 
     return list
