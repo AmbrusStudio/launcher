@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react'
 import { Falsy, useCall, useCalls, useLogs } from '@usedapp/core'
 import { Contract } from 'ethers'
 
@@ -21,7 +22,10 @@ export function useERC721BalanceOf(tokenAddress: string | Falsy, account: string
     ) ?? {}
 
   if (error) {
-    console.error(error.message)
+    const e = `Error encountered calling 'balanceOf' on ${error.message}`
+    console.error(e)
+    Sentry.captureException(e)
+
     return undefined
   }
 
@@ -39,7 +43,10 @@ export function useERC721OwnerOf(tokenAddress: string | Falsy, tokenId: string) 
     ) ?? {}
 
   if (error) {
-    console.error(error.message)
+    const e = `Error encountered calling 'ownerOf' on ${error.message}`
+    console.error(e)
+    Sentry.captureException(e)
+
     return undefined
   }
 
@@ -62,7 +69,10 @@ export function useERC721OwnerOfs(tokenAddress: string, tokenIds: string[]): str
   const results = useCalls(calls) ?? []
   results.forEach((result, idx) => {
     if (result && result.error) {
-      console.error(`Error encountered calling 'ownerOf' on ${calls[idx]?.contract.address}: ${result.error.message}`)
+      const e = `Error encountered calling 'ownerOf' on ${calls[idx]?.contract.address}: ${result.error.message}`
+
+      console.error(e)
+      Sentry.captureException(e)
     }
   })
   console.log('results', results)
@@ -85,7 +95,10 @@ export function useERC721Logs(tokenAddress: string | Falsy) {
     ) ?? {}
 
   if (error) {
-    console.error(error.message)
+    const e = `Error encountered calling 'Transfer' on ${error.message}`
+    console.error(e)
+    Sentry.captureException(e)
+
     return undefined
   }
 
