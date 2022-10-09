@@ -1,9 +1,10 @@
-import { Falsy, useCall, useCalls, useContractFunction } from '@usedapp/core'
+import { Falsy, useCall, useCalls, useContractFunction, useEthers } from '@usedapp/core'
 import { BigNumber, Contract } from 'ethers'
 
 import { ERC721__factory } from '../typechain/factories/@openzeppelin/contracts/token/ERC721/ERC721__factory'
 import { E4CRangerHolder__factory } from '../typechain/factories/contracts/E4CRangerHolder.sol/E4CRangerHolder__factory'
 import { E4CRangerHolder__factory as E4CRangerHolderFactory } from '../typechain/factories/contracts/E4CRangerHolder__factory'
+import { preCheckCurrentChain } from '../utils'
 
 /**
  * E4CRangerHolder
@@ -68,12 +69,16 @@ export function useE4CRangerUnstake(tokenAddress: string) {
  * @returns
  */
 export function useUpgradeds(tokenAddress: string, tokenIds: string[]): (boolean | undefined)[] {
-  const calls =
-    tokenIds?.map((tokenId) => ({
-      contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
-      method: 'upgraded',
-      args: [tokenId],
-    })) ?? []
+  const { chainId } = useEthers()
+  const checkState = preCheckCurrentChain(chainId)
+
+  const calls = checkState
+    ? tokenIds?.map((tokenId) => ({
+        contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
+        method: 'upgraded',
+        args: [tokenId],
+      })) ?? []
+    : []
   const results = useCalls(calls) ?? []
   results.forEach((result, idx) => {
     if (result && result.error) {
@@ -91,12 +96,16 @@ export function useUpgradeds(tokenAddress: string, tokenIds: string[]): (boolean
  * @returns constants.AddressZero || Address
  */
 export function useOriginalOwners(tokenAddress: string, tokenIds: string[]): string[] {
-  const calls =
-    tokenIds?.map((tokenId) => ({
-      contract: new Contract(tokenAddress, E4CRangerHolderFactory.abi),
-      method: 'originalOwner',
-      args: [tokenId],
-    })) ?? []
+  const { chainId } = useEthers()
+  const checkState = preCheckCurrentChain(chainId)
+
+  const calls = checkState
+    ? tokenIds?.map((tokenId) => ({
+        contract: new Contract(tokenAddress, E4CRangerHolderFactory.abi),
+        method: 'originalOwner',
+        args: [tokenId],
+      })) ?? []
+    : []
   const results = useCalls(calls) ?? []
   results.forEach((result, idx) => {
     if (result && result.error) {
