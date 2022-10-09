@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react'
 import { Falsy, useCall, useCalls, useContractFunction, useEthers } from '@usedapp/core'
 import { BigNumber, Contract } from 'ethers'
 
@@ -21,7 +22,10 @@ export function useE4CRanger(tokenAddress: string | Falsy) {
       }
     ) ?? {}
   if (error) {
-    console.error(error.message)
+    const e = `Error encountered calling 'nft' on ${error.message}`
+    console.error(e)
+    Sentry.captureException(e)
+
     return undefined
   }
 
@@ -82,7 +86,10 @@ export function useUpgradeds(tokenAddress: string, tokenIds: string[]): (boolean
   const results = useCalls(calls) ?? []
   results.forEach((result, idx) => {
     if (result && result.error) {
-      console.error(`Error encountered calling 'upgraded' on ${calls[idx]?.contract.address}: ${result.error.message}`)
+      const e = `Error encountered calling 'upgraded' on ${calls[idx]?.contract.address}: ${result.error.message}`
+
+      console.error(e)
+      Sentry.captureException(e)
     }
   })
   console.log('useUpgradeds results', results)
@@ -109,9 +116,10 @@ export function useOriginalOwners(tokenAddress: string, tokenIds: string[]): str
   const results = useCalls(calls) ?? []
   results.forEach((result, idx) => {
     if (result && result.error) {
-      console.error(
-        `Error encountered calling 'originalOwner' on ${calls[idx]?.contract.address}: ${result.error.message}`
-      )
+      const e = `Error encountered calling 'originalOwner' on ${calls[idx]?.contract.address}: ${result.error.message}`
+
+      console.error(e)
+      Sentry.captureException(e)
     }
   })
   console.log('useOriginalOwners results', results)
@@ -135,11 +143,15 @@ export function useE4CRangerTotalStakingTime(tokenAddress: string | Falsy, token
         }
     ) ?? {}
   if (error) {
-    console.error(error.message)
+    const e = `Error encountered calling 'totalStakingTime' on ${error.message}`
+    console.error(e)
+    Sentry.captureException(e)
+
     return undefined
   }
 
-  console.log('useE4CRangerTotalStakingTime value', value)
+  // console.log('useE4CRangerTotalStakingTime value', value)
+
   return value?.[0]
 }
 
@@ -158,11 +170,14 @@ export function useE4CRangerUpgradeDuration(tokenAddress: string | Falsy): BigNu
       }
     ) ?? {}
   if (error) {
-    console.error(error.message)
+    const e = `Error encountered calling 'upgradeDuration' on ${error.message}`
+    console.error(e)
+    Sentry.captureException(e)
+
     return undefined
   }
 
-  console.log('useE4CRangerUpgradeDuration value', value)
+  // console.log('useE4CRangerUpgradeDuration value', value)
 
   return value?.[0]
 }
