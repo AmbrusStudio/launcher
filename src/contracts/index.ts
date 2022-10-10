@@ -4,7 +4,17 @@ import { Network } from 'alchemy-sdk'
 
 import { getDefaultChainId } from '../utils'
 
-const defaultChainId = getDefaultChainId()
+export const defaultChainId = getDefaultChainId()
+
+// Support chainId
+const SUPPORT_CHAIN_ID = {
+  [Mainnet.chainId]: Mainnet.chainId,
+  [Goerli.chainId]: Goerli.chainId,
+}
+
+if (!SUPPORT_CHAIN_ID[defaultChainId]) {
+  throw new Error(`This chain is not supported. chainID: ${defaultChainId}`)
+}
 
 // Gold E4CRangerHolder
 export const ADDRESS_E4CRanger_Gold_Holders = {

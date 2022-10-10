@@ -1,11 +1,11 @@
 import * as Sentry from '@sentry/react'
-import { Falsy, useCall, useCalls, useContractFunction, useEthers } from '@usedapp/core'
+import { Falsy, useCall, useCalls, useContractFunction } from '@usedapp/core'
 import { BigNumber, Contract } from 'ethers'
 
+import { defaultChainId } from '../contracts'
 import { ERC721__factory } from '../typechain/factories/@openzeppelin/contracts/token/ERC721/ERC721__factory'
 import { E4CRangerHolder__factory } from '../typechain/factories/contracts/E4CRangerHolder.sol/E4CRangerHolder__factory'
 import { E4CRangerHolder__factory as E4CRangerHolderFactory } from '../typechain/factories/contracts/E4CRangerHolder__factory'
-import { preCheckCurrentChain } from '../utils'
 
 /**
  * E4CRangerHolder
@@ -13,14 +13,16 @@ import { preCheckCurrentChain } from '../utils'
  * @returns
  */
 export function useE4CRanger(tokenAddress: string | Falsy) {
+  const call = tokenAddress && {
+    contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
+    method: 'nft',
+    args: [],
+  }
+
   const { value, error } =
-    useCall(
-      tokenAddress && {
-        contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
-        method: 'nft',
-        args: [],
-      }
-    ) ?? {}
+    useCall(call, {
+      chainId: defaultChainId,
+    }) ?? {}
   if (error) {
     const e = `Error encountered calling 'nft' on ${error.message}`
     console.error(e)
@@ -73,17 +75,16 @@ export function useE4CRangerUnstake(tokenAddress: string) {
  * @returns
  */
 export function useUpgradeds(tokenAddress: string, tokenIds: string[]): (boolean | undefined)[] {
-  const { chainId } = useEthers()
-  const checkState = preCheckCurrentChain(chainId)
-
-  const calls = checkState
-    ? tokenIds?.map((tokenId) => ({
-        contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
-        method: 'upgraded',
-        args: [tokenId],
-      })) ?? []
-    : []
-  const results = useCalls(calls) ?? []
+  const calls =
+    tokenIds?.map((tokenId) => ({
+      contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
+      method: 'upgraded',
+      args: [tokenId],
+    })) ?? []
+  const results =
+    useCalls(calls, {
+      chainId: defaultChainId,
+    }) ?? []
   results.forEach((result, idx) => {
     if (result && result.error) {
       const e = `Error encountered calling 'upgraded' on ${calls[idx]?.contract.address}: ${result.error.message}`
@@ -103,17 +104,17 @@ export function useUpgradeds(tokenAddress: string, tokenIds: string[]): (boolean
  * @returns constants.AddressZero || Address
  */
 export function useOriginalOwners(tokenAddress: string, tokenIds: string[]): string[] {
-  const { chainId } = useEthers()
-  const checkState = preCheckCurrentChain(chainId)
+  const calls =
+    tokenIds?.map((tokenId) => ({
+      contract: new Contract(tokenAddress, E4CRangerHolderFactory.abi),
+      method: 'originalOwner',
+      args: [tokenId],
+    })) ?? []
 
-  const calls = checkState
-    ? tokenIds?.map((tokenId) => ({
-        contract: new Contract(tokenAddress, E4CRangerHolderFactory.abi),
-        method: 'originalOwner',
-        args: [tokenId],
-      })) ?? []
-    : []
-  const results = useCalls(calls) ?? []
+  const results =
+    useCalls(calls, {
+      chainId: defaultChainId,
+    }) ?? []
   results.forEach((result, idx) => {
     if (result && result.error) {
       const e = `Error encountered calling 'originalOwner' on ${calls[idx]?.contract.address}: ${result.error.message}`
@@ -133,15 +134,17 @@ export function useOriginalOwners(tokenAddress: string, tokenIds: string[]): str
  * @returns
  */
 export function useE4CRangerTotalStakingTime(tokenAddress: string | Falsy, tokenId: string | Falsy): BigNumber | Falsy {
+  const call = tokenAddress &&
+    tokenId && {
+      contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
+      method: 'totalStakingTime',
+      args: [tokenId],
+    }
+
   const { value, error } =
-    useCall(
-      tokenAddress &&
-        tokenId && {
-          contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
-          method: 'totalStakingTime',
-          args: [tokenId],
-        }
-    ) ?? {}
+    useCall(call, {
+      chainId: defaultChainId,
+    }) ?? {}
   if (error) {
     const e = `Error encountered calling 'totalStakingTime' on ${error.message}`
     console.error(e)
@@ -161,14 +164,16 @@ export function useE4CRangerTotalStakingTime(tokenAddress: string | Falsy, token
  * @returns
  */
 export function useE4CRangerUpgradeDuration(tokenAddress: string | Falsy): BigNumber | Falsy {
+  const call = tokenAddress && {
+    contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
+    method: 'upgradeDuration',
+    args: [],
+  }
+
   const { value, error } =
-    useCall(
-      tokenAddress && {
-        contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
-        method: 'upgradeDuration',
-        args: [],
-      }
-    ) ?? {}
+    useCall(call, {
+      chainId: defaultChainId,
+    }) ?? {}
   if (error) {
     const e = `Error encountered calling 'upgradeDuration' on ${error.message}`
     console.error(e)

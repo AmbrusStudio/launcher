@@ -2,6 +2,7 @@ import * as Sentry from '@sentry/react'
 import { Falsy, useCall, useCalls, useLogs } from '@usedapp/core'
 import { Contract } from 'ethers'
 
+import { defaultChainId } from '../contracts'
 import { ERC721__factory } from '../typechain/factories/@openzeppelin/contracts/token/ERC721/ERC721__factory'
 
 /**
@@ -11,15 +12,16 @@ import { ERC721__factory } from '../typechain/factories/@openzeppelin/contracts/
  * @returns
  */
 export function useERC721BalanceOf(tokenAddress: string | Falsy, account: string | Falsy) {
+  const call = tokenAddress &&
+    account && {
+      contract: new Contract(tokenAddress, ERC721__factory.abi),
+      method: 'balanceOf',
+      args: [account],
+    }
   const { value, error } =
-    useCall(
-      tokenAddress &&
-        account && {
-          contract: new Contract(tokenAddress, ERC721__factory.abi),
-          method: 'balanceOf',
-          args: [account],
-        }
-    ) ?? {}
+    useCall(call, {
+      chainId: defaultChainId,
+    }) ?? {}
 
   if (error) {
     const e = `Error encountered calling 'balanceOf' on ${error.message}`
@@ -33,14 +35,15 @@ export function useERC721BalanceOf(tokenAddress: string | Falsy, account: string
 }
 
 export function useERC721OwnerOf(tokenAddress: string | Falsy, tokenId: string) {
+  const call = tokenAddress && {
+    contract: new Contract(tokenAddress, ERC721__factory.abi),
+    method: 'ownerOf',
+    args: [tokenId],
+  }
   const { value, error } =
-    useCall(
-      tokenAddress && {
-        contract: new Contract(tokenAddress, ERC721__factory.abi),
-        method: 'ownerOf',
-        args: [tokenId],
-      }
-    ) ?? {}
+    useCall(call, {
+      chainId: defaultChainId,
+    }) ?? {}
 
   if (error) {
     const e = `Error encountered calling 'ownerOf' on ${error.message}`
@@ -66,7 +69,10 @@ export function useERC721OwnerOfs(tokenAddress: string, tokenIds: string[]): str
       method: 'ownerOf',
       args: [tokenId],
     })) ?? []
-  const results = useCalls(calls) ?? []
+  const results =
+    useCalls(calls, {
+      chainId: defaultChainId,
+    }) ?? []
   results.forEach((result, idx) => {
     if (result && result.error) {
       const e = `Error encountered calling 'ownerOf' on ${calls[idx]?.contract.address}: ${result.error.message}`
