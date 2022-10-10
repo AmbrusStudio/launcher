@@ -34,6 +34,8 @@ export function useWeb3Modal(): UseWeb3Modal {
 
   const switchNetwork = React.useCallback(async () => {
     if (chainIdMismatch) await dappSwitchNetwork(defaultChainId)
+    console.log('switch network')
+    window.location.reload()
   }, [chainIdMismatch, dappSwitchNetwork])
 
   return {
