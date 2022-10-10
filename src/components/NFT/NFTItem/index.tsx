@@ -3,6 +3,7 @@ import { useEthers } from '@usedapp/core'
 import classNames from 'classnames'
 import { FC, useCallback, useEffect, useState } from 'react'
 
+import { useWeb3Modal } from '../../../hooks'
 // import Star from '../../../components/Icon/Star'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
 import { useHandleState } from '../../../hooks/useHandleState'
@@ -20,6 +21,7 @@ interface NFTItemProps {
 
 const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
   const { account } = useEthers()
+  const { chainIdMismatch, switchNetwork } = useWeb3Modal()
 
   const [visibleInfo, setVisibleInfo] = useState<boolean>(false)
   const [visibleStatusCheck, setVisibleStatusCheck] = useState<boolean>(false)
@@ -83,7 +85,11 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
             {/* <button className="u-btn u-btn-primary max-w-[120px] relative !py-0">
               <Star sx={{ fontSize: '36px' }} />
             </button> */}
-            {nft.staking ? (
+            {chainIdMismatch ? (
+              <button className={'u-btn u-btn-primary'} onClick={() => switchNetwork()}>
+                Switch Network
+              </button>
+            ) : nft.staking ? (
               <button
                 disabled={unstakeLoading}
                 className={classNames('u-btn u-btn-primary', {
