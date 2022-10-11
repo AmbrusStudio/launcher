@@ -9,6 +9,8 @@ const BlindBox = () => {
       loop
       disablePictureInPicture
       poster={BlindBoxPictures}
+      playsInline
+      webkit-playsinline=""
     ></video>
   )
 }
