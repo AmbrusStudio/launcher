@@ -90,19 +90,18 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
 
   return (
     <>
-      <div className="w-full my-6 mx-auto">
-        <Slider
-          nfts={nfts}
-          setActive={(index) => {
-            if (index === active) {
-              const dom = document.querySelector<HTMLButtonElement>('#image-viewer')
-              dom?.click()
-            }
+      <Slider
+        nfts={nfts}
+        active={active}
+        setActive={(index) => {
+          if (index === active) {
+            const dom = document.querySelector<HTMLButtonElement>('#image-viewer')
+            dom?.click()
+          }
 
-            setActive(index)
-          }}
-        />
-      </div>
+          setActive(index)
+        }}
+      />
 
       {nft && (
         <>
