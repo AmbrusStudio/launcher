@@ -32,7 +32,6 @@ const SimpleSlider: FC<Props> = ({ nfts, active, setActive }) => {
     arrows: false,
     variableWidth: true,
     beforeChange: (_oldIndex: number, newIndex: number) => {
-      console.log('newIndex', newIndex)
       setActive(newIndex)
     },
   }
@@ -48,57 +47,31 @@ const SimpleSlider: FC<Props> = ({ nfts, active, setActive }) => {
   }, [])
 
   return (
-    <div className="w-full mx-auto">
-      {nfts.length < 4 ? (
-        <div className="flex flex-nowrap overflow-x-auto py-6">
-          {nfts.map((nft, index) => (
+    <div
+      className="w-full mx-auto my-6"
+      style={{
+        height: mediaWidth,
+      }}
+    >
+      <Slider {...settings} ref={sliderRef}>
+        {nfts.map((nft, index) => (
+          <div key={index} onClick={handleSlickGoTo}>
             <div
-              key={index}
-              onClick={() => setActive(index)}
               style={{
                 width: mediaWidth,
                 height: mediaWidth,
               }}
-              className={classNames(
-                'shrink-0 w-[160px] h-[160px] border-2 border-solid mx-[6px] first:ml-6 last:mr-6 text-center bg-[#2A2A2A] box-border',
-                {
-                  'opacity-50 border-transparent': index !== active,
-                  'opacity-100 border-white': index === active,
-                }
-              )}
+              data-token-index={index}
+              className={classNames('border-2 border-solid mx-[6px] text-center bg-[#2A2A2A] box-border', {
+                'opacity-50 border-transparent': index !== active,
+                'opacity-100 border-white': index === active,
+              })}
             >
               <TokenMedia src={imageSizeConversion(nft.image, 2000)} />
             </div>
-          ))}
-        </div>
-      ) : (
-        <div
-          className="py-6 box-content"
-          style={{
-            height: mediaWidth,
-          }}
-        >
-          <Slider {...settings} ref={sliderRef}>
-            {nfts.map((nft, index) => (
-              <div key={index} onClick={handleSlickGoTo}>
-                <div
-                  style={{
-                    width: mediaWidth,
-                    height: mediaWidth,
-                  }}
-                  data-token-index={index}
-                  className={classNames('border-2 border-solid mx-[6px] text-center bg-[#2A2A2A] box-border', {
-                    'opacity-50 border-transparent': index !== active,
-                    'opacity-100 border-white': index === active,
-                  })}
-                >
-                  <TokenMedia src={imageSizeConversion(nft.image, 2000)} />
-                </div>
-              </div>
-            ))}
-          </Slider>
-        </div>
-      )}
+          </div>
+        ))}
+      </Slider>
     </div>
   )
 }
