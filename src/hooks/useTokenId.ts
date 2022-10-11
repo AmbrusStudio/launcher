@@ -1,9 +1,10 @@
 import { useEthers } from '@usedapp/core'
-import { Alchemy } from 'alchemy-sdk'
+import { Alchemy, GetNftsForOwnerOptions, OwnedNftsResponse } from 'alchemy-sdk'
 import { getAddress } from 'ethers/lib/utils'
 import { useCallback, useEffect, useState } from 'react'
 
 import { ALCHEMY_NETWORK } from '../contracts'
+import { Writeable } from '../types'
 
 const initAlchemy = (): Alchemy => {
   const ALCHEMY_API_KEY: string | undefined = import.meta.env.VITE_ALCHEMY_API_KEY
@@ -14,6 +15,41 @@ const initAlchemy = (): Alchemy => {
   }
 
   return new Alchemy(settings)
+}
+
+/**
+ * Get All NFT
+ * @param owner
+ * @returns
+ */
+const getAllNfts = async (owner: string): Promise<OwnedNftsResponse> => {
+  const alchemy = initAlchemy()
+  const nfts: Writeable<OwnedNftsResponse> = {
+    ownedNfts: [],
+    pageKey: undefined,
+    totalCount: 0,
+  }
+
+  const getNft = async (owner: string, options?: GetNftsForOwnerOptions) => {
+    const result = await alchemy.nft.getNftsForOwner(owner, {
+      // pageSize: 100,
+      ...options,
+    })
+
+    nfts.ownedNfts.push(...result.ownedNfts)
+    nfts.pageKey = result.pageKey
+    nfts.totalCount = result.totalCount
+
+    if (result?.pageKey) {
+      await getNft(owner, {
+        pageKey: result.pageKey,
+      })
+    }
+  }
+
+  await getNft(owner)
+
+  return nfts
 }
 
 /**
@@ -32,11 +68,9 @@ export function useTokenId({ tokenAddress }: { tokenAddress: string }) {
       return
     }
 
-    const alchemy = initAlchemy()
-
     setLoading(true)
 
-    const nftsForOwnerResult = await alchemy.nft.getNftsForOwner(account)
+    const nftsForOwnerResult = await getAllNfts(account)
     console.log('nftsForOwnerResult', nftsForOwnerResult)
 
     const list = nftsForOwnerResult.ownedNfts
@@ -71,9 +105,7 @@ export function useTokenIdByContract({ holderAddress, tokenAddress }: { holderAd
     if (!holderAddress) {
       return
     }
-    const alchemy = initAlchemy()
-
-    const nftsForOwnerResult = await alchemy.nft.getNftsForOwner(holderAddress)
+    const nftsForOwnerResult = await getAllNfts(holderAddress)
     console.log('nftsForOwnerResult by contract', nftsForOwnerResult)
 
     const list = nftsForOwnerResult.ownedNfts
