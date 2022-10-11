@@ -6,6 +6,10 @@ import { useCallback, useEffect, useState } from 'react'
 import { ALCHEMY_NETWORK } from '../contracts'
 import { Writeable } from '../types'
 
+/**
+ * Init Alchemy
+ * @returns
+ */
 const initAlchemy = (): Alchemy => {
   const ALCHEMY_API_KEY: string | undefined = import.meta.env.VITE_ALCHEMY_API_KEY
   if (!ALCHEMY_API_KEY) throw new TypeError('VITE_ALCHEMY_API_KEY not set')
@@ -56,7 +60,7 @@ const getAllNfts = async (owner: string): Promise<OwnedNftsResponse> => {
  * Get NFT tokenId
  * @returns
  */
-export function useTokenId({ tokenAddress }: { tokenAddress: string }) {
+export function useTokenIdByOwner({ tokenAddress }: { tokenAddress: string }) {
   const [tokenId, setTokenId] = useState<string[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const { account } = useEthers()
@@ -71,7 +75,7 @@ export function useTokenId({ tokenAddress }: { tokenAddress: string }) {
     setLoading(true)
 
     const nftsForOwnerResult = await getAllNfts(account)
-    console.log('nftsForOwnerResult', nftsForOwnerResult)
+    console.log('useTokenIdByOwner', nftsForOwnerResult)
 
     const list = nftsForOwnerResult.ownedNfts
       .filter((item) => getAddress(item.contract.address) === getAddress(tokenAddress))
@@ -99,25 +103,37 @@ export function useTokenId({ tokenAddress }: { tokenAddress: string }) {
  */
 export function useTokenIdByContract({ holderAddress, tokenAddress }: { holderAddress: string; tokenAddress: string }) {
   const [tokenId, setTokenId] = useState<string[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
+  const { account } = useEthers()
 
   // Fetch nfts for owner
   const getNftsForOwner = useCallback(async () => {
-    if (!holderAddress) {
+    if (!holderAddress || !account) {
+      setLoading(false)
       return
     }
+
+    setLoading(true)
+
     const nftsForOwnerResult = await getAllNfts(holderAddress)
-    console.log('nftsForOwnerResult by contract', nftsForOwnerResult)
+    console.log('useTokenIdByContract', nftsForOwnerResult)
 
     const list = nftsForOwnerResult.ownedNfts
       .filter((item) => getAddress(item.contract.address) === getAddress(tokenAddress))
       .map((item) => item.tokenId)
 
+    // console.log('list', list)
+
     setTokenId(list)
-  }, [holderAddress, tokenAddress])
+    setLoading(false)
+  }, [holderAddress, tokenAddress, account])
 
   useEffect(() => {
     getNftsForOwner()
   }, [getNftsForOwner])
 
-  return tokenId
+  return {
+    tokenId,
+    loading,
+  }
 }

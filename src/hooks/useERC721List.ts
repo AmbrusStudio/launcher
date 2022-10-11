@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 import { NFTE4CRanger } from '../types'
 import { nftsForOwner } from '../utils'
 import { useOriginalOwners, useUpgradeds } from './useE4CRanger'
-import { useTokenId, useTokenIdByContract } from './useTokenId'
+import { useTokenIdByContract, useTokenIdByOwner } from './useTokenId'
 
 /**
  * useERC721 List
@@ -15,10 +15,10 @@ export function useERC721ListState({ holderAddress, tokenAddress }: { holderAddr
   const { account } = useEthers()
 
   // tokenId for owner
-  const { tokenId, loading } = useTokenId({ tokenAddress })
+  const { tokenId, loading } = useTokenIdByOwner({ tokenAddress })
 
   // tokenId by contract
-  const tokenIdByContract = useTokenIdByContract({
+  const { tokenId: tokenIdByContract } = useTokenIdByContract({
     holderAddress,
     tokenAddress,
   })
@@ -74,12 +74,12 @@ export function useERC721List({ holderAddress, tokenAddress }: { holderAddress: 
   const { account } = useEthers()
 
   // TokenId for owner
-  const { tokenId, loading } = useTokenId({
+  const { tokenId, loading } = useTokenIdByOwner({
     tokenAddress,
   })
 
   // TokenId by contract
-  const tokenIdByContract = useTokenIdByContract({
+  const { tokenId: tokenIdByContract } = useTokenIdByContract({
     holderAddress,
     tokenAddress,
   })

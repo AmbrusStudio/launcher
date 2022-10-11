@@ -1,4 +1,6 @@
-import { Dispatch, FC, SetStateAction } from 'react'
+import { useSize } from 'ahooks'
+import classNames from 'classnames'
+import { Dispatch, FC, MouseEvent, SetStateAction, useCallback, useMemo, useRef } from 'react'
 import Slider from 'react-slick'
 
 import { NFTE4CRanger } from '../../../types'
@@ -7,50 +9,70 @@ import TokenMedia from '../../TokenMedia'
 
 interface Props {
   readonly nfts: NFTE4CRanger[]
+  readonly active: number
   setActive: Dispatch<SetStateAction<number>>
 }
-const slidesToShow = 2
 
-const SimpleSlider: FC<Props> = ({ nfts, setActive }) => {
+const SimpleSlider: FC<Props> = ({ nfts, active, setActive }) => {
+  const size = useSize(document.querySelector('body'))
+  const sliderRef = useRef<Slider>(null)
+  const mediaWidth = useMemo<string>(() => {
+    if (size) {
+      // 48 = 24 * 2 padding
+      // 12 = 6 * 2 padding
+      // 60 = 48 + 12
+      return (size.width - 60) / 2 + 'px'
+    } else {
+      return '160px'
+    }
+  }, [size])
+
   const settings = {
     className: 'sliderWrapper',
-    centerMode: true,
-    focusOnSelect: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: slidesToShow,
-    centerPadding: '20px',
     arrows: false,
-    adaptiveHeight: true,
-    afterChange: (current: number) => setActive(current),
+    variableWidth: true,
+    beforeChange: (_oldIndex: number, newIndex: number) => {
+      setActive(newIndex)
+    },
   }
 
+  const handleSlickGoTo = useCallback((e: MouseEvent<HTMLDivElement>) => {
+    // TODO: modify get index
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const dataIndex = (e.target as any).parentElement.parentElement.parentElement.parentElement.getAttribute(
+      'data-index'
+    )
+
+    dataIndex && sliderRef.current?.slickGoTo(parseInt(dataIndex))
+  }, [])
+
   return (
-    <>
-      {nfts.length < 4 ? (
-        <div>
-          {nfts.map((nft, index) => (
+    <div
+      className="w-full mx-auto my-6"
+      style={{
+        height: mediaWidth,
+      }}
+    >
+      <Slider {...settings} ref={sliderRef}>
+        {nfts.map((nft, index) => (
+          <div key={index} onClick={handleSlickGoTo}>
             <div
-              key={index}
-              onClick={() => setActive(index)}
-              className="opacity-50 border-2 border-white border-solid mx-[6px] text-center bg-[#2A2A2A] box-border"
+              style={{
+                width: mediaWidth,
+                height: mediaWidth,
+              }}
+              data-token-index={index}
+              className={classNames('border-2 border-solid mx-[6px] text-center bg-[#2A2A2A] box-border', {
+                'opacity-50 border-transparent': index !== active,
+                'opacity-100 border-white': index === active,
+              })}
             >
               <TokenMedia src={imageSizeConversion(nft.image, 2000)} />
             </div>
-          ))}
-        </div>
-      ) : (
-        <Slider {...settings}>
-          {nfts.map((nft, index) => (
-            <div key={index}>
-              <div className="opacity-50 border-2 border-white border-solid mx-[6px] text-center bg-[#2A2A2A] box-border">
-                <TokenMedia src={imageSizeConversion(nft.image, 2000)} />
-              </div>
-            </div>
-          ))}
-        </Slider>
-      )}
-    </>
+          </div>
+        ))}
+      </Slider>
+    </div>
   )
 }
 

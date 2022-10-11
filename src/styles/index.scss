@@ -97,12 +97,8 @@ body,
 }
 
 // slider
-.sliderWrapper .slick-slide div {
-  transition: all 0.3s ease;
-}
-
-.sliderWrapper .slick-center div {
-  opacity: 1;
+.sliderWrapper .slick-track {
+  margin-left: 18px;
 }
 
 // assets slider
