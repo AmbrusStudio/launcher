@@ -17,10 +17,10 @@ interface Props {
 const StakeInfoModal: FC<Props> = ({ visible, loading = false, nft, close, stake }) => {
   return (
     <Modal visible={visible} title={stakeToUpgrade.title} close={close}>
-      <div className="bg-white backdrop-blur-md px-6 pt-6 pb-[109px] grid gap-y-[36px]">
+      <div className="bg-white backdrop-blur-md px-6 pt-6 pb-27 grid gap-y-[36px]">
         <Announcements address={nft.address} />
       </div>
-      <div className="bg-black backdrop-blur-md p-6">
+      <div className="bg-black backdrop-blur-md pt-6 pb-27 px-6">
         <p className="font-normal text-base leading-[30px] text-white not-italic">{stakeToUpgrade.description}</p>
       </div>
       <button

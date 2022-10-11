@@ -1,6 +1,6 @@
 import { useSize } from 'ahooks'
 import classNames from 'classnames'
-import { Dispatch, FC, SetStateAction, useMemo } from 'react'
+import { Dispatch, FC, MouseEvent, SetStateAction, useCallback, useMemo, useRef } from 'react'
 import Slider from 'react-slick'
 
 import { NFTE4CRanger } from '../../../types'
@@ -12,10 +12,10 @@ interface Props {
   readonly active: number
   setActive: Dispatch<SetStateAction<number>>
 }
-const slidesToShow = 2
 
 const SimpleSlider: FC<Props> = ({ nfts, active, setActive }) => {
   const size = useSize(document.querySelector('body'))
+  const sliderRef = useRef<Slider>(null)
   const mediaWidth = useMemo<string>(() => {
     if (size) {
       // 48 = 24 * 2 padding
@@ -29,17 +29,23 @@ const SimpleSlider: FC<Props> = ({ nfts, active, setActive }) => {
 
   const settings = {
     className: 'sliderWrapper',
-    centerMode: true,
-    focusOnSelect: true,
-    infinite: true,
-    slidesToShow: slidesToShow,
-    centerPadding: '20px',
     arrows: false,
-    adaptiveHeight: true,
-    autoplay: false,
-    initialSlide: active,
-    afterChange: (current: number) => setActive(current),
+    variableWidth: true,
+    beforeChange: (_oldIndex: number, newIndex: number) => {
+      console.log('newIndex', newIndex)
+      setActive(newIndex)
+    },
   }
+
+  const handleSlickGoTo = useCallback((e: MouseEvent<HTMLDivElement>) => {
+    // TODO: modify get index
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const dataIndex = (e.target as any).parentElement.parentElement.parentElement.parentElement.getAttribute(
+      'data-index'
+    )
+
+    dataIndex && sliderRef.current?.slickGoTo(parseInt(dataIndex))
+  }, [])
 
   return (
     <div className="w-full mx-auto">
@@ -72,16 +78,19 @@ const SimpleSlider: FC<Props> = ({ nfts, active, setActive }) => {
             height: mediaWidth,
           }}
         >
-          <Slider {...settings}>
+          <Slider {...settings} ref={sliderRef}>
             {nfts.map((nft, index) => (
-              <div key={index}>
+              <div key={index} onClick={handleSlickGoTo}>
                 <div
                   style={{
                     width: mediaWidth,
                     height: mediaWidth,
                   }}
-                  data-index={index}
-                  className="opacity-50 border-2 border-transparent border-solid mx-[6px] text-center bg-[#2A2A2A] box-border"
+                  data-token-index={index}
+                  className={classNames('border-2 border-solid mx-[6px] text-center bg-[#2A2A2A] box-border', {
+                    'opacity-50 border-transparent': index !== active,
+                    'opacity-100 border-white': index === active,
+                  })}
                 >
                   <TokenMedia src={imageSizeConversion(nft.image, 2000)} />
                 </div>

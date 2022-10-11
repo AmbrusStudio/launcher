@@ -2,7 +2,7 @@ import { Stack } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
 import { useMemo, useState } from 'react'
-import { isBrowser } from 'react-device-detect'
+import { useMediaQuery } from 'react-responsive'
 
 import { PageLayout } from '../../../components/Layout'
 import { WalletButton } from '../../../components/Layout/WalletButton'
@@ -23,6 +23,7 @@ import { useERC721ListState } from '../../../hooks/useERC721List'
 function AccountNFT() {
   const { account, active } = useEthers()
   const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
+  const isMd = useMediaQuery({ query: '(min-width: 768px)' })
 
   const { nfts: nftsGold, loading: loadingGold } = useERC721ListState({
     holderAddress: ADDRESS_E4CRanger_Gold_Holder,
@@ -69,7 +70,7 @@ function AccountNFT() {
           <div className="px-6 xl:px-2.5 my-6 sm:my-9 text-white">No Data...</div>
         ) : (
           <>
-            {isBrowser ? (
+            {isMd ? (
               <Stack spacing={3} className="px-6 xl:px-2.5 my-6 sm:my-9">
                 {nfts.map((nft) => (
                   <NFTItem nft={nft} key={`${nft.address}_${nft.tokenId}`} tokenId={nft.tokenId} />
@@ -82,7 +83,7 @@ function AccountNFT() {
         )}
       </div>
 
-      {isBrowser ? (
+      {isMd ? (
         <Perk visible={visiblePerk} close={(value) => setVisiblePerk(value)} />
       ) : (
         <PerkModal visible={visiblePerkModal} close={() => setVisiblePerkModal(false)} />
