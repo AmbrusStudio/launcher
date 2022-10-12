@@ -17,9 +17,10 @@ import StatusCheck from '../StatusCheck'
 interface NFTItemProps {
   readonly nft: NFTE4CRanger
   readonly tokenId: string
+  update: () => void
 }
 
-const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
+const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, update }) => {
   const { account } = useEthers()
   const { chainIdMismatch, switchNetwork } = useWeb3Modal()
 
@@ -59,7 +60,11 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
     } else {
       setStakeLoading(false)
     }
-  }, [stakeState, handleState])
+
+    if (stakeState.status === 'Success') {
+      update()
+    }
+  }, [stakeState, handleState, update])
 
   // Watch unstakeState
   useEffect(() => {
@@ -70,7 +75,11 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
     } else {
       setUnstakeLoading(false)
     }
-  }, [unstakeState, handleState])
+
+    if (unstakeState.status === 'Success') {
+      update()
+    }
+  }, [unstakeState, handleState, update])
 
   return (
     <div className="bg-black relative min-h-300px">

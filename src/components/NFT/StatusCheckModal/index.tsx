@@ -32,6 +32,7 @@ const StatusCheckModal: FC<Props> = ({ visible, loading = false, nft, close, upg
       <div className="bg-white backdrop-blur-md px-6 pt-6 pb-27 grid gap-y-[36px]">
         <Announcements address={nft.address} />
       </div>
+      <div className="bg-black backdrop-blur-md pt-6 pb-27 px-6"></div>
       <button className="u-btn u-btn-primary !w-auto fixed left-6 bottom-6 right-6" onClick={() => setDrawer(true)}>
         My Status
         <ArrowUp className="!text-base ml-3" />

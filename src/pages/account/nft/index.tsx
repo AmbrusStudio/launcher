@@ -1,6 +1,7 @@
 import { Stack } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
+import { useUpdate } from 'ahooks'
 import { useMemo, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
@@ -24,6 +25,7 @@ function AccountNFT() {
   const { account, active } = useEthers()
   const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
   const isMd = useMediaQuery({ query: '(min-width: 768px)' })
+  const update = useUpdate()
 
   const { nfts: nftsGold, loading: loadingGold } = useERC721ListState({
     holderAddress: ADDRESS_E4CRanger_Gold_Holder,
@@ -73,11 +75,11 @@ function AccountNFT() {
             {isMd ? (
               <Stack spacing={3} className="px-6 xl:px-2.5 my-6 sm:my-9">
                 {nfts.map((nft) => (
-                  <NFTItem nft={nft} key={`${nft.address}_${nft.tokenId}`} tokenId={nft.tokenId} />
+                  <NFTItem nft={nft} key={`${nft.address}_${nft.tokenId}`} tokenId={nft.tokenId} update={update} />
                 ))}
               </Stack>
             ) : (
-              <MobileWrap nfts={nfts} />
+              <MobileWrap nfts={nfts} update={update} />
             )}
           </>
         )}
