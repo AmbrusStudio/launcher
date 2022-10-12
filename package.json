@@ -34,7 +34,7 @@
     "react-window": "^1.8.7",
     "redux": "^4.2.0",
     "slick-carousel": "^1.8.1",
-    "swiper": "^8.3.2",
+    "swiper": "^8.4.3",
     "ua-parser-js": "^1.0.2",
     "use-local-storage-state": "^18.1.1",
     "web-vitals": "^2.1.4",
