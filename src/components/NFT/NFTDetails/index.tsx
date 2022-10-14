@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import Skeleton from '@mui/material/Skeleton'
-import { FC, useMemo } from 'react'
+import { FC } from 'react'
 
 import { BlindBoxMode, BlindBoxTrait } from '../../../constants'
-import { NFTE4CRanger, Trait, TraitItem } from '../../../types'
-import { getEdition } from '../../../utils'
+import { NFTE4CRanger } from '../../../types'
+import { getEdition, traitNameOnTop } from '../../../utils'
 import NFTTag from '../NFTTag'
 
 const NFTInfoContent = styled.div`
@@ -44,15 +44,6 @@ interface NFTDetailsProps {
 }
 
 const NFTDetails: FC<NFTDetailsProps> = ({ nft, tokenId }) => {
-  // Name moves to the top
-  const traitSort = useMemo<TraitItem[]>(() => {
-    const index = nft.attributes.findIndex((i) => i.trait_type === Trait.Name)
-    if (~index) {
-      nft.attributes.unshift(nft.attributes.splice(index, 1)[0])
-    }
-    return nft.attributes
-  }, [nft.attributes])
-
   return (
     <>
       <section className="flex items-start justify-between">
@@ -81,7 +72,7 @@ const NFTDetails: FC<NFTDetailsProps> = ({ nft, tokenId }) => {
       </section>
 
       <NFTInfoContent>
-        {traitSort.map((trait, index) => (
+        {traitNameOnTop(nft.attributes).map((trait, index) => (
           <section key={index}>
             <NFTInfoIntroductionTitle>{trait.trait_type}</NFTInfoIntroductionTitle>
             <NFTInfoIntroductionContent>

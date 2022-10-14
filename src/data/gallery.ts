@@ -1,5 +1,6 @@
 import { groupBy } from 'lodash'
 
+import { BlindBoxMode, BlindBoxTrait } from '../constants'
 import { OPENSEA_URL } from '../contracts'
 import { Trait } from '../types'
 import { GALLERY_FILTER, GALLERY_FILTER_LIST, GALLERY_INFO_TYPE } from '../types/gallery'
@@ -23,7 +24,7 @@ export const GALLERYS_FILTERS: GALLERY_FILTER[] = Object.values(Trait).map((i) =
     for (const key in propertyGroup) {
       if (Object.prototype.hasOwnProperty.call(propertyGroup, key)) {
         list.push({
-          label: key,
+          label: !BlindBoxMode || BlindBoxTrait.includes(propertyGroup[key][0].trait_type) ? key : 'unknown',
           count: propertyGroup[key].length,
         })
       }
