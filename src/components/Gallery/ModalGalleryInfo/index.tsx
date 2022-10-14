@@ -2,8 +2,9 @@ import { Box } from '@mui/system'
 import { Dispatch, FC, SetStateAction } from 'react'
 
 import ModalGallery from '../../../components/ModalGallery'
+import { BlindBoxMode, BlindBoxTrait } from '../../../constants'
 import { Metadata } from '../../../types'
-import { imageSizeConversion, parseTokenId } from '../../../utils'
+import { imageSizeConversion, parseTokenId, traitNameOnTop } from '../../../utils'
 import TokenMedia from '../../TokenMedia'
 
 interface ModalGalleryInfoProps {
@@ -26,13 +27,13 @@ const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ metadata, visible, setVis
         </div>
         <div className="flex flex-1 flex-col flex-grow p-9 text-white overflow-auto max-height-modal-info">
           <div className="grid grid-cols-2 gap-6 mb-auto">
-            {metadata?.attributes.map((trait, index: number) => (
+            {traitNameOnTop(metadata?.attributes || []).map((trait, index: number) => (
               <section key={index}>
                 <p className="font-normal text-xs leading-[15px] m-0 p-0 not-italic uppercase text-[#a0a4b0]">
                   {trait.trait_type}
                 </p>
                 <p className="font-bold text-base leading-5 mx-0 mb-0 mt-1 p-0 text-[#2A2A2A] not-italic">
-                  {trait.value}
+                  {!BlindBoxMode || BlindBoxTrait.includes(trait.trait_type) ? trait.value : 'unknown'}
                 </p>
               </section>
             ))}

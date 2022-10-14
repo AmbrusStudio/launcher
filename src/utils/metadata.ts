@@ -1,6 +1,7 @@
 import * as Sentry from '@sentry/react'
 import { constants } from 'ethers'
 import { getAddress } from 'ethers/lib/utils'
+import { cloneDeep } from 'lodash'
 
 import {
   ADDRESS_E4C_Ranger_Gold_Edition,
@@ -9,7 +10,7 @@ import {
   ADDRESS_E4CRanger_Rangers_Holder,
 } from '../contracts'
 import { METADATA_GOLD, METADATA_RANGERS, stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
-import { Metadata, NFTE4CRanger, NFTE4CRangerUpgraded, NFTEdition, StakeAnnouncement } from '../types'
+import { Metadata, NFTE4CRanger, NFTE4CRangerUpgraded, NFTEdition, StakeAnnouncement, Trait, TraitItem } from '../types'
 
 /**
  * parse tokenId by name
@@ -126,4 +127,18 @@ export const getMetadataByAddress = (address: string): Metadata[] => {
   } else {
     throw new Error('metadata not found')
   }
+}
+
+/**
+ * Trait name on top
+ * @param trait
+ * @returns
+ */
+export const traitNameOnTop = (trait: TraitItem[]): TraitItem[] => {
+  const _trait = cloneDeep(trait)
+  const index = _trait.findIndex((i) => i.trait_type === Trait.Name)
+  if (~index) {
+    _trait.unshift(_trait.splice(index, 1)[0])
+  }
+  return _trait
 }
