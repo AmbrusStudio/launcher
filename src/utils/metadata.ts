@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react'
 import { constants } from 'ethers'
 import { getAddress } from 'ethers/lib/utils'
 
@@ -33,8 +34,19 @@ export const nftsForOwner = (
 ): NFTE4CRanger[] => {
   const data = getMetadataByAddress(address)
   const result = tokenIds.map((tokenId, index) => {
-    const item = data[Number(tokenId) - 1]
+    let item = data[Number(tokenId) - 1]
 
+    if (parseTokenId(item.name) !== tokenId) {
+      const e = `Metadata data not found by subscript. tokenId: ${tokenId}`
+      console.error(e)
+      Sentry.captureException(e)
+
+      // Start search
+      const found = data.find((i) => parseTokenId(i.name) === tokenId)
+      if (found) {
+        item = found
+      }
+    }
     return {
       address,
       tokenId: tokenId,

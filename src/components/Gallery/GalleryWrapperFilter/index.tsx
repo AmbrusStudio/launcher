@@ -14,9 +14,9 @@ const GalleryWrapperFilter: FC<Props> = ({ allToken, setCurrentNFTInfo, setVisib
   return (
     <div className="mt-3 lg:mt-6">
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-        {allToken.map((item) => (
+        {allToken.map((item, index) => (
           <GalleryItem
-            key={parseTokenId(item.name)}
+            key={`index_${index}_tokenId_${parseTokenId(item.name)}`}
             data={item}
             onClick={() => {
               setCurrentNFTInfo(item)
