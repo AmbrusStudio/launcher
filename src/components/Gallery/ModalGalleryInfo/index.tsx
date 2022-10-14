@@ -4,6 +4,7 @@ import { Dispatch, FC, SetStateAction } from 'react'
 import ModalGallery from '../../../components/ModalGallery'
 import { Metadata } from '../../../types'
 import { imageSizeConversion, parseTokenId } from '../../../utils'
+import TokenMedia from '../../TokenMedia'
 
 interface ModalGalleryInfoProps {
   readonly metadata?: Metadata
@@ -21,11 +22,7 @@ const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ metadata, visible, setVis
     >
       <Box className="flex flex-1 lg:flex-none flex-col lg:flex-row overflow-hidden lg:overflow-auto bg-white lg:bg-white/80 backdrop-blur-[20px] transition-none">
         <div className="w-[100vw] h-[100vw] lg:w-[600px] lg:h-[600px] border-4 border-white">
-          <img
-            className="h-full object-cover w-full"
-            src={imageSizeConversion(metadata?.image || '', 2000)}
-            alt="logo"
-          />
+          <TokenMedia src={imageSizeConversion(metadata?.image || '', 2000)} />
         </div>
         <div className="flex flex-1 flex-col flex-grow p-9 text-white overflow-auto max-height-modal-info">
           <div className="grid grid-cols-2 gap-6 mb-auto">
