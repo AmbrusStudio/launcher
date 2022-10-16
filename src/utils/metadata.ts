@@ -1,5 +1,7 @@
+import * as Sentry from '@sentry/react'
 import { constants } from 'ethers'
 import { getAddress } from 'ethers/lib/utils'
+import { cloneDeep } from 'lodash'
 
 import {
   ADDRESS_E4C_Ranger_Gold_Edition,
@@ -8,7 +10,7 @@ import {
   ADDRESS_E4CRanger_Rangers_Holder,
 } from '../contracts'
 import { METADATA_GOLD, METADATA_RANGERS, stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
-import { Metadata, NFTE4CRanger, NFTE4CRangerUpgraded, NFTEdition, StakeAnnouncement } from '../types'
+import { Metadata, NFTE4CRanger, NFTE4CRangerUpgraded, NFTEdition, StakeAnnouncement, Trait, TraitItem } from '../types'
 
 /**
  * parse tokenId by name
@@ -33,8 +35,19 @@ export const nftsForOwner = (
 ): NFTE4CRanger[] => {
   const data = getMetadataByAddress(address)
   const result = tokenIds.map((tokenId, index) => {
-    const item = data[Number(tokenId) - 1]
+    let item = data[Number(tokenId) - 1]
 
+    if (parseTokenId(item.name) !== tokenId) {
+      const e = `Metadata data not found by subscript. tokenId: ${tokenId}`
+      console.error(e)
+      Sentry.captureException(e)
+
+      // Start search
+      const found = data.find((i) => parseTokenId(i.name) === tokenId)
+      if (found) {
+        item = found
+      }
+    }
     return {
       address,
       tokenId: tokenId,
@@ -114,4 +127,18 @@ export const getMetadataByAddress = (address: string): Metadata[] => {
   } else {
     throw new Error('metadata not found')
   }
+}
+
+/**
+ * Trait name on top
+ * @param trait
+ * @returns
+ */
+export const traitNameOnTop = (trait: TraitItem[]): TraitItem[] => {
+  const _trait = cloneDeep(trait)
+  const index = _trait.findIndex((i) => i.trait_type === Trait.Name)
+  if (~index) {
+    _trait.unshift(_trait.splice(index, 1)[0])
+  }
+  return _trait
 }

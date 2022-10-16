@@ -9,6 +9,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { PhotoProvider, PhotoView } from 'react-photo-view'
 
 import { BlindBoxPictures } from '../../../constants'
+import { useWeb3Modal } from '../../../hooks'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
 import { useHandleState } from '../../../hooks/useHandleState'
 import { NFTE4CRanger } from '../../../types'
@@ -27,11 +28,13 @@ const Actions = styled(Stack)`
 `
 
 interface MobileWrapProps {
-  nfts: NFTE4CRanger[]
+  readonly nfts: NFTE4CRanger[]
+  update: () => void
 }
 
-const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
+const MobileWrap: FC<MobileWrapProps> = ({ nfts, update }) => {
   const { account } = useEthers()
+  const { chainIdMismatch, switchNetwork } = useWeb3Modal()
 
   const [active, setActive] = useState<number>(0)
   const [visibleStakeInfoModal, setVisibleStakeInfoModal] = useState<boolean>(false)
@@ -75,7 +78,11 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
     } else {
       setStakeLoading(false)
     }
-  }, [stakeState, handleState])
+
+    if (stakeState.status === 'Success') {
+      update()
+    }
+  }, [stakeState, handleState, update])
 
   // Watch unstakeState
   useEffect(() => {
@@ -86,7 +93,11 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
     } else {
       setUnstakeLoading(false)
     }
-  }, [unstakeState, handleState])
+
+    if (unstakeState.status === 'Success') {
+      update()
+    }
+  }, [unstakeState, handleState, update])
 
   return (
     <>
@@ -113,7 +124,11 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
               {/* <button className="u-btn u-btn-primary max-w-[120px] relative !py-0">
                 <Star sx={{ fontSize: '36px' }} />
               </button> */}
-              {nft.staking ? (
+              {chainIdMismatch ? (
+                <button className={'u-btn u-btn-primary'} onClick={() => switchNetwork()}>
+                  Switch Network
+                </button>
+              ) : nft.staking ? (
                 <button
                   disabled={unstakeLoading}
                   className={classNames('u-btn u-btn-primary', {

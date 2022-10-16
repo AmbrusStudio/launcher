@@ -7,7 +7,7 @@ import AccountNFT from './pages/account/nft'
 import { Settings } from './pages/account/settings'
 import { SignIn } from './pages/account/signin'
 import { SignUp } from './pages/account/signup'
-// import Gallery from './pages/gallery'
+import Gallery from './pages/gallery'
 
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
       <Route path="/account/settings" element={<Settings />} />
       <Route path="/account/home" element={<Home />} />
       <Route path="/account/games" element={<Games />} />
-      {/* <Route path="/gallery" element={<Gallery />} /> */}
+      <Route path="/gallery" element={<Gallery />} />
       <Route path="*" element={<MainSiteRoutes />} />
     </Routes>
   )
