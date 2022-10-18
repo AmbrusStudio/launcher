@@ -1,7 +1,7 @@
 import SwipeableDrawer from '@mui/material/SwipeableDrawer'
-import { Dispatch, FC, SetStateAction, useCallback, useEffect, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useCallback, useEffect } from 'react'
 
-import { GALLERYS_FILTERS_STATUS } from '../../../data'
+import { useGalleryFilter } from '../../../hooks/useGalleryFilter'
 import { Filter } from '../../../types/gallery'
 import { toggleFilterCheckedFn, toggleFilterOpenFn } from '../../../utils'
 import GalleryFilter from '../../Gallery/Filter'
@@ -15,8 +15,7 @@ interface DrawerFilterProps {
 }
 
 const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, isFixed, setVisibleDrawer, applyFilter }) => {
-  // Filter
-  const [filter, setFilter] = useState<Filter[]>(GALLERYS_FILTERS_STATUS)
+  const { galleryFilterStatus, filter, setFilter } = useGalleryFilter()
 
   // https://mui.com/material-ui/react-drawer/#swipeable
   const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent)
@@ -27,7 +26,7 @@ const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, isFixed, setVisibl
       const list = toggleFilterOpenFn(filter, index)
       list && setFilter(list)
     },
-    [filter]
+    [filter, setFilter]
   )
 
   // Toggle filter children tag checked
@@ -36,17 +35,17 @@ const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, isFixed, setVisibl
       const list = toggleFilterCheckedFn(filter, parentIndex, childrenIndex)
       setFilter(list)
     },
-    [filter]
+    [filter, setFilter]
   )
 
   // Watch visible, false initialization
   useEffect(() => {
     if (!visibleDrawer) {
       setTimeout(() => {
-        setFilter(GALLERYS_FILTERS_STATUS)
+        setFilter(galleryFilterStatus)
       }, 300)
     }
-  }, [visibleDrawer])
+  }, [visibleDrawer, galleryFilterStatus, setFilter])
 
   return (
     <SwipeableDrawer

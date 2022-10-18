@@ -9,8 +9,16 @@ import {
   ADDRESS_E4CRanger_Gold_Holder,
   ADDRESS_E4CRanger_Rangers_Holder,
 } from '../contracts'
-import { METADATA_GOLD, METADATA_RANGERS, stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
-import { Metadata, NFTE4CRanger, NFTE4CRangerUpgraded, NFTEdition, StakeAnnouncement, Trait, TraitItem } from '../types'
+import { stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
+import {
+  NFTE4CRanger,
+  NFTE4CRangerUpgraded,
+  NFTEdition,
+  StakeAnnouncement,
+  TokenMetadata,
+  Trait,
+  TraitItem,
+} from '../types'
 
 /**
  * parse tokenId by name
@@ -29,33 +37,41 @@ export const parseTokenId = (name: string): string => {
  */
 export const nftsForOwner = (
   address: string,
+  metadata: TokenMetadata[],
   tokenIds: string[],
   upgradeds: NFTE4CRangerUpgraded[],
   originalOwners: string[]
 ): NFTE4CRanger[] => {
-  const data = getMetadataByAddress(address)
-  const result = tokenIds.map((tokenId, index) => {
-    let item = data[Number(tokenId) - 1]
+  console.log('metadata', metadata)
 
-    if (parseTokenId(item.name) !== tokenId) {
-      const e = `Metadata data not found by subscript. tokenId: ${tokenId}`
-      console.error(e)
-      Sentry.captureException(e)
+  const result = tokenIds
+    .map((tokenId, index) => {
+      let item = metadata[Number(tokenId) - 1]
 
-      // Start search
-      const found = data.find((i) => parseTokenId(i.name) === tokenId)
-      if (found) {
-        item = found
+      if (!item) {
+        return
       }
-    }
-    return {
-      address,
-      tokenId: tokenId,
-      upgraded: upgradeds?.[index],
-      staking: originalOwners?.[index] ? originalOwners[index] !== constants.AddressZero : false,
-      ...item,
-    }
-  })
+      if (parseTokenId(item.name) !== tokenId) {
+        const e = `Metadata data not found by subscript. tokenId: ${tokenId}`
+        console.error(e)
+        Sentry.captureException(e)
+
+        // Start search
+        const found = metadata.find((i) => parseTokenId(i.name) === tokenId)
+        if (found) {
+          item = found
+        }
+      }
+
+      return {
+        ...item,
+        address,
+        tokenId: tokenId,
+        upgraded: upgradeds?.[index],
+        staking: originalOwners?.[index] ? originalOwners[index] !== constants.AddressZero : false,
+      }
+    })
+    .filter((i) => i) as NFTE4CRanger[]
 
   return result
 }
@@ -111,21 +127,6 @@ export const getHolderByAddress = (address: string): string => {
     return ADDRESS_E4CRanger_Rangers_Holder
   } else {
     throw new Error('holder not found')
-  }
-}
-
-/**
- * Get Metadata By Address
- * @param address
- * @returns
- */
-export const getMetadataByAddress = (address: string): Metadata[] => {
-  if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition)) {
-    return METADATA_GOLD
-  } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition)) {
-    return METADATA_RANGERS
-  } else {
-    throw new Error('metadata not found')
   }
 }
 

@@ -27,7 +27,7 @@ const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ metadata, visible, setVis
         </div>
         <div className="flex flex-1 flex-col flex-grow p-9 text-white overflow-auto max-height-modal-info">
           <div className="grid grid-cols-2 gap-6 mb-auto">
-            {traitNameOnTop(metadata?.attributes || []).map((trait, index: number) => (
+            {traitNameOnTop(metadata?.trait || []).map((trait, index: number) => (
               <section key={index}>
                 <p className="font-normal text-xs leading-[15px] m-0 p-0 not-italic uppercase text-[#a0a4b0]">
                   {trait.trait_type}

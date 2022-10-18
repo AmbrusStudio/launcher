@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { Route, Routes } from 'react-router-dom'
 
 import MainSiteRoutes from './components/MainSiteRoutes'
@@ -8,8 +10,21 @@ import { Settings } from './pages/account/settings'
 import { SignIn } from './pages/account/signin'
 import { SignUp } from './pages/account/signup'
 import Gallery from './pages/gallery'
+import { AppDispatch } from './store'
+import { fetchMetadataGoldEdition, fetchMetadataRangersEdition } from './store/metadata/metadataSlice'
 
 function App() {
+  const dispatch = useDispatch<AppDispatch>()
+
+  useEffect(() => {
+    const promiseGoldEdition = dispatch(fetchMetadataGoldEdition())
+    const promiseRangersEdition = dispatch(fetchMetadataRangersEdition())
+    return () => {
+      promiseGoldEdition.abort()
+      promiseRangersEdition.abort()
+    }
+  }, [dispatch])
+
   return (
     <Routes>
       <Route path="/" element={<MainSiteRoutes />} />

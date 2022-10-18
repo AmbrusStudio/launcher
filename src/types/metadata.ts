@@ -23,5 +23,12 @@ export type Metadata = {
   name: string
   description: string
   image: string
+  trait: TraitItem[]
+}
+
+export type MetadataResponse = {
+  name: string
+  description: string
+  image: string
   attributes: TraitItem[]
 }
