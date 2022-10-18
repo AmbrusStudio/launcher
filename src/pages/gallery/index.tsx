@@ -62,9 +62,7 @@ function Gallery() {
 
     const listFlat = (data: FilterList[][]): string[] => data.flatMap((i) => i.map((j) => j.label))
 
-    compose(listFlat, listChecked)(filter)
-
-    return []
+    return compose(listFlat, listChecked)(filter)
   }, [filter])
 
   // Toggle Filter children open

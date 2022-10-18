@@ -3,12 +3,12 @@ import { Dispatch, FC, SetStateAction } from 'react'
 
 import ModalGallery from '../../../components/ModalGallery'
 import { BlindBoxMode, BlindBoxTrait } from '../../../constants'
-import { Metadata } from '../../../types'
+import { TokenMetadata } from '../../../types'
 import { imageSizeConversion, parseTokenId, traitNameOnTop } from '../../../utils'
 import TokenMedia from '../../TokenMedia'
 
 interface ModalGalleryInfoProps {
-  readonly metadata?: Metadata
+  readonly metadata?: TokenMetadata
   readonly visible: boolean
   setVisible: Dispatch<SetStateAction<boolean>>
 }
