@@ -14,8 +14,8 @@ import { TokenMetadata } from '../types'
  * @returns
  */
 export function useMetadata() {
-  const metadadaGoldEdition = useSelector((state: RootState) => state.metadataSlice.GoldEdition[defaultChainId])
-  const metadadaRangersEdition = useSelector((state: RootState) => state.metadataSlice.RangersEdition[defaultChainId])
+  const metadadaGoldEdition = useSelector((state: RootState) => state.metadata.GoldEdition[defaultChainId])
+  const metadadaRangersEdition = useSelector((state: RootState) => state.metadata.RangersEdition[defaultChainId])
 
   console.log('Edition', metadadaGoldEdition, metadadaRangersEdition)
 

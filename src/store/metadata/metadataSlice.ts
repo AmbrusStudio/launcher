@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import * as Sentry from '@sentry/react'
 import { Goerli, Mainnet } from '@usedapp/core'
 import axios from 'axios'
 import { getAddress } from 'ethers/lib/utils'
@@ -76,16 +77,32 @@ const initialState: MetadataState = {
 export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
   'metadata/fetchMetadataGoldEdition',
   async () => {
-    const response = await axios.get(defaultState.GoldEdition[defaultChainId].url)
-    return response.data
+    try {
+      const response = await axios.get(defaultState.GoldEdition[defaultChainId].url)
+      return response.data
+    } catch (error) {
+      const e = `metadata/fetchMetadataGoldEdition error: ${error}`
+      console.log('error', e)
+      Sentry.captureException(e)
+
+      return []
+    }
   }
 )
 
 export const fetchMetadataRangersEdition = createAsyncThunk<MetadataResponse[]>(
   'metadata/fetchMetadataRangersEdition',
   async () => {
-    const response = await axios.get(defaultState.RangersEdition[defaultChainId].url)
-    return response.data
+    try {
+      const response = await axios.get(defaultState.RangersEdition[defaultChainId].url)
+      return response.data
+    } catch (error) {
+      const e = `metadata/fetchMetadataRangersEdition error: ${error}`
+      console.log('error', e)
+      Sentry.captureException(e)
+
+      return []
+    }
   }
 )
 
