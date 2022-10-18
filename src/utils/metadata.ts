@@ -101,6 +101,30 @@ export const getEdition = (upgraded: NFTE4CRangerUpgraded, address: string): NFT
 }
 
 /**
+ * Get gallery edition
+ * @param upgraded
+ * @param address
+ * @returns
+ */
+export const getGalleryEdition = (upgraded: NFTE4CRangerUpgraded, address: string): string => {
+  if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition)) {
+    if (upgraded) {
+      return 'Gold+'
+    } else {
+      return 'Gold'
+    }
+  } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition)) {
+    if (upgraded) {
+      return 'Rangers+'
+    } else {
+      return 'Rangers'
+    }
+  } else {
+    return '-'
+  }
+}
+
+/**
  * Get Stake Announcement
  * @param address
  * @returns
