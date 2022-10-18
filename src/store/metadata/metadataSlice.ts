@@ -12,32 +12,24 @@ import {
 } from '../../contracts'
 import { MetadataResponse, TokenMetadata } from '../../types'
 import { parseTokenId } from '../../utils'
-import { RootState } from '../index'
 
-interface CounterState {
-  GoldEdition: {
-    [key: number]: {
-      lastTime: number
-      url: string
-      address: string
-      chainId: number
-      name: string
-      metadata: TokenMetadata[]
-    }
-  }
-  RangersEdition: {
-    [key: number]: {
-      lastTime: number
-      url: string
-      address: string
-      chainId: number
-      name: string
-      metadata: TokenMetadata[]
-    }
+type MetadataEdition = {
+  [key: number]: {
+    lastTime: number
+    url: string
+    address: string
+    chainId: number
+    name: string
+    metadata: TokenMetadata[]
   }
 }
 
-const defaultState: CounterState = {
+interface MetadataState {
+  GoldEdition: MetadataEdition
+  RangersEdition: MetadataEdition
+}
+
+const defaultState: MetadataState = {
   GoldEdition: {
     [Mainnet.chainId]: {
       lastTime: 0,
@@ -76,7 +68,7 @@ const defaultState: CounterState = {
   },
 }
 
-const initialState: CounterState = {
+const initialState: MetadataState = {
   GoldEdition: defaultState.GoldEdition,
   RangersEdition: defaultState.RangersEdition,
 }
@@ -160,7 +152,5 @@ export const metadataSlice = createSlice({
       })
   },
 })
-
-export const selectMetadataGoldEdition = (state: RootState) => state.metadataSlice.GoldEdition
 
 export default metadataSlice.reducer
