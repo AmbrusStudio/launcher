@@ -55,8 +55,6 @@ function Gallery() {
     return handleFilterFn(filter, searchId, metadataAllEdition)
   }, [searchId, filter, metadataAllEdition])
 
-  console.log('currentGallery', currentGallery)
-
   // Filter checked category
   const checkedFilterCategory = useMemo<string[]>(() => {
     const listChecked = (data: Filter[]): FilterList[][] =>

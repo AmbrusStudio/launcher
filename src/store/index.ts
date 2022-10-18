@@ -1,12 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import counterReducer from './counter/counterSlice'
 import metadataSlice from './metadata/metadataSlice'
 
 export const store = configureStore({
   devTools: true,
   reducer: {
-    counterReducer,
     metadataSlice,
   },
 })
