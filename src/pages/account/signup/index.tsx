@@ -1,5 +1,5 @@
 import Alert from '@mui/material/Alert'
-import { shortenIfAddress, useEthers } from '@usedapp/core'
+import { shortenIfAddress } from '@usedapp/core'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -22,7 +22,7 @@ import {
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
 import { BasePageLayout } from '../../../components/Layout'
-import { useEmailAccount, useMetamaskAccount, useWeb3Modal } from '../../../hooks'
+import { useEmailAccount, useImmutableXAccount, useImmutableXWallet } from '../../../hooks'
 import { AccountSignUpFormData, AccountStepInfo, EmailVerificationTypes } from '../../../types'
 
 type StepSignUpProps = AccountEmailAndAgreementProps & {
@@ -89,13 +89,12 @@ function getStepInfo(step: number, complete?: boolean): AccountStepInfo {
 
 export function SignUp() {
   const navigate = useNavigate()
-  const { account } = useEthers()
   const { getValues, trigger, handleSubmit } = useFormContext<AccountSignUpFormData>()
-  const { connect } = useWeb3Modal()
-  const { walletLogin, walletBind } = useMetamaskAccount()
+  const { walletInfo, walletLogin: imxLogin } = useImmutableXWallet()
+  const { walletLogin, walletBind } = useImmutableXAccount()
   const { emailSendVerification, emailVerifyVerification, emailRegister, emailCheckUsername } = useEmailAccount()
 
-  const shortAccount = shortenIfAddress(account)
+  const shortAccount = shortenIfAddress(walletInfo?.address)
 
   const [step, setStep] = React.useState(0)
   const [complete, setComplete] = React.useState(false)
@@ -132,14 +131,14 @@ export function SignUp() {
     try {
       setMetamaskSigning(true)
       if (signUpError) setSignUpError('')
-      if (!account) return connect()
+      if (!walletInfo) return await imxLogin()
       const res = await walletLogin()
       if (!res.isOk) return setSignUpError(res.error.message)
       setComplete(true)
     } finally {
       setMetamaskSigning(false)
     }
-  }, [metamaskSigning, signUpError, account, connect, walletLogin])
+  }, [imxLogin, metamaskSigning, signUpError, walletInfo, walletLogin])
 
   /** For step 0, sign up with email directly. */
   const handleEmailSignUpSubmit = React.useCallback(
@@ -225,14 +224,14 @@ export function SignUp() {
     try {
       setMetamaskBinding(true)
       if (signUpError) setSignUpError('')
-      if (!account) return connect()
+      if (!walletInfo) return await imxLogin()
       const res = await walletBind()
       if (!res.isOk) return setSignUpError(res.error.message)
       setComplete(true)
     } finally {
       setMetamaskBinding(false)
     }
-  }, [account, connect, metamaskBinding, signUpError, walletBind])
+  }, [imxLogin, metamaskBinding, signUpError, walletBind, walletInfo])
   const handleSkipBindWalletClick = React.useCallback(() => {
     if (signUpError) setSignUpError('')
     setComplete(true)

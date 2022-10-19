@@ -1,4 +1,4 @@
-import { shortenIfAddress, useEthers } from '@usedapp/core'
+import { shortenIfAddress } from '@usedapp/core'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 import { Navigate } from 'react-router-dom'
@@ -6,16 +6,21 @@ import { Navigate } from 'react-router-dom'
 import AvatarDefault from '../../../assets/images/avatar/avatar-default.png'
 import { AccountMyAccountInfo, AccountMyAvatar, AccountMyWallet, AccountTitie } from '../../../components/Account'
 import { AccountCenterPageLayout } from '../../../components/Layout'
-import { useAccountInfo, useEmailAccount, useMetamaskAccount, useSnackbarTR, useWeb3Modal } from '../../../hooks'
+import {
+  useAccountInfo,
+  useEmailAccount,
+  useImmutableXAccount,
+  useImmutableXWallet,
+  useSnackbarTR,
+} from '../../../hooks'
 import { AccountAvatarInfo, AccountInfoFormData } from '../../../types'
 
 const demoData: AccountAvatarInfo[] = [{ id: 1, image: AvatarDefault }]
 
 export function Settings() {
   const { setValue, reset, handleSubmit } = useFormContext<AccountInfoFormData>()
-  const { account } = useEthers()
-  const { connect } = useWeb3Modal()
-  const { walletBind, walletUnbind } = useMetamaskAccount()
+  const { walletInfo, walletLogin: imxLogin } = useImmutableXWallet()
+  const { walletBind, walletUnbind } = useImmutableXAccount()
   const { emailUpdatePassword } = useEmailAccount()
   const { account: userInfo, expired: sessionExpired } = useAccountInfo()
   const showSnackbar = useSnackbarTR()
@@ -50,13 +55,13 @@ export function Settings() {
     if (metamaskBinding) return
     try {
       setMetamaskBinding(true)
-      if (!account) return connect()
+      if (!walletInfo) return await imxLogin()
       const res = await walletBind()
       if (!res.isOk) return showSnackbar(res.error.message, 'error')
     } finally {
       setMetamaskBinding(false)
     }
-  }, [account, connect, metamaskBinding, showSnackbar, walletBind])
+  }, [imxLogin, metamaskBinding, showSnackbar, walletBind, walletInfo])
   const handleUnbindWalletClick = React.useCallback(async () => {
     if (metamaskBinding) return
     try {
@@ -92,7 +97,7 @@ export function Settings() {
         </div>
         <AccountMyWallet
           bindAccount={shortenIfAddress(userInfo?.wallet)}
-          walletAccount={shortenIfAddress(account)}
+          walletAccount={shortenIfAddress(walletInfo?.address)}
           metamaskButtonDisabled={metamaskBinding}
           disconnectButtonDisabled={metamaskBinding}
           onMetamaskClick={handleBindWalletClick}

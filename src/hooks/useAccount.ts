@@ -18,6 +18,22 @@ import {
 import { LSK_ACCESS_TOKEN } from '../constants'
 import { AccountAccessToken, AccountAccessTokenJWTPayload, AccountApiResult, EmailVerificationTypes } from '../types'
 import { getAccessTokenPayload, getDefaultChainId, isAccountTokenExpired } from '../utils'
+import { useImmutableXWallet } from './useImmutableX'
+
+type UseCommonWalletAccount = {
+  getWalletSignCode: (account: string) => Promise<string | null>
+}
+
+function useCommonWalletAccount(): UseCommonWalletAccount {
+  const getWalletSignCode = React.useCallback<UseCommonWalletAccount['getWalletSignCode']>(async (account) => {
+    if (!account) return null
+    const res = await getMetamaskCode(account)
+    if (res.isOk) return res.data.code
+    return null
+  }, [])
+
+  return { getWalletSignCode }
+}
 
 type UseMetamaskAccount = {
   walletLogin: () => Promise<AccountApiResult<AccountAccessToken>>
@@ -29,15 +45,9 @@ export function useMetamaskAccount(): UseMetamaskAccount {
   const { account, chainId, library, switchNetwork } = useEthers()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setAccessToken] = useLocalStorageState<string>(LSK_ACCESS_TOKEN)
+  const { getWalletSignCode } = useCommonWalletAccount()
 
-  const getMetamaskSignCode = React.useCallback(async () => {
-    if (!account) return null
-    const res = await getMetamaskCode(account)
-    if (res.isOk) return res.data.code
-    return null
-  }, [account])
-
-  const getMetamaskSignSignature = React.useCallback(
+  const getWalletSignSignature = React.useCallback(
     async (code: string) => {
       const defaultChainId = getDefaultChainId()
       // Don't know why cause UseDApp throw 'underlying network changed' error.
@@ -55,27 +65,81 @@ export function useMetamaskAccount(): UseMetamaskAccount {
 
   const walletLogin = React.useCallback<UseMetamaskAccount['walletLogin']>(async () => {
     if (!account) return { isOk: false, data: null, error: new Error('No wallet address.') }
-    const code = await getMetamaskSignCode()
+    const code = await getWalletSignCode(account)
     if (!code) return { isOk: false, data: null, error: new Error('No signature code.') }
-    const sig = await getMetamaskSignSignature(code)
+    const sig = await getWalletSignSignature(code)
     if (!sig) return { isOk: false, data: null, error: new Error('No sign signature.') }
     const res = await doMetamaskLogin(account, sig)
     if (res.isOk) setAccessToken(res.data.accessToken)
     return res
-  }, [account, getMetamaskSignCode, getMetamaskSignSignature, setAccessToken])
+  }, [account, getWalletSignCode, getWalletSignSignature, setAccessToken])
 
   const walletBind = React.useCallback<UseMetamaskAccount['walletBind']>(async () => {
     if (!account) return { isOk: false, data: null, error: new Error('No wallet address.') }
-    const code = await getMetamaskSignCode()
+    const code = await getWalletSignCode(account)
     if (!code) return { isOk: false, data: null, error: new Error('No signature code.') }
-    const sig = await getMetamaskSignSignature(code)
+    const sig = await getWalletSignSignature(code)
     if (!sig) return { isOk: false, data: null, error: new Error('No sign signature.') }
     const res = await bindMetamaskAddress(account, sig)
     if (res.isOk) setAccessToken(res.data.accessToken)
     return res
-  }, [account, getMetamaskSignCode, getMetamaskSignSignature, setAccessToken])
+  }, [account, getWalletSignCode, getWalletSignSignature, setAccessToken])
 
   const walletUnbind = React.useCallback<UseMetamaskAccount['walletUnbind']>(async () => {
+    const res = await unbindMetamaskAddress()
+    if (res.isOk) setAccessToken(res.data.accessToken)
+    return res
+  }, [setAccessToken])
+
+  return { walletLogin, walletBind, walletUnbind }
+}
+
+type UseImmutableXAccount = {
+  walletLogin: () => Promise<AccountApiResult<AccountAccessToken>>
+  walletBind: () => Promise<AccountApiResult<AccountAccessToken>>
+  walletUnbind: () => Promise<AccountApiResult<AccountAccessToken>>
+}
+
+export function useImmutableXAccount(): UseImmutableXAccount {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setAccessToken] = useLocalStorageState<string>(LSK_ACCESS_TOKEN)
+  const { getWalletSignCode } = useCommonWalletAccount()
+  const { imxLink, walletInfo } = useImmutableXWallet()
+
+  const getWalletSignSignature = React.useCallback(
+    async (code: string) => {
+      if (!imxLink || !walletInfo) return null
+      const message = `\x19Ethereum Signed Message:\n Code Length: ${code.length}; Code: ${code}`
+      const { result: signature } = await imxLink.sign({ message, description: message })
+      console.debug('account', walletInfo.address, 'signature', signature)
+      return signature
+    },
+    [imxLink, walletInfo]
+  )
+
+  const walletLogin = React.useCallback<UseImmutableXAccount['walletLogin']>(async () => {
+    if (!walletInfo) return { isOk: false, data: null, error: new Error('No wallet address.') }
+    const code = await getWalletSignCode(walletInfo.address)
+    if (!code) return { isOk: false, data: null, error: new Error('No signature code.') }
+    const sig = await getWalletSignSignature(code)
+    if (!sig) return { isOk: false, data: null, error: new Error('No sign signature.') }
+    const res = await doMetamaskLogin(walletInfo.address, sig)
+    if (res.isOk) setAccessToken(res.data.accessToken)
+    return res
+  }, [getWalletSignCode, getWalletSignSignature, setAccessToken, walletInfo])
+
+  const walletBind = React.useCallback<UseImmutableXAccount['walletBind']>(async () => {
+    if (!walletInfo) return { isOk: false, data: null, error: new Error('No wallet address.') }
+    const code = await getWalletSignCode(walletInfo.address)
+    if (!code) return { isOk: false, data: null, error: new Error('No signature code.') }
+    const sig = await getWalletSignSignature(code)
+    if (!sig) return { isOk: false, data: null, error: new Error('No sign signature.') }
+    const res = await bindMetamaskAddress(walletInfo.address, sig)
+    if (res.isOk) setAccessToken(res.data.accessToken)
+    return res
+  }, [getWalletSignCode, getWalletSignSignature, setAccessToken, walletInfo])
+
+  const walletUnbind = React.useCallback<UseImmutableXAccount['walletUnbind']>(async () => {
     const res = await unbindMetamaskAddress()
     if (res.isOk) setAccessToken(res.data.accessToken)
     return res
