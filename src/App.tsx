@@ -11,7 +11,11 @@ import { SignIn } from './pages/account/signin'
 import { SignUp } from './pages/account/signup'
 import Gallery from './pages/gallery'
 import { AppDispatch } from './store'
-import { fetchMetadataGoldEdition, fetchMetadataRangersEdition } from './store/metadata/metadataSlice'
+import {
+  fetchMetadataGoldEdition,
+  fetchMetadataRangersEdition,
+  fetchMetadataUltimateEdition,
+} from './store/metadata/metadataSlice'
 
 function App() {
   const dispatch = useDispatch<AppDispatch>()
@@ -19,9 +23,11 @@ function App() {
   useEffect(() => {
     const promiseGoldEdition = dispatch(fetchMetadataGoldEdition())
     const promiseRangersEdition = dispatch(fetchMetadataRangersEdition())
+    const promiseUltimateEdition = dispatch(fetchMetadataUltimateEdition())
     return () => {
       promiseGoldEdition.abort()
       promiseRangersEdition.abort()
+      promiseUltimateEdition.abort()
     }
   }, [dispatch])
 

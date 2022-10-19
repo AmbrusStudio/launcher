@@ -6,6 +6,7 @@ import { cloneDeep } from 'lodash'
 import {
   ADDRESS_E4C_Ranger_Gold_Edition,
   ADDRESS_E4C_Ranger_Rangers_Edition,
+  ADDRESS_E4C_Ranger_Ultimate_Edition,
   ADDRESS_E4CRanger_Gold_Holder,
   ADDRESS_E4CRanger_Rangers_Holder,
 } from '../contracts'
@@ -95,6 +96,8 @@ export const getEdition = (upgraded: NFTE4CRangerUpgraded, address: string): NFT
     } else {
       return NFTEdition.RangersEdition
     }
+  } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Ultimate_Edition)) {
+    return NFTEdition.UltimateEdition
   } else {
     return NFTEdition.Default
   }
@@ -119,6 +122,8 @@ export const getGalleryEdition = (upgraded: NFTE4CRangerUpgraded, address: strin
     } else {
       return 'Rangers'
     }
+  } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Ultimate_Edition)) {
+    return 'Ultimate'
   } else {
     return '-'
   }

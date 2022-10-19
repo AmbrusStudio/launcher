@@ -9,10 +9,12 @@ import {
   ADDRESS_E4C_Ranger_Gold_Editions,
   ADDRESS_E4C_Ranger_Rangers_Edition,
   ADDRESS_E4C_Ranger_Rangers_Editions,
+  ADDRESS_E4C_Ranger_Ultimate_Edition,
   defaultChainId,
 } from '../../contracts'
 import { MetadataResponse, TokenMetadata } from '../../types'
 import { parseTokenId } from '../../utils'
+import E4C_Rangers from './E4C_Rangers.json'
 
 type MetadataEdition = {
   [key: number]: {
@@ -28,6 +30,7 @@ type MetadataEdition = {
 interface MetadataState {
   GoldEdition: MetadataEdition
   RangersEdition: MetadataEdition
+  UltimateEdition: MetadataEdition
 }
 
 const defaultState: MetadataState = {
@@ -67,11 +70,30 @@ const defaultState: MetadataState = {
       metadata: [],
     },
   },
+  UltimateEdition: {
+    [Mainnet.chainId]: {
+      lastTime: 0,
+      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Ultimate_Edition/E4C_Rangers.json',
+      address: ADDRESS_E4C_Ranger_Ultimate_Edition[Mainnet.chainId],
+      chainId: Mainnet.chainId,
+      name: 'E4C Ranger',
+      metadata: [],
+    },
+    [Goerli.chainId]: {
+      lastTime: 0,
+      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Ultimate_Edition/E4C_Rangers.json',
+      address: ADDRESS_E4C_Ranger_Ultimate_Edition[Goerli.chainId],
+      chainId: Goerli.chainId,
+      name: 'E4C Ranger',
+      metadata: [],
+    },
+  },
 }
 
 const initialState: MetadataState = {
   GoldEdition: defaultState.GoldEdition,
   RangersEdition: defaultState.RangersEdition,
+  UltimateEdition: defaultState.UltimateEdition,
 }
 
 export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
@@ -102,6 +124,22 @@ export const fetchMetadataRangersEdition = createAsyncThunk<MetadataResponse[]>(
       Sentry.captureException(e)
 
       return []
+    }
+  }
+)
+
+export const fetchMetadataUltimateEdition = createAsyncThunk<MetadataResponse[]>(
+  'metadata/fetchMetadataUltimateEdition',
+  async () => {
+    try {
+      const response = await axios.get(defaultState.UltimateEdition[defaultChainId].url)
+      return response.data
+    } catch (error) {
+      const e = `metadata/fetchMetadataUltimateEdition error: ${error}`
+      console.log('error', e)
+      Sentry.captureException(e)
+
+      return E4C_Rangers
     }
   }
 )
@@ -166,6 +204,31 @@ export const metadataSlice = createSlice({
       .addCase(fetchMetadataRangersEdition.rejected, (state) => {
         console.log('failed')
         state.RangersEdition = defaultState.RangersEdition
+      })
+      .addCase(fetchMetadataUltimateEdition.pending, () => {
+        console.log('loading')
+      })
+      .addCase(fetchMetadataUltimateEdition.fulfilled, (state, action) => {
+        console.log('fulfilled', action)
+
+        if (action.payload.length) {
+          const time = Date.now()
+
+          state.UltimateEdition[defaultChainId].lastTime = time
+
+          state.UltimateEdition[defaultChainId].metadata = action.payload.map((i, index) => ({
+            name: i.name,
+            description: i.description,
+            image: i.image,
+            address: getAddress(ADDRESS_E4C_Ranger_Ultimate_Edition),
+            tokenId: String(index + 1),
+            trait: i.attributes,
+          }))
+        }
+      })
+      .addCase(fetchMetadataUltimateEdition.rejected, (state) => {
+        console.log('failed')
+        state.UltimateEdition = defaultState.UltimateEdition
       })
   },
 })

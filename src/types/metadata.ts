@@ -15,6 +15,7 @@ export enum Trait {
   WaistAccessory = 'Waist Accessory',
   Background = 'Background',
   Particles = 'Particles',
+  OneOfOne = 'One of One',
 }
 
 export type TraitItem = { trait_type: Trait; value: string }

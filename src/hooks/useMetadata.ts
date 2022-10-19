@@ -16,12 +16,13 @@ import { TokenMetadata } from '../types'
 export function useMetadata() {
   const metadadaGoldEdition = useSelector((state: RootState) => state.metadata.GoldEdition[defaultChainId])
   const metadadaRangersEdition = useSelector((state: RootState) => state.metadata.RangersEdition[defaultChainId])
+  const metadadaUltimateEdition = useSelector((state: RootState) => state.metadata.UltimateEdition[defaultChainId])
 
-  console.log('Edition', metadadaGoldEdition, metadadaRangersEdition)
+  console.log('Edition', metadadaGoldEdition, metadadaRangersEdition, metadadaUltimateEdition)
 
   const metadataAllEdition = useMemo<TokenMetadata[]>(
-    () => [...metadadaGoldEdition.metadata, ...metadadaRangersEdition.metadata],
-    [metadadaGoldEdition, metadadaRangersEdition]
+    () => [...metadadaUltimateEdition.metadata, ...metadadaGoldEdition.metadata, ...metadadaRangersEdition.metadata],
+    [metadadaGoldEdition, metadadaRangersEdition, metadadaUltimateEdition]
   )
 
   /**
