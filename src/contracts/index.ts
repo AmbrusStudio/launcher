@@ -2,7 +2,7 @@ import { Config as DAppConfig, Goerli, Mainnet } from '@usedapp/core'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { Network } from 'alchemy-sdk'
 
-import { getDefaultChainId } from '../utils'
+import { getDefaultChainId, getViteEnv } from '../utils'
 
 export const defaultChainId = getDefaultChainId()
 
@@ -59,8 +59,7 @@ export const OPENSEA_URLS = {
 export const OPENSEA_URL = OPENSEA_URLS[defaultChainId]
 
 // Web3Modal providerOptions
-const infuraId: string | undefined = import.meta.env.VITE_INFURA_API_KEY
-if (!infuraId) throw new TypeError('VITE_INFURA_API_KEY not set')
+const infuraId = getViteEnv('VITE_INFURA_API_KEY')
 export const web3ModalProviderOptions = {
   injected: {
     display: {
@@ -71,10 +70,7 @@ export const web3ModalProviderOptions = {
   },
   walletconnect: {
     package: WalletConnectProvider,
-    options: {
-      bridge: 'https://bridge.walletconnect.org',
-      infuraId: infuraId,
-    },
+    options: { bridge: 'https://bridge.walletconnect.org', infuraId },
   },
 }
 
