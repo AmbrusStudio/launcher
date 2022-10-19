@@ -2,7 +2,12 @@ import { getAddress } from 'ethers/lib/utils'
 import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { ADDRESS_E4C_Ranger_Gold_Edition, ADDRESS_E4C_Ranger_Rangers_Edition, defaultChainId } from '../contracts'
+import {
+  ADDRESS_E4C_Ranger_Gold_Edition,
+  ADDRESS_E4C_Ranger_Rangers_Edition,
+  ADDRESS_E4C_Ranger_Ultimate_Edition,
+  defaultChainId,
+} from '../contracts'
 import { RootState } from '../store'
 import { TokenMetadata } from '../types'
 
@@ -18,7 +23,7 @@ export function useMetadata() {
   const metadadaRangersEdition = useSelector((state: RootState) => state.metadata.RangersEdition[defaultChainId])
   const metadadaUltimateEdition = useSelector((state: RootState) => state.metadata.UltimateEdition[defaultChainId])
 
-  console.log('Edition', metadadaGoldEdition, metadadaRangersEdition, metadadaUltimateEdition)
+  // console.log('Edition', metadadaGoldEdition, metadadaRangersEdition, metadadaUltimateEdition)
 
   const metadataAllEdition = useMemo<TokenMetadata[]>(
     () => [...metadadaUltimateEdition.metadata, ...metadadaGoldEdition.metadata, ...metadadaRangersEdition.metadata],
@@ -36,11 +41,13 @@ export function useMetadata() {
         return metadadaGoldEdition.metadata
       } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition)) {
         return metadadaRangersEdition.metadata
+      } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Ultimate_Edition)) {
+        return metadadaUltimateEdition.metadata
       } else {
         throw new Error('metadata not found')
       }
     },
-    [metadadaGoldEdition.metadata, metadadaRangersEdition.metadata]
+    [metadadaGoldEdition.metadata, metadadaRangersEdition.metadata, metadadaUltimateEdition.metadata]
   )
 
   return {

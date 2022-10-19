@@ -14,7 +14,6 @@ import {
 } from '../../contracts'
 import { MetadataResponse, TokenMetadata } from '../../types'
 import { parseTokenId } from '../../utils'
-import E4C_Rangers from './E4C_Rangers.json'
 
 type MetadataEdition = {
   [key: number]: {
@@ -139,7 +138,7 @@ export const fetchMetadataUltimateEdition = createAsyncThunk<MetadataResponse[]>
       console.log('error', e)
       Sentry.captureException(e)
 
-      return E4C_Rangers
+      return []
     }
   }
 )
