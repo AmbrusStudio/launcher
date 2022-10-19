@@ -4,7 +4,7 @@ import { Dispatch, FC, SetStateAction } from 'react'
 import ModalGallery from '../../../components/ModalGallery'
 import { BlindBoxMode, BlindBoxTrait } from '../../../constants'
 import { TokenMetadata } from '../../../types'
-import { imageSizeConversion, parseTokenId, traitNameOnTop } from '../../../utils'
+import { imageSizeConversion, traitNameOnTop } from '../../../utils'
 import TokenMedia from '../../TokenMedia'
 
 interface ModalGalleryInfoProps {
@@ -17,7 +17,7 @@ const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ metadata, visible, setVis
   return (
     <ModalGallery
       title="E4C Rangers"
-      id={Number(parseTokenId(metadata?.name || ''))}
+      id={Number(metadata?.tokenId || 0)}
       visible={visible}
       toggle={(value) => setVisible(value)}
     >

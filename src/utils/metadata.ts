@@ -52,13 +52,13 @@ export const nftsForOwner = (
       if (!item) {
         return
       }
-      if (parseTokenId(item.name) !== tokenId) {
+      if (item.tokenId !== tokenId) {
         const e = `Metadata data not found by subscript. tokenId: ${tokenId}`
         console.error(e)
         Sentry.captureException(e)
 
         // Start search
-        const found = metadata.find((i) => parseTokenId(i.name) === tokenId)
+        const found = metadata.find((i) => i.tokenId === tokenId)
         if (found) {
           item = found
         }
