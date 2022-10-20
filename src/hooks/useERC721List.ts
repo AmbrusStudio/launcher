@@ -10,6 +10,7 @@ import { useTokenIdByContract, useTokenIdByOwner } from './useTokenId'
 
 /**
  * useERC721 List
+ * Token + Contract + Contract State
  * @returns
  */
 export function useERC721ListState({ holderAddress, tokenAddress }: { holderAddress: string; tokenAddress: string }) {
@@ -74,6 +75,12 @@ export function useERC721ListState({ holderAddress, tokenAddress }: { holderAddr
   }
 }
 
+/**
+ * useERC721 List
+ * Token + Contract
+ * @param param
+ * @returns
+ */
 export function useERC721List({ holderAddress, tokenAddress }: { holderAddress: string; tokenAddress: string }) {
   const { account } = useEthers()
 
@@ -130,6 +137,7 @@ export function useERC721List({ holderAddress, tokenAddress }: { holderAddress: 
 
 /**
  * ERC721 Ultimate Edition List
+ * Token
  * @param param
  * @returns
  */
