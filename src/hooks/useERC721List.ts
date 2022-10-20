@@ -133,10 +133,7 @@ export function useERC721List({ holderAddress, tokenAddress }: { holderAddress: 
  * @param param
  * @returns
  */
-export function useERC721UltimateEditionList({ tokenAddress }: { tokenAddress: string }): {
-  nfts: NFTE4CRanger[]
-  loading: boolean
-} {
+export function useERC721UltimateEditionList({ tokenAddress }: { tokenAddress: string }) {
   // TokenId for owner
   const { tokenId, loading } = useTokenIdByOwner({
     tokenAddress,
