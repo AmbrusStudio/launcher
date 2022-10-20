@@ -1,12 +1,11 @@
 import { Dispatch, FC, SetStateAction } from 'react'
 
-import { Metadata } from '../../../types'
-import { parseTokenId } from '../../../utils'
+import { TokenMetadata } from '../../../types'
 import GalleryItem from '../GalleryItem'
 
 interface Props {
-  readonly allToken: Metadata[]
-  setCurrentNFTInfo: Dispatch<SetStateAction<Metadata | undefined>>
+  readonly allToken: TokenMetadata[]
+  setCurrentNFTInfo: Dispatch<SetStateAction<TokenMetadata | undefined>>
   setVisibleNFT: Dispatch<SetStateAction<boolean>>
 }
 
@@ -16,7 +15,7 @@ const GalleryWrapperFilter: FC<Props> = ({ allToken, setCurrentNFTInfo, setVisib
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
         {allToken.map((item, index) => (
           <GalleryItem
-            key={`index_${index}_tokenId_${parseTokenId(item.name)}`}
+            key={`${item.address}_index_${index}_tokenId_${item.tokenId}`}
             data={item}
             onClick={() => {
               setCurrentNFTInfo(item)

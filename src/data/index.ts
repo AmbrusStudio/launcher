@@ -1,5 +1,4 @@
 export * from './gallery'
 export * from './games'
-export * from './metadata'
 export * from './nft'
 export * from './wallet'

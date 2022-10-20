@@ -13,19 +13,20 @@ import ModalGalleryInfo from '../../components/Gallery/ModalGalleryInfo'
 import Search from '../../components/Gallery/Search'
 import SearchAction from '../../components/Gallery/SearchAction'
 import { PageLayout } from '../../components/Layout'
-import { GALLERYS_FILTERS_STATUS } from '../../data'
+import { useGalleryFilter } from '../../hooks/useGalleryFilter'
+import { useMetadata } from '../../hooks/useMetadata'
 import { useNumStrState } from '../../hooks/useNumStrState'
-import { Metadata } from '../../types'
+import { TokenMetadata } from '../../types'
 import { Filter, FilterList } from '../../types/gallery'
 import { handleFilterFn, toggleFilterCheckedFn, toggleFilterOpenFn } from '../../utils'
 
 function Gallery() {
-  // Filter
-  const [filter, setFilter] = useState<Filter[]>(GALLERYS_FILTERS_STATUS)
+  const { galleryFilterStatus, filter, setFilter } = useGalleryFilter()
+
   // NFT modal
   const [visibleNFT, setVisibleNFT] = useState<boolean>(false)
   // NFT current
-  const [currentNFTInfo, setCurrentNFTInfo] = useState<Metadata>()
+  const [currentNFTInfo, setCurrentNFTInfo] = useState<TokenMetadata>()
   // Gallery Filter Drawer
   const [visibleDrawer, setVisibleDrawer] = useState<boolean>(false)
   // Search by ID
@@ -33,6 +34,8 @@ function Gallery() {
 
   const wrapperRef = useRef<HTMLDivElement>(null)
   const scroll = useScroll(document)
+
+  const { metadataAllEdition } = useMetadata()
 
   const isFixed = useMemo(() => {
     const headerDom = document.querySelector<HTMLDivElement>('#header')
@@ -48,9 +51,9 @@ function Gallery() {
   }, [filter])
 
   // Current gallery
-  const currentGallery = useMemo<Metadata[]>(() => {
-    return handleFilterFn(filter, searchId)
-  }, [searchId, filter])
+  const currentGallery = useMemo<TokenMetadata[]>(() => {
+    return handleFilterFn(filter, searchId, metadataAllEdition)
+  }, [searchId, filter, metadataAllEdition])
 
   // Filter checked category
   const checkedFilterCategory = useMemo<string[]>(() => {
@@ -68,7 +71,7 @@ function Gallery() {
       const list = toggleFilterOpenFn(filter, index)
       list && setFilter(list)
     },
-    [filter]
+    [filter, setFilter]
   )
 
   // Toggle filter children tag checked - change
@@ -77,14 +80,14 @@ function Gallery() {
       const list = toggleFilterCheckedFn(filter, parentIndex, childrenIndex)
       setFilter(list)
     },
-    [filter]
+    [filter, setFilter]
   )
 
   // Clear filter
   const clearFilter = useCallback(() => {
-    setFilter(GALLERYS_FILTERS_STATUS)
+    setFilter(galleryFilterStatus)
     setSearchId('')
-  }, [setSearchId])
+  }, [setSearchId, galleryFilterStatus, setFilter])
 
   return (
     <PageLayout>

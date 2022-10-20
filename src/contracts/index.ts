@@ -44,6 +44,13 @@ export const ADDRESS_E4C_Ranger_Rangers_Editions = {
 }
 export const ADDRESS_E4C_Ranger_Rangers_Edition = ADDRESS_E4C_Ranger_Rangers_Editions[defaultChainId]
 
+// E4C Ranger Ultimate Edition
+export const ADDRESS_E4C_Ranger_Ultimate_Editions = {
+  [Mainnet.chainId]: '0xeb05CB1c82ACC87Ad8E0bB7927a1dc39Cd300402',
+  [Goerli.chainId]: '0xeb05CB1c82ACC87Ad8E0bB7927a1dc39Cd300402',
+}
+export const ADDRESS_E4C_Ranger_Ultimate_Edition = ADDRESS_E4C_Ranger_Ultimate_Editions[defaultChainId]
+
 // Alchemy Network Config
 export const ALCHEMY_NETWORKS = {
   [Mainnet.chainId]: Network.ETH_MAINNET,

@@ -1,10 +1,11 @@
-import { Metadata, Trait } from './metadata'
+import { Trait } from './metadata'
+import { TokenMetadata } from './nft'
 
 export type GALLERY_TRAIT_MAP = {
   trait: Map<Trait, string>
 }
 
-export type GALLERY_MAP = Omit<Metadata, 'trait'> & GALLERY_TRAIT_MAP
+export type GALLERY_MAP = Omit<TokenMetadata, 'trait'> & GALLERY_TRAIT_MAP
 
 export type GALLERY_FILTER_LIST = {
   label: string

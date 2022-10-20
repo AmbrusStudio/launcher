@@ -3,12 +3,12 @@ import { Dispatch, FC, SetStateAction } from 'react'
 
 import ModalGallery from '../../../components/ModalGallery'
 import { BlindBoxMode, BlindBoxTrait } from '../../../constants'
-import { Metadata } from '../../../types'
-import { imageSizeConversion, parseTokenId, traitNameOnTop } from '../../../utils'
+import { TokenMetadata } from '../../../types'
+import { imageSizeConversion, traitNameOnTop } from '../../../utils'
 import TokenMedia from '../../TokenMedia'
 
 interface ModalGalleryInfoProps {
-  readonly metadata?: Metadata
+  readonly metadata?: TokenMetadata
   readonly visible: boolean
   setVisible: Dispatch<SetStateAction<boolean>>
 }
@@ -17,7 +17,7 @@ const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ metadata, visible, setVis
   return (
     <ModalGallery
       title="E4C Rangers"
-      id={Number(parseTokenId(metadata?.name || ''))}
+      id={Number(metadata?.tokenId || 0)}
       visible={visible}
       toggle={(value) => setVisible(value)}
     >
@@ -27,7 +27,7 @@ const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ metadata, visible, setVis
         </div>
         <div className="flex flex-1 flex-col flex-grow p-9 text-white overflow-auto max-height-modal-info">
           <div className="grid grid-cols-2 gap-6 mb-auto">
-            {traitNameOnTop(metadata?.attributes || []).map((trait, index: number) => (
+            {traitNameOnTop(metadata?.trait || []).map((trait, index: number) => (
               <section key={index}>
                 <p className="font-normal text-xs leading-[15px] m-0 p-0 not-italic uppercase text-[#a0a4b0]">
                   {trait.trait_type}

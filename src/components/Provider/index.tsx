@@ -3,11 +3,14 @@ import { DAppProvider } from '@usedapp/core'
 import { SnackbarProvider } from 'notistack'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { Provider as ReduxProvider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
 import useLocalStorageState from 'use-local-storage-state'
 
 import { LSK_IMX_WALLET_INFO } from '../../constants'
 import { ImmutableXWalletContext, WalletModalContext } from '../../context'
 import { DAPP_CONFIG } from '../../contracts'
+import { persistor, store } from '../../store/index'
 import { getViteEnv } from '../../utils'
 import WalletModal from '../WalletModal'
 
@@ -62,9 +65,13 @@ export function Provider({ children }: ProvidersProps) {
     <DAppProvider config={DAPP_CONFIG}>
       <FormProvider {...formMethods}>
         <WalletModalProvider>
-          <ImmutableXWalletProvider>
-            <SnackbarProvider maxSnack={3}>{children}</SnackbarProvider>
-          </ImmutableXWalletProvider>
+          <ReduxProvider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <ImmutableXWalletProvider>
+                <SnackbarProvider maxSnack={3}>{children}</SnackbarProvider>
+              </ImmutableXWalletProvider>
+            </PersistGate>
+          </ReduxProvider>
         </WalletModalProvider>
       </FormProvider>
     </DAppProvider>
