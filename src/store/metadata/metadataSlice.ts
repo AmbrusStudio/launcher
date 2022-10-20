@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import * as Sentry from '@sentry/react'
 import { Goerli, Mainnet } from '@usedapp/core'
-import axios from 'axios'
 import { getAddress } from 'ethers/lib/utils'
 
 import {
@@ -10,8 +9,12 @@ import {
   ADDRESS_E4C_Ranger_Rangers_Edition,
   ADDRESS_E4C_Ranger_Rangers_Editions,
   ADDRESS_E4C_Ranger_Ultimate_Edition,
+  ADDRESS_E4C_Ranger_Ultimate_Editions,
   defaultChainId,
 } from '../../contracts'
+import GoldEditionJSON from '../../data/Gold_Edition/E4C_Rangers.json'
+import RangersEditionJSON from '../../data/Rangers_Edition/E4C_Rangers.json'
+import UltimateEditionJSON from '../../data/Ultimate_Edition/E4C_Rangers.json'
 import { MetadataResponse, TokenMetadata } from '../../types'
 import { parseTokenId } from '../../utils'
 
@@ -21,7 +24,7 @@ type MetadataEdition = {
     url: string
     address: string
     chainId: number
-    name: string
+    name: string // contract name
     metadata: TokenMetadata[]
   }
 }
@@ -73,7 +76,7 @@ const defaultState: MetadataState = {
     [Mainnet.chainId]: {
       lastTime: 0,
       url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Ultimate_Edition/E4C_Rangers.json',
-      address: ADDRESS_E4C_Ranger_Ultimate_Edition[Mainnet.chainId],
+      address: ADDRESS_E4C_Ranger_Ultimate_Editions[Mainnet.chainId],
       chainId: Mainnet.chainId,
       name: 'E4C Ranger',
       metadata: [],
@@ -81,9 +84,9 @@ const defaultState: MetadataState = {
     [Goerli.chainId]: {
       lastTime: 0,
       url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Ultimate_Edition/E4C_Rangers.json',
-      address: ADDRESS_E4C_Ranger_Ultimate_Edition[Goerli.chainId],
+      address: ADDRESS_E4C_Ranger_Ultimate_Editions[Goerli.chainId],
       chainId: Goerli.chainId,
-      name: 'E4C Ranger',
+      name: 'E4C Ranger Ultimate Edition',
       metadata: [],
     },
   },
@@ -97,10 +100,9 @@ const initialState: MetadataState = {
 
 export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
   'metadata/fetchMetadataGoldEdition',
-  async () => {
+  () => {
     try {
-      const response = await axios.get(defaultState.GoldEdition[defaultChainId].url)
-      return response.data
+      return GoldEditionJSON as MetadataResponse[]
     } catch (error) {
       const e = `metadata/fetchMetadataGoldEdition error: ${error}`
       console.log('error', e)
@@ -113,10 +115,9 @@ export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
 
 export const fetchMetadataRangersEdition = createAsyncThunk<MetadataResponse[]>(
   'metadata/fetchMetadataRangersEdition',
-  async () => {
+  () => {
     try {
-      const response = await axios.get(defaultState.RangersEdition[defaultChainId].url)
-      return response.data
+      return RangersEditionJSON as MetadataResponse[]
     } catch (error) {
       const e = `metadata/fetchMetadataRangersEdition error: ${error}`
       console.log('error', e)
@@ -129,10 +130,9 @@ export const fetchMetadataRangersEdition = createAsyncThunk<MetadataResponse[]>(
 
 export const fetchMetadataUltimateEdition = createAsyncThunk<MetadataResponse[]>(
   'metadata/fetchMetadataUltimateEdition',
-  async () => {
+  () => {
     try {
-      const response = await axios.get(defaultState.UltimateEdition[defaultChainId].url)
-      return response.data
+      return UltimateEditionJSON as MetadataResponse[]
     } catch (error) {
       const e = `metadata/fetchMetadataUltimateEdition error: ${error}`
       console.log('error', e)

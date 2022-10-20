@@ -52,14 +52,14 @@ export function useERC721ListState({ holderAddress, tokenAddress }: { holderAddr
   const { getMetadataByAddress } = useMetadata()
   const metadata = getMetadataByAddress(tokenAddress)
 
-  // Nfts for account
+  // NFT metadata for account
   const nftsForAccount = useMemo<NFTE4CRanger[]>(
     () => nftsForOwner(tokenAddress, metadata, tokenId, upgraded, []),
     [tokenId, upgraded, tokenAddress, metadata]
   )
   // console.log('nftsForAccount', nftsForAccount)
 
-  // Nfts for contract
+  // NFT metadata for contract
   const nftsForContract = useMemo<NFTE4CRanger[]>(
     () => nftsForOwner(tokenAddress, metadata, tokenIdForContract, upgradedForContract, originalOwner),
     [tokenIdForContract, upgradedForContract, originalOwner, tokenAddress, metadata]
@@ -107,13 +107,13 @@ export function useERC721List({ holderAddress, tokenAddress }: { holderAddress: 
   const { getMetadataByAddress } = useMetadata()
   const metadata = getMetadataByAddress(tokenAddress)
 
-  // Nfts for account
+  // NFT metadata for account
   const nftsForAccount = useMemo<NFTE4CRanger[]>(
     () => nftsForOwner(tokenAddress, metadata, tokenId, [], []),
     [tokenId, tokenAddress, metadata]
   )
 
-  // Nfts for contract
+  // NFT metadata for contract
   const nftsForContract = useMemo<NFTE4CRanger[]>(
     () => nftsForOwner(tokenAddress, metadata, tokenIdForContract, [], []),
     [tokenIdForContract, tokenAddress, metadata]
@@ -124,6 +124,35 @@ export function useERC721List({ holderAddress, tokenAddress }: { holderAddress: 
 
   return {
     nfts,
+    loading: loading,
+  }
+}
+
+/**
+ * ERC721 Ultimate Edition List
+ * @param param
+ * @returns
+ */
+export function useERC721UltimateEditionList({ tokenAddress }: { tokenAddress: string }): {
+  nfts: NFTE4CRanger[]
+  loading: boolean
+} {
+  // TokenId for owner
+  const { tokenId, loading } = useTokenIdByOwner({
+    tokenAddress,
+  })
+
+  const { getMetadataByAddress } = useMetadata()
+  const metadata = getMetadataByAddress(tokenAddress)
+
+  // NFT metadata
+  const nftsForAccount = useMemo<NFTE4CRanger[]>(
+    () => nftsForOwner(tokenAddress, metadata, tokenId, [], []),
+    [tokenId, tokenAddress, metadata]
+  )
+
+  return {
+    nfts: nftsForAccount,
     loading: loading,
   }
 }

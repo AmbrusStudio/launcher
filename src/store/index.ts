@@ -9,7 +9,7 @@ const persistConfig = {
   key: 'RootE4CRanger',
   version: 1,
   storage,
-  whitelist: ['metadata'],
+  whitelist: [],
 }
 
 const reducers = combineReducers({

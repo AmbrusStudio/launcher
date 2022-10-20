@@ -36,7 +36,7 @@ export function SideNav() {
           </SideNavItem>
         </Link>
         <Link to="/account/nft">
-          <SideNavItem name="My NFTs">
+          <SideNavItem name="My NFTs" active={isActive('/account/nft')}>
             <IconAccount className="w-36px h-36px" />
           </SideNavItem>
         </Link>
