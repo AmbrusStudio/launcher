@@ -5,9 +5,9 @@ import { useUpdate } from 'ahooks'
 import { useMemo, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
-import { PageLayout } from '../../../components/Layout'
+import { AccountTitleWithAccountInfo } from '../../../components/Account'
+import { AccountCenterPageLayout } from '../../../components/Layout'
 import { WalletButton } from '../../../components/Layout/WalletButton'
-import Head from '../../../components/NFT/Head'
 import MobileWrap from '../../../components/NFT/MobileWrap'
 import NFTItem from '../../../components/NFT/NFTItem'
 import Perk from '../../../components/NFT/Perk'
@@ -45,21 +45,18 @@ function AccountNFT() {
   const [visiblePerkModal, setVisiblePerkModal] = useState<boolean>(false)
 
   return (
-    <PageLayout>
-      <div className="my-0 mx-auto py-23 lg:py-32.5 max-w-[1140px] font-sans">
-        <Head />
-
+    <AccountCenterPageLayout>
+      <AccountTitleWithAccountInfo title="My" subtitle="NFTs" />
+      <div className="mt-6">
         {!(account && active) ? (
-          <div className="px-6 xl:px-2.5 my-6 sm:my-9">
-            <WalletButton
-              connected={!!(account && active)}
-              chainIdMismatch={chainIdMismatch}
-              onConnectClick={() => connect()}
-              onSwitchNetworkClick={switchNetwork}
-            >
-              {shortenIfAddress(account)}
-            </WalletButton>
-          </div>
+          <WalletButton
+            connected={!!(account && active)}
+            chainIdMismatch={chainIdMismatch}
+            onConnectClick={() => connect()}
+            onSwitchNetworkClick={switchNetwork}
+          >
+            {shortenIfAddress(account)}
+          </WalletButton>
         ) : account && active && loading ? (
           <div className="text-center py-6">
             <CircularProgress
@@ -69,11 +66,11 @@ function AccountNFT() {
             />
           </div>
         ) : account && active && !loading && !nfts.length ? (
-          <div className="px-6 xl:px-2.5 my-6 sm:my-9 text-white">No Data...</div>
+          <div className="text-white">No Data...</div>
         ) : (
           <>
             {isMd ? (
-              <Stack spacing={3} className="px-6 xl:px-2.5 my-6 sm:my-9">
+              <Stack spacing={3}>
                 {nfts.map((nft) => (
                   <NFTItem nft={nft} key={`${nft.address}_${nft.tokenId}`} tokenId={nft.tokenId} update={update} />
                 ))}
@@ -90,7 +87,7 @@ function AccountNFT() {
       ) : (
         <PerkModal visible={visiblePerkModal} close={() => setVisiblePerkModal(false)} />
       )}
-    </PageLayout>
+    </AccountCenterPageLayout>
   )
 }
 
