@@ -85,7 +85,7 @@ export function AccountInfo() {
   const { account: userInfo, expired: sessionExpired } = useAccountInfo()
   const { imxLink, imxClient, walletInfo } = useImmutableXWallet()
 
-  const [imxBalance, setImxBalance] = React.useState('0')
+  const [ethBalance, setEthBalance] = React.useState('0.0')
 
   const name =
     userInfo?.username && userInfo.username.startsWith('0x')
@@ -100,13 +100,15 @@ export function AccountInfo() {
     setMenuOpen((o) => !o)
   }, [])
 
-  const fetchWalletBalance = React.useCallback(async () => {
+  const fetchWalletBalances = React.useCallback(async () => {
     if (!imxClient || !walletInfo) return
     const userDecode = EthAddress.decode(walletInfo.address)
     if (!isRight(userDecode)) return
-    const balances = await imxClient.getBalances({ user: userDecode.right })
-    const imxBalance = formatEther(balances.imx)
-    setImxBalance(imxBalance)
+    const { result: balances } = await imxClient.listBalances({ user: userDecode.right, symbols: [ETHTokenType.ETH] })
+    console.debug('Fetch wallet balances', balances)
+    const ethBalance = formatEther(balances[0].balance)
+    setEthBalance(ethBalance)
+    return ethBalance
   }, [imxClient, walletInfo])
 
   const handleSettingsClick = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
@@ -115,6 +117,13 @@ export function AccountInfo() {
       navigate(`/account/settings`)
     },
     [navigate]
+  )
+  const handleBalancesClick = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
+    async (e) => {
+      e.stopPropagation()
+      await fetchWalletBalances()
+    },
+    [fetchWalletBalances]
   )
   const handleDepositClick = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
     async (e) => {
@@ -128,14 +137,20 @@ export function AccountInfo() {
     async (e) => {
       e.stopPropagation()
       if (!imxLink) return
-      await imxLink.completeWithdrawal({ type: ETHTokenType.ETH })
+      const ethBalance = await fetchWalletBalances()
+      if (!ethBalance) return
+      await imxLink.prepareWithdrawal({ type: ETHTokenType.ETH, amount: ethBalance })
     },
-    [imxLink]
+    [fetchWalletBalances, imxLink]
   )
 
   React.useEffect(() => {
-    fetchWalletBalance()
-  }, [fetchWalletBalance])
+    fetchWalletBalances()
+    const fetchInterval = setInterval(async () => {
+      await fetchWalletBalances()
+    }, 30000)
+    return () => clearInterval(fetchInterval)
+  }, [fetchWalletBalances])
 
   return (
     <div className="z-30 relative">
@@ -156,12 +171,12 @@ export function AccountInfo() {
             <InfoSubtitle>{email}</InfoSubtitle>
           </div>
         </InfoItem>
-        <InfoItem>
+        <InfoItem onClick={handleBalancesClick}>
           <div className="flex flex-col gap-12px truncate text-12px leading-16px text-left">
             <div className="font-semibold text-grey-medium">IMX Balance</div>
             <div className="flex flex-row items-center font-normal text-black">
-              <IconEthereum className="mr-8px w-10px h-10px" />
-              <span className="mr-4px text-14px leading-20px">{imxBalance}</span>
+              <IconEthereum className="mr-8px" />
+              <span className="mr-4px text-14px leading-20px">{ethBalance}</span>
               <span>ETH</span>
             </div>
           </div>
