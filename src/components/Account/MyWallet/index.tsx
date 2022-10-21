@@ -5,16 +5,19 @@ import { classNames } from '../../../utils'
 import { Button } from '../../Forms'
 import { IconMetamack } from '../../Icon'
 import { AccountCard } from '../Card'
+import { AccountWalletButtonPopover } from '../WalletButtonPopover'
 
 type MetamaskButtonProps = ReactButtonProps
 
 function MetamaskButton(props: MetamaskButtonProps) {
   const { className, children, ...others } = props
   return (
-    <Button variant="metamask" className={classNames('flex flex-row items-center relative', className)} {...others}>
-      <IconMetamack className="absolute w-36px h-auto" />
-      <span className="w-full">{children}</span>
-    </Button>
+    <AccountWalletButtonPopover>
+      <Button variant="metamask" className={classNames('flex flex-row items-center relative', className)} {...others}>
+        <IconMetamack className="absolute w-36px h-auto" />
+        <span className="w-full">{children}</span>
+      </Button>
+    </AccountWalletButtonPopover>
   )
 }
 
@@ -34,6 +37,7 @@ export function AccountMyWallet(props: MyWalletProps) {
 
   const handleMetamaskClick = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
     (e) => {
+      e.stopPropagation()
       if (bindAccount) return
       onMetamaskClick && onMetamaskClick(e)
     },
