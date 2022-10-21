@@ -3,8 +3,9 @@ import { useEthers } from '@usedapp/core'
 import classNames from 'classnames'
 import { FC, useCallback, useEffect, useState } from 'react'
 
-import { useWeb3Modal } from '../../../hooks'
+import withdraw from '../../../assets/images/withdraw.png'
 import Star from '../../../components/Icon/Star'
+import { useWeb3Modal } from '../../../hooks'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
 import { useHandleState } from '../../../hooks/useHandleState'
 import { NFTE4CRanger } from '../../../types'
@@ -91,9 +92,11 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, update }) => {
 
         {nft.upgraded === false && (
           <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
-            {<button className="u-btn u-btn-primary max-w-[120px] relative !py-0">
-              <Star sx={{ fontSize: '36px' }} />
-            </button>}
+            {
+              <button className="u-btn u-btn-primary max-w-[120px]">
+                <Star sx={{ fontSize: '36px' }} />
+              </button>
+            }
             {chainIdMismatch ? (
               <button className={'u-btn u-btn-primary'} onClick={() => switchNetwork()}>
                 Switch Network
@@ -119,9 +122,14 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, update }) => {
                 Upgrade
               </button>
             )}
-            { <button className="u-btn u-btn-disabled max-w-[120px] relative !py-0" onClick={() => window.open('https://imxtools.io/withdrawal')}>
-              
-            </button> }
+            {
+              <button
+                className="u-btn max-w-[120px] !bg-[#465358]"
+                onClick={() => window.open('https://imxtools.io/withdrawal')}
+              >
+                <img className="w-9 h-9" src={withdraw} alt="imxtools withdrawal" />
+              </button>
+            }
           </Stack>
         )}
       </div>
