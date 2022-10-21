@@ -8,6 +8,7 @@ import classNames from 'classnames'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { PhotoProvider, PhotoView } from 'react-photo-view'
 
+import withdraw from '../../../assets/images/withdraw.png'
 import { BlindBoxPictures } from '../../../constants'
 import { useWeb3Modal } from '../../../hooks'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
@@ -149,6 +150,14 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts, update }) => {
                   Upgrade
                 </button>
               )}
+              {
+                <button
+                  className="u-btn max-w-[120px] !bg-[#465358]"
+                  onClick={() => window.open('https://imxtools.io/withdrawal')}
+                >
+                  <img className="w-9 h-9" src={withdraw} alt="imxtools withdrawal" />
+                </button>
+              }
             </Actions>
           )}
         </>
