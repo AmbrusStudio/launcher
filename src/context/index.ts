@@ -1,4 +1,4 @@
-import { Link, LinkResults } from '@imtbl/imx-sdk'
+import { ImmutableXClient, Link, LinkResults } from '@imtbl/imx-sdk'
 import React from 'react'
 
 type WalletModalContextValue = {
@@ -13,6 +13,7 @@ export const WalletModalContext = React.createContext<WalletModalContextValue>({
 
 type ImmutableXWalletContextValue = {
   imxLink: Link | undefined
+  imxClient: ImmutableXClient | undefined
   walletInfo: LinkResults.Setup | undefined
   walletLogin: () => Promise<void>
   walletLogout: () => Promise<void>
@@ -20,6 +21,7 @@ type ImmutableXWalletContextValue = {
 
 export const ImmutableXWalletContext = React.createContext<ImmutableXWalletContextValue>({
   imxLink: undefined,
+  imxClient: undefined,
   walletInfo: undefined,
   walletLogin: async () => void 0,
   walletLogout: async () => void 0,

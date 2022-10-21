@@ -1,4 +1,4 @@
-import { Link, LinkResults } from '@imtbl/imx-sdk'
+import { ImmutableXClient, Link, LinkResults } from '@imtbl/imx-sdk'
 import { DAppProvider } from '@usedapp/core'
 import { SnackbarProvider } from 'notistack'
 import React from 'react'
@@ -37,10 +37,17 @@ function WalletModalProvider({ children }: ProvidersProps) {
 }
 
 const linkUrl = getViteEnv('VITE_IMX_LINK_URL')
+const publicApiUrl = getViteEnv('VITE_IMX_API_URL')
 
 function ImmutableXWalletProvider({ children }: ProvidersProps) {
   const imxLink = React.useMemo(() => new Link(linkUrl), [])
+  const [imxClient, setImxClient] = React.useState<ImmutableXClient>()
   const [walletInfo, setWalletInfo, { removeItem }] = useLocalStorageState<LinkResults.Setup>(LSK_IMX_WALLET_INFO)
+
+  const buildIMXClient = React.useCallback(async () => {
+    const imxClient = await ImmutableXClient.build({ publicApiUrl })
+    setImxClient(imxClient)
+  }, [])
 
   const walletLogin = React.useCallback(async () => {
     const _walletInfo = await imxLink.setup({})
@@ -52,8 +59,12 @@ function ImmutableXWalletProvider({ children }: ProvidersProps) {
     removeItem()
   }, [removeItem])
 
+  React.useEffect(() => {
+    buildIMXClient()
+  }, [buildIMXClient])
+
   return (
-    <ImmutableXWalletContext.Provider value={{ imxLink, walletInfo, walletLogin, walletLogout }}>
+    <ImmutableXWalletContext.Provider value={{ imxLink, imxClient, walletInfo, walletLogin, walletLogout }}>
       {children}
     </ImmutableXWalletContext.Provider>
   )
