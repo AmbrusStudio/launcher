@@ -1,4 +1,5 @@
 import { Box } from '@mui/system'
+import { Stack } from '@mui/material'
 import { Dispatch, FC, SetStateAction } from 'react'
 
 import ModalGallery from '../../../components/ModalGallery'
@@ -65,6 +66,24 @@ const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ metadata, visible, setVis
               Etherscan
             </a>
           </Stack> */}
+          {<Stack className="mt-9" spacing={4.5} direction="row">
+            <a
+              className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
+              href={'https://rarible.com/token/' /*+ nft.address*/}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Rarible
+            </a>
+            <a
+              className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
+              href={'https://etherscan.io/token/' /*+ nft.address*/}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Etherscan
+            </a>
+          </Stack>}
         </div>
       </Box>
     </ModalGallery>
