@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js'
 import { useMemo } from 'react'
 
 import { useE4CRangerTotalStakingTime, useE4CRangerUpgradeDuration } from './useE4CRanger'
+import { useOwnedDiamondHandSBT } from './useOwnedDiamondHandSBT'
 
 /**
  * Staking status
@@ -56,7 +57,7 @@ export function useStatusCheck(tokenId: string, address: string) {
   }, [upgradeDuration, stakingTime])
 
   // Soulbound Badge Status
-  const soulboundBadgeStatus = useMemo<boolean>(() => false, [])
+  const { owned: soulboundBadgeStatus } = useOwnedDiamondHandSBT()
 
   const status = useMemo<boolean>(() => timeStatus && soulboundBadgeStatus, [timeStatus, soulboundBadgeStatus])
 
