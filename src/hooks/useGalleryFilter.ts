@@ -1,9 +1,10 @@
 import { groupBy } from 'lodash'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { BlindBoxMode, BlindBoxTrait } from '../constants'
 import { Trait } from '../types'
 import { Filter, GALLERY_FILTER, GALLERY_FILTER_LIST } from '../types/gallery'
+import { toggleFilterCheckedFn, toggleFilterOpenFn } from '../utils'
 import { useMetadata } from './useMetadata'
 
 /**
@@ -52,6 +53,24 @@ export function useGalleryFilter() {
     }))
   }, [galleryFilter])
 
+  // Toggle Filter children open
+  const toggleFilterTab = useCallback(
+    (index: number) => {
+      const list = toggleFilterOpenFn(filter, index)
+      list && setFilter(list)
+    },
+    [filter, setFilter]
+  )
+
+  // Toggle filter children tag checked - change
+  const toggleFilterTagCheckedChange = useCallback(
+    (parentIndex: number, childrenIndex: number) => {
+      const list = toggleFilterCheckedFn(filter, parentIndex, childrenIndex)
+      setFilter(list)
+    },
+    [filter, setFilter]
+  )
+
   useEffect(() => {
     setFilter(galleryFilterStatus)
   }, [galleryFilterStatus])
@@ -60,5 +79,7 @@ export function useGalleryFilter() {
     galleryFilterStatus,
     filter,
     setFilter,
+    toggleFilterTab,
+    toggleFilterTagCheckedChange,
   }
 }
