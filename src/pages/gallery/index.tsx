@@ -82,7 +82,7 @@ function Gallery() {
       list.forEach((item, index) => {
         if (item.label === Trait.Name) {
           item.list.forEach((itemJ, indexJ) => {
-            if (state.name === itemJ.label.toLocaleLowerCase()) {
+            if (state.name.toLocaleLowerCase() === itemJ.label.toLocaleLowerCase()) {
               list[index].is_open = true
               list[index].list[indexJ].is_checked = true
 
