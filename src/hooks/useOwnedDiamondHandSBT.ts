@@ -2,17 +2,19 @@ import { useEthers } from '@usedapp/core'
 import { Alchemy, Network } from 'alchemy-sdk'
 import { useEffect, useState } from 'react'
 
+import { getViteEnv } from '../utils'
+
 /**
  * Init Alchemy
  * @returns
  */
 const initAlchemy = (): Alchemy => {
-  const ALCHEMY_API_KEY: string | undefined = import.meta.env.VITE_ALCHEMY_POLYGON_API_KEY
-  if (!ALCHEMY_API_KEY) throw new TypeError('VITE_ALCHEMY_POLYGON_API_KEY not set')
-  const IS_POLYGON_MAINNET: string | undefined = import.meta.env.VITE_IS_POLYGON_MAINNET
+  const ALCHEMY_API_KEY = getViteEnv('VITE_ALCHEMY_POLYGON_API_KEY')
+  const POLYGON_NETWORK = getViteEnv('VITE_POLYGON_NETWORK')
+
   const settings = {
     apiKey: ALCHEMY_API_KEY,
-    network: IS_POLYGON_MAINNET ? Network.MATIC_MAINNET : Network.MATIC_MUMBAI,
+    network: POLYGON_NETWORK === 'polygon-mainnet' ? Network.MATIC_MAINNET : Network.MATIC_MUMBAI,
   }
 
   return new Alchemy(settings)
@@ -37,8 +39,7 @@ export function useOwnedDiamondHandSBT() {
 
     const alchemy = initAlchemy()
 
-    const DIAMOND_HAND_CONTRACT_ADDRESS: string | undefined = import.meta.env.VITE_DIAMOND_HAND_CONTRACT_ADDRESS
-    if (!DIAMOND_HAND_CONTRACT_ADDRESS) throw new TypeError('VITE_DIAMOND_HAND_CONTRACT_ADDRESS not set')
+    const DIAMOND_HAND_CONTRACT_ADDRESS = getViteEnv('VITE_DIAMOND_HAND_CONTRACT_ADDRESS')
 
     alchemy.nft
       .getNftsForOwner(account, {
