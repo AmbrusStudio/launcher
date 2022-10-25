@@ -44,6 +44,7 @@ export default defineConfig({
     dropShadow: {
       'nft-modal': '0px 4px 24px rgba(0, 0, 0, 0.4)',
       'statusCheck-head-modal': '0px 4px 8px rgba(0, 0, 0, 0.2)',
+      'wallet-popover': '0px 4px 10px rgba(0, 0, 0, 0.2)',
     },
   },
   rules: [

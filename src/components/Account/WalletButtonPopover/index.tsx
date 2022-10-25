@@ -24,8 +24,8 @@ export function AccountWalletButtonPopover(props: React.PropsWithChildren) {
         leaveTo="opacity-0"
       >
         <Popover.Panel className="absolute z-10 bottom-full w-full">
-          <div className="flex flex-col justify-center items-center">
-            <div className="p-24px box-border rounded-12px font-medium text-14px leading-24px bg-black/80 text-white max-w-500px">
+          <div className="flex flex-col justify-center items-center drop-shadow-wallet-popover">
+            <div className="p-24px box-border rounded-12px font-medium text-14px leading-24px bg-black/80 text-white max-w-500px backdrop-blur-6px">
               E4C is built on ImmutableX, one of the largest blockchains for Web3 games. When connecting to your ETH
               wallet, you will also be connecting to IMX.
               <br />
