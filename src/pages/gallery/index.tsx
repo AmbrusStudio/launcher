@@ -1,5 +1,7 @@
-import { useScroll } from 'ahooks'
+import useUrlState from '@ahooksjs/use-url-state'
+import { useScroll, useTimeout } from 'ahooks'
 import classNames from 'classnames'
+import { cloneDeep } from 'lodash'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { compose } from 'redux'
 
@@ -16,12 +18,13 @@ import { PageLayout } from '../../components/Layout'
 import { useGalleryFilter } from '../../hooks/useGalleryFilter'
 import { useMetadata } from '../../hooks/useMetadata'
 import { useNumStrState } from '../../hooks/useNumStrState'
-import { TokenMetadata } from '../../types'
+import { TokenMetadata, Trait } from '../../types'
 import { Filter, FilterList } from '../../types/gallery'
-import { handleFilterFn, toggleFilterCheckedFn, toggleFilterOpenFn } from '../../utils'
+import { handleFilterFn } from '../../utils'
 
 function Gallery() {
-  const { galleryFilterStatus, filter, setFilter } = useGalleryFilter()
+  const { galleryFilterStatus, filter, setFilter, toggleFilterTab, toggleFilterTagCheckedChange } = useGalleryFilter()
+  const [state, setState] = useUrlState({ name: undefined })
 
   // NFT modal
   const [visibleNFT, setVisibleNFT] = useState<boolean>(false)
@@ -65,29 +68,31 @@ function Gallery() {
     return compose(listFlat, listChecked)(filter)
   }, [filter])
 
-  // Toggle Filter children open
-  const toggleFilterTab = useCallback(
-    (index: number) => {
-      const list = toggleFilterOpenFn(filter, index)
-      list && setFilter(list)
-    },
-    [filter, setFilter]
-  )
-
-  // Toggle filter children tag checked - change
-  const toggleFilterTagCheckedChange = useCallback(
-    (parentIndex: number, childrenIndex: number) => {
-      const list = toggleFilterCheckedFn(filter, parentIndex, childrenIndex)
-      setFilter(list)
-    },
-    [filter, setFilter]
-  )
-
   // Clear filter
   const clearFilter = useCallback(() => {
     setFilter(galleryFilterStatus)
     setSearchId('')
   }, [setSearchId, galleryFilterStatus, setFilter])
+
+  useTimeout(() => {
+    const list = cloneDeep(filter)
+
+    // Only supports Name
+    if (state.name) {
+      list.forEach((item, index) => {
+        if (item.label === Trait.Name) {
+          item.list.forEach((itemJ, indexJ) => {
+            if (state.name === itemJ.label.toLocaleLowerCase()) {
+              list[index].is_open = true
+              list[index].list[indexJ].is_checked = true
+
+              setFilter(list)
+            }
+          })
+        }
+      })
+    }
+  }, 3000)
 
   return (
     <PageLayout>
@@ -112,7 +117,18 @@ function Gallery() {
                   filter={filter}
                   isFixed={isFixed}
                   toggleFilterTab={toggleFilterTab}
-                  toggleFilterTagChecked={toggleFilterTagCheckedChange}
+                  toggleFilterTagChecked={(parentIndex: number, childrenIndex: number) => {
+                    toggleFilterTagCheckedChange(parentIndex, childrenIndex)
+
+                    // Only supports Name
+                    if (filter[parentIndex].label === Trait.Name) {
+                      if (!filter[parentIndex].list[childrenIndex].is_checked) {
+                        setState({ name: filter[parentIndex].list[childrenIndex].label.toLocaleLowerCase() })
+                      } else {
+                        setState({ name: undefined })
+                      }
+                    }
+                  }}
                 />
               </div>
             </div>
