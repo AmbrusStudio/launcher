@@ -9,9 +9,10 @@ import { useEffect, useState } from 'react'
 const initAlchemy = (): Alchemy => {
   const ALCHEMY_API_KEY: string | undefined = import.meta.env.VITE_ALCHEMY_POLYGON_API_KEY
   if (!ALCHEMY_API_KEY) throw new TypeError('VITE_ALCHEMY_POLYGON_API_KEY not set')
+  const IS_POLYGON_MAINNET: string | undefined = import.meta.env.VITE_IS_POLYGON_MAINNET
   const settings = {
     apiKey: ALCHEMY_API_KEY,
-    network: Network.MATIC_MAINNET,
+    network: IS_POLYGON_MAINNET ? Network.MATIC_MAINNET : Network.MATIC_MUMBAI,
   }
 
   return new Alchemy(settings)
