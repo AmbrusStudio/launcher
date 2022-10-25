@@ -48,7 +48,7 @@ function InfoItem(props: React.PropsWithChildren<InfoItemProps>) {
     <button
       className={classNames(
         'flex flex-row flex-nowrap items-center box-border',
-        'px-12px py-12px border-b-1px border-grey-border hover:bg-gray/10',
+        'px-12px py-12px hover:bg-gray/10',
         className
       )}
       {...others}
@@ -158,9 +158,8 @@ export function AccountInfo() {
       <AvatarItem image={AvatarDefault} onClick={toggleMenuOpen} />
       <div
         className={classNames(
-          'hidden flex-col overflow-hidden',
-          'w-290px bg-white rounded-24px',
-          '-z-10 absolute -top-12px -right-12px',
+          'hidden flex-col overflow-hidden -z-10 absolute -top-12px -right-12px',
+          'w-290px bg-white rounded-24px divide-y divide-grey-border',
           'transition-opacity opacity-0',
           menuOpen && 'flex opacity-100'
         )}
@@ -171,22 +170,24 @@ export function AccountInfo() {
             <InfoSubtitle>{email}</InfoSubtitle>
           </div>
         </InfoItem>
-        <InfoItem onClick={handleBalancesClick}>
-          <div className="flex flex-col gap-12px truncate text-12px leading-16px text-left">
-            <div className="font-semibold text-grey-medium">IMX Balance</div>
-            <div className="flex flex-row items-center font-normal text-black">
-              <IconEthereum className="mr-8px" />
-              <span className="mr-4px text-14px leading-20px">{ethBalance}</span>
-              <span>ETH</span>
+        <div className="flex flex-col">
+          <InfoItem onClick={handleBalancesClick}>
+            <div className="flex flex-col gap-12px truncate text-12px leading-16px text-left">
+              <div className="font-semibold text-grey-medium">IMX Balance</div>
+              <div className="flex flex-row items-center font-normal text-black">
+                <IconEthereum className="mr-8px" />
+                <span className="mr-4px text-14px leading-20px">{ethBalance}</span>
+                <span>ETH</span>
+              </div>
             </div>
-          </div>
-        </InfoItem>
-        <InfoItem onClick={handleDepositClick}>
-          <InfoTitle>Deposit</InfoTitle>
-        </InfoItem>
-        <InfoItem onClick={handleWithdrawClick}>
-          <InfoTitle>Withdraw</InfoTitle>
-        </InfoItem>
+          </InfoItem>
+          <InfoItem className="pl-24px" onClick={handleDepositClick}>
+            <InfoTitle>Deposit</InfoTitle>
+          </InfoItem>
+          <InfoItem className="pl-24px" onClick={handleWithdrawClick}>
+            <InfoTitle>Withdraw</InfoTitle>
+          </InfoItem>
+        </div>
       </div>
     </div>
   )
