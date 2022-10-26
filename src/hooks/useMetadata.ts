@@ -23,11 +23,20 @@ export function useMetadata() {
   const metadadaRangersEdition = useSelector((state: RootState) => state.metadata.RangersEdition[defaultChainId])
   const metadadaUltimateEdition = useSelector((state: RootState) => state.metadata.UltimateEdition[defaultChainId])
 
+  const GoldEditionLoading = useSelector((state: RootState) => state.metadata.GoldEditionLoading)
+  const RangersEditionLoading = useSelector((state: RootState) => state.metadata.RangersEditionLoading)
+  const UltimateEditionLoading = useSelector((state: RootState) => state.metadata.UltimateEditionLoading)
+
   // console.log('Edition', metadadaGoldEdition, metadadaRangersEdition, metadadaUltimateEdition)
 
   const metadataAllEdition = useMemo<TokenMetadata[]>(
     () => [...metadadaUltimateEdition.metadata, ...metadadaGoldEdition.metadata, ...metadadaRangersEdition.metadata],
     [metadadaGoldEdition, metadadaRangersEdition, metadadaUltimateEdition]
+  )
+
+  const loading = useMemo<boolean>(
+    () => GoldEditionLoading && RangersEditionLoading && UltimateEditionLoading,
+    [GoldEditionLoading, RangersEditionLoading, UltimateEditionLoading]
   )
 
   /**
@@ -54,6 +63,7 @@ export function useMetadata() {
     metadadaGoldEdition,
     metadadaRangersEdition,
     metadataAllEdition,
+    loading,
     getMetadataByAddress,
   }
 }
