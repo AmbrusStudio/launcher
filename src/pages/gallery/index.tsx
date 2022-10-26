@@ -112,25 +112,22 @@ function Gallery() {
               <div className="border-y-2 border-rust py-4 text-xl font-bold leading-6 uppercase text-white">
                 Filters
               </div>
-              <div className={classNames({ 'bg-[#252525]': isFixed })}>
-                <GalleryFilter
-                  filter={filter}
-                  isFixed={isFixed}
-                  toggleFilterTab={toggleFilterTab}
-                  toggleFilterTagChecked={(parentIndex: number, childrenIndex: number) => {
-                    toggleFilterTagCheckedChange(parentIndex, childrenIndex)
+              <GalleryFilter
+                filter={filter}
+                toggleFilterTab={toggleFilterTab}
+                toggleFilterTagChecked={(parentIndex: number, childrenIndex: number) => {
+                  toggleFilterTagCheckedChange(parentIndex, childrenIndex)
 
-                    // Only supports Name
-                    if (filter[parentIndex].label === Trait.Name) {
-                      if (!filter[parentIndex].list[childrenIndex].is_checked) {
-                        setState({ name: filter[parentIndex].list[childrenIndex].label.toLocaleLowerCase() })
-                      } else {
-                        setState({ name: undefined })
-                      }
+                  // Only supports Name
+                  if (filter[parentIndex].label === Trait.Name) {
+                    if (!filter[parentIndex].list[childrenIndex].is_checked) {
+                      setState({ name: filter[parentIndex].list[childrenIndex].label.toLocaleLowerCase() })
+                    } else {
+                      setState({ name: undefined })
                     }
-                  }}
-                />
-              </div>
+                  }
+                }}
+              />
             </div>
           </div>
           <div className="lg:ml-[336px]">
@@ -168,7 +165,6 @@ function Gallery() {
 
       {currentNFTInfo && <ModalGalleryInfo visible={visibleNFT} setVisible={setVisibleNFT} metadata={currentNFTInfo} />}
       <DrawerFilter
-        isFixed={isFixed}
         visibleDrawer={visibleDrawer}
         setVisibleDrawer={setVisibleDrawer}
         applyFilter={(value) => {

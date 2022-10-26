@@ -1,4 +1,5 @@
 import { Fragment } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import { classNames } from '../../utils'
 import { PageFooter } from './Footer'
@@ -20,11 +21,15 @@ export function BasePageLayout(props: React.PropsWithChildren<PageLayoutProps>) 
 
 export function PageLayout(props: React.PropsWithChildren<PageLayoutProps>) {
   const { className, children } = props
+  const location = useLocation()
+
   return (
     <Fragment>
       <PageHeader />
       <BasePageLayout className={className}>{children}</BasePageLayout>
-      <PageFooter />
+
+      {/* gallery page hide footer */}
+      {location.pathname !== '/gallery' && <PageFooter />}
     </Fragment>
   )
 }

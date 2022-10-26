@@ -1,42 +1,22 @@
 import SwipeableDrawer from '@mui/material/SwipeableDrawer'
-import { Dispatch, FC, SetStateAction, useCallback, useEffect } from 'react'
+import { Dispatch, FC, SetStateAction, useEffect } from 'react'
 
 import { useGalleryFilter } from '../../../hooks/useGalleryFilter'
 import { Filter } from '../../../types/gallery'
-import { toggleFilterCheckedFn, toggleFilterOpenFn } from '../../../utils'
 import GalleryFilter from '../../Gallery/Filter'
 import FilterSliderLineClear from '../../Icon/FilterSliderLineClear'
 
 interface DrawerFilterProps {
   readonly visibleDrawer: boolean
-  readonly isFixed: boolean
   setVisibleDrawer: Dispatch<SetStateAction<boolean>>
   applyFilter: (filter: Filter[]) => void
 }
 
-const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, isFixed, setVisibleDrawer, applyFilter }) => {
-  const { galleryFilterStatus, filter, setFilter } = useGalleryFilter()
+const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, setVisibleDrawer, applyFilter }) => {
+  const { galleryFilterStatus, filter, setFilter, toggleFilterTab, toggleFilterTagCheckedChange } = useGalleryFilter()
 
   // https://mui.com/material-ui/react-drawer/#swipeable
   const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent)
-
-  // Toggle Filter children tab
-  const toggleFilterTab = useCallback(
-    (index: number) => {
-      const list = toggleFilterOpenFn(filter, index)
-      list && setFilter(list)
-    },
-    [filter, setFilter]
-  )
-
-  // Toggle filter children tag checked
-  const toggleFilterTagChecked = useCallback(
-    (parentIndex: number, childrenIndex: number) => {
-      const list = toggleFilterCheckedFn(filter, parentIndex, childrenIndex)
-      setFilter(list)
-    },
-    [filter, setFilter]
-  )
 
   // Watch visible, false initialization
   useEffect(() => {
@@ -86,9 +66,8 @@ const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, isFixed, setVisibl
         </div>
         <GalleryFilter
           filter={filter}
-          isFixed={isFixed}
           toggleFilterTab={toggleFilterTab}
-          toggleFilterTagChecked={toggleFilterTagChecked}
+          toggleFilterTagChecked={toggleFilterTagCheckedChange}
         />
         <button
           className="u-btn u-btn-primary !w-auto absolute bottom-6 left-6 right-6"
