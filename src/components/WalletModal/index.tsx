@@ -5,7 +5,7 @@ import { FC, useCallback } from 'react'
 
 import { WALLET_LIST } from '../../data'
 import { WALLET_NAME } from '../../types'
-import { getDefaultChainId } from '../../utils'
+import { getDefaultChainId, getViteEnv } from '../../utils'
 
 interface WalletModalProps {
   readonly visible: boolean
@@ -32,11 +32,8 @@ const WalletModal: FC<WalletModalProps> = ({ visible, onModalClose }) => {
    */
   const walletConnectFn = useCallback(async () => {
     try {
-      const infuraId: string | undefined = import.meta.env.VITE_INFURA_API_KEY
-      if (!infuraId) throw new TypeError('VITE_INFURA_API_KEY not set')
-      const provider = new WalletConnectProvider({
-        infuraId: infuraId,
-      })
+      const infuraId = getViteEnv('VITE_INFURA_API_KEY')
+      const provider = new WalletConnectProvider({ infuraId: infuraId })
       await provider.enable()
       await activate(provider)
 

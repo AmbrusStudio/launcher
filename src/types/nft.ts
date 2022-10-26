@@ -103,3 +103,8 @@ export type NFTE4CRanger = {
   upgraded: NFTE4CRangerUpgraded
   staking: boolean
 } & Metadata
+
+export type TokenMetadata = {
+  address: string
+  tokenId: string
+} & Metadata

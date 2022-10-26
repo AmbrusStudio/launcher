@@ -1,9 +1,7 @@
 import { cloneDeep } from 'lodash'
 
-import { METADATA_ALL } from '../data'
-import { Metadata, Trait, TraitItem } from '../types'
+import { TokenMetadata, Trait, TraitItem } from '../types'
 import { Filter, FilterList, GALLERY_MAP } from '../types/gallery'
-import { parseTokenId } from './metadata'
 /**
  * modify filter checked
  * @param filter
@@ -59,16 +57,16 @@ const convertFilterToMap = (filter: Filter[]): Map<Trait, string[]> => {
  * @param data
  * @returns
  */
-const convertTraitToMap = (data: Metadata[]): GALLERY_MAP[] => {
-  return data.map((item) => {
+const convertTraitToMap = (data: TokenMetadata[]): GALLERY_MAP[] => {
+  return data.map((token) => {
     const traitMap = new Map<Trait, string>()
 
-    item.attributes.forEach((traitItem) => {
-      traitMap.set(traitItem.trait_type, traitItem.value)
+    token.trait.forEach((trait) => {
+      traitMap.set(trait.trait_type, trait.value)
     })
 
     return {
-      ...item,
+      ...token,
       trait: traitMap,
     }
   })
@@ -79,7 +77,7 @@ const convertTraitToMap = (data: Metadata[]): GALLERY_MAP[] => {
  * @param data
  * @returns
  */
-const convertTraitToArray = (data: GALLERY_MAP[]): Metadata[] => {
+const convertTraitToArray = (data: GALLERY_MAP[]): TokenMetadata[] => {
   return data.map((item) => {
     const traitArr: TraitItem[] = []
     item.trait.forEach((val, key) => {
@@ -88,6 +86,7 @@ const convertTraitToArray = (data: GALLERY_MAP[]): Metadata[] => {
         value: val,
       })
     })
+
     return {
       ...item,
       trait: traitArr,
@@ -101,11 +100,9 @@ const convertTraitToArray = (data: GALLERY_MAP[]): Metadata[] => {
  * @param searchId
  * @returns
  */
-export const handleFilterFn = (filter: Filter[], searchId: string): Metadata[] => {
+export const handleFilterFn = (filter: Filter[], searchId: string, tokens: TokenMetadata[]): TokenMetadata[] => {
   // Search filter
-  const gallery = searchId
-    ? METADATA_ALL.filter((item) => String(parseTokenId(item.name)).includes(searchId))
-    : METADATA_ALL
+  const gallery = searchId ? tokens.filter((item) => item.tokenId.includes(searchId)) : tokens
 
   const filterChecked = convertFilterToMap(filter)
   // No filter

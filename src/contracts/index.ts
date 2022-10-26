@@ -2,7 +2,7 @@ import { Config as DAppConfig, Goerli, Mainnet } from '@usedapp/core'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { Network } from 'alchemy-sdk'
 
-import { getDefaultChainId } from '../utils'
+import { getDefaultChainId, getViteEnv } from '../utils'
 
 export const defaultChainId = getDefaultChainId()
 
@@ -44,6 +44,13 @@ export const ADDRESS_E4C_Ranger_Rangers_Editions = {
 }
 export const ADDRESS_E4C_Ranger_Rangers_Edition = ADDRESS_E4C_Ranger_Rangers_Editions[defaultChainId]
 
+// E4C Ranger Ultimate Edition
+export const ADDRESS_E4C_Ranger_Ultimate_Editions = {
+  [Mainnet.chainId]: '0xeb05CB1c82ACC87Ad8E0bB7927a1dc39Cd300402',
+  [Goerli.chainId]: '0x1243F6c819265d58d7c9424d50DF42d047832fB3',
+}
+export const ADDRESS_E4C_Ranger_Ultimate_Edition = ADDRESS_E4C_Ranger_Ultimate_Editions[defaultChainId]
+
 // Alchemy Network Config
 export const ALCHEMY_NETWORKS = {
   [Mainnet.chainId]: Network.ETH_MAINNET,
@@ -53,14 +60,13 @@ export const ALCHEMY_NETWORK = ALCHEMY_NETWORKS[defaultChainId]
 
 // opensea.io
 export const OPENSEA_URLS = {
-  [Mainnet.chainId]: 'https://opensea.io/collection/e4c',
-  [Goerli.chainId]: 'https://opensea.io/collection/e4c',
+  [Mainnet.chainId]: 'https://opensea.io/collection/e4crangersultimate',
+  [Goerli.chainId]: 'https://opensea.io/collection/e4crangersultimate',
 }
 export const OPENSEA_URL = OPENSEA_URLS[defaultChainId]
 
 // Web3Modal providerOptions
-const infuraId: string | undefined = import.meta.env.VITE_INFURA_API_KEY
-if (!infuraId) throw new TypeError('VITE_INFURA_API_KEY not set')
+const infuraId = getViteEnv('VITE_INFURA_API_KEY')
 export const web3ModalProviderOptions = {
   injected: {
     display: {
@@ -71,10 +77,7 @@ export const web3ModalProviderOptions = {
   },
   walletconnect: {
     package: WalletConnectProvider,
-    options: {
-      bridge: 'https://bridge.walletconnect.org',
-      infuraId: infuraId,
-    },
+    options: { bridge: 'https://bridge.walletconnect.org', infuraId },
   },
 }
 

@@ -1,42 +1,32 @@
-import GlobalsPolyfills from '@esbuild-plugins/node-globals-polyfill'
-import ModulesPolyfills from '@esbuild-plugins/node-modules-polyfill'
+import RollupInject from '@rollup/plugin-inject'
 import react from '@vitejs/plugin-react'
-import nodePolyfills from 'rollup-plugin-polyfill-node'
+// Switch from @esbuild-plugins/node-modules-polyfill to node-stdlib-browser because of https://github.com/remorses/esbuild-plugins/issues/14
+import NodeStdLibBrowser from 'node-stdlib-browser'
 import Unocss from 'unocss/vite'
 import { defineConfig } from 'vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), Unocss()],
-  optimizeDeps: {
-    esbuildOptions: {
-      define: {
-        global: 'globalThis',
-      },
-      plugins: [
-        GlobalsPolyfills({
-          process: true,
-          buffer: true,
-        }),
-        ModulesPolyfills(),
-      ],
+  plugins: [
+    {
+      ...RollupInject({
+        global: [require.resolve('node-stdlib-browser/helpers/esbuild/shim'), 'global'],
+        process: [require.resolve('node-stdlib-browser/helpers/esbuild/shim'), 'process'],
+        Buffer: [require.resolve('node-stdlib-browser/helpers/esbuild/shim'), 'Buffer'],
+      }),
+      enforce: 'post',
     },
+    react(),
+    Unocss(),
+  ],
+  optimizeDeps: {
+    include: ['buffer', 'process'],
   },
   resolve: {
     mainFields: ['browser', 'module', 'jsnext:main', 'jsnext'],
-    // https://github.com/vitejs/vite/discussions/4479 and https://medium.com/@ftaioli/using-node-js-builtin-modules-with-vite-6194737c2cd2
-    alias: {
-      stream: 'stream-browserify',
-      https: 'agent-base',
-      http: 'agent-base',
-      util: 'rollup-plugin-node-polyfills/polyfills/util',
-      path: 'rollup-plugin-node-polyfills/polyfills/path',
-    },
+    alias: NodeStdLibBrowser,
   },
   build: {
-    rollupOptions: {
-      plugins: [nodePolyfills()],
-    },
     commonjsOptions: {
       transformMixedEsModules: true,
     },

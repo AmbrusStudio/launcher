@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { useAccountInfo, useRouterActive } from '../../../hooks'
+import { useAccountInfo, useImmutableXWallet, useRouterActive } from '../../../hooks'
 import { getMainSiteLink } from '../../../utils'
 import { IconAccount, IconAmbrus2, IconESports, IconExit, IconHome, IconSettings, IconWidgets } from '../../Icon'
 import { ExternalLink } from '../../Link'
@@ -11,11 +11,13 @@ export function SideNav() {
   const { isActive } = useRouterActive()
   const navigate = useNavigate()
   const { remove: removeAccount } = useAccountInfo()
+  const { walletLogout } = useImmutableXWallet()
 
-  const handleSignOutClick = React.useCallback(() => {
+  const handleSignOutClick = React.useCallback(async () => {
+    await walletLogout()
     removeAccount()
     navigate('/account/signin', { replace: true })
-  }, [navigate, removeAccount])
+  }, [navigate, removeAccount, walletLogout])
 
   return (
     <nav className="flex flex-col justify-between h-full z-20" title="Sidebar Nav">
@@ -36,7 +38,7 @@ export function SideNav() {
           </SideNavItem>
         </Link>
         <Link to="/account/nft">
-          <SideNavItem name="My NFTs">
+          <SideNavItem name="My NFTs" active={isActive('/account/nft')}>
             <IconAccount className="w-36px h-36px" />
           </SideNavItem>
         </Link>

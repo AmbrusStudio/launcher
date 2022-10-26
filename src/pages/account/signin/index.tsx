@@ -1,5 +1,5 @@
 import Alert from '@mui/material/Alert'
-import { shortenIfAddress, useEthers } from '@usedapp/core'
+import { shortenIfAddress } from '@usedapp/core'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -23,7 +23,7 @@ import {
 } from '../../../components/Account'
 import { Button } from '../../../components/Forms'
 import { BasePageLayout } from '../../../components/Layout'
-import { useEmailAccount, useGameClient, useMetamaskAccount, useQuery, useWeb3Modal } from '../../../hooks'
+import { useEmailAccount, useGameClient, useImmutableXAccount, useImmutableXWallet, useQuery } from '../../../hooks'
 import {
   AccountForgotPasswordFormData,
   AccountSignInFormData,
@@ -103,13 +103,12 @@ export function SignIn() {
   const navigate = useNavigate()
   const { handleSubmit: handleSignInSubmit } = useFormContext<AccountSignInFormData>()
   const { handleSubmit: handleFogotPasswordSubmit } = useFormContext<AccountForgotPasswordFormData>()
-  const { account } = useEthers()
   const { openGameClient } = useGameClient()
-  const { connect } = useWeb3Modal()
-  const { walletLogin } = useMetamaskAccount()
+  const { walletInfo, walletLogin: imxLogin } = useImmutableXWallet()
+  const { walletLogin } = useImmutableXAccount()
   const { emailLogin, emailSendVerification, emailVerifyVerification, emailResetPassword } = useEmailAccount()
 
-  const shortAccount = shortenIfAddress(account)
+  const shortAccount = shortenIfAddress(walletInfo?.address)
 
   const client = query.get('client')
   const [wallet] = React.useState(!!client)
@@ -167,7 +166,7 @@ export function SignIn() {
     try {
       setMetamaskSigning(true)
       if (signInError) setSignInError('')
-      if (!account) return await connect()
+      if (!walletInfo) return await imxLogin()
       const res = await walletLogin()
       if (!res.isOk) return setSignInError(res.error.message)
       setComplete(true)
@@ -179,7 +178,7 @@ export function SignIn() {
     } finally {
       setMetamaskSigning(false)
     }
-  }, [account, connect, metamaskSigning, openGameClient, signInError, toAccountCenter, wallet, walletLogin])
+  }, [imxLogin, metamaskSigning, openGameClient, signInError, toAccountCenter, wallet, walletInfo, walletLogin])
 
   const handleNormalSignInSubmit = React.useCallback(
     async (data: AccountSignInFormData) => {

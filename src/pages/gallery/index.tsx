@@ -1,5 +1,7 @@
-import { useScroll } from 'ahooks'
+import useUrlState from '@ahooksjs/use-url-state'
+import { useScroll, useTimeout } from 'ahooks'
 import classNames from 'classnames'
+import { cloneDeep } from 'lodash'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { compose } from 'redux'
 
@@ -13,19 +15,21 @@ import ModalGalleryInfo from '../../components/Gallery/ModalGalleryInfo'
 import Search from '../../components/Gallery/Search'
 import SearchAction from '../../components/Gallery/SearchAction'
 import { PageLayout } from '../../components/Layout'
-import { GALLERYS_FILTERS_STATUS } from '../../data'
+import { useGalleryFilter } from '../../hooks/useGalleryFilter'
+import { useMetadata } from '../../hooks/useMetadata'
 import { useNumStrState } from '../../hooks/useNumStrState'
-import { Metadata } from '../../types'
+import { TokenMetadata, Trait } from '../../types'
 import { Filter, FilterList } from '../../types/gallery'
-import { handleFilterFn, toggleFilterCheckedFn, toggleFilterOpenFn } from '../../utils'
+import { handleFilterFn } from '../../utils'
 
 function Gallery() {
-  // Filter
-  const [filter, setFilter] = useState<Filter[]>(GALLERYS_FILTERS_STATUS)
+  const { galleryFilterStatus, filter, setFilter, toggleFilterTab, toggleFilterTagCheckedChange } = useGalleryFilter()
+  const [state, setState] = useUrlState({ name: undefined })
+
   // NFT modal
   const [visibleNFT, setVisibleNFT] = useState<boolean>(false)
   // NFT current
-  const [currentNFTInfo, setCurrentNFTInfo] = useState<Metadata>()
+  const [currentNFTInfo, setCurrentNFTInfo] = useState<TokenMetadata>()
   // Gallery Filter Drawer
   const [visibleDrawer, setVisibleDrawer] = useState<boolean>(false)
   // Search by ID
@@ -33,6 +37,8 @@ function Gallery() {
 
   const wrapperRef = useRef<HTMLDivElement>(null)
   const scroll = useScroll(document)
+
+  const { metadataAllEdition } = useMetadata()
 
   const isFixed = useMemo(() => {
     const headerDom = document.querySelector<HTMLDivElement>('#header')
@@ -48,9 +54,9 @@ function Gallery() {
   }, [filter])
 
   // Current gallery
-  const currentGallery = useMemo<Metadata[]>(() => {
-    return handleFilterFn(filter, searchId)
-  }, [searchId, filter])
+  const currentGallery = useMemo<TokenMetadata[]>(() => {
+    return handleFilterFn(filter, searchId, metadataAllEdition)
+  }, [searchId, filter, metadataAllEdition])
 
   // Filter checked category
   const checkedFilterCategory = useMemo<string[]>(() => {
@@ -62,29 +68,31 @@ function Gallery() {
     return compose(listFlat, listChecked)(filter)
   }, [filter])
 
-  // Toggle Filter children open
-  const toggleFilterTab = useCallback(
-    (index: number) => {
-      const list = toggleFilterOpenFn(filter, index)
-      list && setFilter(list)
-    },
-    [filter]
-  )
-
-  // Toggle filter children tag checked - change
-  const toggleFilterTagCheckedChange = useCallback(
-    (parentIndex: number, childrenIndex: number) => {
-      const list = toggleFilterCheckedFn(filter, parentIndex, childrenIndex)
-      setFilter(list)
-    },
-    [filter]
-  )
-
   // Clear filter
   const clearFilter = useCallback(() => {
-    setFilter(GALLERYS_FILTERS_STATUS)
+    setFilter(galleryFilterStatus)
     setSearchId('')
-  }, [setSearchId])
+  }, [setSearchId, galleryFilterStatus, setFilter])
+
+  useTimeout(() => {
+    const list = cloneDeep(filter)
+
+    // Only supports Name
+    if (state.name) {
+      list.forEach((item, index) => {
+        if (item.label === Trait.Name) {
+          item.list.forEach((itemJ, indexJ) => {
+            if (state.name.toLocaleLowerCase() === itemJ.label.toLocaleLowerCase()) {
+              list[index].is_open = true
+              list[index].list[indexJ].is_checked = true
+
+              setFilter(list)
+            }
+          })
+        }
+      })
+    }
+  }, 3000)
 
   return (
     <PageLayout>
@@ -104,14 +112,22 @@ function Gallery() {
               <div className="border-y-2 border-rust py-4 text-xl font-bold leading-6 uppercase text-white">
                 Filters
               </div>
-              <div className={classNames({ 'bg-[#252525]': isFixed })}>
-                <GalleryFilter
-                  filter={filter}
-                  isFixed={isFixed}
-                  toggleFilterTab={toggleFilterTab}
-                  toggleFilterTagChecked={toggleFilterTagCheckedChange}
-                />
-              </div>
+              <GalleryFilter
+                filter={filter}
+                toggleFilterTab={toggleFilterTab}
+                toggleFilterTagChecked={(parentIndex: number, childrenIndex: number) => {
+                  toggleFilterTagCheckedChange(parentIndex, childrenIndex)
+
+                  // Only supports Name
+                  if (filter[parentIndex].label === Trait.Name) {
+                    if (!filter[parentIndex].list[childrenIndex].is_checked) {
+                      setState({ name: filter[parentIndex].list[childrenIndex].label.toLocaleLowerCase() })
+                    } else {
+                      setState({ name: undefined })
+                    }
+                  }
+                }}
+              />
             </div>
           </div>
           <div className="lg:ml-[336px]">
@@ -149,7 +165,6 @@ function Gallery() {
 
       {currentNFTInfo && <ModalGalleryInfo visible={visibleNFT} setVisible={setVisibleNFT} metadata={currentNFTInfo} />}
       <DrawerFilter
-        isFixed={isFixed}
         visibleDrawer={visibleDrawer}
         setVisibleDrawer={setVisibleDrawer}
         applyFilter={(value) => {

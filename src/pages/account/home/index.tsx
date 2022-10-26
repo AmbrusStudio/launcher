@@ -13,11 +13,12 @@ import { WalletButton } from '../../../components/Layout/WalletButton'
 import {
   ADDRESS_E4C_Ranger_Gold_Edition,
   ADDRESS_E4C_Ranger_Rangers_Edition,
+  ADDRESS_E4C_Ranger_Ultimate_Edition,
   ADDRESS_E4CRanger_Gold_Holder,
   ADDRESS_E4CRanger_Rangers_Holder,
 } from '../../../contracts'
 import { useWeb3Modal } from '../../../hooks'
-import { useERC721List } from '../../../hooks/useERC721List'
+import { useERC721List, useERC721UltimateEditionList } from '../../../hooks/useERC721List'
 import { GameInfo } from '../../../types'
 
 export function Home() {
@@ -34,9 +35,17 @@ export function Home() {
     holderAddress: ADDRESS_E4CRanger_Rangers_Holder,
     tokenAddress: ADDRESS_E4C_Ranger_Rangers_Edition,
   })
+  const { nfts: nftsUltimate, loading: loadingUltimate } = useERC721UltimateEditionList({
+    tokenAddress: ADDRESS_E4C_Ranger_Ultimate_Edition,
+  })
 
-  const nfts = useMemo(() => [...nftsGold, ...nftsRangers], [nftsGold, nftsRangers])
-  const loading = useMemo(() => loadingGold && loadingRangers, [loadingGold, loadingRangers])
+  console.log('nftsUltimate', nftsUltimate)
+
+  const nfts = useMemo(() => [...nftsGold, ...nftsRangers, ...nftsUltimate], [nftsGold, nftsRangers, nftsUltimate])
+  const loading = useMemo(
+    () => loadingGold && loadingRangers && loadingUltimate,
+    [loadingGold, loadingRangers, loadingUltimate]
+  )
 
   const fetchAllGames = useCallback(async (signal: AbortSignal) => {
     const games = await getAllGames(signal)

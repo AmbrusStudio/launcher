@@ -1,24 +1,23 @@
 import CircularProgress from '@mui/material/CircularProgress'
 import { useInfiniteScroll } from 'ahooks'
-import { Dispatch, FC, SetStateAction } from 'react'
+import { Dispatch, FC, SetStateAction, useEffect } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
-import { Metadata } from '../../../types'
-import { parseTokenId } from '../../../utils'
+import { TokenMetadata } from '../../../types'
 import GalleryItem from '../GalleryItem'
 
 interface Props {
-  readonly allToken: Metadata[]
-  setCurrentNFTInfo: Dispatch<SetStateAction<Metadata | undefined>>
+  readonly allToken: TokenMetadata[]
+  setCurrentNFTInfo: Dispatch<SetStateAction<TokenMetadata | undefined>>
   setVisibleNFT: Dispatch<SetStateAction<boolean>>
 }
 
 interface ListResult {
-  list: Metadata[]
+  list: TokenMetadata[]
   total: number
 }
 
-function getLoadMoreList(page: number, pageSize: number, data: Metadata[]): Promise<ListResult> {
+function getLoadMoreList(page: number, pageSize: number, data: TokenMetadata[]): Promise<ListResult> {
   const start = (page - 1) * pageSize
   const end = page * pageSize
   const list = data.slice(start, end)
@@ -33,12 +32,19 @@ function getLoadMoreList(page: number, pageSize: number, data: Metadata[]): Prom
 const PAGE_SIZE = 16
 
 const GalleryWrapper: FC<Props> = ({ allToken, setCurrentNFTInfo, setVisibleNFT }) => {
-  const { data, loading, loadMore } = useInfiniteScroll((d) => {
+  const { data, loading, loadMore, reload } = useInfiniteScroll((d) => {
     const page = d ? Math.ceil(d.list.length / PAGE_SIZE) + 1 : 1
+
     return getLoadMoreList(page, PAGE_SIZE, allToken)
   })
 
   const hasMore = !!(data && data.list.length < data.total)
+
+  useEffect(() => {
+    if (allToken) {
+      reload()
+    }
+  }, [allToken, reload])
 
   return (
     <div className="mt-3 lg:mt-6">
@@ -61,7 +67,7 @@ const GalleryWrapper: FC<Props> = ({ allToken, setCurrentNFTInfo, setVisibleNFT 
           >
             {data?.list.map((item, index) => (
               <GalleryItem
-                key={`index_${index}_tokenId_${parseTokenId(item.name)}`}
+                key={`${item.address}_index_${index}_tokenId_${item.tokenId}`}
                 data={item}
                 onClick={() => {
                   setCurrentNFTInfo(item)

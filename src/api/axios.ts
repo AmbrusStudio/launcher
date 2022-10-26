@@ -2,7 +2,7 @@ import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import Axios, { AxiosError } from 'axios'
 
 import { LSK_ACCESS_TOKEN } from '../constants'
-import { redirectToSignIn } from '../utils'
+import { getViteEnv, redirectToSignIn } from '../utils'
 
 class MainBackendRequest {
   public readonly client: AxiosInstance
@@ -80,14 +80,12 @@ class AccountBackendRequest {
 }
 
 function getAPIBaseUrl(path: string): string {
-  const baseUrl: string | undefined = import.meta.env.VITE_BACKEND_API_URL
-  if (!baseUrl) throw new TypeError('VITE_BACKEND_API_URL not set')
+  const baseUrl = getViteEnv('VITE_BACKEND_API_URL')
   return new URL(path, baseUrl).href
 }
 
 function getAccountBackendAPIPath(): string {
-  const apiPath: string | undefined = import.meta.env.VITE_ACCOUNT_BACKEND_API_PATH
-  if (!apiPath) throw new TypeError('VITE_ACCOUNT_BACKEND_API_PATH not set')
+  const apiPath = getViteEnv('VITE_ACCOUNT_BACKEND_API_PATH')
   return apiPath
 }
 

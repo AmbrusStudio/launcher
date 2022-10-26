@@ -72,7 +72,7 @@ const NFTDetails: FC<NFTDetailsProps> = ({ nft, tokenId }) => {
       </section>
 
       <NFTInfoContent>
-        {traitNameOnTop(nft.attributes).map((trait, index) => (
+        {traitNameOnTop(nft.trait).map((trait, index) => (
           <section key={index}>
             <NFTInfoIntroductionTitle>{trait.trait_type}</NFTInfoIntroductionTitle>
             <NFTInfoIntroductionContent>

@@ -5,19 +5,15 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { ALCHEMY_NETWORK } from '../contracts'
 import { Writeable } from '../types'
+import { getViteEnv } from '../utils'
 
 /**
  * Init Alchemy
  * @returns
  */
 const initAlchemy = (): Alchemy => {
-  const ALCHEMY_API_KEY: string | undefined = import.meta.env.VITE_ALCHEMY_API_KEY
-  if (!ALCHEMY_API_KEY) throw new TypeError('VITE_ALCHEMY_API_KEY not set')
-  const settings = {
-    apiKey: ALCHEMY_API_KEY,
-    network: ALCHEMY_NETWORK,
-  }
-
+  const apiKey = getViteEnv('VITE_ALCHEMY_API_KEY')
+  const settings = { apiKey, network: ALCHEMY_NETWORK }
   return new Alchemy(settings)
 }
 

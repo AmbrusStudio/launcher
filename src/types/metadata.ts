@@ -15,11 +15,19 @@ export enum Trait {
   WaistAccessory = 'Waist Accessory',
   Background = 'Background',
   Particles = 'Particles',
+  OneOfOne = 'One of One', // Ultimate
 }
 
 export type TraitItem = { trait_type: Trait; value: string }
 
 export type Metadata = {
+  name: string
+  description: string
+  image: string
+  trait: TraitItem[]
+}
+
+export type MetadataResponse = {
   name: string
   description: string
   image: string

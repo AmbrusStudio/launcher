@@ -1,52 +1,31 @@
 import SwipeableDrawer from '@mui/material/SwipeableDrawer'
-import { Dispatch, FC, SetStateAction, useCallback, useEffect, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useEffect } from 'react'
 
-import { GALLERYS_FILTERS_STATUS } from '../../../data'
+import { useGalleryFilter } from '../../../hooks/useGalleryFilter'
 import { Filter } from '../../../types/gallery'
-import { toggleFilterCheckedFn, toggleFilterOpenFn } from '../../../utils'
 import GalleryFilter from '../../Gallery/Filter'
 import FilterSliderLineClear from '../../Icon/FilterSliderLineClear'
 
 interface DrawerFilterProps {
   readonly visibleDrawer: boolean
-  readonly isFixed: boolean
   setVisibleDrawer: Dispatch<SetStateAction<boolean>>
   applyFilter: (filter: Filter[]) => void
 }
 
-const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, isFixed, setVisibleDrawer, applyFilter }) => {
-  // Filter
-  const [filter, setFilter] = useState<Filter[]>(GALLERYS_FILTERS_STATUS)
+const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, setVisibleDrawer, applyFilter }) => {
+  const { galleryFilterStatus, filter, setFilter, toggleFilterTab, toggleFilterTagCheckedChange } = useGalleryFilter()
 
   // https://mui.com/material-ui/react-drawer/#swipeable
   const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent)
-
-  // Toggle Filter children tab
-  const toggleFilterTab = useCallback(
-    (index: number) => {
-      const list = toggleFilterOpenFn(filter, index)
-      list && setFilter(list)
-    },
-    [filter]
-  )
-
-  // Toggle filter children tag checked
-  const toggleFilterTagChecked = useCallback(
-    (parentIndex: number, childrenIndex: number) => {
-      const list = toggleFilterCheckedFn(filter, parentIndex, childrenIndex)
-      setFilter(list)
-    },
-    [filter]
-  )
 
   // Watch visible, false initialization
   useEffect(() => {
     if (!visibleDrawer) {
       setTimeout(() => {
-        setFilter(GALLERYS_FILTERS_STATUS)
+        setFilter(galleryFilterStatus)
       }, 300)
     }
-  }, [visibleDrawer])
+  }, [visibleDrawer, galleryFilterStatus, setFilter])
 
   return (
     <SwipeableDrawer
@@ -87,9 +66,8 @@ const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, isFixed, setVisibl
         </div>
         <GalleryFilter
           filter={filter}
-          isFixed={isFixed}
           toggleFilterTab={toggleFilterTab}
-          toggleFilterTagChecked={toggleFilterTagChecked}
+          toggleFilterTagChecked={toggleFilterTagCheckedChange}
         />
         <button
           className="u-btn u-btn-primary !w-auto absolute bottom-6 left-6 right-6"

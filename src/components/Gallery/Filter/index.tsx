@@ -9,12 +9,11 @@ import FilterOpen from '../../Icon/FilterOpen'
 
 interface GalleryFilterProps {
   readonly filter: Filter[]
-  readonly isFixed: boolean
   toggleFilterTab: (index: number) => void
   toggleFilterTagChecked: (parentIndex: number, childrenIndex: number) => void
 }
 
-const GalleryFilter: FC<GalleryFilterProps> = ({ filter, isFixed, toggleFilterTab, toggleFilterTagChecked }) => {
+const GalleryFilter: FC<GalleryFilterProps> = ({ filter, toggleFilterTab, toggleFilterTagChecked }) => {
   return (
     <ul className={classNames('select-none overflow-auto max-height-category filter-category-scrollbar')}>
       {filter.map((item, index) => (
@@ -22,7 +21,6 @@ const GalleryFilter: FC<GalleryFilterProps> = ({ filter, isFixed, toggleFilterTa
           <div
             className={classNames('border-b-1 border-[#465358] py-4 flex items-center justify-between', {
               'cursor-pointer': !!item.list.length,
-              'px-3': isFixed,
             })}
             onClick={() => toggleFilterTab(index)}
           >

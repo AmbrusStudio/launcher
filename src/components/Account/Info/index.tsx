@@ -1,11 +1,15 @@
+import { EthAddress, ETHTokenType } from '@imtbl/imx-sdk'
 import { shortenIfAddress } from '@usedapp/core'
+import { formatEther } from 'ethers/lib/utils'
+import { isRight } from 'fp-ts/Either'
 import React from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 
 import AvatarDefault from '../../../assets/images/avatar/avatar-default.png'
-import { useAccountInfo } from '../../../hooks'
+import { useAccountInfo, useImmutableXWallet } from '../../../hooks'
 import { ReactButtonProps } from '../../../types'
 import { classNames } from '../../../utils'
+import { IconEthereum } from '../../Icon'
 
 type AvatarItemProps = {
   className?: string
@@ -44,7 +48,7 @@ function InfoItem(props: React.PropsWithChildren<InfoItemProps>) {
     <button
       className={classNames(
         'flex flex-row flex-nowrap items-center box-border',
-        'px-24px py-12px border-b-1px border-grey-border',
+        'px-12px py-12px hover:bg-gray/10',
         className
       )}
       {...others}
@@ -77,8 +81,11 @@ function InfoSubtitle(props: React.PropsWithChildren<InfoSubtitleProps>) {
 }
 
 export function AccountInfo() {
-  const { account: userInfo, expired: sessionExpired } = useAccountInfo()
   const navigate = useNavigate()
+  const { account: userInfo, expired: sessionExpired } = useAccountInfo()
+  const { imxLink, imxClient, walletInfo } = useImmutableXWallet()
+
+  const [ethBalance, setEthBalance] = React.useState('0.0')
 
   const name =
     userInfo?.username && userInfo.username.startsWith('0x')
@@ -93,14 +100,57 @@ export function AccountInfo() {
     setMenuOpen((o) => !o)
   }, [])
 
-  const handleMyWalletClick = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
+  const fetchWalletBalances = React.useCallback(async () => {
+    if (!imxClient || !walletInfo) return
+    const userDecode = EthAddress.decode(walletInfo.address)
+    if (!isRight(userDecode)) return
+    const { result: balances } = await imxClient.listBalances({ user: userDecode.right, symbols: [ETHTokenType.ETH] })
+    console.debug('Fetch wallet balances', balances)
+    const ethBalance = formatEther(balances[0].balance)
+    setEthBalance(ethBalance)
+    return ethBalance
+  }, [imxClient, walletInfo])
+
+  const handleSettingsClick = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
     (e) => {
-      e.preventDefault()
       e.stopPropagation()
       navigate(`/account/settings`)
     },
     [navigate]
   )
+  const handleBalancesClick = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
+    async (e) => {
+      e.stopPropagation()
+      await fetchWalletBalances()
+    },
+    [fetchWalletBalances]
+  )
+  const handleDepositClick = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
+    async (e) => {
+      e.stopPropagation()
+      if (!imxLink) return
+      await imxLink.deposit({ type: ETHTokenType.ETH })
+    },
+    [imxLink]
+  )
+  const handleWithdrawClick = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
+    async (e) => {
+      e.stopPropagation()
+      if (!imxLink) return
+      const ethBalance = await fetchWalletBalances()
+      if (!ethBalance) return
+      await imxLink.prepareWithdrawal({ type: ETHTokenType.ETH, amount: ethBalance })
+    },
+    [fetchWalletBalances, imxLink]
+  )
+
+  React.useEffect(() => {
+    fetchWalletBalances()
+    const fetchInterval = setInterval(async () => {
+      await fetchWalletBalances()
+    }, 30000)
+    return () => clearInterval(fetchInterval)
+  }, [fetchWalletBalances])
 
   return (
     <div className="z-30 relative">
@@ -108,21 +158,36 @@ export function AccountInfo() {
       <AvatarItem image={AvatarDefault} onClick={toggleMenuOpen} />
       <div
         className={classNames(
-          'flex flex-col opacity-0 overflow-hidden transition-opacity',
-          'w-290px h-168px bg-white rounded-24px',
-          '-z-10 absolute -top-12px -right-12px',
-          menuOpen && 'opacity-100'
+          'hidden flex-col overflow-hidden -z-10 absolute -top-12px -right-12px',
+          'w-290px bg-white rounded-24px divide-y divide-grey-border',
+          'transition-opacity opacity-0',
+          menuOpen && 'flex opacity-100'
         )}
       >
-        <InfoItem className="h-100px">
+        <InfoItem className="h-100px px-24px" onClick={handleSettingsClick}>
           <div className="flex flex-col truncate mr-76px text-left">
             <InfoTitle>{name}</InfoTitle>
             <InfoSubtitle>{email}</InfoSubtitle>
           </div>
         </InfoItem>
-        <InfoItem onClick={handleMyWalletClick}>
-          <InfoTitle>My Wallet</InfoTitle>
-        </InfoItem>
+        <div className="flex flex-col">
+          <InfoItem onClick={handleBalancesClick}>
+            <div className="flex flex-col gap-12px truncate text-12px leading-16px text-left">
+              <div className="font-semibold text-grey-medium">IMX Balance</div>
+              <div className="flex flex-row items-center font-normal text-black">
+                <IconEthereum className="mr-8px" />
+                <span className="mr-4px text-14px leading-20px">{ethBalance}</span>
+                <span>ETH</span>
+              </div>
+            </div>
+          </InfoItem>
+          <InfoItem className="pl-24px" onClick={handleDepositClick}>
+            <InfoTitle>Deposit</InfoTitle>
+          </InfoItem>
+          <InfoItem className="pl-24px" onClick={handleWithdrawClick}>
+            <InfoTitle>Withdraw</InfoTitle>
+          </InfoItem>
+        </div>
       </div>
     </div>
   )

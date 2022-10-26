@@ -5,10 +5,12 @@ import { useMemo } from 'react'
 import { NFTE4CRanger } from '../types'
 import { nftsForOwner } from '../utils'
 import { useOriginalOwners, useUpgradeds } from './useE4CRanger'
+import { useMetadata } from './useMetadata'
 import { useTokenIdByContract, useTokenIdByOwner } from './useTokenId'
 
 /**
  * useERC721 List
+ * Token + Contract + Contract State
  * @returns
  */
 export function useERC721ListState({ holderAddress, tokenAddress }: { holderAddress: string; tokenAddress: string }) {
@@ -48,17 +50,20 @@ export function useERC721ListState({ holderAddress, tokenAddress }: { holderAddr
   // console.log('tokenIdForContract', tokenIdForContract)
   // console.log('upgradedForContract', upgradedForContract)
 
-  // Nfts for account
+  const { getMetadataByAddress } = useMetadata()
+  const metadata = getMetadataByAddress(tokenAddress)
+
+  // NFT metadata for account
   const nftsForAccount = useMemo<NFTE4CRanger[]>(
-    () => nftsForOwner(tokenAddress, tokenId, upgraded, []),
-    [tokenId, upgraded, tokenAddress]
+    () => nftsForOwner(tokenAddress, metadata, tokenId, upgraded, []),
+    [tokenId, upgraded, tokenAddress, metadata]
   )
   // console.log('nftsForAccount', nftsForAccount)
 
-  // Nfts for contract
+  // NFT metadata for contract
   const nftsForContract = useMemo<NFTE4CRanger[]>(
-    () => nftsForOwner(tokenAddress, tokenIdForContract, upgradedForContract, originalOwner),
-    [tokenIdForContract, upgradedForContract, originalOwner, tokenAddress]
+    () => nftsForOwner(tokenAddress, metadata, tokenIdForContract, upgradedForContract, originalOwner),
+    [tokenIdForContract, upgradedForContract, originalOwner, tokenAddress, metadata]
   )
   // console.log('nftsForContract', nftsForContract)
   const nfts = useMemo<NFTE4CRanger[]>(() => [...nftsForAccount, ...nftsForContract], [nftsForAccount, nftsForContract])
@@ -70,6 +75,12 @@ export function useERC721ListState({ holderAddress, tokenAddress }: { holderAddr
   }
 }
 
+/**
+ * useERC721 List
+ * Token + Contract
+ * @param param
+ * @returns
+ */
 export function useERC721List({ holderAddress, tokenAddress }: { holderAddress: string; tokenAddress: string }) {
   const { account } = useEthers()
 
@@ -100,16 +111,19 @@ export function useERC721List({ holderAddress, tokenAddress }: { holderAddress: 
     return list
   }, [account, originalOwner, tokenIdByContract])
 
-  // Nfts for account
+  const { getMetadataByAddress } = useMetadata()
+  const metadata = getMetadataByAddress(tokenAddress)
+
+  // NFT metadata for account
   const nftsForAccount = useMemo<NFTE4CRanger[]>(
-    () => nftsForOwner(tokenAddress, tokenId, [], []),
-    [tokenId, tokenAddress]
+    () => nftsForOwner(tokenAddress, metadata, tokenId, [], []),
+    [tokenId, tokenAddress, metadata]
   )
 
-  // Nfts for contract
+  // NFT metadata for contract
   const nftsForContract = useMemo<NFTE4CRanger[]>(
-    () => nftsForOwner(tokenAddress, tokenIdForContract, [], []),
-    [tokenIdForContract, tokenAddress]
+    () => nftsForOwner(tokenAddress, metadata, tokenIdForContract, [], []),
+    [tokenIdForContract, tokenAddress, metadata]
   )
 
   const nfts = useMemo<NFTE4CRanger[]>(() => [...nftsForAccount, ...nftsForContract], [nftsForAccount, nftsForContract])
@@ -117,6 +131,33 @@ export function useERC721List({ holderAddress, tokenAddress }: { holderAddress: 
 
   return {
     nfts,
+    loading: loading,
+  }
+}
+
+/**
+ * ERC721 Ultimate Edition List
+ * Token
+ * @param param
+ * @returns
+ */
+export function useERC721UltimateEditionList({ tokenAddress }: { tokenAddress: string }) {
+  // TokenId for owner
+  const { tokenId, loading } = useTokenIdByOwner({
+    tokenAddress,
+  })
+
+  const { getMetadataByAddress } = useMetadata()
+  const metadata = getMetadataByAddress(tokenAddress)
+
+  // NFT metadata
+  const nftsForAccount = useMemo<NFTE4CRanger[]>(
+    () => nftsForOwner(tokenAddress, metadata, tokenId, [], []),
+    [tokenId, tokenAddress, metadata]
+  )
+
+  return {
+    nfts: nftsForAccount,
     loading: loading,
   }
 }
