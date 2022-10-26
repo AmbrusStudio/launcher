@@ -1,5 +1,5 @@
-import classNames from 'classnames'
 import { Stack } from '@mui/material'
+import classNames from 'classnames'
 import numbro from 'numbro'
 import { FC, RefObject, useMemo } from 'react'
 
@@ -32,23 +32,21 @@ const HeadStatus: FC<Props> = ({ scroll, wrapperRef, count, clearFilter }) => {
         }
       )}
     >
-      {<Stack spacing={3} direction="row">
-      <div
-        className="p-x-4 p-y-2 rounded-2xl bg-white/10 hidden lg:flex items-center justify-center cursor-pointer text-sm font-medium text-center leading-4.25 text-white"
-        onClick={() => {
-          clearFilter()
-        }}
-      >
-        Reset Filters
-      </div>
-      <div
-        className="p-x-4 p-y-2 rounded-2xl bg-#FFB600 hidden lg:flex items-center justify-center cursor-pointer text-sm font-medium text-center leading-4.25 text-white"
-        onClick={() => {
-        }}
-      >
-        PURE GOLD
-      </div>
-      </Stack>}
+      {
+        <Stack spacing={3} direction="row">
+          <div
+            className="p-x-4 p-y-2 rounded-2xl bg-white/10 hidden lg:flex items-center justify-center cursor-pointer text-sm font-medium text-center leading-4.25 text-white"
+            onClick={() => {
+              clearFilter()
+            }}
+          >
+            Reset Filters
+          </div>
+          <div className="p-x-4 p-y-2 rounded-2xl bg-#FFB600 hidden items-center justify-center cursor-pointer text-sm font-medium text-center leading-4.25 text-white">
+            PURE GOLD
+          </div>
+        </Stack>
+      }
 
       <span className="text-sm font-medium leading-4.25 text-white">
         {numbro(count).format({ thousandSeparated: true })} items
