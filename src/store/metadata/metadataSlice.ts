@@ -98,9 +98,12 @@ const initialState: MetadataState = {
 
 export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
   'metadata/fetchMetadataGoldEdition',
-  async () => {
+  async (_, { signal }) => {
     try {
-      const response = await axios.get(defaultState.GoldEdition[defaultChainId].url)
+      const response = await axios.get(defaultState.GoldEdition[defaultChainId].url, {
+        signal: signal,
+      })
+
       return response.data
     } catch (error) {
       const e = `metadata/fetchMetadataGoldEdition error: ${error}`
@@ -114,9 +117,11 @@ export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
 
 export const fetchMetadataRangersEdition = createAsyncThunk<MetadataResponse[]>(
   'metadata/fetchMetadataRangersEdition',
-  async () => {
+  async (_, { signal }) => {
     try {
-      const response = await axios.get(defaultState.RangersEdition[defaultChainId].url)
+      const response = await axios.get(defaultState.RangersEdition[defaultChainId].url, {
+        signal: signal,
+      })
       return response.data
     } catch (error) {
       const e = `metadata/fetchMetadataRangersEdition error: ${error}`
@@ -130,9 +135,11 @@ export const fetchMetadataRangersEdition = createAsyncThunk<MetadataResponse[]>(
 
 export const fetchMetadataUltimateEdition = createAsyncThunk<MetadataResponse[]>(
   'metadata/fetchMetadataUltimateEdition',
-  async () => {
+  async (_, { signal }) => {
     try {
-      const response = await axios.get(defaultState.UltimateEdition[defaultChainId].url)
+      const response = await axios.get(defaultState.UltimateEdition[defaultChainId].url, {
+        signal: signal,
+      })
       return response.data
     } catch (error) {
       const e = `metadata/fetchMetadataUltimateEdition error: ${error}`
