@@ -153,6 +153,7 @@ function Gallery() {
               </div>
             ) : (
               <>
+                {/* Todo Merge optimization */}
                 {checkedFilterCategory.length || searchId ? (
                   <GalleryWrapperFilter
                     allToken={currentGallery}
