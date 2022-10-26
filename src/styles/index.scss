@@ -80,6 +80,9 @@ body,
 // Gallery
 .max-height {
   max-height: calc(100vh - 100px);
+  @media (min-width: 1024px) {
+    max-height: calc(100vh - 60px);
+  }
 }
 .max-height-category {
   max-height: calc(100% - 52px - 60px);

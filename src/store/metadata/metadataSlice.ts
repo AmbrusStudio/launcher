@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import * as Sentry from '@sentry/react'
 import { Goerli, Mainnet } from '@usedapp/core'
+import axios from 'axios'
 import { getAddress } from 'ethers/lib/utils'
 
 import {
@@ -12,9 +13,6 @@ import {
   ADDRESS_E4C_Ranger_Ultimate_Editions,
   defaultChainId,
 } from '../../contracts'
-import GoldEditionJSON from '../../data/Gold_Edition/E4C_Rangers.json'
-import RangersEditionJSON from '../../data/Rangers_Edition/E4C_Rangers.json'
-import UltimateEditionJSON from '../../data/Ultimate_Edition/E4C_Rangers.json'
 import { MetadataResponse, TokenMetadata } from '../../types'
 import { parseTokenId } from '../../utils'
 
@@ -100,9 +98,13 @@ const initialState: MetadataState = {
 
 export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
   'metadata/fetchMetadataGoldEdition',
-  () => {
+  async (_, { signal }) => {
     try {
-      return GoldEditionJSON as MetadataResponse[]
+      const response = await axios.get(defaultState.GoldEdition[defaultChainId].url, {
+        signal: signal,
+      })
+
+      return response.data
     } catch (error) {
       const e = `metadata/fetchMetadataGoldEdition error: ${error}`
       console.log('error', e)
@@ -115,9 +117,12 @@ export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
 
 export const fetchMetadataRangersEdition = createAsyncThunk<MetadataResponse[]>(
   'metadata/fetchMetadataRangersEdition',
-  () => {
+  async (_, { signal }) => {
     try {
-      return RangersEditionJSON as MetadataResponse[]
+      const response = await axios.get(defaultState.RangersEdition[defaultChainId].url, {
+        signal: signal,
+      })
+      return response.data
     } catch (error) {
       const e = `metadata/fetchMetadataRangersEdition error: ${error}`
       console.log('error', e)
@@ -130,9 +135,12 @@ export const fetchMetadataRangersEdition = createAsyncThunk<MetadataResponse[]>(
 
 export const fetchMetadataUltimateEdition = createAsyncThunk<MetadataResponse[]>(
   'metadata/fetchMetadataUltimateEdition',
-  () => {
+  async (_, { signal }) => {
     try {
-      return UltimateEditionJSON as MetadataResponse[]
+      const response = await axios.get(defaultState.UltimateEdition[defaultChainId].url, {
+        signal: signal,
+      })
+      return response.data
     } catch (error) {
       const e = `metadata/fetchMetadataUltimateEdition error: ${error}`
       console.log('error', e)
