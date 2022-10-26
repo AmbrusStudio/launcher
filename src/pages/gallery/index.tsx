@@ -1,4 +1,5 @@
 import useUrlState from '@ahooksjs/use-url-state'
+import CircularProgress from '@mui/material/CircularProgress'
 import { useScroll, useTimeout } from 'ahooks'
 import { cloneDeep } from 'lodash'
 import { useCallback, useMemo, useRef, useState } from 'react'
@@ -37,7 +38,7 @@ function Gallery() {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const scroll = useScroll(document)
 
-  const { metadataAllEdition } = useMetadata()
+  const { metadataAllEdition, loading } = useMetadata()
 
   // Drawer has filter
   const isFilter = useMemo<boolean>(() => {
@@ -65,7 +66,10 @@ function Gallery() {
   const clearFilter = useCallback(() => {
     setFilter(galleryFilterStatus)
     setSearchId('')
-  }, [setSearchId, galleryFilterStatus, setFilter])
+
+    // Only supports Name
+    setState({ name: undefined })
+  }, [setSearchId, galleryFilterStatus, setFilter, setState])
 
   useTimeout(() => {
     const list = cloneDeep(filter)
@@ -139,18 +143,31 @@ function Gallery() {
               clearFilter={clearFilter}
             />
 
-            {checkedFilterCategory.length || searchId ? (
-              <GalleryWrapperFilter
-                allToken={currentGallery}
-                setCurrentNFTInfo={setCurrentNFTInfo}
-                setVisibleNFT={setVisibleNFT}
-              />
+            {loading ? (
+              <div className="text-center py-6">
+                <CircularProgress
+                  sx={{
+                    color: 'white',
+                  }}
+                />
+              </div>
             ) : (
-              <GalleryWrapper
-                allToken={currentGallery}
-                setCurrentNFTInfo={setCurrentNFTInfo}
-                setVisibleNFT={setVisibleNFT}
-              />
+              <>
+                {/* Todo Merge optimization */}
+                {checkedFilterCategory.length || searchId ? (
+                  <GalleryWrapperFilter
+                    allToken={currentGallery}
+                    setCurrentNFTInfo={setCurrentNFTInfo}
+                    setVisibleNFT={setVisibleNFT}
+                  />
+                ) : (
+                  <GalleryWrapper
+                    allToken={currentGallery}
+                    setCurrentNFTInfo={setCurrentNFTInfo}
+                    setVisibleNFT={setVisibleNFT}
+                  />
+                )}
+              </>
             )}
           </div>
         </div>
@@ -163,6 +180,15 @@ function Gallery() {
         applyFilter={(value) => {
           setFilter(value)
           setVisibleDrawer(false)
+
+          // Only supports Name
+          value.forEach((item) => {
+            if (item.label === Trait.Name) {
+              item.list.forEach((itemJ) => {
+                setState({ name: itemJ.label.toLocaleLowerCase() })
+              })
+            }
+          })
         }}
       />
     </PageLayout>

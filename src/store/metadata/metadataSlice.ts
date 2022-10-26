@@ -33,6 +33,12 @@ interface MetadataState {
   UltimateEdition: MetadataEdition
 }
 
+interface LoadingState {
+  GoldEditionLoading: boolean
+  RangersEditionLoading: boolean
+  UltimateEditionLoading: boolean
+}
+
 const defaultState: MetadataState = {
   GoldEdition: {
     [Mainnet.chainId]: {
@@ -90,10 +96,13 @@ const defaultState: MetadataState = {
   },
 }
 
-const initialState: MetadataState = {
+const initialState: MetadataState & LoadingState = {
   GoldEdition: defaultState.GoldEdition,
   RangersEdition: defaultState.RangersEdition,
   UltimateEdition: defaultState.UltimateEdition,
+  GoldEditionLoading: false,
+  RangersEditionLoading: false,
+  UltimateEditionLoading: false,
 }
 
 export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
@@ -158,15 +167,22 @@ export const metadataSlice = createSlice({
     clear: (state) => {
       state.GoldEdition = defaultState.GoldEdition
       state.RangersEdition = defaultState.RangersEdition
+      state.UltimateEdition = defaultState.UltimateEdition
+
+      state.GoldEditionLoading = false
+      state.RangersEditionLoading = false
+      state.UltimateEditionLoading = false
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchMetadataGoldEdition.pending, () => {
+      .addCase(fetchMetadataGoldEdition.pending, (state) => {
         console.log('loading')
+        state.GoldEditionLoading = true
       })
       .addCase(fetchMetadataGoldEdition.fulfilled, (state, action) => {
         console.log('fulfilled', action)
+        state.GoldEditionLoading = false
 
         if (action.payload.length) {
           const time = Date.now()
@@ -186,12 +202,15 @@ export const metadataSlice = createSlice({
       .addCase(fetchMetadataGoldEdition.rejected, (state) => {
         console.log('failed')
         state.GoldEdition = defaultState.GoldEdition
+        state.GoldEditionLoading = false
       })
-      .addCase(fetchMetadataRangersEdition.pending, () => {
+      .addCase(fetchMetadataRangersEdition.pending, (state) => {
         console.log('loading')
+        state.RangersEditionLoading = true
       })
       .addCase(fetchMetadataRangersEdition.fulfilled, (state, action) => {
         console.log('fulfilled', action)
+        state.RangersEditionLoading = false
 
         if (action.payload.length) {
           const time = Date.now()
@@ -211,13 +230,15 @@ export const metadataSlice = createSlice({
       .addCase(fetchMetadataRangersEdition.rejected, (state) => {
         console.log('failed')
         state.RangersEdition = defaultState.RangersEdition
+        state.RangersEditionLoading = false
       })
-      .addCase(fetchMetadataUltimateEdition.pending, () => {
+      .addCase(fetchMetadataUltimateEdition.pending, (state) => {
         console.log('loading')
+        state.UltimateEditionLoading = true
       })
       .addCase(fetchMetadataUltimateEdition.fulfilled, (state, action) => {
         console.log('fulfilled', action)
-
+        state.UltimateEditionLoading = false
         if (action.payload.length) {
           const time = Date.now()
 
@@ -236,6 +257,7 @@ export const metadataSlice = createSlice({
       .addCase(fetchMetadataUltimateEdition.rejected, (state) => {
         console.log('failed')
         state.UltimateEdition = defaultState.UltimateEdition
+        state.UltimateEditionLoading = false
       })
   },
 })
