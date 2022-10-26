@@ -66,7 +66,10 @@ function Gallery() {
   const clearFilter = useCallback(() => {
     setFilter(galleryFilterStatus)
     setSearchId('')
-  }, [setSearchId, galleryFilterStatus, setFilter])
+
+    // Only supports Name
+    setState({ name: undefined })
+  }, [setSearchId, galleryFilterStatus, setFilter, setState])
 
   useTimeout(() => {
     const list = cloneDeep(filter)
@@ -176,6 +179,15 @@ function Gallery() {
         applyFilter={(value) => {
           setFilter(value)
           setVisibleDrawer(false)
+
+          // Only supports Name
+          value.forEach((item) => {
+            if (item.label === Trait.Name) {
+              item.list.forEach((itemJ) => {
+                setState({ name: itemJ.label.toLocaleLowerCase() })
+              })
+            }
+          })
         }}
       />
     </PageLayout>
