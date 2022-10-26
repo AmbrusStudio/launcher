@@ -1,6 +1,5 @@
 import useUrlState from '@ahooksjs/use-url-state'
 import { useScroll, useTimeout } from 'ahooks'
-import classNames from 'classnames'
 import { cloneDeep } from 'lodash'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { compose } from 'redux'
@@ -39,12 +38,6 @@ function Gallery() {
   const scroll = useScroll(document)
 
   const { metadataAllEdition } = useMetadata()
-
-  const isFixed = useMemo(() => {
-    const headerDom = document.querySelector<HTMLDivElement>('#header')
-    const headerHeight = headerDom?.offsetHeight || 100
-    return scroll && wrapperRef?.current ? scroll.top >= wrapperRef.current?.offsetTop - headerHeight : false
-  }, [wrapperRef, scroll])
 
   // Drawer has filter
   const isFilter = useMemo<boolean>(() => {
@@ -99,11 +92,11 @@ function Gallery() {
       <div className="max-w-[1312px] m-x-auto mt-[92px] lg:mt-[156px] xl:mt-[188px] px-6">
         <GalleryHead />
 
-        <div className="my-3 lg:my-[48px]" ref={wrapperRef}>
+        <div className="my-3 lg:my-[48px] flex" ref={wrapperRef}>
           <div
-            className={classNames('hidden lg:block absolute w-[300px] max-height overflow-hidden', {
-              'fixed lg:top-[68px] xl:top-[100px]': isFixed,
-            })}
+            className={
+              'hidden lg:block w-[300px] sticky top-[120px] lg:top-[68px] xl:top-[100px] shrink-0 max-height overflow-hidden'
+            }
           >
             <div className={'flex m-b-3 lg:m-b-4.5'}>
               <Search searchId={searchId} setSearchId={setSearchId} />
@@ -130,7 +123,7 @@ function Gallery() {
               />
             </div>
           </div>
-          <div className="lg:ml-[336px]">
+          <div className="lg:ml-[36px] grow-1">
             <SearchAction
               searchId={searchId}
               isFilter={isFilter}
