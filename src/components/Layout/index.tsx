@@ -2,9 +2,9 @@ import React from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { classNames } from '../../utils'
-import { PageFooter } from './Footer'
-import { PageHeader } from './Header'
-import { PageSidebar } from './Sidebar'
+import { PageFooter } from './PageFooter'
+import { PageHeader } from './PageHeader'
+import { PageSidebar } from './PageSidebar'
 
 type PageLayoutProps = {
   className?: string
