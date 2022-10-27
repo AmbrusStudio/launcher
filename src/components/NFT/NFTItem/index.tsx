@@ -3,8 +3,8 @@ import { useEthers } from '@usedapp/core'
 import classNames from 'classnames'
 import { FC, useCallback, useEffect, useState } from 'react'
 
-import withdraw from '../../../assets/images/withdraw.png'
-import Star from '../../../components/Icon/Star'
+// import withdraw from '../../../assets/images/withdraw.png'
+// import Star from '../../../components/Icon/Star'
 import { useWeb3Modal } from '../../../hooks'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
 import { useHandleState } from '../../../hooks/useHandleState'
@@ -90,7 +90,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, update }) => {
       <div className="w-[46.5%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0">
         <NFTDetails nft={nft} tokenId={tokenId} />
 
-        <Stack className="mt-9" spacing={4.5} direction="row">
+        {/* <Stack className="mt-9" spacing={4.5} direction="row">
           <a
             className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
             href={'https://rarible.com/token/' + nft.address}
@@ -107,15 +107,13 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, update }) => {
           >
             Etherscan
           </a>
-        </Stack>
+        </Stack> */}
 
         {nft.upgraded === false && (
           <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
-            {
-              <button className="u-btn u-btn-primary max-w-[120px]">
-                <Star sx={{ fontSize: '36px' }} />
-              </button>
-            }
+            {/* <button className="u-btn u-btn-primary max-w-[120px]">
+              <Star sx={{ fontSize: '36px' }} />
+            </button> */}
             {chainIdMismatch ? (
               <button className={'u-btn u-btn-primary'} onClick={() => switchNetwork()}>
                 Switch Network
@@ -141,14 +139,12 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, update }) => {
                 Upgrade
               </button>
             )}
-            {
-              <button
-                className="u-btn max-w-[120px] !bg-[#465358]"
-                onClick={() => window.open('https://imxtools.io/withdrawal')}
-              >
-                <img className="w-9 h-9" src={withdraw} alt="imxtools withdrawal" />
-              </button>
-            }
+            {/* <button
+              className="u-btn max-w-[120px] !bg-[#465358]"
+              onClick={() => window.open('https://imxtools.io/withdrawal')}
+            >
+              <img className="w-9 h-9" src={withdraw} alt="imxtools withdrawal" />
+            </button> */}
           </Stack>
         )}
       </div>
