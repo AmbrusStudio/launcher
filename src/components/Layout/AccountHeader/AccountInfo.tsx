@@ -22,14 +22,14 @@ function AvatarItem(props: AvatarItemProps) {
   return (
     <div
       className={classNames(
-        'flex flex-row flex-nowrap items-center cursor-pointer',
-        'w-76px h-76px rounded-full box-border border-1px border-white',
+        'flex flex-row flex-nowrap items-center cursor-pointer box-border rounded-full',
+        'w-44px h-44px md:w-76px md:h-76px border-1px border-white',
         className
       )}
       onClick={onClick}
     >
       <img
-        className="block max-w-full h-auto rounded-full object-cover select-none"
+        className="block w-full h-auto rounded-full object-cover select-none"
         src={image}
         alt="Avatar Image"
         loading="lazy"
@@ -64,7 +64,17 @@ type InfoTitleProps = {
 
 function InfoTitle(props: React.PropsWithChildren<InfoTitleProps>) {
   const { className, children } = props
-  return <div className={classNames('font-bold text-16px leading-30px text-black truncate', className)}>{children}</div>
+  return (
+    <div
+      className={classNames(
+        'font-bold text-black truncate',
+        'text-14px leading-24px md:text-16px md:leading-30px',
+        className
+      )}
+    >
+      {children}
+    </div>
+  )
 }
 
 type InfoSubtitleProps = {
@@ -81,10 +91,13 @@ function InfoSubtitle(props: React.PropsWithChildren<InfoSubtitleProps>) {
 }
 
 type AccountInfoProps = {
+  menuOpen: boolean
   sessionExpiredNavigateTo: string
+  onAvatarClick: () => void
 }
 
 export function AccountInfo(props: AccountInfoProps) {
+  const { menuOpen, sessionExpiredNavigateTo, onAvatarClick } = props
   const navigate = useNavigate()
   const { account: userInfo, expired: sessionExpired } = useAccountInfo()
   const { imxLink, imxClient, walletInfo } = useImmutableXWallet()
@@ -97,12 +110,13 @@ export function AccountInfo(props: AccountInfoProps) {
       : userInfo?.username || 'Name'
   const email = userInfo?.email || shortenIfAddress(userInfo?.wallet)
 
-  const [menuOpen, setMenuOpen] = React.useState(false)
-  const toggleMenuOpen = React.useCallback<React.MouseEventHandler<HTMLDivElement>>((e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setMenuOpen((o) => !o)
-  }, [])
+  const handleAvatarClick = React.useCallback<React.MouseEventHandler<HTMLDivElement>>(
+    (e) => {
+      e.stopPropagation()
+      onAvatarClick()
+    },
+    [onAvatarClick]
+  )
 
   const fetchWalletBalances = React.useCallback(async () => {
     if (!imxClient || !walletInfo) return
@@ -157,19 +171,20 @@ export function AccountInfo(props: AccountInfoProps) {
   }, [fetchWalletBalances])
 
   return (
-    <div className="z-30 relative">
-      {sessionExpired && <Navigate to={props.sessionExpiredNavigateTo} replace={true} />}
-      <AvatarItem image={AvatarDefault} onClick={toggleMenuOpen} />
+    <div className="relative">
+      {sessionExpired && <Navigate to={sessionExpiredNavigateTo} replace={true} />}
+      <AvatarItem image={AvatarDefault} onClick={handleAvatarClick} />
       <div
         className={classNames(
-          'hidden flex-col overflow-hidden -z-10 absolute -top-12px -right-12px',
-          'w-290px bg-white rounded-24px divide-y divide-grey-border',
-          'transition-opacity opacity-0',
-          menuOpen && 'flex opacity-100'
+          'flex flex-col overflow-hidden absolute transition-all h-0 opacity-0',
+          'bg-white drop-shadow-account-info divide-y divide-grey-border',
+          'w-180px rounded-12px top-full mt-24px',
+          'lg:w-290px lg:rounded-24px lg:-z-10 lg:-top-12px lg:-right-12px lg:mt-0',
+          menuOpen && 'h-auto opacity-100'
         )}
       >
-        <InfoItem className="h-100px px-24px" onClick={handleSettingsClick}>
-          <div className="flex flex-col truncate mr-76px text-left">
+        <InfoItem className="lg:h-100px lg:pl-24px" onClick={handleSettingsClick}>
+          <div className="flex flex-col truncate text-left lg:mr-76px">
             <InfoTitle>{name}</InfoTitle>
             <InfoSubtitle>{email}</InfoSubtitle>
           </div>
