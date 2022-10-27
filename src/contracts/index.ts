@@ -60,8 +60,8 @@ export const ALCHEMY_NETWORK = ALCHEMY_NETWORKS[defaultChainId]
 
 // opensea.io
 export const OPENSEA_URLS = {
-  [Mainnet.chainId]: 'https://opensea.io/collection/e4crangersultimate',
-  [Goerli.chainId]: 'https://opensea.io/collection/e4crangersultimate',
+  [Mainnet.chainId]: 'https://opensea.io/collection/e4crangersgold',
+  [Goerli.chainId]: 'https://opensea.io/collection/e4crangersgold',
 }
 export const OPENSEA_URL = OPENSEA_URLS[defaultChainId]
 

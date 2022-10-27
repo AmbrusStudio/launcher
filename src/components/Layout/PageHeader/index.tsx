@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
 import React from 'react'
+import { Link } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 import { useWeb3Modal } from '../../../hooks'
 import { classNames } from '../../../utils'
@@ -25,6 +27,7 @@ const MobileMenuWrapper = styled.div<MobileMenuWrapperProps>`
 export function PageHeader() {
   const { account, active, deactivate } = useEthers()
   const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
+  const location = useLocation()
 
   const connected = Boolean(account && active)
 
@@ -67,15 +70,26 @@ export function PageHeader() {
           <SiteNav onGamesNavClick={handleGamesNavClick} />
           <div className="flex flex-col xl:flex-row items-center gap-24px xl:gap-0 px-32px py-36px xl:p-0 bg-black-bg xl:bg-transparent">
             <SocialNav className="px-26px" />
-            <WalletButton
-              connected={connected}
-              chainIdMismatch={chainIdMismatch}
-              onConnectClick={handleWalletConnect}
-              onSwitchNetworkClick={handleWalletSwitchNetwork}
-              onDisonnectClick={handleWalletDisconnect}
-            >
-              {shortenIfAddress(account)}
-            </WalletButton>
+
+            {/* gallery page hide WalletButton */}
+            {location.pathname !== '/gallery' ? (
+              <WalletButton
+                connected={connected}
+                chainIdMismatch={chainIdMismatch}
+                onConnectClick={handleWalletConnect}
+                onSwitchNetworkClick={handleWalletSwitchNetwork}
+                onDisonnectClick={handleWalletDisconnect}
+              >
+                {shortenIfAddress(account)}
+              </WalletButton>
+            ) : (
+              <Link
+                to={'/account/home'}
+                className="rounded outline-none cursor-pointer px-[26px] py-[10px] font-semibold text-[14px] leading-[17px] not-italic uppercase text-white bg-[#ff4125]"
+              >
+                Account Center
+              </Link>
+            )}
           </div>
         </MobileMenuWrapper>
       </div>
