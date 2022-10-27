@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { IconAmbrus } from '../../Icon'
-import { SocialNav } from '../Header/SocialNav'
+import { SocialNav } from '../PageHeader/SocialNav'
 import { FooterNavItem } from './FooterNavItem'
 import { ImageAmbrusStudio } from './ImageAmbrusStudio'
 import { NewsletterSubscribe } from './NewsletterSubscribe'
