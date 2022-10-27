@@ -5,7 +5,6 @@ import { useUpdate } from 'ahooks'
 import { useMemo, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
-import { AccountTitleWithAccountInfo } from '../../../components/Account'
 import { AccountCenterPageLayout } from '../../../components/Layout'
 import { WalletButton } from '../../../components/Layout/WalletButton'
 import MobileWrap from '../../../components/NFT/MobileWrap'
@@ -45,8 +44,7 @@ function AccountNFT() {
   const [visiblePerkModal, setVisiblePerkModal] = useState<boolean>(false)
 
   return (
-    <AccountCenterPageLayout>
-      <AccountTitleWithAccountInfo title="My" subtitle="NFTs" />
+    <AccountCenterPageLayout title="My" subtitle="NFTs">
       <div className="mt-6">
         {!(account && active) ? (
           <WalletButton
