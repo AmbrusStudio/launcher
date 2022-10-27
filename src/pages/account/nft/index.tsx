@@ -45,40 +45,38 @@ function AccountNFT() {
 
   return (
     <AccountCenterPageLayout title="My" subtitle="NFTs">
-      <div className="mt-6">
-        {!(account && active) ? (
-          <WalletButton
-            connected={!!(account && active)}
-            chainIdMismatch={chainIdMismatch}
-            onConnectClick={() => connect()}
-            onSwitchNetworkClick={switchNetwork}
-          >
-            {shortenIfAddress(account)}
-          </WalletButton>
-        ) : account && active && loading ? (
-          <div className="text-center py-6">
-            <CircularProgress
-              sx={{
-                color: 'white',
-              }}
-            />
-          </div>
-        ) : account && active && !loading && !nfts.length ? (
-          <div className="text-white">No Data...</div>
-        ) : (
-          <>
-            {isMd ? (
-              <Stack spacing={3}>
-                {nfts.map((nft) => (
-                  <NFTItem nft={nft} key={`${nft.address}_${nft.tokenId}`} tokenId={nft.tokenId} update={update} />
-                ))}
-              </Stack>
-            ) : (
-              <MobileWrap nfts={nfts} update={update} />
-            )}
-          </>
-        )}
-      </div>
+      {!(account && active) ? (
+        <WalletButton
+          connected={!!(account && active)}
+          chainIdMismatch={chainIdMismatch}
+          onConnectClick={() => connect()}
+          onSwitchNetworkClick={switchNetwork}
+        >
+          {shortenIfAddress(account)}
+        </WalletButton>
+      ) : account && active && loading ? (
+        <div className="text-center py-6">
+          <CircularProgress
+            sx={{
+              color: 'white',
+            }}
+          />
+        </div>
+      ) : account && active && !loading && !nfts.length ? (
+        <div className="text-white">No Data...</div>
+      ) : (
+        <>
+          {isMd ? (
+            <Stack spacing={3}>
+              {nfts.map((nft) => (
+                <NFTItem nft={nft} key={`${nft.address}_${nft.tokenId}`} tokenId={nft.tokenId} update={update} />
+              ))}
+            </Stack>
+          ) : (
+            <MobileWrap nfts={nfts} update={update} />
+          )}
+        </>
+      )}
 
       {isMd ? (
         <Perk visible={visiblePerk} close={(value) => setVisiblePerk(value)} />
