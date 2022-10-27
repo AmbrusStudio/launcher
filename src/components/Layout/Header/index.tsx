@@ -4,13 +4,12 @@ import React from 'react'
 
 import { useWeb3Modal } from '../../../hooks'
 import { classNames } from '../../../utils'
-import { IconHeaderClose } from '../../Icon/HeaderClose'
-import { IconHeaderMenu } from '../../Icon/HeaderMenu'
-import { GamesNav } from '../GamesNav'
-import { SiteNav } from '../SiteNav'
-import { SocialNav } from '../SocialNav'
+import { IconHeaderClose, IconHeaderMenu } from '../../Icon'
 import { WalletButton } from '../WalletButton'
+import { GamesNav } from './GamesNav'
 import { LogoNav } from './LogoNav'
+import { SiteNav } from './SiteNav'
+import { SocialNav } from './SocialNav'
 
 type MobileMenuWrapperProps = {
   open: boolean

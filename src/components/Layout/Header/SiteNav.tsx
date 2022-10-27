@@ -3,7 +3,7 @@ import React from 'react'
 import { classNames, getMainSiteLink } from '../../../utils'
 import { IconArrowDown } from '../../Icon'
 import { ExternalLink } from '../../Link'
-import { GamesNav } from '../GamesNav'
+import { GamesNav } from './GamesNav'
 import { SiteNavItem } from './SiteNavItem'
 
 type SiteNavProps = {
