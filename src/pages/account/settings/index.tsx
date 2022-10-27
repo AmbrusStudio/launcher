@@ -1,10 +1,9 @@
 import { shortenIfAddress } from '@usedapp/core'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
-import { Navigate } from 'react-router-dom'
 
 import AvatarDefault from '../../../assets/images/avatar/avatar-default.png'
-import { AccountMyAccountInfo, AccountMyAvatar, AccountMyWallet, AccountTitie } from '../../../components/Account'
+import { AccountMyAccountInfo, AccountMyAvatar, AccountMyWallet } from '../../../components/Account'
 import { AccountCenterPageLayout } from '../../../components/Layout'
 import {
   useAccountInfo,
@@ -22,7 +21,7 @@ export function Settings() {
   const { walletInfo, walletLogin: imxLogin } = useImmutableXWallet()
   const { walletBind, walletUnbind } = useImmutableXAccount()
   const { emailUpdatePassword } = useEmailAccount()
-  const { account: userInfo, expired: sessionExpired } = useAccountInfo()
+  const { account: userInfo } = useAccountInfo()
   const showSnackbar = useSnackbarTR()
 
   const [updateSending, setUpdateSending] = React.useState(false)
@@ -87,23 +86,23 @@ export function Settings() {
   }, [setValue, userInfo?.username])
 
   return (
-    <React.Fragment>
-      {sessionExpired && <Navigate to="/account/signin" replace={true} />}
-      <AccountCenterPageLayout className="flex flex-col gap-36px">
-        <AccountTitie subtitle="Management" />
-        <div className="grid grid-cols-1 xl:grid-cols-[600px_1fr] gap-36px">
-          <AccountMyAccountInfo disabled={updateSending} onSaveButtonSubmit={handleSubmit(handleSaveButtonSubmit)} />
-          <AccountMyAvatar data={demoData} selected={selectedAvatar} onAvatarSelect={handleAvatarSelect} />
-        </div>
-        <AccountMyWallet
-          bindAccount={shortenIfAddress(userInfo?.wallet)}
-          walletAccount={shortenIfAddress(walletInfo?.address)}
-          metamaskButtonDisabled={metamaskBinding}
-          disconnectButtonDisabled={metamaskBinding}
-          onMetamaskClick={handleBindWalletClick}
-          onDisconnectClick={handleUnbindWalletClick}
-        />
-      </AccountCenterPageLayout>
-    </React.Fragment>
+    <AccountCenterPageLayout
+      className="flex flex-col gap-24px xl:gap-36px"
+      subtitle="Management"
+      sessionExpiredNavigateTo="/account/signin"
+    >
+      <div className="flex flex-col-reverse md:grid md:grid-cols-[auto_1fr] gap-24px lg:gap-36px">
+        <AccountMyAccountInfo disabled={updateSending} onSaveButtonSubmit={handleSubmit(handleSaveButtonSubmit)} />
+        <AccountMyAvatar data={demoData} selected={selectedAvatar} onAvatarSelect={handleAvatarSelect} />
+      </div>
+      <AccountMyWallet
+        bindAccount={shortenIfAddress(userInfo?.wallet)}
+        walletAccount={shortenIfAddress(walletInfo?.address)}
+        metamaskButtonDisabled={metamaskBinding}
+        disconnectButtonDisabled={metamaskBinding}
+        onMetamaskClick={handleBindWalletClick}
+        onDisconnectClick={handleUnbindWalletClick}
+      />
+    </AccountCenterPageLayout>
   )
 }

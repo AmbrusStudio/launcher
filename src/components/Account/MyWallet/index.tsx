@@ -10,10 +10,15 @@ import { AccountWalletButtonPopover } from '../WalletButtonPopover'
 type MetamaskButtonProps = ReactButtonProps
 
 function MetamaskButton(props: MetamaskButtonProps) {
-  const { className, children, ...others } = props
+  const { className, children, disabled, ...others } = props
   return (
-    <AccountWalletButtonPopover>
-      <Button variant="metamask" className={classNames('flex flex-row items-center relative', className)} {...others}>
+    <AccountWalletButtonPopover disabled={disabled}>
+      <Button
+        variant="metamask"
+        className={classNames('flex flex-row items-center relative', className)}
+        disabled={disabled}
+        {...others}
+      >
         <IconMetamack className="absolute w-36px h-auto" />
         <span className="w-full">{children}</span>
       </Button>
@@ -58,14 +63,14 @@ export function AccountMyWallet(props: MyWalletProps) {
           To play with your rangers and weapons in games, or to set your E4C Rangers NFT as your avatar, please connect
           to your wallet. Each account can be connected to one wallet.
         </p>
-        <div className="flex flex-row flex-nowrap items-center">
-          <MetamaskButton disabled={metamaskButtonDisabled} onClick={handleMetamaskClick}>
+        <div className="flex flex-col md:flex-row flex-nowrap items-center gap-12px md:gap-0">
+          <MetamaskButton disabled={!!bindAccount || metamaskButtonDisabled} onClick={handleMetamaskClick}>
             {buttonText}
           </MetamaskButton>
           {bindAccount && (
             <Button
               variant="primary"
-              className="w-233px hover:!bg-rust/85 hover:!text-white"
+              className="md:w-233px hover:!bg-rust/85 hover:!text-white"
               disabled={disconnectButtonDisabled}
               onClick={handleDisconnectClick}
             >

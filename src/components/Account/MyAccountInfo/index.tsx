@@ -51,7 +51,7 @@ export function AccountMyAccountInfo(props: AccountMyAccountProps) {
   }
 
   return (
-    <AccountCard title="E4C Account" className="gap-24px">
+    <AccountCard title="E4C Account" className="md:min-w-350px xl:min-w-600px gap-24px">
       <form className="flex flex-col gap-24px" onSubmit={onSaveButtonSubmit}>
         <Input
           variant="dark"

@@ -2,7 +2,6 @@ import React from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { getAllGames } from '../../../api'
-import { AccountTitleWithAccountInfo } from '../../../components/Account'
 import { GameBackground, GameIconBar, GameToolbar } from '../../../components/Game'
 import { AccountCenterPageLayout } from '../../../components/Layout'
 import { GameInfo } from '../../../types'
@@ -34,7 +33,6 @@ export function Games() {
 
   return (
     <AccountCenterPageLayout className="flex flex-col gap-24px">
-      <AccountTitleWithAccountInfo subtitle="Center" />
       <div className="flex flex-col w-full xl:w-1260px">
         <GameIconBar games={allGames} active={activeGame} />
         {activeGame && (

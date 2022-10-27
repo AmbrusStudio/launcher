@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { getAllGames } from '../../../api'
-import { AccountTitleWithAccountInfo } from '../../../components/Account'
 import { AccountBlock } from '../../../components/Account/Block'
 import AssetsSlider from '../../../components/Account/MyAsset'
 import { GameBanner } from '../../../components/Game'
@@ -68,8 +67,7 @@ export function Home() {
   }, [fetchAllGames])
 
   return (
-    <AccountCenterPageLayout className="flex flex-col gap-36px">
-      <AccountTitleWithAccountInfo subtitle="Center" />
+    <AccountCenterPageLayout className="flex flex-col gap-24px xl:gap-36px">
       <div className="flex flex-col gap-36px">
         <AccountBlock title="E4C Games">
           <div className="flex gap-36px">

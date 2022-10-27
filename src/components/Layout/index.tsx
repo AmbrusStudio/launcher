@@ -1,10 +1,11 @@
-import { Fragment } from 'react'
+import React from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { classNames } from '../../utils'
-import { PageFooter } from './Footer'
-import { PageHeader } from './Header'
-import { PageSidebar } from './Sidebar'
+import { AccountHeader } from './AccountHeader'
+import { PageFooter } from './PageFooter'
+import { PageHeader } from './PageHeader'
+import { PageSidebar } from './PageSidebar'
 
 type PageLayoutProps = {
   className?: string
@@ -24,22 +25,31 @@ export function PageLayout(props: React.PropsWithChildren<PageLayoutProps>) {
   const location = useLocation()
 
   return (
-    <Fragment>
+    <React.Fragment>
       <PageHeader />
       <BasePageLayout className={className}>{children}</BasePageLayout>
-
       {/* gallery page hide footer */}
       {location.pathname !== '/gallery' && <PageFooter />}
-    </Fragment>
+    </React.Fragment>
   )
 }
 
-export function AccountCenterPageLayout(props: React.PropsWithChildren<PageLayoutProps>) {
+type AccountCenterPageLayoutProps = PageLayoutProps & {
+  title?: string
+  subtitle?: string
+  sessionExpiredNavigateTo?: string
+}
+
+export function AccountCenterPageLayout(props: React.PropsWithChildren<AccountCenterPageLayoutProps>) {
   const { className, children } = props
+  const { title = 'Account', subtitle = 'Center', sessionExpiredNavigateTo = '/account/signup' } = props
   return (
-    <BasePageLayout className="flex flex-row flex-nowrap">
-      <PageSidebar className="fixed h-screen min-w-108px" />
-      <div className={classNames('ml-108px p-36px w-full max-w-1332px', className)}>{children}</div>
-    </BasePageLayout>
+    <React.Fragment>
+      <PageSidebar />
+      <BasePageLayout className={classNames('lg:ml-108px p-24px lg:p-36px w-full max-w-1332px', className)}>
+        <AccountHeader title={title} subtitle={subtitle} sessionExpiredNavigateTo={sessionExpiredNavigateTo} />
+        {children}
+      </BasePageLayout>
+    </React.Fragment>
   )
 }
