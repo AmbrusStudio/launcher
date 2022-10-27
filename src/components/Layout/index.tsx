@@ -41,14 +41,15 @@ type AccountCenterPageLayoutProps = PageLayoutProps & {
 }
 
 export function AccountCenterPageLayout(props: React.PropsWithChildren<AccountCenterPageLayoutProps>) {
-  const { className, children } = props
   const { title = 'Account', subtitle = 'Center', sessionExpiredNavigateTo = '/account/signup' } = props
   return (
     <React.Fragment>
       <PageSidebar />
-      <BasePageLayout className={classNames('lg:ml-108px p-24px lg:p-36px w-full max-w-1332px', className)}>
-        <AccountHeader title={title} subtitle={subtitle} sessionExpiredNavigateTo={sessionExpiredNavigateTo} />
-        {children}
+      <AccountHeader title={title} subtitle={subtitle} sessionExpiredNavigateTo={sessionExpiredNavigateTo} />
+      <BasePageLayout
+        className={classNames('lg:ml-108px w-full max-w-1332px px-24px lg:px-36px py-24px lg:py-36px', props.className)}
+      >
+        {props.children}
       </BasePageLayout>
     </React.Fragment>
   )

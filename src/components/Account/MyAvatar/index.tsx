@@ -27,7 +27,7 @@ function AvatarItem(props: AvatarItemProps) {
       onClick={onItemClick}
     >
       <img
-        className="block max-w-full h-auto rounded-full object-cover select-none"
+        className="block w-full h-auto rounded-full object-cover select-none"
         src={image}
         alt="Avatar Image"
         loading="lazy"
