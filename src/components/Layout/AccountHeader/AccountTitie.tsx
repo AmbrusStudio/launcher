@@ -9,7 +9,7 @@ type AccountTitieProps = {
 export function AccountTitie(props: AccountTitieProps) {
   const { className, title, subtitle } = props
   return (
-    <div className={classNames('flex flex-col gap-24px', className)}>
+    <div className={classNames('flex flex-col gap-24px px-24px lg:px-0', className)}>
       <h1 className="font-bold uppercase text-20px leading-24px md:text-32px md:leading-40px lg:text-36px lg:leading-44px">
         <span className="text-white mr-8px">{title}</span>
         <span className="text-rust">{subtitle}</span>
