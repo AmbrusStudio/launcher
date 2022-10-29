@@ -1,5 +1,7 @@
-import { useEthers } from '@usedapp/core'
-import React from 'react'
+import * as Sentry from '@sentry/react'
+import { shortenIfAddress, useEthers } from '@usedapp/core'
+import { isAddress } from 'ethers/lib/utils'
+import React, { useMemo } from 'react'
 import useLocalStorageState from 'use-local-storage-state'
 
 import {
@@ -261,4 +263,41 @@ export function useAccountInfo(): UseAccountInfo {
   }, [removeItem])
 
   return { account, expired, remove }
+}
+
+export function useAccountName(username: string | null | undefined) {
+  const value = useMemo<string>(() => {
+    try {
+      return username && isAddress(username) ? shortenIfAddress(username) : username || 'Name'
+    } catch (error) {
+      const e = `'useAccountName error: ${error}`
+      console.error(e)
+
+      return 'Name'
+    }
+  }, [username])
+
+  return value
+}
+
+export function useAccountEmail({
+  email,
+  wallet,
+}: {
+  email: string | null | undefined
+  wallet: string | null | undefined
+}) {
+  const value = useMemo<string>(() => {
+    try {
+      return email || (wallet && isAddress(wallet) ? shortenIfAddress(wallet) : '-')
+    } catch (error) {
+      const e = `'useAccountEmail error: ${error}`
+      console.error(e)
+      Sentry.captureException(e)
+
+      return '-'
+    }
+  }, [email, wallet])
+
+  return value
 }
