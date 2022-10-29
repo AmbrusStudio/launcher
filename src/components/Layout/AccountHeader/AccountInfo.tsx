@@ -1,12 +1,11 @@
 import { EthAddress, ETHTokenType } from '@imtbl/imx-sdk'
-import { shortenIfAddress } from '@usedapp/core'
 import { formatEther } from 'ethers/lib/utils'
 import { isRight } from 'fp-ts/Either'
 import React from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 
 import AvatarDefault from '../../../assets/images/avatar/avatar-default.png'
-import { useAccountInfo, useImmutableXWallet } from '../../../hooks'
+import { useAccountEmail, useAccountInfo, useAccountName, useImmutableXWallet } from '../../../hooks'
 import { ReactButtonProps } from '../../../types'
 import { classNames } from '../../../utils'
 import { IconEthereum } from '../../Icon'
@@ -101,12 +100,10 @@ function AccountMenu(props: AccountMenuProps) {
   const { imxLink, imxClient, walletInfo } = useImmutableXWallet()
 
   const [ethBalance, setEthBalance] = React.useState('0.0')
+  console.log('userInfo account header', userInfo)
 
-  const name =
-    userInfo?.username && userInfo.username.startsWith('0x')
-      ? shortenIfAddress(userInfo?.username)
-      : userInfo?.username || 'Name'
-  const email = userInfo?.email || shortenIfAddress(userInfo?.wallet)
+  const name = useAccountName(userInfo?.username)
+  const email = useAccountEmail({ email: userInfo?.email, wallet: userInfo?.wallet })
 
   const fetchWalletBalances = React.useCallback(async () => {
     if (!imxClient || !walletInfo) return
