@@ -85,6 +85,7 @@ export function AccountInfo() {
   const { imxLink, imxClient, walletInfo } = useImmutableXWallet()
 
   const [ethBalance, setEthBalance] = React.useState('0.0')
+  console.log('userInfo Account/Info', userInfo)
 
   const name = useAccountName(userInfo?.username)
   const email = useAccountEmail({ email: userInfo?.email, wallet: userInfo?.wallet })
