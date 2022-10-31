@@ -116,7 +116,7 @@ function AccountWithdrawModal(props: AccountWithdrawModalProps) {
       if (inputBalance.lte(maxBalance)) return true
       return 'Insufficient funds.'
     } catch (error) {
-      console.log(error)
+      if (error instanceof Error) console.error(`Validate withdraw amount ${error}`)
       return 'Please enter the correct balance.'
     }
   }
@@ -201,7 +201,6 @@ function AccountMenu(props: AccountMenuProps) {
   const { imxLink, imxClient, walletInfo } = useImmutableXWallet()
 
   const { account: userInfo } = useAccountInfo()
-  console.log('userInfo AccountHeader/AccountInfo', userInfo)
   const name = useAccountName(userInfo?.username)
   const email = useAccountEmail({ email: userInfo?.email, wallet: userInfo?.wallet })
 
