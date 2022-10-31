@@ -44,6 +44,10 @@ export type AccountInfoFormData = {
   confirmNewPassword: string
 }
 
+export type AccountWithdrawModalFormData = {
+  withdrawAmount: string
+}
+
 type ResultOk<T = unknown> = { isOk: true; data: T; error: null }
 type ResultErr<E = unknown> = { isOk: false; data: null; error: E }
 

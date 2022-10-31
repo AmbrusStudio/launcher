@@ -44,6 +44,13 @@ export function getRequiredValidationRule(required: boolean, message: string): V
   return { value: true, message }
 }
 
+export function getFloatNumbersValidationPattern(): ValidationRule<RegExp> {
+  return {
+    value: /^\d+\.?\d*$/,
+    message: 'Please enter a number.',
+  }
+}
+
 export function isAccountTokenExpired(token: string): boolean {
   const payload = getAccessTokenPayload(token)
   const now = Date.now()

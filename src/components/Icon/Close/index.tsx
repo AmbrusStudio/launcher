@@ -12,3 +12,5 @@ const Close = (props: SvgIconProps) => {
 }
 
 export default Close
+
+export const IconClose = Close

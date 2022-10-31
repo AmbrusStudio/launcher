@@ -13,6 +13,7 @@ type InputProps = ReactInputProps &
     error?: string
     variant?: InputVariants
     labelRightElement?: React.ReactNode
+    inputRightElement?: React.ReactNode
     forwardedRef: React.ForwardedRef<HTMLInputElement>
   }
 
@@ -49,6 +50,7 @@ function LabeledInput(props: InputProps) {
     label,
     error,
     labelRightElement,
+    inputRightElement,
     forwardedRef,
     variant = 'light',
     type = 'text',
@@ -102,6 +104,7 @@ function LabeledInput(props: InputProps) {
             {!visible && <IconVisible className="w-24px h-auto" aria-label="Make password visible" />}
           </button>
         )}
+        {inputRightElement && <div className="absolute right-24px top-1/2 -translate-y-1/2">{inputRightElement}</div>}
       </div>
     </label>
   )
