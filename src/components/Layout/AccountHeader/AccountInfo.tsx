@@ -1,4 +1,5 @@
 import { EthAddress, ETHTokenType } from '@imtbl/imx-sdk'
+import { BigNumber } from 'ethers'
 import { formatEther, parseEther } from 'ethers/lib/utils'
 import { isRight } from 'fp-ts/Either'
 import React from 'react'
@@ -109,10 +110,13 @@ function AccountWithdrawModal(props: AccountWithdrawModalProps) {
     formState: { errors },
   } = useFormContext<AccountWithdrawModalFormData>()
 
+  const zeroBalance = BigNumber.from(0)
+  const maxBalance = parseEther(ethBalance)
+
   function validateWithdrawAmount(value: string): boolean | string {
     try {
-      const maxBalance = parseEther(ethBalance)
       const inputBalance = parseEther(value)
+      if (inputBalance.lte(zeroBalance)) return 'Please enter the correct balance.'
       if (inputBalance.lte(maxBalance)) return true
       return 'Insufficient funds.'
     } catch (error) {
@@ -179,7 +183,7 @@ function AccountWithdrawModal(props: AccountWithdrawModalProps) {
                 {...register('withdrawAmount', { required: true, pattern, validate: validateWithdrawAmount })}
                 error={getFormErrorMessage(errors.withdrawAmount)}
               />
-              <Button variant="primary" type="submit" disabled={disabled}>
+              <Button variant="primary" type="submit" disabled={disabled || !!errors.withdrawAmount}>
                 Next
               </Button>
             </form>
@@ -233,22 +237,22 @@ function AccountMenu(props: AccountMenuProps) {
     },
     [fetchWalletBalances]
   )
-  const handleDepositClick = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
-    async (e) => {
-      e.stopPropagation()
-      if (!imxLink) return
-      await imxLink.deposit({ type: ETHTokenType.ETH })
-    },
-    [imxLink]
-  )
-  const handleWithdrawClick = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
-    async (e) => {
-      e.stopPropagation()
-      await fetchWalletBalances()
-      setWithdrawModalOpen(true)
-    },
-    [fetchWalletBalances]
-  )
+  // const handleDepositClick = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
+  //   async (e) => {
+  //     e.stopPropagation()
+  //     if (!imxLink) return
+  //     await imxLink.deposit({ type: ETHTokenType.ETH })
+  //   },
+  //   [imxLink]
+  // )
+  // const handleWithdrawClick = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
+  //   async (e) => {
+  //     e.stopPropagation()
+  //     await fetchWalletBalances()
+  //     setWithdrawModalOpen(true)
+  //   },
+  //   [fetchWalletBalances]
+  // )
 
   const handleWithdrawModalClose = React.useCallback(() => {
     setWithdrawModalOpen(false)
@@ -302,12 +306,12 @@ function AccountMenu(props: AccountMenuProps) {
               </div>
             </div>
           </InfoItem>
-          <InfoItem className="pl-24px" onClick={handleDepositClick}>
+          {/* <InfoItem className="pl-24px" onClick={handleDepositClick}>
             <InfoTitle>Deposit</InfoTitle>
           </InfoItem>
           <InfoItem className="pl-24px" onClick={handleWithdrawClick}>
             <InfoTitle>Withdraw</InfoTitle>
-          </InfoItem>
+          </InfoItem> */}
         </div>
       </div>
       <AccountWithdrawModal
