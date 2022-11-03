@@ -13,6 +13,8 @@ import {
   ADDRESS_E4C_Ranger_Ultimate_Editions,
   defaultChainId,
 } from '../../contracts'
+import E4C_Rangers_KitGold from '../../data/Gold_Edition/E4C_Rangers_Kit.json'
+import E4C_Rangers_KitRangers from '../../data/Rangers_Edition/E4C_Rangers_Kit.json'
 import { MetadataResponse, TokenMetadata } from '../../types'
 import { parseTokenId } from '../../utils'
 
@@ -41,6 +43,8 @@ interface LoadingState {
 
 const defaultState: MetadataState = {
   GoldEdition: {
+    // 1 - 450
+    // 451 - 900
     [Mainnet.chainId]: {
       lastTime: 0,
       url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Gold_Edition/E4C_Rangers.json',
@@ -59,6 +63,8 @@ const defaultState: MetadataState = {
     },
   },
   RangersEdition: {
+    // 1 - 646
+    // 647 - 1292
     [Mainnet.chainId]: {
       lastTime: 0,
       url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Rangers_Edition/E4C_Rangers.json',
@@ -77,6 +83,7 @@ const defaultState: MetadataState = {
     },
   },
   UltimateEdition: {
+    // 1 - 15
     [Mainnet.chainId]: {
       lastTime: 0,
       url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Ultimate_Edition/E4C_Rangers.json',
@@ -113,7 +120,7 @@ export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
         signal: signal,
       })
 
-      return response.data
+      return [...response.data, ...E4C_Rangers_KitGold]
     } catch (error) {
       const e = `metadata/fetchMetadataGoldEdition error: ${error}`
       console.log('error', e)
@@ -131,7 +138,7 @@ export const fetchMetadataRangersEdition = createAsyncThunk<MetadataResponse[]>(
       const response = await axios.get(defaultState.RangersEdition[defaultChainId].url, {
         signal: signal,
       })
-      return response.data
+      return [...response.data, ...E4C_Rangers_KitRangers]
     } catch (error) {
       const e = `metadata/fetchMetadataRangersEdition error: ${error}`
       console.log('error', e)
