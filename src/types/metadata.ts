@@ -33,3 +33,8 @@ export type MetadataResponse = {
   image: string
   attributes: TraitItem[]
 }
+
+export enum TraitName {
+  Rin = 'Rin',
+  Kit = 'Kit',
+}

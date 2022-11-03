@@ -67,7 +67,7 @@ const SimpleSlider: FC<Props> = ({ nfts, active, setActive }) => {
                 'opacity-100 border-white': index === active,
               })}
             >
-              <TokenMedia src={imageSizeConversion(nft.image, 2000)} />
+              <TokenMedia src={imageSizeConversion(nft.image, 2000)} trait={nft.trait} />
             </div>
           </div>
         ))}

@@ -5,6 +5,7 @@ import { useMemo } from 'react'
 import { NFTE4CRanger } from '../types'
 import { nftsForOwner } from '../utils'
 import { useOriginalOwners, useUpgradeds } from './useE4CRanger'
+import { useImmutableXUserNFTAssets, useImmutableXWallet } from './useImmutableX'
 import { useMetadata } from './useMetadata'
 import { useTokenIdByContract, useTokenIdByOwner } from './useTokenId'
 
@@ -153,6 +154,51 @@ export function useERC721UltimateEditionList({ tokenAddress }: { tokenAddress: s
   // NFT metadata
   const nftsForAccount = useMemo<NFTE4CRanger[]>(
     () => nftsForOwner(tokenAddress, metadata, tokenId, [], []),
+    [tokenId, tokenAddress, metadata]
+  )
+
+  return {
+    nfts: nftsForAccount,
+    loading: loading,
+  }
+}
+
+/**
+ * useERC721ImmutableXList
+ * @param param
+ * @returns
+ */
+export function useERC721ImmutableXList({
+  holderAddress,
+  tokenAddress,
+  collection,
+}: {
+  holderAddress: string
+  tokenAddress: string
+  collection: string
+}) {
+  const { walletInfo } = useImmutableXWallet()
+
+  const { immutableXAssets, loading } = useImmutableXUserNFTAssets({
+    user: walletInfo?.address || '',
+    collection,
+  })
+
+  const tokenId = immutableXAssets.map((asset) => asset.token_id)
+
+  const { getMetadataByAddress } = useMetadata()
+  const metadata = getMetadataByAddress(tokenAddress)
+
+  // NFT metadata
+  const nftsForAccount = useMemo<NFTE4CRanger[]>(
+    () =>
+      nftsForOwner(
+        tokenAddress,
+        metadata,
+        tokenId,
+        tokenId.map(() => false),
+        []
+      ),
     [tokenId, tokenAddress, metadata]
   )
 

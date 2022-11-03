@@ -16,13 +16,16 @@ import {
   ADDRESS_E4C_Ranger_Rangers_Edition,
   ADDRESS_E4CRanger_Gold_Holder,
   ADDRESS_E4CRanger_Rangers_Holder,
+  ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
+  ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
 } from '../../../contracts'
 import { useWeb3Modal } from '../../../hooks'
-import { useERC721ListState } from '../../../hooks/useERC721List'
+import { useERC721ImmutableXList, useERC721ListState } from '../../../hooks/useERC721List'
 
 function AccountNFT() {
   const { account, active } = useEthers()
   const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
+
   const isMd = useMediaQuery({ query: '(min-width: 768px)' })
   const update = useUpdate()
 
@@ -34,9 +37,24 @@ function AccountNFT() {
     holderAddress: ADDRESS_E4CRanger_Rangers_Holder,
     tokenAddress: ADDRESS_E4C_Ranger_Rangers_Edition,
   })
+  const { nfts: nftsImmutableXGold, loading: loadingImmutableXGold } = useERC721ImmutableXList({
+    holderAddress: ADDRESS_E4CRanger_Gold_Holder,
+    tokenAddress: ADDRESS_E4C_Ranger_Gold_Edition,
+    collection: ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
+  })
+  const { nfts: nftsImmutableXRangers, loading: loadingImmutableXRangers } = useERC721ImmutableXList({
+    holderAddress: ADDRESS_E4CRanger_Rangers_Holder,
+    tokenAddress: ADDRESS_E4C_Ranger_Rangers_Edition,
+    collection: ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
+  })
 
-  const nfts = useMemo(() => [...nftsGold, ...nftsRangers], [nftsGold, nftsRangers])
-  const loading = useMemo(() => loadingGold && loadingRangers, [loadingGold, loadingRangers])
+  const nfts = useMemo(
+    () => [...nftsGold, ...nftsRangers, ...nftsImmutableXGold, ...nftsImmutableXRangers],
+    [nftsGold, nftsRangers, nftsImmutableXGold, nftsImmutableXRangers]
+  )
+  const loading = useMemo(() => {
+    return loadingGold && loadingRangers && loadingImmutableXGold && loadingImmutableXRangers
+  }, [loadingGold, loadingRangers, loadingImmutableXGold, loadingImmutableXRangers])
 
   console.log('nfts', nfts)
 

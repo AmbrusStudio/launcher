@@ -43,7 +43,7 @@ export const nftsForOwner = (
   upgradeds: NFTE4CRangerUpgraded[],
   originalOwners: string[]
 ): NFTE4CRanger[] => {
-  console.log('metadata', metadata)
+  console.log('metadata', metadata.length)
 
   const result = tokenIds
     .map((tokenId, index) => {
