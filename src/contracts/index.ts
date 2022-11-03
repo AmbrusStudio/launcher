@@ -3,6 +3,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 import { Network } from 'alchemy-sdk'
 
 import { getDefaultChainId, getViteEnv } from '../utils'
+export * from './immutableX'
 
 export const defaultChainId = getDefaultChainId()
 

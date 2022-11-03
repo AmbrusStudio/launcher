@@ -9,12 +9,12 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { PhotoProvider, PhotoView } from 'react-photo-view'
 
 import withdraw from '../../../assets/images/withdraw.png'
-import { BlindBoxPictures } from '../../../constants'
 import { useWeb3Modal } from '../../../hooks'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
 import { useHandleState } from '../../../hooks/useHandleState'
-import { NFTE4CRanger } from '../../../types'
+import { NFTE4CRanger, TraitName } from '../../../types'
 import { getHolderByAddress } from '../../../utils'
+import { BlindBoxVideo, traitName } from '../../../utils/bindbox'
 // import Star from '../../Icon/Star'
 import ConfirmUnstakeModal from '../ConfirmUnstakeModal'
 import ConfirmUpgradeModal from '../ConfirmUpgradeModal'
@@ -120,46 +120,52 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts, update }) => {
           <div className="px-6 xl:px-2.5">
             <NFTDetails nft={nft} tokenId={nft.tokenId} />
           </div>
-          {nft.upgraded === false && (
-            <Actions sx={{ marginTop: 'auto' }} direction="row" spacing={1.5} className="fixed left-6 bottom-6 right-6">
-              {/* <button className="u-btn u-btn-primary max-w-[120px] relative !py-0">
+          {nft.upgraded === false ||
+            (traitName(nft.trait) !== TraitName.Kit && (
+              <Actions
+                sx={{ marginTop: 'auto' }}
+                direction="row"
+                spacing={1.5}
+                className="fixed left-6 bottom-6 right-6"
+              >
+                {/* <button className="u-btn u-btn-primary max-w-[120px] relative !py-0">
                 <Star sx={{ fontSize: '36px' }} />
               </button> */}
-              {chainIdMismatch ? (
-                <button className={'u-btn u-btn-primary'} onClick={() => switchNetwork()}>
-                  Switch Network
-                </button>
-              ) : nft.staking ? (
-                <button
-                  disabled={unstakeLoading}
-                  className={classNames('u-btn u-btn-primary', {
-                    loading: unstakeLoading,
-                  })}
-                  onClick={() => setVisibleStatusCheckModal(true)}
-                >
-                  Status Check
-                </button>
-              ) : (
-                <button
-                  disabled={stakeLoading}
-                  className={classNames('u-btn u-btn-primary', {
-                    loading: stakeLoading,
-                  })}
-                  onClick={() => setVisibleStakeInfoModal(true)}
-                >
-                  Upgrade
-                </button>
-              )}
-              {
-                <button
-                  className="u-btn max-w-[120px] !bg-[#465358]"
-                  onClick={() => window.open('https://imxtools.io/withdrawal')}
-                >
-                  <img className="w-9 h-9" src={withdraw} alt="imxtools withdrawal" />
-                </button>
-              }
-            </Actions>
-          )}
+                {chainIdMismatch ? (
+                  <button className={'u-btn u-btn-primary'} onClick={() => switchNetwork()}>
+                    Switch Network
+                  </button>
+                ) : nft.staking ? (
+                  <button
+                    disabled={unstakeLoading}
+                    className={classNames('u-btn u-btn-primary', {
+                      loading: unstakeLoading,
+                    })}
+                    onClick={() => setVisibleStatusCheckModal(true)}
+                  >
+                    Status Check
+                  </button>
+                ) : (
+                  <button
+                    disabled={stakeLoading}
+                    className={classNames('u-btn u-btn-primary', {
+                      loading: stakeLoading,
+                    })}
+                    onClick={() => setVisibleStakeInfoModal(true)}
+                  >
+                    Upgrade
+                  </button>
+                )}
+                {
+                  <button
+                    className="u-btn max-w-[120px] !bg-[#465358]"
+                    onClick={() => window.open('https://imxtools.io/withdrawal')}
+                  >
+                    <img className="w-9 h-9" src={withdraw} alt="imxtools withdrawal" />
+                  </button>
+                }
+              </Actions>
+            ))}
         </>
       )}
 
@@ -192,7 +198,7 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts, update }) => {
       />
 
       <PhotoProvider>
-        <PhotoView src={BlindBoxPictures}>
+        <PhotoView src={BlindBoxVideo(nft.trait)}>
           <button id="image-viewer" className="text-white fixed left-0 top-0 translate-x-[-100%]">
             Click
           </button>

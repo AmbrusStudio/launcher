@@ -1,8 +1,8 @@
 import { groupBy } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { BlindBoxMode, BlindBoxTrait } from '../constants'
-import { Trait } from '../types'
+import { Blindbox, BlindBoxTrait } from '../constants'
+import { Trait, TraitName } from '../types'
 import { Filter, GALLERY_FILTER, GALLERY_FILTER_LIST } from '../types/gallery'
 import { toggleFilterCheckedFn, toggleFilterOpenFn } from '../utils'
 import { useMetadata } from './useMetadata'
@@ -29,7 +29,11 @@ export function useGalleryFilter() {
         for (const key in propertyGroupByValue) {
           if (Object.prototype.hasOwnProperty.call(propertyGroupByValue, key)) {
             list.push({
-              label: !BlindBoxMode || BlindBoxTrait.includes(propertyGroupByValue[key][0].trait_type) ? key : 'unknown',
+              label:
+                // TODO
+                !Blindbox[TraitName.Rin].BlindBoxMode || BlindBoxTrait.includes(propertyGroupByValue[key][0].trait_type)
+                  ? key
+                  : 'unknown',
               count: propertyGroupByValue[key].length,
             })
           }
