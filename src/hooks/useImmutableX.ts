@@ -12,29 +12,41 @@ export const useImmutableXWallet = () => React.useContext(ImmutableXWalletContex
  * @returns
  */
 export const useImmutableXUserNFTAssets = ({ user, collection }: { user: string; collection: string }) => {
+  const [loading, setLoading] = useState<boolean>(false)
   const { imxClient } = useImmutableXWallet()
   const [immutableXAssets, setImmutableXAssets] = useState<ImmutableGetAssetsResultCodec>([])
 
   const getAssets = useCallback(async () => {
-    if (!imxClient || !user) return
+    if (!imxClient || !user) {
+      setLoading(false)
+      return
+    }
 
-    let assetCursor
-    let assets: ImmutableGetAssetsResultCodec = []
-    do {
-      const assetRequest: ImmutableMethodResults.ImmutableGetAssetsResult = await imxClient.getAssets({
-        user,
-        cursor: assetCursor,
-        status: 'imx',
-        collection,
-      } as ImmutableMethodParams.ImmutableGetAssetsParamsTS)
+    setLoading(true)
 
-      console.log('assetRequest', assetRequest)
+    try {
+      let assetCursor
+      let assets: ImmutableGetAssetsResultCodec = []
+      do {
+        const assetRequest: ImmutableMethodResults.ImmutableGetAssetsResult = await imxClient.getAssets({
+          user,
+          cursor: assetCursor,
+          status: 'imx',
+          collection,
+        } as ImmutableMethodParams.ImmutableGetAssetsParamsTS)
 
-      assets = assets.concat(assetRequest.result)
-      assetCursor = assetRequest.cursor
-    } while (assetCursor)
+        console.log('assetRequest', assetRequest)
 
-    setImmutableXAssets(assets)
+        assets = assets.concat(assetRequest.result)
+        assetCursor = assetRequest.cursor
+      } while (assetCursor)
+
+      setImmutableXAssets(assets)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
   }, [imxClient, user, collection])
 
   useEffect(() => {
@@ -43,6 +55,6 @@ export const useImmutableXUserNFTAssets = ({ user, collection }: { user: string;
 
   return {
     immutableXAssets,
-    loading: false,
+    loading: loading,
   }
 }

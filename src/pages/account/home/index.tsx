@@ -15,9 +15,11 @@ import {
   ADDRESS_E4C_Ranger_Ultimate_Edition,
   ADDRESS_E4CRanger_Gold_Holder,
   ADDRESS_E4CRanger_Rangers_Holder,
+  ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
+  ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
 } from '../../../contracts'
 import { useWeb3Modal } from '../../../hooks'
-import { useERC721List, useERC721UltimateEditionList } from '../../../hooks/useERC721List'
+import { useERC721ImmutableXList, useERC721List, useERC721UltimateEditionList } from '../../../hooks/useERC721List'
 import { GameInfo } from '../../../types'
 
 export function Home() {
@@ -38,12 +40,26 @@ export function Home() {
     tokenAddress: ADDRESS_E4C_Ranger_Ultimate_Edition,
   })
 
+  const { nfts: nftsImmutableXGold, loading: loadingImmutableXGold } = useERC721ImmutableXList({
+    holderAddress: ADDRESS_E4CRanger_Gold_Holder,
+    tokenAddress: ADDRESS_E4C_Ranger_Gold_Edition,
+    collection: ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
+  })
+  const { nfts: nftsImmutableXRangers, loading: loadingImmutableXRangers } = useERC721ImmutableXList({
+    holderAddress: ADDRESS_E4CRanger_Rangers_Holder,
+    tokenAddress: ADDRESS_E4C_Ranger_Rangers_Edition,
+    collection: ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
+  })
+
   console.log('nftsUltimate', nftsUltimate)
 
-  const nfts = useMemo(() => [...nftsGold, ...nftsRangers, ...nftsUltimate], [nftsGold, nftsRangers, nftsUltimate])
+  const nfts = useMemo(
+    () => [...nftsGold, ...nftsRangers, ...nftsUltimate, ...nftsImmutableXGold, ...nftsImmutableXRangers],
+    [nftsGold, nftsRangers, nftsUltimate, nftsImmutableXGold, nftsImmutableXRangers]
+  )
   const loading = useMemo(
-    () => loadingGold && loadingRangers && loadingUltimate,
-    [loadingGold, loadingRangers, loadingUltimate]
+    () => loadingGold && loadingRangers && loadingUltimate && loadingImmutableXGold && loadingImmutableXRangers,
+    [loadingGold, loadingRangers, loadingUltimate, loadingImmutableXGold, loadingImmutableXRangers]
   )
 
   const fetchAllGames = useCallback(async (signal: AbortSignal) => {
