@@ -9,10 +9,11 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { PhotoProvider, PhotoView } from 'react-photo-view'
 
 import withdraw from '../../../assets/images/withdraw.png'
-import { useWeb3Modal } from '../../../hooks'
+import { ADDRESS_ImmutableX_Holder } from '../../../contracts'
+import { useImmutableXERC721AssetTransfers, useWeb3Modal } from '../../../hooks'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
 import { useHandleState } from '../../../hooks/useHandleState'
-import { NFTE4CRanger, TraitName } from '../../../types'
+import { MetadataStatus, NFTE4CRanger, TraitName } from '../../../types'
 import { getHolderByAddress } from '../../../utils'
 import { BlindBoxVideo, traitName } from '../../../utils/bindbox'
 // import Star from '../../Icon/Star'
@@ -52,14 +53,26 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts, update }) => {
   const { state: stakeState, send: stake } = useERC721SafeTransferFrom(nft.address)
   const { state: unstakeState, send: unstake } = useE4CRangerUnstake(getHolderByAddress(nft.address))
 
+  const { send: transfer } = useImmutableXERC721AssetTransfers()
+
   const handleState = useHandleState()
 
   // handle stake
   const onStake = useCallback(
     (tokenId: string) => {
-      stake(account, getHolderByAddress(nft.address), tokenId)
+      if (nft.status === MetadataStatus.Ethereum) {
+        stake(account, getHolderByAddress(nft.address), tokenId)
+      } else if (nft.status === MetadataStatus.ImmutableX) {
+        transfer({
+          tokenId: tokenId,
+          tokenAddress: nft.address,
+          toAddress: ADDRESS_ImmutableX_Holder,
+        })
+      } else {
+        console.error('No matching stake method')
+      }
     },
-    [account, stake, nft.address]
+    [nft.status, nft.address, stake, account, transfer]
   )
 
   // handle unstake

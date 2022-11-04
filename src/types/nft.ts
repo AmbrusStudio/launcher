@@ -1,4 +1,4 @@
-import { Metadata, TraitItem } from './metadata'
+import { Metadata, MetadataStatus, TraitItem } from './metadata'
 
 export type StakeAnnouncement = {
   title: string
@@ -102,6 +102,7 @@ export type NFTE4CRanger = {
   tokenId: string
   upgraded: NFTE4CRangerUpgraded
   staking: boolean
+  status: MetadataStatus
 } & Metadata
 
 export type TokenMetadata = {

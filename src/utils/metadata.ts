@@ -14,6 +14,7 @@ import {
 } from '../contracts'
 import { stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
 import {
+  MetadataStatus,
   NFTE4CRanger,
   NFTE4CRangerUpgraded,
   NFTEdition,
@@ -34,16 +35,17 @@ export const parseTokenId = (name: string): string => {
 }
 
 /**
- * nftsForOwner
+ * formatMetadata
  * @param tokenId
  * @returns
  */
-export const nftsForOwner = (
+export const formatMetadata = (
   address: string,
   metadata: TokenMetadata[],
   tokenIds: string[],
   upgradeds: NFTE4CRangerUpgraded[],
-  originalOwners: string[]
+  originalOwners: string[],
+  status: MetadataStatus
 ): NFTE4CRanger[] => {
   const result = tokenIds
     .map((tokenId, index) => {
@@ -56,6 +58,7 @@ export const nftsForOwner = (
           tokenId: tokenId,
           upgraded: upgradeds?.[index],
           staking: originalOwners?.[index] ? originalOwners[index] !== constants.AddressZero : false,
+          status,
         }
       } else {
         const e = `Metadata data not found. tokenId: ${tokenId}`
