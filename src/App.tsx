@@ -12,6 +12,10 @@ import { SignUp } from './pages/account/signup'
 import Gallery from './pages/gallery'
 import { AppDispatch } from './store'
 import {
+  fetchMetadataGoldEdition as fetchMetadataImmutableXGoldEdition,
+  fetchMetadataRangersEdition as fetchMetadataImmutableXRangersEdition,
+} from './store/metadata/metadataImmutableXSlice'
+import {
   fetchMetadataGoldEdition,
   fetchMetadataRangersEdition,
   fetchMetadataUltimateEdition,
@@ -24,10 +28,16 @@ function App() {
     const promiseGoldEdition = dispatch(fetchMetadataGoldEdition())
     const promiseRangersEdition = dispatch(fetchMetadataRangersEdition())
     const promiseUltimateEdition = dispatch(fetchMetadataUltimateEdition())
+
+    const promiseImmutableXGoldEdition = dispatch(fetchMetadataImmutableXGoldEdition())
+    const promiseImmutableXRangersEdition = dispatch(fetchMetadataImmutableXRangersEdition())
     return () => {
       promiseGoldEdition.abort()
       promiseRangersEdition.abort()
       promiseUltimateEdition.abort()
+
+      promiseImmutableXGoldEdition.abort()
+      promiseImmutableXRangersEdition.abort()
     }
   }, [dispatch])
 

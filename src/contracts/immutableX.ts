@@ -4,6 +4,8 @@ import { getDefaultChainId } from '../utils'
 
 export const defaultChainId = getDefaultChainId()
 
+// ImmutableX Goerli.chainId instead of ethNetwork: "goerli"
+
 // E4C Ranger Gold Edition - ImmutableX
 export const ADDRESS_ImmutableX_E4C_Ranger_Gold_Editions = {
   [Mainnet.chainId]: '0xba265b93519e6473f34f46ee35f4b23970f41a3f',

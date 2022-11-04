@@ -38,3 +38,8 @@ export enum TraitName {
   Rin = 'Rin',
   Kit = 'Kit',
 }
+
+export enum MetadataStatus {
+  'Ethereum' = 'Ethereum',
+  'ImmutableX' = 'ImmutableX',
+}

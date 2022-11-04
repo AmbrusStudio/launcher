@@ -13,8 +13,6 @@ import {
   ADDRESS_E4C_Ranger_Ultimate_Editions,
   defaultChainId,
 } from '../../contracts'
-import E4C_Rangers_KitGold from '../../data/Gold_Edition/E4C_Rangers_Kit.json'
-import E4C_Rangers_KitRangers from '../../data/Rangers_Edition/E4C_Rangers_Kit.json'
 import { MetadataResponse, TokenMetadata } from '../../types'
 import { parseTokenId } from '../../utils'
 
@@ -28,6 +26,8 @@ type MetadataEdition = {
     metadata: TokenMetadata[]
   }
 }
+
+// ethNetwork: 'goerli'
 
 interface MetadataState {
   GoldEdition: MetadataEdition
@@ -120,7 +120,7 @@ export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
         signal: signal,
       })
 
-      return [...response.data, ...E4C_Rangers_KitGold]
+      return response.data.slice(0, 450)
     } catch (error) {
       const e = `metadata/fetchMetadataGoldEdition error: ${error}`
       console.log('error', e)
@@ -138,7 +138,7 @@ export const fetchMetadataRangersEdition = createAsyncThunk<MetadataResponse[]>(
       const response = await axios.get(defaultState.RangersEdition[defaultChainId].url, {
         signal: signal,
       })
-      return [...response.data, ...E4C_Rangers_KitRangers]
+      return response.data.slice(0, 646)
     } catch (error) {
       const e = `metadata/fetchMetadataRangersEdition error: ${error}`
       console.log('error', e)

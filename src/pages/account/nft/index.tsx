@@ -38,13 +38,9 @@ function AccountNFT() {
     tokenAddress: ADDRESS_E4C_Ranger_Rangers_Edition,
   })
   const { nfts: nftsImmutableXGold, loading: loadingImmutableXGold } = useERC721ImmutableXList({
-    holderAddress: ADDRESS_E4CRanger_Gold_Holder,
-    tokenAddress: ADDRESS_E4C_Ranger_Gold_Edition,
     collection: ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
   })
   const { nfts: nftsImmutableXRangers, loading: loadingImmutableXRangers } = useERC721ImmutableXList({
-    holderAddress: ADDRESS_E4CRanger_Rangers_Holder,
-    tokenAddress: ADDRESS_E4C_Ranger_Rangers_Edition,
     collection: ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
   })
 

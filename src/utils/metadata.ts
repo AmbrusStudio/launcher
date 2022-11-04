@@ -9,6 +9,8 @@ import {
   ADDRESS_E4C_Ranger_Ultimate_Edition,
   ADDRESS_E4CRanger_Gold_Holder,
   ADDRESS_E4CRanger_Rangers_Holder,
+  ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
+  ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
 } from '../contracts'
 import { stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
 import {
@@ -43,33 +45,24 @@ export const nftsForOwner = (
   upgradeds: NFTE4CRangerUpgraded[],
   originalOwners: string[]
 ): NFTE4CRanger[] => {
-  console.log('metadata', metadata.length)
-
   const result = tokenIds
     .map((tokenId, index) => {
-      let item = metadata[Number(tokenId) - 1]
-
-      if (!item) {
-        return
-      }
-      if (item.tokenId !== tokenId) {
-        const e = `Metadata data not found by subscript. tokenId: ${tokenId}`
+      // Start search
+      const findResult = metadata.find((i) => i.tokenId === tokenId)
+      if (findResult) {
+        return {
+          ...findResult,
+          address,
+          tokenId: tokenId,
+          upgraded: upgradeds?.[index],
+          staking: originalOwners?.[index] ? originalOwners[index] !== constants.AddressZero : false,
+        }
+      } else {
+        const e = `Metadata data not found. tokenId: ${tokenId}`
         console.error(e)
         Sentry.captureException(e)
 
-        // Start search
-        const found = metadata.find((i) => i.tokenId === tokenId)
-        if (found) {
-          item = found
-        }
-      }
-
-      return {
-        ...item,
-        address,
-        tokenId: tokenId,
-        upgraded: upgradeds?.[index],
-        staking: originalOwners?.[index] ? originalOwners[index] !== constants.AddressZero : false,
+        return
       }
     })
     .filter((i) => i) as NFTE4CRanger[]
@@ -84,13 +77,19 @@ export const nftsForOwner = (
  * @returns
  */
 export const getEdition = (upgraded: NFTE4CRangerUpgraded, address: string): NFTEdition => {
-  if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition)) {
+  if (
+    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition) ||
+    getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition)
+  ) {
     if (upgraded) {
       return NFTEdition.GoldPlusEdition
     } else {
       return NFTEdition.GoldEdition
     }
-  } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition)) {
+  } else if (
+    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition) ||
+    getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition)
+  ) {
     if (upgraded) {
       return NFTEdition.RangersPlusEdition
     } else {
@@ -155,7 +154,9 @@ export const getHolderByAddress = (address: string): string => {
   } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition)) {
     return ADDRESS_E4CRanger_Rangers_Holder
   } else {
-    throw new Error('holder not found')
+    // TODO
+    // throw new Error('holder not found')
+    return ADDRESS_E4CRanger_Gold_Holder
   }
 }
 
