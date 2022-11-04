@@ -10,7 +10,7 @@ import { PhotoProvider, PhotoView } from 'react-photo-view'
 
 import withdraw from '../../../assets/images/withdraw.png'
 import { ADDRESS_ImmutableX_Holder } from '../../../contracts'
-import { useImmutableXERC721AssetTransfers, useWeb3Modal } from '../../../hooks'
+import { useImmutableXERC721AssetTransfers, useImmutableXERC721AssetUnstake, useWeb3Modal } from '../../../hooks'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
 import { useHandleState } from '../../../hooks/useHandleState'
 import { MetadataStatus, NFTE4CRanger, TraitName } from '../../../types'
@@ -54,6 +54,7 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts, update }) => {
   const { state: unstakeState, send: unstake } = useE4CRangerUnstake(getHolderByAddress(nft.address))
 
   const { send: transfer } = useImmutableXERC721AssetTransfers()
+  const { send: unstakeHolder } = useImmutableXERC721AssetUnstake()
 
   const handleState = useHandleState()
 
@@ -78,9 +79,18 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts, update }) => {
   // handle unstake
   const onUnstake = useCallback(
     (tokenId: string) => {
-      unstake(tokenId)
+      if (nft.status === MetadataStatus.Ethereum) {
+        unstake(tokenId)
+      } else if (nft.status === MetadataStatus.ImmutableX) {
+        unstakeHolder({
+          tokenId: tokenId,
+          tokenAddress: nft.address,
+        })
+      } else {
+        console.error('No matching unstake method')
+      }
     },
-    [unstake]
+    [nft.address, nft.status, unstake, unstakeHolder]
   )
 
   // Watch stakeState

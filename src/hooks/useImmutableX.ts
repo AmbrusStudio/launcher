@@ -1,6 +1,7 @@
 import { ERC721TokenType, ImmutableMethodParams, ImmutableMethodResults } from '@imtbl/imx-sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 
+import { unstakeApi } from '../api/block'
 import { ImmutableXWalletContext } from '../context'
 
 type ImmutableGetAssetsResultCodec = ImmutableMethodResults.ImmutableGetAssetsResult['result']
@@ -116,9 +117,49 @@ export const useImmutableXERC721AssetTransfers = () => {
 }
 
 export const useImmutableXERC721AssetUnstake = () => {
-  const unstake = useCallback(() => {
-    //
-  }, [])
+  const { imxLink, walletInfo } = useImmutableXWallet()
+
+  const getWalletSignSignature = useCallback(
+    async (tokenAddress: string, tokenId: string) => {
+      if (!imxLink || !walletInfo) return null
+      const message = `Token address: ${tokenAddress}\nToken id: ${tokenId}`
+      const { result: signature } = await imxLink.sign({ message, description: message })
+      console.debug('account', walletInfo.address, 'signature', signature)
+      return signature
+    },
+    [imxLink, walletInfo]
+  )
+
+  const unstake = useCallback(
+    async ({ tokenAddress, tokenId }: { tokenAddress: string; tokenId: string }) => {
+      if (!imxLink || !walletInfo) {
+        return
+      }
+
+      if (!tokenId || !tokenAddress) {
+        console.error(`Missing parameters: tokenId: ${tokenId}, tokenAddress: ${tokenAddress}`)
+        return
+      }
+
+      const signature = await getWalletSignSignature(tokenAddress, tokenId)
+
+      if (!signature) {
+        console.error(`Missing parameters: signature: ${signature}`)
+        return
+      }
+
+      const result = await unstakeApi<any>({
+        owner: walletInfo.address,
+        tokenAddress,
+        tokenId,
+        signature,
+      })
+      console.log('result', result)
+
+      return result
+    },
+    [getWalletSignSignature, imxLink, walletInfo]
+  )
 
   return {
     send: unstake,
