@@ -109,13 +109,19 @@ export const getEdition = (upgraded: NFTE4CRangerUpgraded, address: string): NFT
  * @returns
  */
 export const getGalleryEdition = (upgraded: NFTE4CRangerUpgraded, address: string): string => {
-  if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition)) {
+  if (
+    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition) ||
+    getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition)
+  ) {
     if (upgraded) {
       return 'Gold+'
     } else {
       return 'Gold'
     }
-  } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition)) {
+  } else if (
+    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition) ||
+    getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition)
+  ) {
     if (upgraded) {
       return 'Rangers+'
     } else {
@@ -134,9 +140,15 @@ export const getGalleryEdition = (upgraded: NFTE4CRangerUpgraded, address: strin
  * @returns
  */
 export const getStakeAnnouncement = (address: string): StakeAnnouncement[] => {
-  if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition)) {
+  if (
+    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition) ||
+    getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition)
+  ) {
     return stakeAnnouncementGold
-  } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition)) {
+  } else if (
+    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition) ||
+    getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition)
+  ) {
     return stakeAnnouncementRangers
   } else {
     return []
@@ -149,14 +161,18 @@ export const getStakeAnnouncement = (address: string): StakeAnnouncement[] => {
  * @returns
  */
 export const getHolderByAddress = (address: string): string => {
-  if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition)) {
+  if (
+    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition) ||
+    getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition)
+  ) {
     return ADDRESS_E4CRanger_Gold_Holder
-  } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition)) {
+  } else if (
+    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition) ||
+    getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition)
+  ) {
     return ADDRESS_E4CRanger_Rangers_Holder
   } else {
-    // TODO
-    // throw new Error('holder not found')
-    return ADDRESS_E4CRanger_Gold_Holder
+    throw new Error('holder not found')
   }
 }
 
