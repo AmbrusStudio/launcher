@@ -20,7 +20,7 @@ import {
   ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
 } from '../../../contracts'
 import { useWeb3Modal } from '../../../hooks'
-import { useERC721ImmutableXList, useERC721ListState } from '../../../hooks/useERC721List'
+import { useERC721ImmutableXListState, useERC721ListState } from '../../../hooks/useERC721List'
 
 function AccountNFT() {
   const { account, active } = useEthers()
@@ -37,10 +37,10 @@ function AccountNFT() {
     holderAddress: ADDRESS_E4CRanger_Rangers_Holder,
     tokenAddress: ADDRESS_E4C_Ranger_Rangers_Edition,
   })
-  const { nfts: nftsImmutableXGold, loading: loadingImmutableXGold } = useERC721ImmutableXList({
+  const { nfts: nftsImmutableXGold, loading: loadingImmutableXGold } = useERC721ImmutableXListState({
     collection: ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
   })
-  const { nfts: nftsImmutableXRangers, loading: loadingImmutableXRangers } = useERC721ImmutableXList({
+  const { nfts: nftsImmutableXRangers, loading: loadingImmutableXRangers } = useERC721ImmutableXListState({
     collection: ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
   })
 

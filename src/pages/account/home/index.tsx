@@ -47,8 +47,6 @@ export function Home() {
     collection: ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
   })
 
-  console.log('nftsUltimate', nftsUltimate)
-
   const nfts = useMemo(
     () => [...nftsGold, ...nftsRangers, ...nftsUltimate, ...nftsImmutableXGold, ...nftsImmutableXRangers],
     [nftsGold, nftsRangers, nftsUltimate, nftsImmutableXGold, nftsImmutableXRangers]

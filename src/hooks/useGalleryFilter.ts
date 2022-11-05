@@ -19,6 +19,7 @@ export function useGalleryFilter() {
   const galleryFilter = useMemo<GALLERY_FILTER[]>(() => {
     // Handle Filter Property
 
+    // Hide blindbox trait
     const metadatas = metadataAllEdition.map((metadata) => {
       return {
         ...metadata,

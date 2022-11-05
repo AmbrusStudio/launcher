@@ -1,8 +1,9 @@
 import { ERC721TokenType, ImmutableMethodParams, ImmutableMethodResults } from '@imtbl/imx-sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 
-import { unstakeApi } from '../api/block'
+import { immutableXUnstakeApi } from '../api/immutableX'
 import { ImmutableXWalletContext } from '../context'
+import { ADDRESS_ImmutableX_Holder } from '../contracts'
 
 type ImmutableGetAssetsResultCodec = ImmutableMethodResults.ImmutableGetAssetsResult['result']
 
@@ -148,7 +149,7 @@ export const useImmutableXERC721AssetUnstake = () => {
         return
       }
 
-      const result = await unstakeApi<any>({
+      const result = await immutableXUnstakeApi<any>({
         owner: walletInfo.address,
         tokenAddress,
         tokenId,
@@ -165,4 +166,57 @@ export const useImmutableXERC721AssetUnstake = () => {
     send: unstake,
     state: 'Success',
   }
+}
+
+/**
+ * useImmutableXOriginalOwner
+ * @returns
+ */
+export const useImmutableXOriginalOwner = (tokenIds: string[]) => {
+  const [originalOwner, setOriginalOwner] = useState<string[]>([])
+
+  const calls = useCallback(async (tokenIds: string[]): Promise<void> => {
+    try {
+      // const result = await getImmutableXOriginalOwnerApi(tokenIds[0])
+      // console.log('getImmutableXOriginalOwnerApi result:', result)
+
+      const originalOwnerResult = tokenIds.map(() => ADDRESS_ImmutableX_Holder)
+      setOriginalOwner(originalOwnerResult)
+    } catch (error) {
+      console.log(error)
+    }
+  }, [])
+
+  useEffect(() => {
+    calls(tokenIds)
+  }, [calls, tokenIds])
+
+  return originalOwner
+}
+
+/**
+ * useImmutableXUpgraded
+ * @param tokenIds
+ * @returns
+ */
+export const useImmutableXUpgraded = (tokenIds: string[]) => {
+  const [upgraded, setUpgraded] = useState<boolean[]>([])
+
+  const calls = useCallback(async (tokenIds: string[]): Promise<void> => {
+    try {
+      // const result = await getImmutableXUpgradedApi(tokenIds[0])
+      // console.log('getImmutableXUpgradedApi result:', result)
+
+      const upgradedResult = tokenIds.map(() => false)
+      setUpgraded(upgradedResult)
+    } catch (error) {
+      console.log(error)
+    }
+  }, [])
+
+  useEffect(() => {
+    calls(tokenIds)
+  }, [calls, tokenIds])
+
+  return upgraded
 }
