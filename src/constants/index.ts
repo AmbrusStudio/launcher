@@ -16,8 +16,7 @@ export const Blindbox = {
   },
   [TraitName.Kit]: {
     BlindBoxMode: true,
-    BlindBoxVideo: 'https://cdn.ambrus.studio/NFTs/Blindbox.mp4',
-    BlindBoxPictures:
-      'https://assets.raribleuserdata.com/testnet/v1/image/t_gif_preview/aHR0cHM6Ly9jZG4uYW1icnVzLnN0dWRpby9ORlRzL2JsaW5kYm94LmdpZg==',
+    BlindBoxVideo: 'https://ambrus.s3.amazonaws.com/1667537607898_0.88_Blindbox.mp4',
+    BlindBoxPictures: 'https://ambrus.s3.amazonaws.com/1667538431877_0.51_blindbox.gif',
   },
 }

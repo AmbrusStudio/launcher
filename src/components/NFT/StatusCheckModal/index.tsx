@@ -24,7 +24,9 @@ const StatusCheckModal: FC<Props> = ({ visible, loading = false, nft, close, upg
   const [drawer, setDrawer] = useState<boolean>(false)
   const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(
     nft.tokenId,
-    getHolderByAddress(nft.address)
+    getHolderByAddress(nft.address),
+    nft.status,
+    nft.address
   )
 
   return (

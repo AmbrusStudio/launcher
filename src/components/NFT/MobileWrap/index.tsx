@@ -9,10 +9,16 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { PhotoProvider, PhotoView } from 'react-photo-view'
 
 import withdraw from '../../../assets/images/withdraw.png'
-import { useWeb3Modal } from '../../../hooks'
+import { ADDRESS_ImmutableX_Holder } from '../../../contracts'
+import {
+  useImmutableXERC721AssetTransfers,
+  useImmutableXERC721AssetUnstake,
+  useSnackbarTR,
+  useWeb3Modal,
+} from '../../../hooks'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
 import { useHandleState } from '../../../hooks/useHandleState'
-import { NFTE4CRanger, TraitName } from '../../../types'
+import { MetadataStatus, NFTE4CRanger, TraitName } from '../../../types'
 import { getHolderByAddress } from '../../../utils'
 import { BlindBoxVideo, traitName } from '../../../utils/bindbox'
 // import Star from '../../Icon/Star'
@@ -52,22 +58,47 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts, update }) => {
   const { state: stakeState, send: stake } = useERC721SafeTransferFrom(nft.address)
   const { state: unstakeState, send: unstake } = useE4CRangerUnstake(getHolderByAddress(nft.address))
 
+  const { send: transfer } = useImmutableXERC721AssetTransfers()
+  const { send: unstakeHolder } = useImmutableXERC721AssetUnstake()
+
   const handleState = useHandleState()
+  const showSnackbar = useSnackbarTR()
 
   // handle stake
   const onStake = useCallback(
-    (tokenId: string) => {
-      stake(account, getHolderByAddress(nft.address), tokenId)
+    async (tokenId: string) => {
+      if (nft.status === MetadataStatus.Ethereum) {
+        stake(account, getHolderByAddress(nft.address), tokenId)
+      } else if (nft.status === MetadataStatus.ImmutableX) {
+        await transfer({
+          tokenId: tokenId,
+          tokenAddress: nft.address,
+          toAddress: ADDRESS_ImmutableX_Holder,
+        })
+        showSnackbar('Stake Success', 'success')
+      } else {
+        console.error('No matching stake method')
+      }
     },
-    [account, stake, nft.address]
+    [nft.status, nft.address, stake, account, transfer, showSnackbar]
   )
 
   // handle unstake
   const onUnstake = useCallback(
-    (tokenId: string) => {
-      unstake(tokenId)
+    async (tokenId: string) => {
+      if (nft.status === MetadataStatus.Ethereum) {
+        unstake(tokenId)
+      } else if (nft.status === MetadataStatus.ImmutableX) {
+        await unstakeHolder({
+          tokenId: tokenId,
+          tokenAddress: nft.address,
+        })
+        showSnackbar('Unstake Success', 'success')
+      } else {
+        console.error('No matching unstake method')
+      }
     },
-    [unstake]
+    [nft.address, nft.status, showSnackbar, unstake, unstakeHolder]
   )
 
   // Watch stakeState

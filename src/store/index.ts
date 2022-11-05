@@ -3,6 +3,7 @@ import { combineReducers } from 'redux'
 import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
+import metadataImmutableXSlice from './metadata/metadataImmutableXSlice'
 import metadataSlice from './metadata/metadataSlice'
 
 const persistConfig = {
@@ -14,6 +15,7 @@ const persistConfig = {
 
 const reducers = combineReducers({
   metadata: metadataSlice,
+  metadataImmutableX: metadataImmutableXSlice,
 })
 
 const persistedReducer = persistReducer(persistConfig, reducers)

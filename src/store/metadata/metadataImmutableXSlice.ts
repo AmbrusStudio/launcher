@@ -5,12 +5,10 @@ import axios from 'axios'
 import { getAddress } from 'ethers/lib/utils'
 
 import {
-  ADDRESS_E4C_Ranger_Gold_Edition,
-  ADDRESS_E4C_Ranger_Gold_Editions,
-  ADDRESS_E4C_Ranger_Rangers_Edition,
-  ADDRESS_E4C_Ranger_Rangers_Editions,
-  ADDRESS_E4C_Ranger_Ultimate_Edition,
-  ADDRESS_E4C_Ranger_Ultimate_Editions,
+  ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
+  ADDRESS_ImmutableX_E4C_Ranger_Gold_Editions,
+  ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
+  ADDRESS_ImmutableX_E4C_Ranger_Rangers_Editions,
   defaultChainId,
 } from '../../contracts'
 import { MetadataResponse, TokenMetadata } from '../../types'
@@ -32,72 +30,49 @@ type MetadataEdition = {
 interface MetadataState {
   GoldEdition: MetadataEdition
   RangersEdition: MetadataEdition
-  UltimateEdition: MetadataEdition
 }
 
 interface LoadingState {
   GoldEditionLoading: boolean
   RangersEditionLoading: boolean
-  UltimateEditionLoading: boolean
 }
 
 const defaultState: MetadataState = {
   GoldEdition: {
-    // 1 - 450
     // 451 - 900
     [Mainnet.chainId]: {
       lastTime: 0,
-      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Gold_Edition/E4C_Rangers.json',
-      address: ADDRESS_E4C_Ranger_Gold_Editions[Mainnet.chainId],
+      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Gold_Edition/E4C_Rangers_Kit.json',
+      address: ADDRESS_ImmutableX_E4C_Ranger_Gold_Editions[Mainnet.chainId],
       chainId: Mainnet.chainId,
-      name: 'E4C Ranger Gold Edition',
+      name: 'E4C Rangers Gold Edition',
       metadata: [],
     },
     [Goerli.chainId]: {
       lastTime: 0,
-      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Gold_Edition/E4C_Rangers.json',
-      address: ADDRESS_E4C_Ranger_Gold_Editions[Goerli.chainId],
+      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Gold_Edition/E4C_Rangers_Kit.json',
+      address: ADDRESS_ImmutableX_E4C_Ranger_Gold_Editions[Goerli.chainId],
       chainId: Goerli.chainId,
-      name: 'E4C Ranger Gold Edition',
+      name: 'E4C Rangers Gold Edition',
       metadata: [],
     },
   },
   RangersEdition: {
-    // 1 - 646
     // 647 - 1292
     [Mainnet.chainId]: {
       lastTime: 0,
-      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Rangers_Edition/E4C_Rangers.json',
-      address: ADDRESS_E4C_Ranger_Rangers_Editions[Mainnet.chainId],
+      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Rangers_Edition/E4C_Rangers_Kit.json',
+      address: ADDRESS_ImmutableX_E4C_Ranger_Rangers_Editions[Mainnet.chainId],
       chainId: Mainnet.chainId,
-      name: 'E4C Ranger Rangers Edition',
+      name: 'E4C Rangers Rangers Edition',
       metadata: [],
     },
     [Goerli.chainId]: {
       lastTime: 0,
-      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Rangers_Edition/E4C_Rangers.json',
-      address: ADDRESS_E4C_Ranger_Rangers_Editions[Goerli.chainId],
+      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Rangers_Edition/E4C_Rangers_Kit.json',
+      address: ADDRESS_ImmutableX_E4C_Ranger_Rangers_Editions[Goerli.chainId],
       chainId: Goerli.chainId,
-      name: 'E4C Ranger Rangers Edition',
-      metadata: [],
-    },
-  },
-  UltimateEdition: {
-    // 1 - 15
-    [Mainnet.chainId]: {
-      lastTime: 0,
-      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Ultimate_Edition/E4C_Rangers.json',
-      address: ADDRESS_E4C_Ranger_Ultimate_Editions[Mainnet.chainId],
-      chainId: Mainnet.chainId,
-      name: 'E4C Ranger',
-      metadata: [],
-    },
-    [Goerli.chainId]: {
-      lastTime: 0,
-      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Ultimate_Edition/E4C_Rangers.json',
-      address: ADDRESS_E4C_Ranger_Ultimate_Editions[Goerli.chainId],
-      chainId: Goerli.chainId,
-      name: 'E4C Ranger Ultimate Edition',
+      name: 'E4C Rangers Rangers Edition',
       metadata: [],
     },
   },
@@ -106,14 +81,12 @@ const defaultState: MetadataState = {
 const initialState: MetadataState & LoadingState = {
   GoldEdition: defaultState.GoldEdition,
   RangersEdition: defaultState.RangersEdition,
-  UltimateEdition: defaultState.UltimateEdition,
   GoldEditionLoading: false,
   RangersEditionLoading: false,
-  UltimateEditionLoading: false,
 }
 
 export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
-  'metadata/fetchMetadataGoldEdition',
+  'metadataImmutableX/fetchMetadataGoldEdition',
   async (_, { signal }) => {
     try {
       const response = await axios.get<MetadataResponse[]>(defaultState.GoldEdition[defaultChainId].url, {
@@ -122,7 +95,7 @@ export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
 
       return response.data.slice(0, 450)
     } catch (error) {
-      const e = `metadata/fetchMetadataGoldEdition error: ${error}`
+      const e = `metadataImmutableX/fetchMetadataGoldEdition error: ${error}`
       console.log('error', e)
       Sentry.captureException(e)
 
@@ -132,7 +105,7 @@ export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
 )
 
 export const fetchMetadataRangersEdition = createAsyncThunk<MetadataResponse[]>(
-  'metadata/fetchMetadataRangersEdition',
+  'metadataImmutableX/fetchMetadataRangersEdition',
   async (_, { signal }) => {
     try {
       const response = await axios.get<MetadataResponse[]>(defaultState.RangersEdition[defaultChainId].url, {
@@ -140,7 +113,7 @@ export const fetchMetadataRangersEdition = createAsyncThunk<MetadataResponse[]>(
       })
       return response.data.slice(0, 646)
     } catch (error) {
-      const e = `metadata/fetchMetadataRangersEdition error: ${error}`
+      const e = `metadataImmutableX/fetchMetadataRangersEdition error: ${error}`
       console.log('error', e)
       Sentry.captureException(e)
 
@@ -149,36 +122,16 @@ export const fetchMetadataRangersEdition = createAsyncThunk<MetadataResponse[]>(
   }
 )
 
-export const fetchMetadataUltimateEdition = createAsyncThunk<MetadataResponse[]>(
-  'metadata/fetchMetadataUltimateEdition',
-  async (_, { signal }) => {
-    try {
-      const response = await axios.get<MetadataResponse[]>(defaultState.UltimateEdition[defaultChainId].url, {
-        signal: signal,
-      })
-      return response.data
-    } catch (error) {
-      const e = `metadata/fetchMetadataUltimateEdition error: ${error}`
-      console.log('error', e)
-      Sentry.captureException(e)
-
-      return []
-    }
-  }
-)
-
-export const metadataSlice = createSlice({
-  name: 'metadata',
+export const metadataImmutableXSlice = createSlice({
+  name: 'metadataImmutableX',
   initialState,
   reducers: {
     clear: (state) => {
       state.GoldEdition = defaultState.GoldEdition
       state.RangersEdition = defaultState.RangersEdition
-      state.UltimateEdition = defaultState.UltimateEdition
 
       state.GoldEditionLoading = false
       state.RangersEditionLoading = false
-      state.UltimateEditionLoading = false
     },
   },
   extraReducers: (builder) => {
@@ -200,7 +153,7 @@ export const metadataSlice = createSlice({
             name: i.name,
             description: i.description,
             image: i.image,
-            address: getAddress(ADDRESS_E4C_Ranger_Gold_Edition),
+            address: getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition),
             tokenId: parseTokenId(i.name),
             trait: i.attributes,
           }))
@@ -228,7 +181,7 @@ export const metadataSlice = createSlice({
             name: i.name,
             description: i.description,
             image: i.image,
-            address: getAddress(ADDRESS_E4C_Ranger_Rangers_Edition),
+            address: getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition),
             tokenId: parseTokenId(i.name),
             trait: i.attributes,
           }))
@@ -239,34 +192,7 @@ export const metadataSlice = createSlice({
         state.RangersEdition = defaultState.RangersEdition
         state.RangersEditionLoading = false
       })
-      .addCase(fetchMetadataUltimateEdition.pending, (state) => {
-        // console.log('loading')
-        state.UltimateEditionLoading = true
-      })
-      .addCase(fetchMetadataUltimateEdition.fulfilled, (state, action) => {
-        // console.log('fulfilled', action)
-        state.UltimateEditionLoading = false
-        if (action.payload.length) {
-          const time = Date.now()
-
-          state.UltimateEdition[defaultChainId].lastTime = time
-
-          state.UltimateEdition[defaultChainId].metadata = action.payload.map((i, index) => ({
-            name: i.name,
-            description: i.description,
-            image: i.image,
-            address: getAddress(ADDRESS_E4C_Ranger_Ultimate_Edition),
-            tokenId: String(index + 1),
-            trait: i.attributes,
-          }))
-        }
-      })
-      .addCase(fetchMetadataUltimateEdition.rejected, (state) => {
-        // console.log('failed')
-        state.UltimateEdition = defaultState.UltimateEdition
-        state.UltimateEditionLoading = false
-      })
   },
 })
 
-export default metadataSlice.reducer
+export default metadataImmutableXSlice.reducer

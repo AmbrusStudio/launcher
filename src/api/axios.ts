@@ -89,8 +89,20 @@ function getAccountBackendAPIPath(): string {
   return apiPath
 }
 
+/**
+ * NFT Holder
+ * @returns
+ */
+function getNFTHolderBackendAPIPath(): string {
+  const apiPath = getViteEnv('VITE_NFT_HOLDER_BACKEND_API_PATH')
+  return apiPath
+}
+
 const _mainBackendRequest = new MainBackendRequest(getAPIBaseUrl('/api/v1'))
 export const mainBackendRequest = _mainBackendRequest.client
 
 const _accountBackendRequest = new AccountBackendRequest(getAPIBaseUrl(getAccountBackendAPIPath()))
 export const accountBackendRequest = _accountBackendRequest.client
+
+const _unstakeBackendRequest = new AccountBackendRequest(getAPIBaseUrl(getNFTHolderBackendAPIPath()))
+export const unstakeBackendRequest = _unstakeBackendRequest.client
