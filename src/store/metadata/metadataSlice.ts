@@ -116,7 +116,7 @@ export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
   'metadata/fetchMetadataGoldEdition',
   async (_, { signal }) => {
     try {
-      const response = await axios.get(defaultState.GoldEdition[defaultChainId].url, {
+      const response = await axios.get<MetadataResponse[]>(defaultState.GoldEdition[defaultChainId].url, {
         signal: signal,
       })
 
@@ -135,7 +135,7 @@ export const fetchMetadataRangersEdition = createAsyncThunk<MetadataResponse[]>(
   'metadata/fetchMetadataRangersEdition',
   async (_, { signal }) => {
     try {
-      const response = await axios.get(defaultState.RangersEdition[defaultChainId].url, {
+      const response = await axios.get<MetadataResponse[]>(defaultState.RangersEdition[defaultChainId].url, {
         signal: signal,
       })
       return response.data.slice(0, 646)
@@ -153,7 +153,7 @@ export const fetchMetadataUltimateEdition = createAsyncThunk<MetadataResponse[]>
   'metadata/fetchMetadataUltimateEdition',
   async (_, { signal }) => {
     try {
-      const response = await axios.get(defaultState.UltimateEdition[defaultChainId].url, {
+      const response = await axios.get<MetadataResponse[]>(defaultState.UltimateEdition[defaultChainId].url, {
         signal: signal,
       })
       return response.data

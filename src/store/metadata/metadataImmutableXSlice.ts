@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import * as Sentry from '@sentry/react'
 import { Goerli, Mainnet } from '@usedapp/core'
+import axios from 'axios'
 import { getAddress } from 'ethers/lib/utils'
 
 import {
@@ -9,7 +11,6 @@ import {
   ADDRESS_ImmutableX_E4C_Ranger_Rangers_Editions,
   defaultChainId,
 } from '../../contracts'
-import E4C_Rangers_KitGold from '../../data/Gold_Edition/E4C_Rangers_Kit.json'
 import E4C_Rangers_KitRangers from '../../data/Rangers_Edition/E4C_Rangers_Kit.json'
 import { MetadataResponse, TokenMetadata } from '../../types'
 import { parseTokenId } from '../../utils'
@@ -42,7 +43,7 @@ const defaultState: MetadataState = {
     // 451 - 900
     [Mainnet.chainId]: {
       lastTime: 0,
-      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Gold_Edition/E4C_Rangers.json',
+      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Gold_Edition/E4C_Rangers_Kit.json',
       address: ADDRESS_ImmutableX_E4C_Ranger_Gold_Editions[Mainnet.chainId],
       chainId: Mainnet.chainId,
       name: 'E4C Rangers Gold Edition',
@@ -50,7 +51,7 @@ const defaultState: MetadataState = {
     },
     [Goerli.chainId]: {
       lastTime: 0,
-      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Gold_Edition/E4C_Rangers.json',
+      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Gold_Edition/E4C_Rangers_Kit.json',
       address: ADDRESS_ImmutableX_E4C_Ranger_Gold_Editions[Goerli.chainId],
       chainId: Goerli.chainId,
       name: 'E4C Rangers Gold Edition',
@@ -87,8 +88,20 @@ const initialState: MetadataState & LoadingState = {
 
 export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
   'metadataImmutableX/fetchMetadataGoldEdition',
-  () => {
-    return E4C_Rangers_KitGold as MetadataResponse[]
+  async (_, { signal }) => {
+    try {
+      const response = await axios.get<MetadataResponse[]>(defaultState.GoldEdition[defaultChainId].url, {
+        signal: signal,
+      })
+
+      return response.data.slice(0, 450)
+    } catch (error) {
+      const e = `metadata/fetchMetadataGoldEdition error: ${error}`
+      console.log('error', e)
+      Sentry.captureException(e)
+
+      return []
+    }
   }
 )
 
