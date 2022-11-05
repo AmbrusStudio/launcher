@@ -16,9 +16,7 @@ export async function immutableXUnstakeApi<T = unknown>({
   tokenId: string
   signature: string
 }) {
-  return await unstakeBackendRequest.post<T>(`/nft-holder/unstake`, {
-    data: { owner, tokenAddress, tokenId, signature },
-  })
+  return await unstakeBackendRequest.post<T>(`/unstake`, { owner, tokenAddress, tokenId, signature })
 }
 
 /**
@@ -29,7 +27,7 @@ export async function immutableXUnstakeApi<T = unknown>({
  */
 export async function getImmutableXStakingStatusApi<T = unknown>(tokenAddress: string, tokenId: string) {
   console.log('getImmutableXStakingStatusApi', tokenAddress, tokenId)
-  return await unstakeBackendRequest.get<T>(`/nft-holder/stakingStatus`, {
+  return await unstakeBackendRequest.get<T>(`/stakingStatus`, {
     params: {
       tokenAddress,
       tokenId,

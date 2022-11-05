@@ -10,7 +10,12 @@ import { PhotoProvider, PhotoView } from 'react-photo-view'
 
 import withdraw from '../../../assets/images/withdraw.png'
 import { ADDRESS_ImmutableX_Holder } from '../../../contracts'
-import { useImmutableXERC721AssetTransfers, useImmutableXERC721AssetUnstake, useWeb3Modal } from '../../../hooks'
+import {
+  useImmutableXERC721AssetTransfers,
+  useImmutableXERC721AssetUnstake,
+  useSnackbarTR,
+  useWeb3Modal,
+} from '../../../hooks'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
 import { useHandleState } from '../../../hooks/useHandleState'
 import { MetadataStatus, NFTE4CRanger, TraitName } from '../../../types'
@@ -57,40 +62,43 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts, update }) => {
   const { send: unstakeHolder } = useImmutableXERC721AssetUnstake()
 
   const handleState = useHandleState()
+  const showSnackbar = useSnackbarTR()
 
   // handle stake
   const onStake = useCallback(
-    (tokenId: string) => {
+    async (tokenId: string) => {
       if (nft.status === MetadataStatus.Ethereum) {
         stake(account, getHolderByAddress(nft.address), tokenId)
       } else if (nft.status === MetadataStatus.ImmutableX) {
-        transfer({
+        await transfer({
           tokenId: tokenId,
           tokenAddress: nft.address,
           toAddress: ADDRESS_ImmutableX_Holder,
         })
+        showSnackbar('Stake Success', 'success')
       } else {
         console.error('No matching stake method')
       }
     },
-    [nft.status, nft.address, stake, account, transfer]
+    [nft.status, nft.address, stake, account, transfer, showSnackbar]
   )
 
   // handle unstake
   const onUnstake = useCallback(
-    (tokenId: string) => {
+    async (tokenId: string) => {
       if (nft.status === MetadataStatus.Ethereum) {
         unstake(tokenId)
       } else if (nft.status === MetadataStatus.ImmutableX) {
-        unstakeHolder({
+        await unstakeHolder({
           tokenId: tokenId,
           tokenAddress: nft.address,
         })
+        showSnackbar('Unstake Success', 'success')
       } else {
         console.error('No matching unstake method')
       }
     },
-    [nft.address, nft.status, unstake, unstakeHolder]
+    [nft.address, nft.status, showSnackbar, unstake, unstakeHolder]
   )
 
   // Watch stakeState
