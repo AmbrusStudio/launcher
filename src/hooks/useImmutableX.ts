@@ -1,9 +1,9 @@
 import { ERC721TokenType, ImmutableMethodParams, ImmutableMethodResults } from '@imtbl/imx-sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 
-import { immutableXUnstakeApi } from '../api/immutableX'
+import { getImmutableXStakingStatusApi, immutableXUnstakeApi } from '../api/immutableX'
 import { ImmutableXWalletContext } from '../context'
-import { ADDRESS_ImmutableX_Holder } from '../contracts'
+import { ImmutableXStakingStatus } from '../types/immutableX'
 
 type ImmutableGetAssetsResultCodec = ImmutableMethodResults.ImmutableGetAssetsResult['result']
 
@@ -169,54 +169,73 @@ export const useImmutableXERC721AssetUnstake = () => {
 }
 
 /**
- * useImmutableXOriginalOwner
+ * useImmutableXStakingStatuses
  * @returns
  */
-export const useImmutableXOriginalOwner = (tokenIds: string[]) => {
-  const [originalOwner, setOriginalOwner] = useState<string[]>([])
+export const useImmutableXStakingStatuses = (tokenAddress: string, tokenIds: string[]) => {
+  const [stakingStatus, setStakingStatus] = useState<ImmutableXStakingStatus[]>([])
 
-  const calls = useCallback(async (tokenIds: string[]): Promise<void> => {
+  const calls = useCallback(async (tokenAddress: string, tokenIds: string[]): Promise<void> => {
+    if (!tokenAddress || !tokenIds[0]) {
+      return
+    }
+
     try {
-      // const result = await getImmutableXOriginalOwnerApi(tokenIds[0])
-      // console.log('getImmutableXOriginalOwnerApi result:', result)
+      const promiseAllArray = tokenIds.map((tokenId) =>
+        getImmutableXStakingStatusApi<ImmutableXStakingStatus>(tokenAddress, tokenId)
+      )
 
-      const originalOwnerResult = tokenIds.map(() => ADDRESS_ImmutableX_Holder)
-      setOriginalOwner(originalOwnerResult)
+      const response = await Promise.all(promiseAllArray)
+
+      response.forEach((item) => {
+        if (item.status !== 200) {
+          throw new Error('status is not 200')
+        }
+      })
+
+      setStakingStatus(response.map((item) => item.data))
     } catch (error) {
       console.log(error)
     }
   }, [])
 
   useEffect(() => {
-    calls(tokenIds)
-  }, [calls, tokenIds])
+    calls(tokenAddress, tokenIds)
+  }, [calls, tokenAddress, tokenIds])
 
-  return originalOwner
+  return stakingStatus
 }
 
 /**
- * useImmutableXUpgraded
- * @param tokenIds
+ * useImmutableXStakingStatus
+ * @param tokenAddress
+ * @param tokenId
  * @returns
  */
-export const useImmutableXUpgraded = (tokenIds: string[]) => {
-  const [upgraded, setUpgraded] = useState<boolean[]>([])
+export const useImmutableXStakingStatus = (tokenAddress: string, tokenId: string) => {
+  const [stakingStatus, setStakingStatus] = useState<ImmutableXStakingStatus>()
 
-  const calls = useCallback(async (tokenIds: string[]): Promise<void> => {
+  const calls = useCallback(async (tokenAddress: string, tokenId: string): Promise<void> => {
+    if (!tokenAddress || !tokenId) {
+      return
+    }
+
     try {
-      // const result = await getImmutableXUpgradedApi(tokenIds[0])
-      // console.log('getImmutableXUpgradedApi result:', result)
+      const response = await getImmutableXStakingStatusApi<ImmutableXStakingStatus>(tokenAddress, tokenId)
 
-      const upgradedResult = tokenIds.map(() => false)
-      setUpgraded(upgradedResult)
+      if (response.status !== 200) {
+        throw new Error('status is not 200')
+      }
+
+      setStakingStatus(response.data)
     } catch (error) {
       console.log(error)
     }
   }, [])
 
   useEffect(() => {
-    calls(tokenIds)
-  }, [calls, tokenIds])
+    calls(tokenAddress, tokenId)
+  }, [calls, tokenAddress, tokenId])
 
-  return upgraded
+  return stakingStatus
 }

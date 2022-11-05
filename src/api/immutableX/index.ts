@@ -22,25 +22,17 @@ export async function immutableXUnstakeApi<T = unknown>({
 }
 
 /**
- * Get ImmutableX OriginalOwner Api
- * @param param
- * @returns
- */
-export async function getImmutableXOriginalOwnerApi<T = unknown>(tokenId: string) {
-  console.log('getImmutableXOriginalOwnerApi', tokenId)
-  return await unstakeBackendRequest.post<T>(`/nft-holder/originalOwner`, {
-    data: { tokenId },
-  })
-}
-
-/**
- * Get ImmutableX Upgraded Api
+ * Get ImmutableX StakingStatus Api
+ * @param tokenAddress
  * @param tokenId
  * @returns
  */
-export async function getImmutableXUpgradedApi<T = unknown>(tokenId: string) {
-  console.log('getImmutableXUpgradedApi', tokenId)
-  return await unstakeBackendRequest.post<T>(`/nft-holder/upgraded`, {
-    data: { tokenId },
+export async function getImmutableXStakingStatusApi<T = unknown>(tokenAddress: string, tokenId: string) {
+  console.log('getImmutableXStakingStatusApi', tokenAddress, tokenId)
+  return await unstakeBackendRequest.get<T>(`/nft-holder/stakingStatus`, {
+    params: {
+      tokenAddress,
+      tokenId,
+    },
   })
 }

@@ -184,11 +184,11 @@ export const metadataSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchMetadataGoldEdition.pending, (state) => {
-        console.log('loading')
+        // console.log('loading')
         state.GoldEditionLoading = true
       })
       .addCase(fetchMetadataGoldEdition.fulfilled, (state, action) => {
-        console.log('fulfilled', action)
+        // console.log('fulfilled', action)
         state.GoldEditionLoading = false
 
         if (action.payload.length) {
@@ -207,16 +207,16 @@ export const metadataSlice = createSlice({
         }
       })
       .addCase(fetchMetadataGoldEdition.rejected, (state) => {
-        console.log('failed')
+        // console.log('failed')
         state.GoldEdition = defaultState.GoldEdition
         state.GoldEditionLoading = false
       })
       .addCase(fetchMetadataRangersEdition.pending, (state) => {
-        console.log('loading')
+        // console.log('loading')
         state.RangersEditionLoading = true
       })
       .addCase(fetchMetadataRangersEdition.fulfilled, (state, action) => {
-        console.log('fulfilled', action)
+        // console.log('fulfilled', action)
         state.RangersEditionLoading = false
 
         if (action.payload.length) {
@@ -235,16 +235,16 @@ export const metadataSlice = createSlice({
         }
       })
       .addCase(fetchMetadataRangersEdition.rejected, (state) => {
-        console.log('failed')
+        // console.log('failed')
         state.RangersEdition = defaultState.RangersEdition
         state.RangersEditionLoading = false
       })
       .addCase(fetchMetadataUltimateEdition.pending, (state) => {
-        console.log('loading')
+        // console.log('loading')
         state.UltimateEditionLoading = true
       })
       .addCase(fetchMetadataUltimateEdition.fulfilled, (state, action) => {
-        console.log('fulfilled', action)
+        // console.log('fulfilled', action)
         state.UltimateEditionLoading = false
         if (action.payload.length) {
           const time = Date.now()
@@ -262,7 +262,7 @@ export const metadataSlice = createSlice({
         }
       })
       .addCase(fetchMetadataUltimateEdition.rejected, (state) => {
-        console.log('failed')
+        // console.log('failed')
         state.UltimateEdition = defaultState.UltimateEdition
         state.UltimateEditionLoading = false
       })

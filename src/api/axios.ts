@@ -95,5 +95,5 @@ export const mainBackendRequest = _mainBackendRequest.client
 const _accountBackendRequest = new AccountBackendRequest(getAPIBaseUrl(getAccountBackendAPIPath()))
 export const accountBackendRequest = _accountBackendRequest.client
 
-const _unstakeBackendRequest = new MainBackendRequest(getAPIBaseUrl(''))
+const _unstakeBackendRequest = new AccountBackendRequest(getAPIBaseUrl(''))
 export const unstakeBackendRequest = _unstakeBackendRequest.client

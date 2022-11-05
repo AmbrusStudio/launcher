@@ -74,6 +74,101 @@ export const formatMetadata = (
 }
 
 /**
+ * FormatMetadata ImmutableX
+ * @param param
+ * @returns
+ */
+export const formatMetadataImmutableX = ({
+  address,
+  metadata,
+  tokenIds,
+  upgradeds,
+  stakings,
+  originalOwner,
+  owner,
+  status,
+}: {
+  address: string
+  metadata: TokenMetadata[]
+  tokenIds: string[]
+  upgradeds: boolean[]
+  stakings: boolean[]
+  originalOwner: string[]
+  owner: string
+  status: MetadataStatus
+}): NFTE4CRanger[] => {
+  const result = tokenIds
+    .map((tokenId, index) => {
+      if (owner && originalOwner[index] === owner) {
+        // Start search
+        const findResult = metadata.find((i) => i.tokenId === tokenId)
+        if (findResult) {
+          return {
+            ...findResult,
+            address,
+            tokenId: tokenId,
+            upgraded: upgradeds?.[index],
+            staking: stakings?.[index] || false,
+            status,
+          }
+        } else {
+          const e = `Metadata data not found. tokenId: ${tokenId}`
+          console.error(e)
+          Sentry.captureException(e)
+
+          return
+        }
+      } else {
+        return
+      }
+    })
+    .filter((i) => i) as NFTE4CRanger[]
+
+  return result
+}
+
+export const formatMetadataImmutableXUser = ({
+  address,
+  metadata,
+  tokenIds,
+  upgradeds,
+  stakings,
+  status,
+}: {
+  address: string
+  metadata: TokenMetadata[]
+  tokenIds: string[]
+  upgradeds: boolean[]
+  stakings: boolean[]
+  status: MetadataStatus
+}): NFTE4CRanger[] => {
+  const result = tokenIds
+    .map((tokenId, index) => {
+      // Start search
+      const findResult = metadata.find((i) => i.tokenId === tokenId)
+      if (findResult) {
+        return {
+          ...findResult,
+          address,
+          tokenId: tokenId,
+          upgraded: upgradeds?.[index],
+          staking: stakings?.[index] || false,
+          status,
+        }
+      } else {
+        const e = `Metadata data not found. tokenId: ${tokenId}`
+        console.error(e)
+        Sentry.captureException(e)
+
+        return
+      }
+    })
+    .filter((i) => i) as NFTE4CRanger[]
+
+  return result
+}
+
+/**
  * Get Edition
  * @param upgraded
  * @param address

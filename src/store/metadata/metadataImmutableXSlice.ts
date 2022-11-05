@@ -137,11 +137,11 @@ export const metadataImmutableXSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchMetadataGoldEdition.pending, (state) => {
-        console.log('loading')
+        // console.log('loading')
         state.GoldEditionLoading = true
       })
       .addCase(fetchMetadataGoldEdition.fulfilled, (state, action) => {
-        console.log('fulfilled', action)
+        // console.log('fulfilled', action)
         state.GoldEditionLoading = false
 
         if (action.payload.length) {
@@ -160,16 +160,16 @@ export const metadataImmutableXSlice = createSlice({
         }
       })
       .addCase(fetchMetadataGoldEdition.rejected, (state) => {
-        console.log('failed')
+        // console.log('failed')
         state.GoldEdition = defaultState.GoldEdition
         state.GoldEditionLoading = false
       })
       .addCase(fetchMetadataRangersEdition.pending, (state) => {
-        console.log('loading')
+        // console.log('loading')
         state.RangersEditionLoading = true
       })
       .addCase(fetchMetadataRangersEdition.fulfilled, (state, action) => {
-        console.log('fulfilled', action)
+        // console.log('fulfilled', action)
         state.RangersEditionLoading = false
 
         if (action.payload.length) {
@@ -188,7 +188,7 @@ export const metadataImmutableXSlice = createSlice({
         }
       })
       .addCase(fetchMetadataRangersEdition.rejected, (state) => {
-        console.log('failed')
+        // console.log('failed')
         state.RangersEdition = defaultState.RangersEdition
         state.RangersEditionLoading = false
       })

@@ -1,7 +1,9 @@
 import BigNumber from 'bignumber.js'
 import { useMemo } from 'react'
 
+import { MetadataStatus } from '../types'
 import { useE4CRangerTotalStakingTime, useE4CRangerUpgradeDuration } from './useE4CRanger'
+import { useImmutableXStakingStatus } from './useImmutableX'
 import { useOwnedDiamondHandSBT } from './useOwnedDiamondHandSBT'
 
 /**
@@ -9,12 +11,39 @@ import { useOwnedDiamondHandSBT } from './useOwnedDiamondHandSBT'
  * @param tokenId
  * @returns
  */
-export function useStatusCheck(tokenId: string, address: string) {
-  const upgradeDuration = useE4CRangerUpgradeDuration(address)
-  // console.log('upgradeDuration', upgradeDuration)
+export function useStatusCheck(tokenId: string, address: string, metadataStatus: MetadataStatus, tokenAddress: string) {
+  // upgradeDuration
+  const upgradeDurationEthereum = useE4CRangerUpgradeDuration(address)
 
   // totalStakingTime
-  const totalStakingTime = useE4CRangerTotalStakingTime(address, tokenId)
+  const totalStakingTimeEthereum = useE4CRangerTotalStakingTime(address, tokenId)
+
+  // ImmutableX StakingStatus
+  const stakingStatus = useImmutableXStakingStatus(
+    metadataStatus === MetadataStatus.ImmutableX ? tokenAddress : '',
+    tokenId
+  )
+
+  const upgradeDuration = useMemo(() => {
+    if (metadataStatus === MetadataStatus.Ethereum) {
+      return upgradeDurationEthereum
+    } else if (metadataStatus === MetadataStatus.ImmutableX) {
+      return stakingStatus?.stakingDuration ? stakingStatus?.stakingDuration / 1000 : 0
+    } else {
+      return 0
+    }
+  }, [metadataStatus, upgradeDurationEthereum, stakingStatus?.stakingDuration])
+
+  const totalStakingTime = useMemo(() => {
+    if (metadataStatus === MetadataStatus.Ethereum) {
+      return totalStakingTimeEthereum
+    } else if (metadataStatus === MetadataStatus.ImmutableX) {
+      return stakingStatus?.totalStakingTime ? stakingStatus?.totalStakingTime / 1000 : 0
+    } else {
+      return 0
+    }
+  }, [metadataStatus, totalStakingTimeEthereum, stakingStatus?.totalStakingTime])
+
   const stakingTime = useMemo<BigNumber>(
     () => (totalStakingTime ? new BigNumber(totalStakingTime.toString()) : new BigNumber(0)),
     [totalStakingTime]
