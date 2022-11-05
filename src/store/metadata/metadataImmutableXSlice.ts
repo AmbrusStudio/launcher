@@ -11,7 +11,6 @@ import {
   ADDRESS_ImmutableX_E4C_Ranger_Rangers_Editions,
   defaultChainId,
 } from '../../contracts'
-import E4C_Rangers_KitRangers from '../../data/Rangers_Edition/E4C_Rangers_Kit.json'
 import { MetadataResponse, TokenMetadata } from '../../types'
 import { parseTokenId } from '../../utils'
 
@@ -62,7 +61,7 @@ const defaultState: MetadataState = {
     // 647 - 1292
     [Mainnet.chainId]: {
       lastTime: 0,
-      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Rangers_Edition/E4C_Rangers.json',
+      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Rangers_Edition/E4C_Rangers_Kit.json',
       address: ADDRESS_ImmutableX_E4C_Ranger_Rangers_Editions[Mainnet.chainId],
       chainId: Mainnet.chainId,
       name: 'E4C Rangers Rangers Edition',
@@ -70,7 +69,7 @@ const defaultState: MetadataState = {
     },
     [Goerli.chainId]: {
       lastTime: 0,
-      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Rangers_Edition/E4C_Rangers.json',
+      url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Rangers_Edition/E4C_Rangers_Kit.json',
       address: ADDRESS_ImmutableX_E4C_Ranger_Rangers_Editions[Goerli.chainId],
       chainId: Goerli.chainId,
       name: 'E4C Rangers Rangers Edition',
@@ -96,7 +95,7 @@ export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
 
       return response.data.slice(0, 450)
     } catch (error) {
-      const e = `metadata/fetchMetadataGoldEdition error: ${error}`
+      const e = `metadataImmutableX/fetchMetadataGoldEdition error: ${error}`
       console.log('error', e)
       Sentry.captureException(e)
 
@@ -107,8 +106,19 @@ export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
 
 export const fetchMetadataRangersEdition = createAsyncThunk<MetadataResponse[]>(
   'metadataImmutableX/fetchMetadataRangersEdition',
-  () => {
-    return E4C_Rangers_KitRangers as MetadataResponse[]
+  async (_, { signal }) => {
+    try {
+      const response = await axios.get<MetadataResponse[]>(defaultState.RangersEdition[defaultChainId].url, {
+        signal: signal,
+      })
+      return response.data.slice(0, 646)
+    } catch (error) {
+      const e = `metadataImmutableX/fetchMetadataRangersEdition error: ${error}`
+      console.log('error', e)
+      Sentry.captureException(e)
+
+      return []
+    }
   }
 )
 
