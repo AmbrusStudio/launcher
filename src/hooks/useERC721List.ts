@@ -1,5 +1,4 @@
 import { useEthers } from '@usedapp/core'
-import { constants } from 'ethers'
 import { getAddress } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 
@@ -257,8 +256,10 @@ export function useERC721ImmutableXList({ collection }: { collection: string }) 
     collection,
   })
 
-  const tokenId = immutableXAssets.map((asset) => asset.token_id)
-  const tokenIdHolder = immutableXAssetsHolder.map((asset) => asset.token_id)
+  const tokenId = useMemo(() => immutableXAssets.map((asset) => asset.token_id), [immutableXAssets])
+  const tokenIdHolder = useMemo(() => immutableXAssetsHolder.map((asset) => asset.token_id), [immutableXAssetsHolder])
+
+  const stakingStatusHolder = useImmutableXStakingStatuses(collection, tokenIdHolder)
 
   const { getMetadataByAddress } = useMetadata()
   const metadata = getMetadataByAddress(collection, MetadataStatus.ImmutableX)
@@ -279,15 +280,17 @@ export function useERC721ImmutableXList({ collection }: { collection: string }) 
 
   const nftsForAccountHolder = useMemo<NFTE4CRanger[]>(
     () =>
-      formatMetadata(
-        collection,
-        metadata,
-        tokenIdHolder,
-        tokenIdHolder.map(() => false),
-        immutableXAssetsHolder.map((i) => i.user || constants.AddressZero),
-        MetadataStatus.ImmutableX
-      ),
-    [collection, immutableXAssetsHolder, metadata, tokenIdHolder]
+      formatMetadataImmutableX({
+        address: collection,
+        metadata: metadata,
+        tokenIds: tokenIdHolder,
+        upgradeds: stakingStatusHolder.map((i) => i.isUpgraded),
+        stakings: stakingStatusHolder.map((i) => i.isStaking),
+        originalOwner: stakingStatusHolder.map((i) => i.originalOwner),
+        owner: walletInfo?.address || '',
+        status: MetadataStatus.ImmutableX,
+      }),
+    [collection, metadata, stakingStatusHolder, tokenIdHolder, walletInfo?.address]
   )
 
   return {
