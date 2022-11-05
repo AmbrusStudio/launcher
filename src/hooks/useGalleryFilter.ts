@@ -1,10 +1,10 @@
 import { groupBy } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { Blindbox, BlindBoxTrait } from '../constants'
-import { Trait, TraitName } from '../types'
+import { Trait } from '../types'
 import { Filter, GALLERY_FILTER, GALLERY_FILTER_LIST } from '../types/gallery'
 import { toggleFilterCheckedFn, toggleFilterOpenFn } from '../utils'
+import { BlindBoxMode } from '../utils/bindbox'
 import { useMetadata } from './useMetadata'
 
 /**
@@ -18,7 +18,15 @@ export function useGalleryFilter() {
 
   const galleryFilter = useMemo<GALLERY_FILTER[]>(() => {
     // Handle Filter Property
-    const allTrait = metadataAllEdition.flatMap((i) => i.trait)
+
+    const metadatas = metadataAllEdition.map((metadata) => {
+      return {
+        ...metadata,
+        trait: metadata.trait.filter((trait) => trait.trait_type === Trait.Name || !BlindBoxMode(metadata.trait)),
+      }
+    })
+
+    const allTrait = metadatas.flatMap((i) => i.trait)
     const allTraitGroupByType = groupBy(allTrait, 'trait_type')
 
     return Object.values(Trait).map((i) => {
@@ -29,16 +37,13 @@ export function useGalleryFilter() {
         for (const key in propertyGroupByValue) {
           if (Object.prototype.hasOwnProperty.call(propertyGroupByValue, key)) {
             list.push({
-              label:
-                // TODO
-                !Blindbox[TraitName.Rin].BlindBoxMode || BlindBoxTrait.includes(propertyGroupByValue[key][0].trait_type)
-                  ? key
-                  : 'unknown',
+              label: key,
               count: propertyGroupByValue[key].length,
             })
           }
         }
       }
+
       return {
         label: i,
         list: list.sort((a, b) => b.count - a.count),
