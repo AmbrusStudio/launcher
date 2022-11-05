@@ -7,6 +7,7 @@
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@headlessui/react": "^1.7.3",
+    "@imtbl/core-sdk": "^1.0.0-beta.3",
     "@imtbl/imx-sdk": "^1.34.0",
     "@mui/material": "^5.9.1",
     "@reduxjs/toolkit": "^1.8.6",

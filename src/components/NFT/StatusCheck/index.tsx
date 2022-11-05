@@ -41,7 +41,9 @@ const StatusCheck: FC<StatusCheckProps> = ({ unstakeLoading, nft, toggle, unstak
 
   const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(
     nft.tokenId,
-    getHolderByAddress(nft.address)
+    getHolderByAddress(nft.address),
+    nft.status,
+    nft.address
   )
 
   return (
