@@ -71,7 +71,6 @@ export function useTokenIdByOwner({ tokenAddress }: { tokenAddress: string }) {
     setLoading(true)
 
     const nftsForOwnerResult = await getAllNfts(account)
-    console.log('useTokenIdByOwner', nftsForOwnerResult)
 
     const list = nftsForOwnerResult.ownedNfts
       .filter((item) => getAddress(item.contract.address) === getAddress(tokenAddress))
@@ -112,7 +111,6 @@ export function useTokenIdByContract({ holderAddress, tokenAddress }: { holderAd
     setLoading(true)
 
     const nftsForOwnerResult = await getAllNfts(holderAddress)
-    console.log('useTokenIdByContract', nftsForOwnerResult)
 
     const list = nftsForOwnerResult.ownedNfts
       .filter((item) => getAddress(item.contract.address) === getAddress(tokenAddress))
@@ -122,7 +120,7 @@ export function useTokenIdByContract({ holderAddress, tokenAddress }: { holderAd
 
     setTokenId(list)
     setLoading(false)
-  }, [holderAddress, tokenAddress, account])
+  }, [account, holderAddress, tokenAddress])
 
   useEffect(() => {
     getNftsForOwner()
