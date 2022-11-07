@@ -10,15 +10,11 @@ import { PhotoProvider, PhotoView } from 'react-photo-view'
 
 import withdraw from '../../../assets/images/withdraw.png'
 import { ADDRESS_ImmutableX_Holder } from '../../../contracts'
-import {
-  useImmutableXERC721AssetTransfers,
-  useImmutableXERC721AssetUnstake,
-  useSnackbarTR,
-  useWeb3Modal,
-} from '../../../hooks'
+import { useImmutableXERC721AssetTransfers, useImmutableXERC721AssetUnstake, useWeb3Modal } from '../../../hooks'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
-import { useHandleState } from '../../../hooks/useHandleState'
+import { useHandleState, useHandleStateImmutableX } from '../../../hooks/useHandleState'
 import { MetadataStatus, NFTE4CRanger, TraitName } from '../../../types'
+import { TransactionStateImmutableX } from '../../../types/immutableX'
 import { getHolderByAddress } from '../../../utils'
 import { BlindBoxVideo, traitName } from '../../../utils/bindbox'
 // import Star from '../../Icon/Star'
@@ -58,11 +54,11 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts, update }) => {
   const { state: stakeState, send: stake } = useERC721SafeTransferFrom(nft.address)
   const { state: unstakeState, send: unstake } = useE4CRangerUnstake(getHolderByAddress(nft.address))
 
-  const { send: transfer } = useImmutableXERC721AssetTransfers()
-  const { send: unstakeHolder } = useImmutableXERC721AssetUnstake()
+  const { state: stakeStateImmutableX, send: stakeImmutableX } = useImmutableXERC721AssetTransfers()
+  const { state: unstakeStateImmutableX, send: unstakeImmutableX } = useImmutableXERC721AssetUnstake()
 
   const handleState = useHandleState()
-  const showSnackbar = useSnackbarTR()
+  const handleStateImmutableX = useHandleStateImmutableX()
 
   // handle stake
   const onStake = useCallback(
@@ -70,17 +66,16 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts, update }) => {
       if (nft.status === MetadataStatus.Ethereum) {
         stake(account, getHolderByAddress(nft.address), tokenId)
       } else if (nft.status === MetadataStatus.ImmutableX) {
-        await transfer({
+        stakeImmutableX({
           tokenId: tokenId,
           tokenAddress: nft.address,
           toAddress: ADDRESS_ImmutableX_Holder,
         })
-        showSnackbar('Stake Success', 'success')
       } else {
         console.error('No matching stake method')
       }
     },
-    [nft.status, nft.address, stake, account, transfer, showSnackbar]
+    [nft.status, nft.address, stake, account, stakeImmutableX]
   )
 
   // handle unstake
@@ -89,47 +84,58 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts, update }) => {
       if (nft.status === MetadataStatus.Ethereum) {
         unstake(tokenId)
       } else if (nft.status === MetadataStatus.ImmutableX) {
-        await unstakeHolder({
+        unstakeImmutableX({
           tokenId: tokenId,
           tokenAddress: nft.address,
         })
-        showSnackbar('Unstake Success', 'success')
       } else {
         console.error('No matching unstake method')
       }
     },
-    [nft.address, nft.status, showSnackbar, unstake, unstakeHolder]
+    [nft.address, nft.status, unstake, unstakeImmutableX]
   )
 
   // Watch stakeState
   useEffect(() => {
     handleState(stakeState)
+    handleStateImmutableX(stakeStateImmutableX)
 
-    if (stakeState.status === 'PendingSignature' || stakeState.status === 'Mining') {
+    if (
+      stakeState.status === 'PendingSignature' ||
+      stakeState.status === 'Mining' ||
+      stakeStateImmutableX.status === 'PendingSignature' ||
+      stakeStateImmutableX.status === 'Mining'
+    ) {
       setStakeLoading(true)
     } else {
       setStakeLoading(false)
     }
 
-    if (stakeState.status === 'Success') {
+    if (stakeState.status === 'Success' || stakeStateImmutableX.status === TransactionStateImmutableX.Success) {
       update()
     }
-  }, [stakeState, handleState, update])
+  }, [stakeState, handleState, update, stakeStateImmutableX.status, stakeStateImmutableX])
 
   // Watch unstakeState
   useEffect(() => {
     handleState(unstakeState)
+    handleStateImmutableX(unstakeStateImmutableX)
 
-    if (unstakeState.status === 'PendingSignature' || unstakeState.status === 'Mining') {
+    if (
+      unstakeState.status === 'PendingSignature' ||
+      unstakeState.status === 'Mining' ||
+      unstakeStateImmutableX.status === 'PendingSignature' ||
+      unstakeStateImmutableX.status === 'Mining'
+    ) {
       setUnstakeLoading(true)
     } else {
       setUnstakeLoading(false)
     }
 
-    if (unstakeState.status === 'Success') {
+    if (unstakeState.status === 'Success' || unstakeStateImmutableX.status === TransactionStateImmutableX.Success) {
       update()
     }
-  }, [unstakeState, handleState, update])
+  }, [unstakeState, handleState, update, unstakeStateImmutableX.status, unstakeStateImmutableX])
 
   return (
     <>
