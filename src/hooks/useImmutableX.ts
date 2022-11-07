@@ -1,9 +1,16 @@
 import { ERC721TokenType, ImmutableMethodParams, ImmutableMethodResults } from '@imtbl/imx-sdk'
+import * as Sentry from '@sentry/react'
 import React, { useCallback, useEffect, useState } from 'react'
 
 import { getImmutableXStakingStatusApi, immutableXUnstakeApi } from '../api/immutableX'
 import { ImmutableXWalletContext } from '../context'
-import { ImmutableXStakingStatus } from '../types/immutableX'
+import {
+  ImmutableXStakingStatus,
+  ImmutableXUnstake,
+  TransactionStateImmutableX,
+  TransactionStatusImmutableX,
+} from '../types/immutableX'
+import { toErrorWithMessage } from '../utils/error'
 
 type ImmutableGetAssetsResultCodec = ImmutableMethodResults.ImmutableGetAssetsResult['result']
 
@@ -63,11 +70,16 @@ export const useImmutableXUserNFTAssets = ({ user, collection }: { user: string;
 
 /**
  * useImmutableXERC721AssetTransfers
- * @param param
+ * @param
  * @returns
  */
 export const useImmutableXERC721AssetTransfers = () => {
   const { imxLink } = useImmutableXWallet()
+  const [state, setState] = useState<TransactionStatusImmutableX>({ status: TransactionStateImmutableX.None })
+
+  const resetState = useCallback(() => {
+    setState({ status: TransactionStateImmutableX.None })
+  }, [setState])
 
   const transfer = useCallback(
     async ({ tokenId, tokenAddress, toAddress }: { tokenId: string; tokenAddress: string; toAddress: string }) => {
@@ -80,8 +92,10 @@ export const useImmutableXERC721AssetTransfers = () => {
         return
       }
 
+      setState({ status: TransactionStateImmutableX.PendingSignature })
+
       try {
-        const result = await imxLink.transfer([
+        const response = await imxLink.transfer([
           {
             type: ERC721TokenType.ERC721,
             tokenId: tokenId,
@@ -89,23 +103,33 @@ export const useImmutableXERC721AssetTransfers = () => {
             toAddress,
           },
         ])
-        // Print the result
-        // const result = [
-        //   {
-        //     type: 'ERC721',
-        //     tokenId: '459',
-        //     tokenAddress: '0xbf206014a878df4153036d7895188e340527a8f0',
-        //     toAddress: '0xE4CdfD21b1Eb96650FF1acde35276D9da579070C',
-        //     status: 'success',
-        //     txId: 350045,
-        //   },
-        // ]
+        console.log(response)
 
-        // {"result":[{"token_address":"","symbol":"ETH","balance":"655600000000","preparing_withdrawal":"0","withdrawable":"0"}],"cursor":"eyJfIjoiIiwic3ltYm9sIjoiRVRIIiwiY29udHJhY3RfYWRkcmVzcyI6IiIsImlteCI6IjY1NTYwMDAwMDAwMCIsInByZXBhcmluZ193aXRoZHJhd2FsIjoiMCIsIndpdGhkcmF3YWJsZSI6IjAifQ","remaining":0}
-        console.log(result)
+        setState({ status: TransactionStateImmutableX.Mining })
+
+        const { status } = response.result[0]
+
+        if (status === 'success') {
+          setState({ status: TransactionStateImmutableX.Success })
+        } else if (status === 'error') {
+          setState({ status: TransactionStateImmutableX.Fail, errorMessage: response.result[0].message })
+        } else {
+          setState({ status: TransactionStateImmutableX.Exception, errorMessage: `status: ${status}` })
+        }
       } catch (error) {
-        // Catch and print out the error
-        console.error(error)
+        const e = `Error encountered calling 'link.transfer' on ${error}. parameters: tokenId: ${tokenId}, tokenAddress: ${tokenAddress}, toAddress: ${toAddress}`
+        console.error(e)
+        Sentry.captureException(e)
+
+        const err = toErrorWithMessage(error)
+
+        if (err.message === 'Link Window Closed') {
+          setState({ status: TransactionStateImmutableX.Exception, errorMessage: 'User closes the window' })
+        } else if (err.message === '') {
+          setState({ status: TransactionStateImmutableX.Exception, errorMessage: 'User deny' })
+        } else {
+          setState({ status: TransactionStateImmutableX.Fail, errorMessage: err.message })
+        }
       }
     },
     [imxLink]
@@ -113,20 +137,47 @@ export const useImmutableXERC721AssetTransfers = () => {
 
   return {
     send: transfer,
-    state: 'Success',
+    state,
+    resetState,
   }
 }
 
+/**
+ * useImmutableXERC721AssetUnstake
+ * @returns
+ */
 export const useImmutableXERC721AssetUnstake = () => {
   const { imxLink, walletInfo } = useImmutableXWallet()
+  const [state, setState] = useState<TransactionStatusImmutableX>({ status: TransactionStateImmutableX.None })
+
+  const resetState = useCallback(() => {
+    setState({ status: TransactionStateImmutableX.None })
+  }, [setState])
 
   const getWalletSignSignature = useCallback(
-    async (tokenAddress: string, tokenId: string) => {
-      if (!imxLink || !walletInfo) return null
-      const message = `Token address: ${tokenAddress}\nToken id: ${tokenId}`
-      const { result: signature } = await imxLink.sign({ message, description: message })
-      console.debug('account', walletInfo.address, 'signature', signature)
-      return signature
+    async (tokenAddress: string, tokenId: string): Promise<string | undefined> => {
+      if (!imxLink || !walletInfo) {
+        return
+      }
+
+      try {
+        const message = `Token address: ${tokenAddress}\nToken id: ${tokenId}`
+        const { result: signature } = await imxLink.sign({ message, description: message })
+        console.debug('account', walletInfo.address, 'signature', signature)
+        return signature
+      } catch (error) {
+        const e = `Error encountered calling 'link.sign' on ${error}. parameters: tokenId: ${tokenId}, tokenAddress: ${tokenAddress}`
+        console.error(e)
+        Sentry.captureException(e)
+
+        const err = toErrorWithMessage(error)
+
+        if (err.message === 'Link Window Closed') {
+          setState({ status: TransactionStateImmutableX.Exception, errorMessage: 'User closes the window' })
+        } else {
+          setState({ status: TransactionStateImmutableX.Fail, errorMessage: err.message })
+        }
+      }
     },
     [imxLink, walletInfo]
   )
@@ -142,6 +193,8 @@ export const useImmutableXERC721AssetUnstake = () => {
         return
       }
 
+      setState({ status: TransactionStateImmutableX.PendingSignature })
+
       const signature = await getWalletSignSignature(tokenAddress, tokenId)
 
       if (!signature) {
@@ -149,23 +202,49 @@ export const useImmutableXERC721AssetUnstake = () => {
         return
       }
 
-      // {"transaction_id":357775,"status":"success","user":"0xe4cdfd21b1eb96650ff1acde35276d9da579070c","receiver":"0x8dd609188f6479732ac5aea52e53264ff8dc0eb6","token":{"type":"ERC721","data":{"token_id":"460","id":"0x7408a33aa464ac5f1275acb0d4f69195570d9c2dfc713a59e7c08abfe9a2c3ee","token_address":"0xbf206014a878df4153036d7895188e340527a8f0","decimals":0,"quantity":{"type":"BigNumber","hex":"0x01"},"quantity_with_fees":""}},"timestamp":"2022-11-05T15:57:31.540Z"}
-      const result = await immutableXUnstakeApi<any>({
-        owner: walletInfo.address,
-        tokenAddress,
-        tokenId,
-        signature,
-      })
-      console.log('result', result)
+      try {
+        const response = await immutableXUnstakeApi<ImmutableXUnstake>({
+          owner: walletInfo.address,
+          tokenAddress,
+          tokenId,
+          signature,
+        })
 
-      return result
+        console.log('response', response)
+
+        setState({ status: TransactionStateImmutableX.Mining })
+
+        if (response.status === 200) {
+          const { status } = response.data
+          if (status === 'success') {
+            setState({ status: TransactionStateImmutableX.Success })
+          } else if (status === 'failure') {
+            setState({ status: TransactionStateImmutableX.Fail, errorMessage: `status: ${status}` })
+          } else {
+            setState({ status: TransactionStateImmutableX.Exception, errorMessage: `status: ${status}` })
+          }
+        } else {
+          setState({
+            status: TransactionStateImmutableX.Exception,
+            errorMessage: `response status: ${response.status}`,
+          })
+        }
+      } catch (error) {
+        const e = `Error encountered calling 'immutableXUnstakeApi' on ${error}. parameters: tokenId: ${tokenId}, tokenAddress: ${tokenAddress}, signature: ${signature}, owner: ${walletInfo.address}`
+        console.error(e)
+        Sentry.captureException(e)
+
+        const err = toErrorWithMessage(error)
+        setState({ status: TransactionStateImmutableX.Fail, errorMessage: err.message })
+      }
     },
     [getWalletSignSignature, imxLink, walletInfo]
   )
 
   return {
     send: unstake,
-    state: 'Success',
+    state,
+    resetState,
   }
 }
 
