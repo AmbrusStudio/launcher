@@ -1,6 +1,7 @@
 import * as Sentry from '@sentry/react'
 import { Falsy, useCall, useCalls, useContractFunction } from '@usedapp/core'
 import { BigNumber, Contract } from 'ethers'
+import { useEffect, useMemo, useState } from 'react'
 
 import { defaultChainId } from '../contracts'
 import { ERC721__factory } from '../typechain/factories/@openzeppelin/contracts/token/ERC721/ERC721__factory'
@@ -75,6 +76,10 @@ export function useE4CRangerUnstake(tokenAddress: string) {
  * @returns
  */
 export function useUpgradeds(tokenAddress: string, tokenIds: string[]): (boolean | undefined)[] {
+  const [upgraded, setUpgraded] = useState<(boolean | undefined)[]>([])
+
+  const emptyCalls = useMemo(() => [], [])
+
   const calls =
     tokenIds?.map((tokenId) => ({
       contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
@@ -84,7 +89,7 @@ export function useUpgradeds(tokenAddress: string, tokenIds: string[]): (boolean
   const results =
     useCalls(calls, {
       chainId: defaultChainId,
-    }) ?? []
+    }) ?? emptyCalls
   results.forEach((result, idx) => {
     if (result && result.error) {
       const e = `Error encountered calling 'upgraded' on ${calls[idx]?.contract.address}: ${result.error.message}`
@@ -94,7 +99,12 @@ export function useUpgradeds(tokenAddress: string, tokenIds: string[]): (boolean
     }
   })
   console.log('useUpgradeds results', results)
-  return results.map((result) => result?.value?.[0])
+
+  useEffect(() => {
+    setUpgraded(results.map((result) => result?.value?.[0]))
+  }, [results])
+
+  return upgraded
 }
 
 /**
@@ -103,7 +113,11 @@ export function useUpgradeds(tokenAddress: string, tokenIds: string[]): (boolean
  * @param tokenIds
  * @returns constants.AddressZero || Address
  */
-export function useOriginalOwners(tokenAddress: string, tokenIds: string[]): string[] {
+export function useOriginalOwners(tokenAddress: string, tokenIds: string[]) {
+  const [originalOwner, setOriginalOwner] = useState<string[]>([])
+
+  const emptyCalls = useMemo(() => [], [])
+
   const calls =
     tokenIds?.map((tokenId) => ({
       contract: new Contract(tokenAddress, E4CRangerHolderFactory.abi),
@@ -114,7 +128,7 @@ export function useOriginalOwners(tokenAddress: string, tokenIds: string[]): str
   const results =
     useCalls(calls, {
       chainId: defaultChainId,
-    }) ?? []
+    }) ?? emptyCalls
   results.forEach((result, idx) => {
     if (result && result.error) {
       const e = `Error encountered calling 'originalOwner' on ${calls[idx]?.contract.address}: ${result.error.message}`
@@ -124,7 +138,13 @@ export function useOriginalOwners(tokenAddress: string, tokenIds: string[]): str
     }
   })
   console.log('useOriginalOwners results', results)
-  return results.map((result) => result?.value?.[0])
+  // return results.map((result) => result?.value?.[0])
+
+  useEffect(() => {
+    setOriginalOwner(results.map((result) => result?.value?.[0]))
+  }, [results])
+
+  return originalOwner
 }
 
 /**

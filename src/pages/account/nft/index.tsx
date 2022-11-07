@@ -21,6 +21,7 @@ import {
 } from '../../../contracts'
 import { useWeb3Modal } from '../../../hooks'
 import { useERC721ImmutableXListState, useERC721ListState } from '../../../hooks/useERC721List'
+import { useMetadataBaseURL } from '../../../hooks/useMetadataBaseURL'
 
 function AccountNFT() {
   const { account, active } = useEthers()
@@ -29,19 +30,25 @@ function AccountNFT() {
   const isMd = useMediaQuery({ query: '(min-width: 768px)' })
   const update = useUpdate()
 
+  const { metadadaGoldBaseURI, metadadaRangersBaseURI } = useMetadataBaseURL()
+
   const { nfts: nftsGold, loading: loadingGold } = useERC721ListState({
     holderAddress: ADDRESS_E4CRanger_Gold_Holder,
     tokenAddress: ADDRESS_E4C_Ranger_Gold_Edition,
+    baseURL: metadadaGoldBaseURI,
   })
   const { nfts: nftsRangers, loading: loadingRangers } = useERC721ListState({
     holderAddress: ADDRESS_E4CRanger_Rangers_Holder,
     tokenAddress: ADDRESS_E4C_Ranger_Rangers_Edition,
+    baseURL: metadadaRangersBaseURI,
   })
   const { nfts: nftsImmutableXGold, loading: loadingImmutableXGold } = useERC721ImmutableXListState({
     collection: ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
+    baseURL: metadadaGoldBaseURI,
   })
   const { nfts: nftsImmutableXRangers, loading: loadingImmutableXRangers } = useERC721ImmutableXListState({
     collection: ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
+    baseURL: metadadaRangersBaseURI,
   })
 
   const nfts = useMemo(
