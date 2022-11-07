@@ -3,6 +3,7 @@ import { constants } from 'ethers'
 import { getAddress } from 'ethers/lib/utils'
 import { cloneDeep } from 'lodash'
 
+import { metadataApi } from '../api/metadata'
 import {
   ADDRESS_E4C_Ranger_Gold_Edition,
   ADDRESS_E4C_Ranger_Rangers_Edition,
@@ -14,6 +15,7 @@ import {
 } from '../contracts'
 import { stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
 import {
+  MetadataResponse,
   MetadataStatus,
   NFTE4CRanger,
   NFTE4CRangerUpgraded,
@@ -23,6 +25,7 @@ import {
   Trait,
   TraitItem,
 } from '../types'
+import { BlindBoxMode } from './bindbox'
 
 /**
  * parse tokenId by name
@@ -286,4 +289,38 @@ export const traitNameOnTop = (trait: TraitItem[]): TraitItem[] => {
     _trait.unshift(_trait.splice(index, 1)[0])
   }
   return _trait
+}
+
+/**
+ * EditionPlus
+ * @param data
+ * @param baseURL
+ * @returns
+ */
+export const editionPlus = async (data: NFTE4CRanger[], baseURL: string): Promise<NFTE4CRanger[]> => {
+  const nfts = cloneDeep(data)
+
+  const promiseAllArray = nfts.map((item) =>
+    metadataApi<MetadataResponse>({
+      url: baseURL,
+      tokenId: item.tokenId,
+    })
+  )
+
+  const response = await Promise.allSettled(promiseAllArray)
+
+  response.forEach((item, index) => {
+    if (item.status === 'fulfilled') {
+      if (item.value.status === 200 && item.value.data.attributes && !BlindBoxMode(nfts[index].trait)) {
+        const findIndexResult = nfts[index].trait.findIndex((i) => i.trait_type === Trait.Edition)
+        const findIndexEditionResult = item.value.data.attributes.findIndex((i) => i.trait_type === Trait.Edition)
+
+        if (~findIndexResult && ~findIndexEditionResult) {
+          nfts[index].trait[findIndexResult].value = item.value.data.attributes[findIndexEditionResult].value
+        }
+      }
+    }
+  })
+
+  return nfts
 }

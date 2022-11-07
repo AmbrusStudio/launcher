@@ -18,6 +18,7 @@ type MetadataEdition = {
   [key: number]: {
     lastTime: number
     url: string
+    baseURI: string
     address: string
     chainId: number
     name: string // contract name
@@ -43,6 +44,7 @@ const defaultState: MetadataState = {
     [Mainnet.chainId]: {
       lastTime: 0,
       url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Gold_Edition/E4C_Rangers_Kit.json',
+      baseURI: 'https://api.ambrus.studio/e4c-ranger/gold/metadata/',
       address: ADDRESS_ImmutableX_E4C_Ranger_Gold_Editions[Mainnet.chainId],
       chainId: Mainnet.chainId,
       name: 'E4C Rangers Gold Edition',
@@ -51,6 +53,7 @@ const defaultState: MetadataState = {
     [Goerli.chainId]: {
       lastTime: 0,
       url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Gold_Edition/E4C_Rangers_Kit.json',
+      baseURI: 'https://api.ambrus.studio/e4c-ranger/gold/metadata/',
       address: ADDRESS_ImmutableX_E4C_Ranger_Gold_Editions[Goerli.chainId],
       chainId: Goerli.chainId,
       name: 'E4C Rangers Gold Edition',
@@ -62,6 +65,7 @@ const defaultState: MetadataState = {
     [Mainnet.chainId]: {
       lastTime: 0,
       url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Rangers_Edition/E4C_Rangers_Kit.json',
+      baseURI: 'https://api.ambrus.studio/e4c-ranger/rangers/metadata/',
       address: ADDRESS_ImmutableX_E4C_Ranger_Rangers_Editions[Mainnet.chainId],
       chainId: Mainnet.chainId,
       name: 'E4C Rangers Rangers Edition',
@@ -70,6 +74,7 @@ const defaultState: MetadataState = {
     [Goerli.chainId]: {
       lastTime: 0,
       url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Rangers_Edition/E4C_Rangers_Kit.json',
+      baseURI: 'https://api.ambrus.studio/e4c-ranger/rangers/metadata/',
       address: ADDRESS_ImmutableX_E4C_Ranger_Rangers_Editions[Goerli.chainId],
       chainId: Goerli.chainId,
       name: 'E4C Rangers Rangers Edition',

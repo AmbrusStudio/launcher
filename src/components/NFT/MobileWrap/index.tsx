@@ -114,7 +114,7 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts, update }) => {
     if (stakeState.status === 'Success' || stakeStateImmutableX.status === TransactionStateImmutableX.Success) {
       update()
     }
-  }, [stakeState, handleState, update, stakeStateImmutableX.status, stakeStateImmutableX])
+  }, [stakeState, handleState, update, stakeStateImmutableX.status, stakeStateImmutableX, handleStateImmutableX])
 
   // Watch unstakeState
   useEffect(() => {
@@ -135,7 +135,7 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts, update }) => {
     if (unstakeState.status === 'Success' || unstakeStateImmutableX.status === TransactionStateImmutableX.Success) {
       update()
     }
-  }, [unstakeState, handleState, update, unstakeStateImmutableX.status, unstakeStateImmutableX])
+  }, [unstakeState, handleState, update, unstakeStateImmutableX.status, unstakeStateImmutableX, handleStateImmutableX])
 
   return (
     <>
