@@ -1,15 +1,13 @@
 import useUrlState from '@ahooksjs/use-url-state'
 import CircularProgress from '@mui/material/CircularProgress'
-import { useScroll, useTimeout } from 'ahooks'
+import { useDebounceFn, useDeepCompareEffect, useScroll, useTimeout } from 'ahooks'
 import { cloneDeep } from 'lodash'
-import { useCallback, useMemo, useRef, useState } from 'react'
-import { compose } from 'redux'
+import { useCallback, useRef, useState } from 'react'
 
 import DrawerFilter from '../../components/Gallery/DrawerFilter'
 import GalleryFilter from '../../components/Gallery/Filter'
 import GalleryHead from '../../components/Gallery/GalleryHead'
 import GalleryWrapper from '../../components/Gallery/GalleryWrapper'
-import GalleryWrapperFilter from '../../components/Gallery/GalleryWrapperFilter'
 import HeadStatus from '../../components/Gallery/HeadStatus'
 import ModalGalleryInfo from '../../components/Gallery/ModalGalleryInfo'
 import Search from '../../components/Gallery/Search'
@@ -19,11 +17,18 @@ import { useGalleryFilter } from '../../hooks/useGalleryFilter'
 import { useMetadata } from '../../hooks/useMetadata'
 import { useNumStrState } from '../../hooks/useNumStrState'
 import { TokenMetadata, Trait } from '../../types'
-import { Filter, FilterList } from '../../types/gallery'
-import { handleFilterFn } from '../../utils'
+import { handleFilterFn, sleep } from '../../utils'
 
 function Gallery() {
-  const { galleryFilterStatus, filter, setFilter, toggleFilterTab, toggleFilterTagCheckedChange } = useGalleryFilter()
+  const {
+    galleryFilterStatus,
+    filter,
+    traitFilter,
+    hasFilter,
+    setFilter,
+    toggleFilterTab,
+    toggleFilterTagCheckedChange,
+  } = useGalleryFilter()
   const [state, setState] = useUrlState({ name: undefined })
 
   // NFT modal
@@ -40,27 +45,33 @@ function Gallery() {
 
   const { metadataAllEdition, loading } = useMetadata()
 
-  // Drawer has filter
-  const isFilter = useMemo<boolean>(() => {
-    const isChecked = (element: Filter) => (element.list as FilterList[]).find((i) => i.is_checked)
-
-    return filter.some(isChecked)
-  }, [filter])
-
   // Current gallery
-  const currentGallery = useMemo<TokenMetadata[]>(() => {
-    return handleFilterFn(filter, searchId, metadataAllEdition)
-  }, [searchId, filter, metadataAllEdition])
+  const [currentGallery, setCurrentGallery] = useState<TokenMetadata[]>([])
 
-  // Filter checked category
-  const checkedFilterCategory = useMemo<string[]>(() => {
-    const listChecked = (data: Filter[]): FilterList[][] =>
-      data.map((i) => [...i.list.filter((j: FilterList) => j.is_checked)])
+  const { run: getCurrentGallery } = useDebounceFn(
+    async (traitFilter: Map<Trait, string[]>, searchId: string, metadataAllEdition: TokenMetadata[]) => {
+      setCurrentGallery([])
 
-    const listFlat = (data: FilterList[][]): string[] => data.flatMap((i) => i.map((j) => j.label))
+      const headerDom = document.querySelector<HTMLDivElement>('#header')
+      const headerHeight = headerDom?.offsetHeight || 100
+      const top = wrapperRef?.current ? wrapperRef.current?.offsetTop - headerHeight : 0
 
-    return compose(listFlat, listChecked)(filter)
-  }, [filter])
+      if (scroll?.top && scroll.top > top) {
+        document.documentElement.scrollTop = top
+      }
+
+      await sleep(300)
+      const list = handleFilterFn(traitFilter, searchId, metadataAllEdition)
+      setCurrentGallery(list)
+    },
+    {
+      wait: 500,
+    }
+  )
+
+  useDeepCompareEffect(() => {
+    getCurrentGallery(traitFilter, searchId, metadataAllEdition)
+  }, [traitFilter, searchId, metadataAllEdition])
 
   // Clear filter
   const clearFilter = useCallback(() => {
@@ -130,7 +141,7 @@ function Gallery() {
           <div className="lg:ml-[36px] grow-1">
             <SearchAction
               searchId={searchId}
-              isFilter={isFilter}
+              isFilter={hasFilter}
               setSearchId={setSearchId}
               clearFilter={clearFilter}
               setVisibleDrawer={setVisibleDrawer}
@@ -152,22 +163,11 @@ function Gallery() {
                 />
               </div>
             ) : (
-              <>
-                {/* Todo Merge optimization */}
-                {checkedFilterCategory.length || searchId ? (
-                  <GalleryWrapperFilter
-                    allToken={currentGallery}
-                    setCurrentNFTInfo={setCurrentNFTInfo}
-                    setVisibleNFT={setVisibleNFT}
-                  />
-                ) : (
-                  <GalleryWrapper
-                    allToken={currentGallery}
-                    setCurrentNFTInfo={setCurrentNFTInfo}
-                    setVisibleNFT={setVisibleNFT}
-                  />
-                )}
-              </>
+              <GalleryWrapper
+                allToken={currentGallery}
+                setCurrentNFTInfo={setCurrentNFTInfo}
+                setVisibleNFT={setVisibleNFT}
+              />
             )}
           </div>
         </div>

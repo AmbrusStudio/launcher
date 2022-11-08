@@ -98,7 +98,7 @@ export function useUpgradeds(tokenAddress: string, tokenIds: string[]): (boolean
       Sentry.captureException(e)
     }
   })
-  console.log('useUpgradeds results', results)
+  results.length && console.log('useUpgradeds results', results)
 
   useEffect(() => {
     setUpgraded(results.map((result) => result?.value?.[0]))
@@ -137,8 +137,7 @@ export function useOriginalOwners(tokenAddress: string, tokenIds: string[]) {
       Sentry.captureException(e)
     }
   })
-  console.log('useOriginalOwners results', results)
-  // return results.map((result) => result?.value?.[0])
+  results.length && console.log('useOriginalOwners results', results)
 
   useEffect(() => {
     setOriginalOwner(results.map((result) => result?.value?.[0]))
