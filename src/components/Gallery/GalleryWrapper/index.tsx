@@ -3,7 +3,9 @@ import { useInfiniteScroll } from 'ahooks'
 import { Dispatch, FC, SetStateAction, useEffect } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
+import { useMetadataBaseURL } from '../../../hooks/useMetadataBaseURL'
 import { TokenMetadata } from '../../../types'
+import { galleryEditionPlus, getBaseURLByAddress } from '../../../utils'
 import GalleryItem from '../GalleryItem'
 
 interface Props {
@@ -17,13 +19,26 @@ interface ListResult {
   total: number
 }
 
-function getLoadMoreList(page: number, pageSize: number, data: TokenMetadata[]): Promise<ListResult> {
+async function getLoadMoreList(
+  page: number,
+  pageSize: number,
+  data: TokenMetadata[],
+  baseURL: {
+    goldEditionBaseURL: string
+    rangersEditionBaseURL: string
+    ultimateEditionBaseURL: string
+  }
+): Promise<ListResult> {
   const start = (page - 1) * pageSize
   const end = page * pageSize
   const list = data.slice(start, end)
+
+  const currentBaseURL = list.map((i) => getBaseURLByAddress(i.address, baseURL))
+  const tokens = await galleryEditionPlus(list, currentBaseURL)
+
   return new Promise((resolve) => {
     resolve({
-      list,
+      list: tokens,
       total: data.length,
     })
   })
@@ -32,10 +47,15 @@ function getLoadMoreList(page: number, pageSize: number, data: TokenMetadata[]):
 const PAGE_SIZE = 16
 
 const GalleryWrapper: FC<Props> = ({ allToken, setCurrentNFTInfo, setVisibleNFT }) => {
-  const { data, loading, loadMore, reload } = useInfiniteScroll((d) => {
-    const page = d ? Math.ceil(d.list.length / PAGE_SIZE) + 1 : 1
+  const { metadadaGoldBaseURI, metadadaRangersBaseURI, metadadaUltimateBaseURI } = useMetadataBaseURL()
 
-    return getLoadMoreList(page, PAGE_SIZE, allToken)
+  const { data, loading, loadMore, reload } = useInfiniteScroll(async (d) => {
+    const page = d ? Math.ceil(d.list.length / PAGE_SIZE) + 1 : 1
+    return getLoadMoreList(page, PAGE_SIZE, allToken, {
+      goldEditionBaseURL: metadadaGoldBaseURI,
+      rangersEditionBaseURL: metadadaRangersBaseURI,
+      ultimateEditionBaseURL: metadadaUltimateBaseURI,
+    })
   })
 
   const hasMore = !!(data && data.list.length < data.total)
@@ -49,12 +69,8 @@ const GalleryWrapper: FC<Props> = ({ allToken, setCurrentNFTInfo, setVisibleNFT 
   return (
     <div className="mt-3 lg:mt-6">
       {loading ? (
-        <div className="text-center">
-          <CircularProgress
-            sx={{
-              color: 'white',
-            }}
-          />
+        <div className="text-center py-6 ">
+          <CircularProgress className="w-6! h-6! text-white!" />
         </div>
       ) : (
         <>
@@ -62,7 +78,11 @@ const GalleryWrapper: FC<Props> = ({ allToken, setCurrentNFTInfo, setVisibleNFT 
             dataLength={data?.list.length || 0}
             next={loadMore}
             hasMore={hasMore}
-            loader={<div className="text-base text-white">Loading...</div>}
+            loader={
+              <div className="text-center col-span-2 lg:col-span-3 xl:col-span-4 py-6 ">
+                <CircularProgress className="w-6! h-6! text-white!" />
+              </div>
+            }
             className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"
           >
             {data?.list.map((item, index) => (
@@ -76,9 +96,7 @@ const GalleryWrapper: FC<Props> = ({ allToken, setCurrentNFTInfo, setVisibleNFT 
               />
             ))}
           </InfiniteScroll>
-          <div className="py-6 text-center">
-            {!hasMore && <span className="text-base text-white">No more data</span>}
-          </div>
+          {!hasMore && <div className="py-6 text-center text-base text-white">No more data</div>}
         </>
       )}
     </div>

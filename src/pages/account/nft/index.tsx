@@ -59,7 +59,7 @@ function AccountNFT() {
     return loadingGold && loadingRangers && loadingImmutableXGold && loadingImmutableXRangers
   }, [loadingGold, loadingRangers, loadingImmutableXGold, loadingImmutableXRangers])
 
-  console.log('nfts', nfts)
+  nfts.length && console.log('nfts', nfts)
 
   const [visiblePerk, setVisiblePerk] = useState<boolean>(false)
   const [visiblePerkModal, setVisiblePerkModal] = useState<boolean>(false)
