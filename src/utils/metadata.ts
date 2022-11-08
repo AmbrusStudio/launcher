@@ -23,6 +23,7 @@ import {
   StakeAnnouncement,
   TokenMetadata,
   Trait,
+  TraitEdition,
   TraitItem,
 } from '../types'
 import { BlindBoxMode } from './bindbox'
@@ -148,7 +149,7 @@ export const formatMetadataImmutableXUser = ({
   const result = tokenIds
     .map((tokenId, index) => {
       // Start search
-      const findResult = metadata.find((i) => i.tokenId === tokenId)
+      const findResult: TokenMetadata | undefined = metadata.find((i) => i.tokenId === tokenId)
       if (findResult) {
         return {
           ...findResult,
@@ -204,7 +205,7 @@ export const getEdition = (upgraded: NFTE4CRangerUpgraded, address: string): NFT
 }
 
 /**
- * Get gallery edition
+ * Get Gallery Edition
  * @param upgraded
  * @param address
  * @returns
@@ -232,6 +233,51 @@ export const getGalleryEdition = (upgraded: NFTE4CRangerUpgraded, address: strin
     return 'Ultimate'
   } else {
     return '-'
+  }
+}
+
+/**
+ * Get BaseURL By Address
+ * @param address
+ * @param goldEditionBaseURL
+ * @param rangersEditionBaseURL
+ * @param ultimateEditionBaseURL
+ * @returns
+ */
+export const getBaseURLByAddress = (
+  address: string,
+  baseURL: {
+    goldEditionBaseURL: string
+    rangersEditionBaseURL: string
+    ultimateEditionBaseURL: string
+  }
+): string | undefined => {
+  if (
+    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition) ||
+    getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition)
+  ) {
+    return baseURL.goldEditionBaseURL
+  } else if (
+    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition) ||
+    getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition)
+  ) {
+    return baseURL.rangersEditionBaseURL
+  } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Ultimate_Edition)) {
+    return baseURL.ultimateEditionBaseURL
+  } else {
+    return
+  }
+}
+
+/**
+ * Get Trait Edition
+ * @param data
+ * @returns
+ */
+export const getTraitEdition = (data: TokenMetadata): TraitEdition | undefined => {
+  const findResult = data.trait.find((i) => i.trait_type === Trait.Edition)
+  if (findResult) {
+    return findResult.value as TraitEdition
   }
 }
 
@@ -306,6 +352,47 @@ export const editionPlus = async (data: NFTE4CRanger[], baseURL: string): Promis
       tokenId: item.tokenId,
     })
   )
+
+  const response = await Promise.allSettled(promiseAllArray)
+
+  response.forEach((item, index) => {
+    if (item.status === 'fulfilled') {
+      if (item.value.status === 200 && item.value.data.attributes && !BlindBoxMode(nfts[index].trait)) {
+        const findIndexResult = nfts[index].trait.findIndex((i) => i.trait_type === Trait.Edition)
+        const findIndexEditionResult = item.value.data.attributes.findIndex((i) => i.trait_type === Trait.Edition)
+
+        if (~findIndexResult && ~findIndexEditionResult) {
+          nfts[index].trait[findIndexResult].value = item.value.data.attributes[findIndexEditionResult].value
+        }
+      }
+    }
+  })
+
+  return nfts
+}
+
+/**
+ * Gallery Edition Plus
+ * @param data
+ * @param baseURL
+ * @returns
+ */
+export const galleryEditionPlus = async (
+  data: TokenMetadata[],
+  baseURL: (string | undefined)[]
+): Promise<TokenMetadata[]> => {
+  const nfts = cloneDeep(data)
+
+  const promiseAllArray = nfts.map((item, index) => {
+    if (baseURL[index]) {
+      return metadataApi<MetadataResponse>({
+        url: baseURL[index] || '',
+        tokenId: item.tokenId,
+      })
+    } else {
+      return Promise.reject('not baseURL')
+    }
+  })
 
   const response = await Promise.allSettled(promiseAllArray)
 

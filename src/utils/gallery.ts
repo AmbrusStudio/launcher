@@ -35,7 +35,7 @@ export const toggleFilterOpenFn = (filter: Filter[], index: number): Filter[] | 
  * @param filter
  * @returns
  */
-const convertFilterToMap = (filter: Filter[]): Map<Trait, string[]> => {
+export const convertFilterToMap = (filter: Filter[]): Map<Trait, string[]> => {
   const filterChecked = filter.filter((i) => i.list.some((j: FilterList) => j.is_checked))
   const filterActiveChecked = filterChecked.map((i) => ({
     ...i,
@@ -100,13 +100,15 @@ const convertTraitToArray = (data: GALLERY_MAP[]): TokenMetadata[] => {
  * @param searchId
  * @returns
  */
-export const handleFilterFn = (filter: Filter[], searchId: string, tokens: TokenMetadata[]): TokenMetadata[] => {
+export const handleFilterFn = (
+  traitFilter: Map<Trait, string[]>,
+  searchId: string,
+  tokens: TokenMetadata[]
+): TokenMetadata[] => {
   // Search filter
   const gallery = searchId ? tokens.filter((item) => item.tokenId.includes(searchId)) : tokens
 
-  const filterChecked = convertFilterToMap(filter)
-  // No filter
-  if (!filterChecked.size) {
+  if (!traitFilter.size) {
     return gallery
   }
 
@@ -115,7 +117,7 @@ export const handleFilterFn = (filter: Filter[], searchId: string, tokens: Token
   const galleryArray = galleryMap.filter((item) => {
     let flag = true
 
-    filterChecked.forEach((value, key) => {
+    traitFilter.forEach((value, key) => {
       const traitVal = item.trait.get(key)
 
       if (!(traitVal && value.includes(traitVal))) {

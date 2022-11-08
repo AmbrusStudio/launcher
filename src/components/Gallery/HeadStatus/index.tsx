@@ -20,7 +20,7 @@ const HeadStatus: FC<Props> = ({ scroll, wrapperRef, count, clearFilter }) => {
     // 12 mobile
     // 24 pc
     const padding = mql.matches ? 24 : 12
-    return scroll && wrapperRef?.current ? scroll.top >= wrapperRef.current?.offsetTop - headerHeight + padding : false
+    return scroll && wrapperRef?.current ? scroll.top >= wrapperRef.current.offsetTop - headerHeight + padding : false
   }, [scroll, wrapperRef])
 
   return (

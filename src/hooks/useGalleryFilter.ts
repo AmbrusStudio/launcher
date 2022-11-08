@@ -1,9 +1,10 @@
+import { useDeepCompareEffect } from 'ahooks'
 import { groupBy } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { Trait } from '../types'
 import { Filter, GALLERY_FILTER, GALLERY_FILTER_LIST } from '../types/gallery'
-import { toggleFilterCheckedFn, toggleFilterOpenFn } from '../utils'
+import { convertFilterToMap, toggleFilterCheckedFn, toggleFilterOpenFn } from '../utils'
 import { BlindBoxMode } from '../utils/bindbox'
 import { useMetadata } from './useMetadata'
 
@@ -15,6 +16,8 @@ export function useGalleryFilter() {
   const { metadataAllEdition } = useMetadata()
   // Filter
   const [filter, setFilter] = useState<Filter[]>([])
+  const [traitFilter, setTraitFilter] = useState<Map<Trait, string[]>>(new Map())
+  const [hasFilter, setHasFilter] = useState<boolean>(false)
 
   const galleryFilter = useMemo<GALLERY_FILTER[]>(() => {
     // Handle Filter Property
@@ -63,7 +66,7 @@ export function useGalleryFilter() {
     }))
   }, [galleryFilter])
 
-  // Toggle Filter children open
+  // Filter menu expand
   const toggleFilterTab = useCallback(
     (index: number) => {
       const list = toggleFilterOpenFn(filter, index)
@@ -72,7 +75,7 @@ export function useGalleryFilter() {
     [filter, setFilter]
   )
 
-  // Toggle filter children tag checked - change
+  // Trait selection
   const toggleFilterTagCheckedChange = useCallback(
     (parentIndex: number, childrenIndex: number) => {
       const list = toggleFilterCheckedFn(filter, parentIndex, childrenIndex)
@@ -85,9 +88,33 @@ export function useGalleryFilter() {
     setFilter(galleryFilterStatus)
   }, [galleryFilterStatus])
 
+  useDeepCompareEffect(() => {
+    // Set has filter
+    let flag = false
+    traitFilter.forEach((value) => {
+      if (flag) {
+        return
+      }
+
+      if (value.length > 0) {
+        flag = true
+      }
+    })
+
+    setHasFilter(flag)
+  }, [traitFilter])
+
+  useDeepCompareEffect(() => {
+    // Set the filter map structure
+    const list = convertFilterToMap(filter)
+    setTraitFilter(list)
+  }, [filter])
+
   return {
     galleryFilterStatus,
     filter,
+    traitFilter,
+    hasFilter,
     setFilter,
     toggleFilterTab,
     toggleFilterTagCheckedChange,
