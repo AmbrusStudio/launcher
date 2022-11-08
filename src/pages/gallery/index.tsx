@@ -1,5 +1,4 @@
 import useUrlState from '@ahooksjs/use-url-state'
-import CircularProgress from '@mui/material/CircularProgress'
 import { useDebounceFn, useDeepCompareEffect, useScroll, useTimeout } from 'ahooks'
 import { cloneDeep } from 'lodash'
 import { useCallback, useRef, useState } from 'react'
@@ -43,7 +42,7 @@ function Gallery() {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const scroll = useScroll(document)
 
-  const { metadataAllEdition, loading } = useMetadata()
+  const { metadataAllEdition } = useMetadata()
 
   // Current gallery
   const [currentGallery, setCurrentGallery] = useState<TokenMetadata[]>([])
@@ -54,7 +53,7 @@ function Gallery() {
 
       const headerDom = document.querySelector<HTMLDivElement>('#header')
       const headerHeight = headerDom?.offsetHeight || 100
-      const top = wrapperRef?.current ? wrapperRef.current?.offsetTop - headerHeight : 0
+      const top = wrapperRef?.current ? wrapperRef.current.offsetTop - headerHeight : 0
 
       if (scroll?.top && scroll.top > top) {
         document.documentElement.scrollTop = top
@@ -103,95 +102,87 @@ function Gallery() {
   }, 3000)
 
   return (
-    <PageLayout>
-      <div className="max-w-[1312px] m-x-auto mt-[92px] lg:mt-[156px] xl:mt-[188px] px-6">
-        <GalleryHead />
+    <>
+      <PageLayout>
+        <div className="max-w-[1312px] m-x-auto mt-[92px] lg:mt-[156px] xl:mt-[188px] px-6">
+          <GalleryHead />
 
-        <div className="my-3 lg:my-[48px] flex" ref={wrapperRef}>
-          <div
-            className={
-              'hidden lg:block w-[300px] sticky top-[120px] lg:top-[68px] xl:top-[100px] shrink-0 max-height overflow-hidden'
-            }
-          >
-            <div className={'flex m-b-3 lg:m-b-4.5'}>
-              <Search searchId={searchId} setSearchId={setSearchId} />
-            </div>
-            <div className="hidden lg:block">
-              <div className="border-y-2 border-rust py-4 text-xl font-bold leading-6 uppercase text-white">
-                Filters
+          <div className="my-3 lg:my-[48px] flex" ref={wrapperRef}>
+            <div
+              className={
+                'hidden lg:block w-[300px] sticky top-[120px] lg:top-[68px] xl:top-[100px] shrink-0 max-height overflow-hidden'
+              }
+            >
+              <div className={'flex m-b-3 lg:m-b-4.5'}>
+                <Search searchId={searchId} setSearchId={setSearchId} />
               </div>
-              <GalleryFilter
-                filter={filter}
-                toggleFilterTab={toggleFilterTab}
-                toggleFilterTagChecked={(parentIndex: number, childrenIndex: number) => {
-                  toggleFilterTagCheckedChange(parentIndex, childrenIndex)
+              <div className="hidden lg:block">
+                <div className="border-y-2 border-rust py-4 text-xl font-bold leading-6 uppercase text-white">
+                  Filters
+                </div>
+                <GalleryFilter
+                  filter={filter}
+                  toggleFilterTab={toggleFilterTab}
+                  toggleFilterTagChecked={(parentIndex: number, childrenIndex: number) => {
+                    toggleFilterTagCheckedChange(parentIndex, childrenIndex)
 
-                  // Only supports Name
-                  if (filter[parentIndex].label === Trait.Name) {
-                    if (!filter[parentIndex].list[childrenIndex].is_checked) {
-                      setState({ name: filter[parentIndex].list[childrenIndex].label.toLocaleLowerCase() })
-                    } else {
-                      setState({ name: undefined })
+                    // Only supports Name
+                    if (filter[parentIndex].label === Trait.Name) {
+                      if (!filter[parentIndex].list[childrenIndex].is_checked) {
+                        setState({ name: filter[parentIndex].list[childrenIndex].label.toLocaleLowerCase() })
+                      } else {
+                        setState({ name: undefined })
+                      }
                     }
-                  }
-                }}
-              />
-            </div>
-          </div>
-          <div className="lg:ml-[36px] grow-1">
-            <SearchAction
-              searchId={searchId}
-              isFilter={hasFilter}
-              setSearchId={setSearchId}
-              clearFilter={clearFilter}
-              setVisibleDrawer={setVisibleDrawer}
-            />
-
-            <HeadStatus
-              scroll={scroll}
-              wrapperRef={wrapperRef}
-              count={currentGallery.length}
-              clearFilter={clearFilter}
-            />
-
-            {loading ? (
-              <div className="text-center py-6">
-                <CircularProgress
-                  sx={{
-                    color: 'white',
                   }}
                 />
               </div>
-            ) : (
+            </div>
+            <div className="lg:ml-[36px] grow-1">
+              <SearchAction
+                searchId={searchId}
+                isFilter={hasFilter}
+                setSearchId={setSearchId}
+                clearFilter={clearFilter}
+                setVisibleDrawer={setVisibleDrawer}
+              />
+
+              <HeadStatus
+                scroll={scroll}
+                wrapperRef={wrapperRef}
+                count={currentGallery.length}
+                clearFilter={clearFilter}
+              />
+
               <GalleryWrapper
                 allToken={currentGallery}
                 setCurrentNFTInfo={setCurrentNFTInfo}
                 setVisibleNFT={setVisibleNFT}
               />
-            )}
+            </div>
           </div>
         </div>
-      </div>
 
+        <DrawerFilter
+          visibleDrawer={visibleDrawer}
+          setVisibleDrawer={setVisibleDrawer}
+          applyFilter={(value) => {
+            setFilter(value)
+            setVisibleDrawer(false)
+
+            // Only supports Name
+            value.forEach((item) => {
+              if (item.label === Trait.Name) {
+                item.list.forEach((itemJ) => {
+                  setState({ name: itemJ.label.toLocaleLowerCase() })
+                })
+              }
+            })
+          }}
+        />
+      </PageLayout>
       {currentNFTInfo && <ModalGalleryInfo visible={visibleNFT} setVisible={setVisibleNFT} metadata={currentNFTInfo} />}
-      <DrawerFilter
-        visibleDrawer={visibleDrawer}
-        setVisibleDrawer={setVisibleDrawer}
-        applyFilter={(value) => {
-          setFilter(value)
-          setVisibleDrawer(false)
-
-          // Only supports Name
-          value.forEach((item) => {
-            if (item.label === Trait.Name) {
-              item.list.forEach((itemJ) => {
-                setState({ name: itemJ.label.toLocaleLowerCase() })
-              })
-            }
-          })
-        }}
-      />
-    </PageLayout>
+    </>
   )
 }
 

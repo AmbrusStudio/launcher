@@ -33,8 +33,16 @@ export type NFTUpgradeInfo = {
 }
 
 export enum NFTTagState {
-  Cold = 'Cold',
-  ColdAdd = 'ColdAdd',
+  Gold = 'Gold',
+  GoldAdd = 'GoldAdd',
+  Ultimate = 'Ultimate',
+}
+
+export enum TraitEdition {
+  Gold = 'Gold',
+  ColdPlus = 'Gold+',
+  Rangers = 'Rangers',
+  RangersPlus = 'Rangers+',
   Ultimate = 'Ultimate',
 }
 
