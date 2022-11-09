@@ -123,25 +123,14 @@ export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
   'metadata/fetchMetadataGoldEdition',
   async (_, { signal }) => {
     try {
-      const list = []
-
       const response = await axios.get<MetadataResponse[]>(defaultState.GoldEdition[defaultChainId].url, {
         signal: signal,
       })
       if (response.status === 200) {
-        list.push(...response.data.slice(0, 450))
+        return response.data.slice(0, 450)
+      } else {
+        return []
       }
-      const responseKit = await axios.get<MetadataResponse[]>(
-        'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Gold_Edition/E4C_Rangers_Kit.json',
-        {
-          signal: signal,
-        }
-      )
-      if (responseKit.status === 200) {
-        list.push(...responseKit.data.slice(0, 450))
-      }
-
-      return list
     } catch (error) {
       const e = `metadata/fetchMetadataGoldEdition error: ${error}`
       console.log('error', e)
@@ -156,24 +145,14 @@ export const fetchMetadataRangersEdition = createAsyncThunk<MetadataResponse[]>(
   'metadata/fetchMetadataRangersEdition',
   async (_, { signal }) => {
     try {
-      const list = []
       const response = await axios.get<MetadataResponse[]>(defaultState.RangersEdition[defaultChainId].url, {
         signal: signal,
       })
       if (response.status === 200) {
-        list.push(...response.data.slice(0, 646))
+        return response.data.slice(0, 646)
+      } else {
+        return []
       }
-      const responseKit = await axios.get<MetadataResponse[]>(
-        'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Rangers_Edition/E4C_Rangers_Kit.json',
-        {
-          signal: signal,
-        }
-      )
-      if (responseKit.status === 200) {
-        list.push(...responseKit.data.slice(0, 646))
-      }
-
-      return list
     } catch (error) {
       const e = `metadata/fetchMetadataRangersEdition error: ${error}`
       console.log('error', e)
@@ -191,7 +170,11 @@ export const fetchMetadataUltimateEdition = createAsyncThunk<MetadataResponse[]>
       const response = await axios.get<MetadataResponse[]>(defaultState.UltimateEdition[defaultChainId].url, {
         signal: signal,
       })
-      return response.data
+      if (response.status === 200) {
+        return response.data
+      } else {
+        return []
+      }
     } catch (error) {
       const e = `metadata/fetchMetadataUltimateEdition error: ${error}`
       console.log('error', e)
