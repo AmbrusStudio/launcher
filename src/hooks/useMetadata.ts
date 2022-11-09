@@ -25,53 +25,18 @@ export function useMetadata() {
   const metadadaRangersEdition = useSelector((state: RootState) => state.metadata.RangersEdition[defaultChainId])
   const metadadaUltimateEdition = useSelector((state: RootState) => state.metadata.UltimateEdition[defaultChainId])
 
-  const metadataImmutableXGoldEdition = useSelector(
-    (state: RootState) => state.metadataImmutableX.GoldEdition[defaultChainId]
-  )
-  const metadataImmutableXRangersEdition = useSelector(
-    (state: RootState) => state.metadataImmutableX.RangersEdition[defaultChainId]
-  )
-
   const GoldEditionLoading = useSelector((state: RootState) => state.metadata.GoldEditionLoading)
   const RangersEditionLoading = useSelector((state: RootState) => state.metadata.RangersEditionLoading)
   const UltimateEditionLoading = useSelector((state: RootState) => state.metadata.UltimateEditionLoading)
 
-  const GoldEditionLoadingImmutableX = useSelector((state: RootState) => state.metadataImmutableX.GoldEditionLoading)
-  const RangersEditionLoadingImmutableX = useSelector(
-    (state: RootState) => state.metadataImmutableX.RangersEditionLoading
-  )
-
   const metadataAllEdition = useMemo<TokenMetadata[]>(
-    () => [
-      ...metadadaUltimateEdition.metadata,
-      ...metadadaGoldEdition.metadata,
-      ...metadadaRangersEdition.metadata,
-      ...metadataImmutableXGoldEdition.metadata,
-      ...metadataImmutableXRangersEdition.metadata,
-    ],
-    [
-      metadadaGoldEdition,
-      metadadaRangersEdition,
-      metadadaUltimateEdition,
-      metadataImmutableXGoldEdition,
-      metadataImmutableXRangersEdition,
-    ]
+    () => [...metadadaUltimateEdition.metadata, ...metadadaGoldEdition.metadata, ...metadadaRangersEdition.metadata],
+    [metadadaGoldEdition, metadadaRangersEdition, metadadaUltimateEdition]
   )
 
   const loading = useMemo<boolean>(
-    () =>
-      GoldEditionLoading &&
-      RangersEditionLoading &&
-      UltimateEditionLoading &&
-      GoldEditionLoadingImmutableX &&
-      RangersEditionLoadingImmutableX,
-    [
-      GoldEditionLoading,
-      RangersEditionLoading,
-      UltimateEditionLoading,
-      GoldEditionLoadingImmutableX,
-      RangersEditionLoadingImmutableX,
-    ]
+    () => GoldEditionLoading && RangersEditionLoading && UltimateEditionLoading,
+    [GoldEditionLoading, RangersEditionLoading, UltimateEditionLoading]
   )
 
   /**
@@ -82,33 +47,41 @@ export function useMetadata() {
   const getMetadataByAddress = useCallback(
     (address: string, status: MetadataStatus): TokenMetadata[] => {
       if (status === MetadataStatus.Ethereum) {
-        if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition)) {
+        if (
+          getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition) ||
+          getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition)
+        ) {
           return metadadaGoldEdition.metadata
-        } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition)) {
+        } else if (
+          getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition) ||
+          getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition)
+        ) {
           return metadadaRangersEdition.metadata
         } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Ultimate_Edition)) {
           return metadadaUltimateEdition.metadata
         } else {
-          throw new Error(`metadata not found, Ethereum status: ${status}`)
+          console.error(`metadata not found, Ethereum status: ${status}`)
+          return metadataAllEdition
         }
       } else if (status === MetadataStatus.ImmutableX) {
         if (getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition)) {
-          return metadataImmutableXGoldEdition.metadata
+          return metadadaGoldEdition.metadata
         } else if (getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition)) {
-          return metadataImmutableXRangersEdition.metadata
+          return metadadaRangersEdition.metadata
         } else {
-          throw new Error(`metadata not found, ImmutableX status: ${status}`)
+          console.error(`metadata not found, ImmutableX status: ${status}`)
+          return metadataAllEdition
         }
       } else {
-        throw new Error(`metadata status not found, status: ${status}`)
+        console.error(`metadata status not found, status: ${status}`)
+        return metadataAllEdition
       }
     },
     [
       metadadaGoldEdition.metadata,
       metadadaRangersEdition.metadata,
       metadadaUltimateEdition.metadata,
-      metadataImmutableXGoldEdition.metadata,
-      metadataImmutableXRangersEdition.metadata,
+      metadataAllEdition,
     ]
   )
 

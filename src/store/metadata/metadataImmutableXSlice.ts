@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import * as Sentry from '@sentry/react'
 import { Goerli, Mainnet } from '@usedapp/core'
-import axios from 'axios'
 import { getAddress } from 'ethers/lib/utils'
 
 import {
@@ -92,13 +91,9 @@ const initialState: MetadataState & LoadingState = {
 
 export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
   'metadataImmutableX/fetchMetadataGoldEdition',
-  async (_, { signal }) => {
+  () => {
     try {
-      const response = await axios.get<MetadataResponse[]>(defaultState.GoldEdition[defaultChainId].url, {
-        signal: signal,
-      })
-
-      return response.data.slice(0, 450)
+      return []
     } catch (error) {
       const e = `metadataImmutableX/fetchMetadataGoldEdition error: ${error}`
       console.log('error', e)
@@ -111,12 +106,9 @@ export const fetchMetadataGoldEdition = createAsyncThunk<MetadataResponse[]>(
 
 export const fetchMetadataRangersEdition = createAsyncThunk<MetadataResponse[]>(
   'metadataImmutableX/fetchMetadataRangersEdition',
-  async (_, { signal }) => {
+  () => {
     try {
-      const response = await axios.get<MetadataResponse[]>(defaultState.RangersEdition[defaultChainId].url, {
-        signal: signal,
-      })
-      return response.data.slice(0, 646)
+      return []
     } catch (error) {
       const e = `metadataImmutableX/fetchMetadataRangersEdition error: ${error}`
       console.log('error', e)
