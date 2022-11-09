@@ -218,6 +218,10 @@ function AccountMenu(props: AccountMenuProps) {
     if (!isRight(userDecode)) return
     const { result: balances } = await imxClient.listBalances({ user: userDecode.right, symbols: [ETHTokenType.ETH] })
     console.debug('Fetch wallet balances', balances)
+    if (!Array.isArray(balances) || balances.length === 0) {
+      setEthBalance('0.0')
+      return '0.0'
+    }
     const ethBalance = formatEther(balances[0].balance)
     setEthBalance(ethBalance)
     return ethBalance
