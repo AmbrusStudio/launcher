@@ -1,6 +1,6 @@
 import CircularProgress from '@mui/material/CircularProgress'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { getAllGames } from '../../../api'
@@ -9,17 +9,8 @@ import AssetsSlider from '../../../components/Account/MyAsset'
 import { GameBanner } from '../../../components/Game'
 import { AccountCenterPageLayout } from '../../../components/Layout'
 import { WalletButton } from '../../../components/Layout/WalletButton'
-import {
-  ADDRESS_E4C_Ranger_Gold_Edition,
-  ADDRESS_E4C_Ranger_Rangers_Edition,
-  ADDRESS_E4C_Ranger_Ultimate_Edition,
-  ADDRESS_E4CRanger_Gold_Holder,
-  ADDRESS_E4CRanger_Rangers_Holder,
-  ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
-  ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
-} from '../../../contracts'
 import { useWeb3Modal } from '../../../hooks'
-import { useERC721ImmutableXList, useERC721List, useERC721UltimateEditionList } from '../../../hooks/useERC721List'
+import { useUserCollections } from '../../../hooks/useUserCollections'
 import { GameInfo } from '../../../types'
 
 export function Home() {
@@ -28,33 +19,7 @@ export function Home() {
   const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
 
   const [games, setGames] = useState<GameInfo[]>([])
-  const { nfts: nftsGold, loading: loadingGold } = useERC721List({
-    holderAddress: ADDRESS_E4CRanger_Gold_Holder,
-    tokenAddress: ADDRESS_E4C_Ranger_Gold_Edition,
-  })
-  const { nfts: nftsRangers, loading: loadingRangers } = useERC721List({
-    holderAddress: ADDRESS_E4CRanger_Rangers_Holder,
-    tokenAddress: ADDRESS_E4C_Ranger_Rangers_Edition,
-  })
-  const { nfts: nftsUltimate, loading: loadingUltimate } = useERC721UltimateEditionList({
-    tokenAddress: ADDRESS_E4C_Ranger_Ultimate_Edition,
-  })
-
-  const { nfts: nftsImmutableXGold, loading: loadingImmutableXGold } = useERC721ImmutableXList({
-    collection: ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
-  })
-  const { nfts: nftsImmutableXRangers, loading: loadingImmutableXRangers } = useERC721ImmutableXList({
-    collection: ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
-  })
-
-  const nfts = useMemo(
-    () => [...nftsGold, ...nftsRangers, ...nftsUltimate, ...nftsImmutableXGold, ...nftsImmutableXRangers],
-    [nftsGold, nftsRangers, nftsUltimate, nftsImmutableXGold, nftsImmutableXRangers]
-  )
-  const loading = useMemo(
-    () => loadingGold && loadingRangers && loadingUltimate && loadingImmutableXGold && loadingImmutableXRangers,
-    [loadingGold, loadingRangers, loadingUltimate, loadingImmutableXGold, loadingImmutableXRangers]
-  )
+  const { collections, loading } = useUserCollections()
 
   const fetchAllGames = useCallback(async (signal: AbortSignal) => {
     const games = await getAllGames(signal)
@@ -109,10 +74,10 @@ export function Home() {
                 }}
               />
             </div>
-          ) : account && active && !loading && !nfts.length ? (
+          ) : account && active && !loading && !collections.length ? (
             <span className="text-base text-white">No more data</span>
           ) : (
-            <AssetsSlider data={nfts} />
+            <AssetsSlider data={collections} />
           )}
         </AccountBlock>
       </div>

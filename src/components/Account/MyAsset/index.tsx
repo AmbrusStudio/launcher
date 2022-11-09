@@ -6,6 +6,7 @@ import { Navigation } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import { NFTE4CRanger } from '../../../types'
+import { TokenMediaMode } from '../../../types/tokenMedia'
 import { imageSizeConversion } from '../../../utils'
 import TokenMedia from '../../TokenMedia'
 
@@ -23,7 +24,7 @@ const AssetsSlider: FC<AccountMyAssetProps> = ({ data }) => {
               className="snap-start w-[240px] h-[240px] shrink-0 mr-9 mb-9 last-of-type:mr-0  rounded-12px object-cover select-none border-1 border-white box-border overflow-hidden"
               key={`${nft.address}_${nft.tokenId}`}
             >
-              <TokenMedia src={imageSizeConversion(nft.image, 800)} trait={nft.trait} />
+              <TokenMedia src={imageSizeConversion(nft.image, 800)} trait={nft.trait} mode={TokenMediaMode.Thumbnail} />
             </div>
           ))}
         </div>
@@ -42,7 +43,11 @@ const AssetsSlider: FC<AccountMyAssetProps> = ({ data }) => {
                 data-token-id={nft.tokenId}
                 className="w-full h-full rounded-12px object-cover select-none border-1 border-white box-border overflow-hidden"
               >
-                <TokenMedia src={imageSizeConversion(nft.image, 800)} trait={nft.trait} />
+                <TokenMedia
+                  src={imageSizeConversion(nft.image, 800)}
+                  trait={nft.trait}
+                  mode={TokenMediaMode.Thumbnail}
+                />
               </div>
             </SwiperSlide>
           ))}
