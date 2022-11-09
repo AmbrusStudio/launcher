@@ -25,18 +25,61 @@ export function useMetadata() {
   const metadadaRangersEdition = useSelector((state: RootState) => state.metadata.RangersEdition[defaultChainId])
   const metadadaUltimateEdition = useSelector((state: RootState) => state.metadata.UltimateEdition[defaultChainId])
 
+  const metadataImmutableXGoldEdition = useSelector(
+    (state: RootState) => state.metadataImmutableX.GoldEdition[defaultChainId]
+  )
+  const metadataImmutableXRangersEdition = useSelector(
+    (state: RootState) => state.metadataImmutableX.RangersEdition[defaultChainId]
+  )
+
   const GoldEditionLoading = useSelector((state: RootState) => state.metadata.GoldEditionLoading)
   const RangersEditionLoading = useSelector((state: RootState) => state.metadata.RangersEditionLoading)
   const UltimateEditionLoading = useSelector((state: RootState) => state.metadata.UltimateEditionLoading)
 
+  const GoldEditionLoadingImmutableX = useSelector((state: RootState) => state.metadataImmutableX.GoldEditionLoading)
+  const RangersEditionLoadingImmutableX = useSelector(
+    (state: RootState) => state.metadataImmutableX.RangersEditionLoading
+  )
+
+  const metadataGold = useMemo<TokenMetadata[]>(
+    () => [...metadadaGoldEdition.metadata, ...metadataImmutableXGoldEdition.metadata],
+    [metadadaGoldEdition.metadata, metadataImmutableXGoldEdition.metadata]
+  )
+  const metadadaRangers = useMemo<TokenMetadata[]>(
+    () => [...metadadaRangersEdition.metadata, ...metadataImmutableXRangersEdition.metadata],
+    [metadadaRangersEdition.metadata, metadataImmutableXRangersEdition.metadata]
+  )
   const metadataAllEdition = useMemo<TokenMetadata[]>(
-    () => [...metadadaUltimateEdition.metadata, ...metadadaGoldEdition.metadata, ...metadadaRangersEdition.metadata],
-    [metadadaGoldEdition, metadadaRangersEdition, metadadaUltimateEdition]
+    () => [
+      ...metadadaUltimateEdition.metadata,
+      ...metadadaGoldEdition.metadata,
+      ...metadadaRangersEdition.metadata,
+      ...metadataImmutableXGoldEdition.metadata,
+      ...metadataImmutableXRangersEdition.metadata,
+    ],
+    [
+      metadadaGoldEdition,
+      metadadaRangersEdition,
+      metadadaUltimateEdition,
+      metadataImmutableXGoldEdition,
+      metadataImmutableXRangersEdition,
+    ]
   )
 
   const loading = useMemo<boolean>(
-    () => GoldEditionLoading && RangersEditionLoading && UltimateEditionLoading,
-    [GoldEditionLoading, RangersEditionLoading, UltimateEditionLoading]
+    () =>
+      GoldEditionLoading &&
+      RangersEditionLoading &&
+      UltimateEditionLoading &&
+      GoldEditionLoadingImmutableX &&
+      RangersEditionLoadingImmutableX,
+    [
+      GoldEditionLoading,
+      RangersEditionLoading,
+      UltimateEditionLoading,
+      GoldEditionLoadingImmutableX,
+      RangersEditionLoadingImmutableX,
+    ]
   )
 
   /**
@@ -51,12 +94,12 @@ export function useMetadata() {
           getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition) ||
           getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition)
         ) {
-          return metadadaGoldEdition.metadata
+          return metadataGold
         } else if (
           getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition) ||
           getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition)
         ) {
-          return metadadaRangersEdition.metadata
+          return metadadaRangers
         } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Ultimate_Edition)) {
           return metadadaUltimateEdition.metadata
         } else {
@@ -65,9 +108,9 @@ export function useMetadata() {
         }
       } else if (status === MetadataStatus.ImmutableX) {
         if (getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition)) {
-          return metadadaGoldEdition.metadata
+          return metadataGold
         } else if (getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition)) {
-          return metadadaRangersEdition.metadata
+          return metadadaRangers
         } else {
           console.error(`metadata not found, ImmutableX status: ${status}`)
           return metadataAllEdition
@@ -77,12 +120,7 @@ export function useMetadata() {
         return metadataAllEdition
       }
     },
-    [
-      metadadaGoldEdition.metadata,
-      metadadaRangersEdition.metadata,
-      metadadaUltimateEdition.metadata,
-      metadataAllEdition,
-    ]
+    [metadadaRangers, metadadaUltimateEdition.metadata, metadataAllEdition, metadataGold]
   )
 
   return {
