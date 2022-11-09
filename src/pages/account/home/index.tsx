@@ -20,6 +20,7 @@ export function Home() {
 
   const [games, setGames] = useState<GameInfo[]>([])
   const { collections, loading } = useUserCollections()
+  collections.length && console.log('collections', collections)
 
   const fetchAllGames = useCallback(async (signal: AbortSignal) => {
     const games = await getAllGames(signal)
