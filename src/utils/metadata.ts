@@ -5,13 +5,13 @@ import { cloneDeep } from 'lodash'
 
 import { metadataApi } from '../api/metadata'
 import {
-  ADDRESS_E4C_Ranger_Gold_Edition,
-  ADDRESS_E4C_Ranger_Rangers_Edition,
-  ADDRESS_E4C_Ranger_Ultimate_Edition,
-  ADDRESS_E4CRanger_Gold_Holder,
-  ADDRESS_E4CRanger_Rangers_Holder,
   ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
   ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
+  E4CRanger_GoldEdition,
+  E4CRanger_GoldEdition_Holder,
+  E4CRanger_RangersEdition,
+  E4CRanger_RangersEdition_Holder,
+  E4CRanger_UltimateEdition,
 } from '../contracts'
 import { stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
 import {
@@ -180,7 +180,7 @@ export const formatMetadataImmutableXUser = ({
  */
 export const getEdition = (upgraded: NFTE4CRangerUpgraded, address: string): NFTEdition => {
   if (
-    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition) ||
+    getAddress(address) === getAddress(E4CRanger_GoldEdition) ||
     getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition)
   ) {
     if (upgraded) {
@@ -189,7 +189,7 @@ export const getEdition = (upgraded: NFTE4CRangerUpgraded, address: string): NFT
       return NFTEdition.GoldEdition
     }
   } else if (
-    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition) ||
+    getAddress(address) === getAddress(E4CRanger_RangersEdition) ||
     getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition)
   ) {
     if (upgraded) {
@@ -197,7 +197,7 @@ export const getEdition = (upgraded: NFTE4CRangerUpgraded, address: string): NFT
     } else {
       return NFTEdition.RangersEdition
     }
-  } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Ultimate_Edition)) {
+  } else if (getAddress(address) === getAddress(E4CRanger_UltimateEdition)) {
     return NFTEdition.UltimateEdition
   } else {
     return NFTEdition.Default
@@ -212,7 +212,7 @@ export const getEdition = (upgraded: NFTE4CRangerUpgraded, address: string): NFT
  */
 export const getGalleryEdition = (upgraded: NFTE4CRangerUpgraded, address: string): string => {
   if (
-    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition) ||
+    getAddress(address) === getAddress(E4CRanger_GoldEdition) ||
     getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition)
   ) {
     if (upgraded) {
@@ -221,7 +221,7 @@ export const getGalleryEdition = (upgraded: NFTE4CRangerUpgraded, address: strin
       return 'Gold'
     }
   } else if (
-    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition) ||
+    getAddress(address) === getAddress(E4CRanger_RangersEdition) ||
     getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition)
   ) {
     if (upgraded) {
@@ -229,7 +229,7 @@ export const getGalleryEdition = (upgraded: NFTE4CRangerUpgraded, address: strin
     } else {
       return 'Rangers'
     }
-  } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Ultimate_Edition)) {
+  } else if (getAddress(address) === getAddress(E4CRanger_UltimateEdition)) {
     return 'Ultimate'
   } else {
     return '-'
@@ -253,16 +253,16 @@ export const getBaseURLByAddress = (
   }
 ): string | undefined => {
   if (
-    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition) ||
+    getAddress(address) === getAddress(E4CRanger_GoldEdition) ||
     getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition)
   ) {
     return baseURL.goldEditionBaseURL
   } else if (
-    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition) ||
+    getAddress(address) === getAddress(E4CRanger_RangersEdition) ||
     getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition)
   ) {
     return baseURL.rangersEditionBaseURL
-  } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Ultimate_Edition)) {
+  } else if (getAddress(address) === getAddress(E4CRanger_UltimateEdition)) {
     return baseURL.ultimateEditionBaseURL
   } else {
     return
@@ -288,12 +288,12 @@ export const getTraitEdition = (data: TokenMetadata): TraitEdition | undefined =
  */
 export const getStakeAnnouncement = (address: string): StakeAnnouncement[] => {
   if (
-    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition) ||
+    getAddress(address) === getAddress(E4CRanger_GoldEdition) ||
     getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition)
   ) {
     return stakeAnnouncementGold
   } else if (
-    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition) ||
+    getAddress(address) === getAddress(E4CRanger_RangersEdition) ||
     getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition)
   ) {
     return stakeAnnouncementRangers
@@ -309,15 +309,15 @@ export const getStakeAnnouncement = (address: string): StakeAnnouncement[] => {
  */
 export const getHolderByAddress = (address: string): string => {
   if (
-    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition) ||
+    getAddress(address) === getAddress(E4CRanger_GoldEdition) ||
     getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition)
   ) {
-    return ADDRESS_E4CRanger_Gold_Holder
+    return E4CRanger_GoldEdition_Holder
   } else if (
-    getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition) ||
+    getAddress(address) === getAddress(E4CRanger_RangersEdition) ||
     getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition)
   ) {
-    return ADDRESS_E4CRanger_Rangers_Holder
+    return E4CRanger_RangersEdition_Holder
   } else {
     throw new Error('holder not found')
   }

@@ -2,37 +2,37 @@ import { Goerli } from '@usedapp/core'
 import { useMemo } from 'react'
 
 import {
-  ADDRESS_E4C_Ranger_Gold_Edition,
-  ADDRESS_E4C_Ranger_Rangers_Edition,
-  ADDRESS_E4C_Ranger_Ultimate_Edition,
-  ADDRESS_E4CRanger_Gold_Holder,
-  ADDRESS_E4CRanger_Rangers_Holder,
   ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
   ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
   defaultChainId,
+  E4CRanger_GoldEdition,
+  E4CRanger_GoldEdition_Holder,
+  E4CRanger_RangersEdition,
+  E4CRanger_RangersEdition_Holder,
+  E4CRanger_UltimateEdition,
 } from '../contracts'
 import { useERC721ImmutableXList, useERC721List, useERC721UltimateEditionList } from './useERC721List'
 
 export function useUserCollections() {
   const { nfts: nftsUltimate, loading: loadingUltimate } = useERC721UltimateEditionList({
-    tokenAddress: ADDRESS_E4C_Ranger_Ultimate_Edition,
+    tokenAddress: E4CRanger_UltimateEdition,
   })
 
   const { nfts: nftsGold, loading: loadingGold } = useERC721List({
-    holderAddress: ADDRESS_E4CRanger_Gold_Holder,
-    tokenAddress: ADDRESS_E4C_Ranger_Gold_Edition,
+    holderAddress: E4CRanger_GoldEdition_Holder,
+    tokenAddress: E4CRanger_GoldEdition,
   })
   const { nfts: nftsRangers, loading: loadingRangers } = useERC721List({
-    holderAddress: ADDRESS_E4CRanger_Rangers_Holder,
-    tokenAddress: ADDRESS_E4C_Ranger_Rangers_Edition,
+    holderAddress: E4CRanger_RangersEdition_Holder,
+    tokenAddress: E4CRanger_RangersEdition,
   })
   // The ImmutableX test network address is inconsistent, and additional query is required
   const { nfts: nftsGoldImmutableX, loading: loadingGoldImmutableX } = useERC721List({
-    holderAddress: defaultChainId === Goerli.chainId ? ADDRESS_E4CRanger_Gold_Holder : undefined,
+    holderAddress: defaultChainId === Goerli.chainId ? E4CRanger_GoldEdition_Holder : undefined,
     tokenAddress: defaultChainId === Goerli.chainId ? ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition : undefined,
   })
   const { nfts: nftsRangersImmutableX, loading: loadingRangersImmutableX } = useERC721List({
-    holderAddress: defaultChainId === Goerli.chainId ? ADDRESS_E4CRanger_Rangers_Holder : undefined,
+    holderAddress: defaultChainId === Goerli.chainId ? E4CRanger_RangersEdition_Holder : undefined,
     tokenAddress: defaultChainId === Goerli.chainId ? ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition : undefined,
   })
 
