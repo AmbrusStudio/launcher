@@ -78,10 +78,11 @@ body,
 }
 
 // Gallery
-.max-height {
-  max-height: calc(100vh - 100px);
-  @media (min-width: 1024px) {
-    max-height: calc(100vh - 60px);
+
+.filter-wrapper {
+  max-height: calc(100vh - 116px);
+  @media (min-width: 1280px) {
+    max-height: calc(100vh - 148px);
   }
 }
 .max-height-category {

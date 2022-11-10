@@ -13,21 +13,22 @@ import Search from '../../components/Gallery/Search'
 import SearchAction from '../../components/Gallery/SearchAction'
 import { PageLayout } from '../../components/Layout'
 import { useGalleryFilter } from '../../hooks/useGalleryFilter'
-import { useMetadata } from '../../hooks/useMetadata'
 import { useNumStrState } from '../../hooks/useNumStrState'
 import { TokenMetadata, Trait } from '../../types'
 import { handleFilterFn, sleep } from '../../utils'
 
 function Gallery() {
+  const [pureGold, setPureGold] = useState<boolean>(false)
   const {
     galleryFilterStatus,
+    galleryMetadata,
     filter,
     traitFilter,
     hasFilter,
     setFilter,
     toggleFilterTab,
     toggleFilterTagCheckedChange,
-  } = useGalleryFilter()
+  } = useGalleryFilter(pureGold)
   const [state, setState] = useUrlState({ name: undefined })
 
   // NFT modal
@@ -42,13 +43,11 @@ function Gallery() {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const scroll = useScroll(document)
 
-  const { metadataAllEdition } = useMetadata()
-
   // Current gallery
   const [currentGallery, setCurrentGallery] = useState<TokenMetadata[]>([])
 
   const { run: getCurrentGallery } = useDebounceFn(
-    async (traitFilter: Map<Trait, string[]>, searchId: string, metadataAllEdition: TokenMetadata[]) => {
+    async (traitFilter: Map<Trait, string[]>, searchId: string, metadatas: TokenMetadata[], pureGold: boolean) => {
       setCurrentGallery([])
 
       const headerDom = document.querySelector<HTMLDivElement>('#header')
@@ -60,7 +59,7 @@ function Gallery() {
       }
 
       await sleep(300)
-      const list = handleFilterFn(traitFilter, searchId, metadataAllEdition)
+      const list = handleFilterFn(traitFilter, searchId, metadatas, pureGold)
       setCurrentGallery(list)
     },
     {
@@ -69,8 +68,8 @@ function Gallery() {
   )
 
   useDeepCompareEffect(() => {
-    getCurrentGallery(traitFilter, searchId, metadataAllEdition)
-  }, [traitFilter, searchId, metadataAllEdition])
+    getCurrentGallery(traitFilter, searchId, galleryMetadata, pureGold)
+  }, [traitFilter, searchId, galleryMetadata, pureGold])
 
   // Clear filter
   const clearFilter = useCallback(() => {
@@ -110,7 +109,7 @@ function Gallery() {
           <div className="my-3 lg:my-[48px] flex" ref={wrapperRef}>
             <div
               className={
-                'hidden lg:block w-[300px] sticky top-[120px] lg:top-[68px] xl:top-[100px] shrink-0 max-height overflow-hidden'
+                'hidden lg:block w-[300px] sticky top-[120px] lg:top-[68px] xl:top-[100px] shrink-0 filter-wrapper overflow-hidden'
               }
             >
               <div className={'flex m-b-3 lg:m-b-4.5'}>
@@ -152,6 +151,8 @@ function Gallery() {
                 wrapperRef={wrapperRef}
                 count={currentGallery.length}
                 clearFilter={clearFilter}
+                pureGold={pureGold}
+                setPureGold={setPureGold}
               />
 
               <GalleryWrapper
@@ -165,6 +166,7 @@ function Gallery() {
 
         <DrawerFilter
           visibleDrawer={visibleDrawer}
+          pureGold={pureGold}
           setVisibleDrawer={setVisibleDrawer}
           applyFilter={(value) => {
             setFilter(value)

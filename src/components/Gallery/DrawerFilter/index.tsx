@@ -8,12 +8,14 @@ import FilterSliderLineClear from '../../Icon/FilterSliderLineClear'
 
 interface DrawerFilterProps {
   readonly visibleDrawer: boolean
+  readonly pureGold: boolean
   setVisibleDrawer: Dispatch<SetStateAction<boolean>>
   applyFilter: (filter: Filter[]) => void
 }
 
-const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, setVisibleDrawer, applyFilter }) => {
-  const { galleryFilterStatus, filter, setFilter, toggleFilterTab, toggleFilterTagCheckedChange } = useGalleryFilter()
+const DrawerFilter: FC<DrawerFilterProps> = ({ visibleDrawer, pureGold, setVisibleDrawer, applyFilter }) => {
+  const { galleryFilterStatus, filter, setFilter, toggleFilterTab, toggleFilterTagCheckedChange } =
+    useGalleryFilter(pureGold)
 
   // https://mui.com/material-ui/react-drawer/#swipeable
   const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent)
