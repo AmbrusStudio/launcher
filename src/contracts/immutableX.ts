@@ -6,24 +6,23 @@ export const defaultChainId = getDefaultChainId()
 
 // ImmutableX Goerli.chainId instead of ethNetwork: "goerli"
 
-// ImmutableX Holder
-export const ADDRESS_ImmutableX_Holders = {
+// E4CRanger Holder - ImmutableX
+export const E4CRanger_ImmutableX_Holders = {
   [Mainnet.chainId]: '0xE4CdfD21b1Eb96650FF1acde35276D9da579070C',
   [Goerli.chainId]: '0xE4CdfD21b1Eb96650FF1acde35276D9da579070C',
 }
-export const ADDRESS_ImmutableX_Holder = ADDRESS_ImmutableX_Holders[defaultChainId]
+export const E4CRanger_ImmutableX_Holder = E4CRanger_ImmutableX_Holders[defaultChainId]
 
-// E4C Ranger Gold Edition - ImmutableX
-export const ADDRESS_ImmutableX_E4C_Ranger_Gold_Editions = {
+// E4CRanger GoldEdition <Rin | Kit> - ImmutableX
+export const E4CRanger_ImmutableX_GoldEditions = {
   [Mainnet.chainId]: '0xba265b93519e6473f34f46ee35f4b23970f41a3f',
   [Goerli.chainId]: '0xbf206014a878df4153036d7895188e340527a8f0',
 }
-export const ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition = ADDRESS_ImmutableX_E4C_Ranger_Gold_Editions[defaultChainId]
+export const E4CRanger_ImmutableX_GoldEdition = E4CRanger_ImmutableX_GoldEditions[defaultChainId]
 
-// E4C Ranger Rangers Edition - ImmutableX
-export const ADDRESS_ImmutableX_E4C_Ranger_Rangers_Editions = {
+// E4CRanger RangersEdition <Rin | Kit> - ImmutableX
+export const E4CRanger_ImmutableX_RangersEditions = {
   [Mainnet.chainId]: '0xC17Aa29c43e4cE0c349749C8986a03B2734813fa',
   [Goerli.chainId]: '0x714a090f35a1f1fc9baa65059b28939dd0f5a196',
 }
-export const ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition =
-  ADDRESS_ImmutableX_E4C_Ranger_Rangers_Editions[defaultChainId]
+export const E4CRanger_ImmutableX_RangersEdition = E4CRanger_ImmutableX_RangersEditions[defaultChainId]

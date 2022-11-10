@@ -4,10 +4,10 @@ import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import {
-  ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
-  ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
   defaultChainId,
   E4CRanger_GoldEdition,
+  E4CRanger_ImmutableX_GoldEdition,
+  E4CRanger_ImmutableX_RangersEdition,
   E4CRanger_RangersEdition,
   E4CRanger_UltimateEdition,
 } from '../contracts'
@@ -97,12 +97,12 @@ export function useMetadata() {
       if (status === MetadataStatus.Ethereum) {
         if (
           getAddress(address) === getAddress(E4CRanger_GoldEdition) ||
-          getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition)
+          getAddress(address) === getAddress(E4CRanger_ImmutableX_GoldEdition)
         ) {
           return metadataGold
         } else if (
           getAddress(address) === getAddress(E4CRanger_RangersEdition) ||
-          getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition)
+          getAddress(address) === getAddress(E4CRanger_ImmutableX_RangersEdition)
         ) {
           return metadadaRangers
         } else if (getAddress(address) === getAddress(E4CRanger_UltimateEdition)) {
@@ -112,9 +112,9 @@ export function useMetadata() {
           return metadataAllEdition
         }
       } else if (status === MetadataStatus.ImmutableX) {
-        if (getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition)) {
+        if (getAddress(address) === getAddress(E4CRanger_ImmutableX_GoldEdition)) {
           return metadataGold
-        } else if (getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition)) {
+        } else if (getAddress(address) === getAddress(E4CRanger_ImmutableX_RangersEdition)) {
           return metadadaRangers
         } else {
           console.error(`metadata not found, ImmutableX status: ${status}`)

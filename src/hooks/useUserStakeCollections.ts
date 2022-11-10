@@ -2,11 +2,11 @@ import { Goerli } from '@usedapp/core'
 import { useMemo } from 'react'
 
 import {
-  ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
-  ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
   defaultChainId,
   E4CRanger_GoldEdition,
   E4CRanger_GoldEdition_Holder,
+  E4CRanger_ImmutableX_GoldEdition,
+  E4CRanger_ImmutableX_RangersEdition,
   E4CRanger_RangersEdition,
   E4CRanger_RangersEdition_Holder,
 } from '../contracts'
@@ -31,21 +31,21 @@ export function useUserStakeCollections() {
   // Cannot pledge without holder
   const { nfts: nftsGoldImmutableX, loading: loadingGoldImmutableX } = useERC721ListState({
     holderAddress: defaultChainId === Goerli.chainId ? E4CRanger_GoldEdition_Holder : undefined,
-    tokenAddress: defaultChainId === Goerli.chainId ? ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition : undefined,
+    tokenAddress: defaultChainId === Goerli.chainId ? E4CRanger_ImmutableX_GoldEdition : undefined,
     baseURL: metadadaGoldBaseURI,
   })
   const { nfts: nftsRangersImmutableX, loading: loadingRangersImmutableX } = useERC721ListState({
     holderAddress: defaultChainId === Goerli.chainId ? E4CRanger_RangersEdition_Holder : undefined,
-    tokenAddress: defaultChainId === Goerli.chainId ? ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition : undefined,
+    tokenAddress: defaultChainId === Goerli.chainId ? E4CRanger_ImmutableX_RangersEdition : undefined,
     baseURL: metadadaRangersBaseURI,
   })
 
   const { nfts: nftsImmutableXGold, loading: loadingImmutableXGold } = useERC721ImmutableXListState({
-    collection: ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
+    collection: E4CRanger_ImmutableX_GoldEdition,
     baseURL: metadadaGoldBaseURI,
   })
   const { nfts: nftsImmutableXRangers, loading: loadingImmutableXRangers } = useERC721ImmutableXListState({
-    collection: ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
+    collection: E4CRanger_ImmutableX_RangersEdition,
     baseURL: metadadaRangersBaseURI,
   })
 
