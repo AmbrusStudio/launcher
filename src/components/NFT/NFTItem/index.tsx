@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import { FC, useCallback, useEffect, useState } from 'react'
 
 // import withdraw from '../../../assets/images/withdraw.png'
-import { ADDRESS_ImmutableX_Holder } from '../../../contracts'
+import { E4CRanger_ImmutableX_Holder } from '../../../contracts'
 // import Star from '../../../components/Icon/Star'
 import { useImmutableXERC721AssetTransfers, useImmutableXERC721AssetUnstake, useWeb3Modal } from '../../../hooks'
 import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
@@ -51,7 +51,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, update }) => {
         stakeImmutableX({
           tokenId: tokenId,
           tokenAddress: nft.address,
-          toAddress: ADDRESS_ImmutableX_Holder,
+          toAddress: E4CRanger_ImmutableX_Holder,
         })
       } else {
         console.error('No matching stake method')

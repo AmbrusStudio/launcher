@@ -2,7 +2,7 @@ import { Falsy, useEthers } from '@usedapp/core'
 import { getAddress } from 'ethers/lib/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { ADDRESS_ImmutableX_Holder } from '../contracts'
+import { E4CRanger_ImmutableX_Holder } from '../contracts'
 import { MetadataStatus, NFTE4CRanger } from '../types'
 import { editionPlus, formatMetadata, formatMetadataImmutableX, formatMetadataImmutableXUser } from '../utils'
 import { useOriginalOwners, useUpgradeds } from './useE4CRanger'
@@ -228,7 +228,7 @@ export function useERC721ImmutableXListState({ collection, baseURL }: { collecti
 
   // Holder
   const { immutableXAssets: immutableXAssetsHolder, loading: loadingHolder } = useImmutableXUserNFTAssets({
-    user: ADDRESS_ImmutableX_Holder,
+    user: E4CRanger_ImmutableX_Holder,
     collection,
   })
 
@@ -306,7 +306,7 @@ export function useERC721ImmutableXList({ collection }: { collection: string }) 
 
   // Holder
   const { immutableXAssets: immutableXAssetsHolder, loading: loadingHolder } = useImmutableXUserNFTAssets({
-    user: ADDRESS_ImmutableX_Holder,
+    user: E4CRanger_ImmutableX_Holder,
     collection,
   })
 
