@@ -2,6 +2,7 @@ import { cloneDeep } from 'lodash'
 
 import { TokenMetadata, Trait, TraitItem } from '../types'
 import { Filter, FilterList, GALLERY_MAP } from '../types/gallery'
+import { BlindBoxMode } from './bindbox'
 /**
  * modify filter checked
  * @param filter
@@ -103,10 +104,22 @@ const convertTraitToArray = (data: GALLERY_MAP[]): TokenMetadata[] => {
 export const handleFilterFn = (
   traitFilter: Map<Trait, string[]>,
   searchId: string,
-  tokens: TokenMetadata[]
+  tokens: TokenMetadata[],
+  pureGold: boolean
 ): TokenMetadata[] => {
   // Search filter
-  const gallery = searchId ? tokens.filter((item) => item.tokenId.includes(searchId)) : tokens
+  let gallery = searchId ? tokens.filter((item) => item.tokenId.includes(searchId)) : tokens
+
+  if (pureGold) {
+    const reg = /(^|\s)Gold(\s|$)/g
+
+    gallery = gallery.filter((item) => {
+      const findResult = item.trait.find((i) => i.trait_type !== Trait.Edition && reg.test(i.value))
+      reg.lastIndex = 0
+
+      return !!findResult && !BlindBoxMode(item.trait)
+    })
+  }
 
   if (!traitFilter.size) {
     return gallery

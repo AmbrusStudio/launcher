@@ -1,7 +1,7 @@
 import { Stack } from '@mui/material'
 import classNames from 'classnames'
 import numbro from 'numbro'
-import { FC, RefObject, useMemo } from 'react'
+import { Dispatch, FC, RefObject, SetStateAction, useMemo } from 'react'
 
 import { Position } from '../../../utils/scroll'
 
@@ -9,10 +9,12 @@ interface Props {
   readonly count: number
   readonly scroll: Position | undefined
   readonly wrapperRef: RefObject<HTMLDivElement>
+  readonly pureGold: boolean
   clearFilter: () => void
+  setPureGold: Dispatch<SetStateAction<boolean>>
 }
 
-const HeadStatus: FC<Props> = ({ scroll, wrapperRef, count, clearFilter }) => {
+const HeadStatus: FC<Props> = ({ scroll, wrapperRef, count, pureGold, setPureGold, clearFilter }) => {
   const isFixed = useMemo(() => {
     const headerDom = document.querySelector<HTMLDivElement>('#header')
     const headerHeight = headerDom?.offsetHeight || 100
@@ -35,15 +37,23 @@ const HeadStatus: FC<Props> = ({ scroll, wrapperRef, count, clearFilter }) => {
       {
         <Stack spacing={3} direction="row">
           <div
-            className="p-x-4 p-y-2 rounded-2xl bg-white/10 hidden lg:flex items-center justify-center cursor-pointer text-sm font-medium text-center leading-4.25 text-white"
+            className="p-x-4 p-y-2 rounded-2xl bg-white/10 hidden lg:flex items-center justify-center cursor-pointer text-sm font-medium text-center leading-[17px] text-white select-none"
             onClick={() => {
               clearFilter()
             }}
           >
             Reset Filters
           </div>
-          <div className="p-x-4 p-y-2 rounded-2xl bg-#FFB600 hidden items-center justify-center cursor-pointer text-sm font-medium text-center leading-4.25 text-white">
-            PURE GOLD
+          <div
+            className={classNames(
+              'p-x-4 p-y-2 rounded-2xl bg-white/10 hidden lg:flex items-center justify-center cursor-pointer text-sm font-bold text-center leading-[17px] text-white select-none uppercase',
+              {
+                'bg-gradient-linear-[(90deg,_#E4AA15_0%,_#F0C75D_100%)] text-black': pureGold,
+              }
+            )}
+            onClick={() => setPureGold(!pureGold)}
+          >
+            Pure Gold
           </div>
         </Stack>
       }
