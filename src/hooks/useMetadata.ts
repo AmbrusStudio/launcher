@@ -1,3 +1,4 @@
+import { Falsy } from '@usedapp/core'
 import { getAddress } from 'ethers/lib/utils'
 import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
@@ -88,7 +89,11 @@ export function useMetadata() {
    * @returns
    */
   const getMetadataByAddress = useCallback(
-    (address: string, status: MetadataStatus): TokenMetadata[] => {
+    (address: string | Falsy, status: MetadataStatus): TokenMetadata[] => {
+      if (!address) {
+        return metadataAllEdition
+      }
+
       if (status === MetadataStatus.Ethereum) {
         if (
           getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition) ||

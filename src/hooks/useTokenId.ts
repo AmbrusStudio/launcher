@@ -1,4 +1,4 @@
-import { useEthers } from '@usedapp/core'
+import { Falsy, useEthers } from '@usedapp/core'
 import { Alchemy, GetNftsForOwnerOptions, OwnedNftsResponse } from 'alchemy-sdk'
 import { getAddress } from 'ethers/lib/utils'
 import { useCallback, useEffect, useState } from 'react'
@@ -56,14 +56,14 @@ const getAllNfts = async (owner: string): Promise<OwnedNftsResponse> => {
  * Get NFT tokenId
  * @returns
  */
-export function useTokenIdByOwner({ tokenAddress }: { tokenAddress: string }) {
+export function useTokenIdByOwner({ tokenAddress }: { tokenAddress: string | Falsy }) {
   const [tokenId, setTokenId] = useState<string[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const { account } = useEthers()
 
   // Fetch nfts for owner
   const getNftsForOwner = useCallback(async () => {
-    if (!account) {
+    if (!account || !tokenAddress) {
       setLoading(false)
       return
     }
@@ -96,14 +96,20 @@ export function useTokenIdByOwner({ tokenAddress }: { tokenAddress: string }) {
  * Get NFT tokenId By Contract
  * @returns
  */
-export function useTokenIdByContract({ holderAddress, tokenAddress }: { holderAddress: string; tokenAddress: string }) {
+export function useTokenIdByContract({
+  holderAddress,
+  tokenAddress,
+}: {
+  holderAddress: string | Falsy
+  tokenAddress: string | Falsy
+}) {
   const [tokenId, setTokenId] = useState<string[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const { account } = useEthers()
 
   // Fetch nfts for owner
   const getNftsForOwner = useCallback(async () => {
-    if (!holderAddress || !account) {
+    if (!holderAddress || !tokenAddress || !account) {
       setLoading(false)
       return
     }

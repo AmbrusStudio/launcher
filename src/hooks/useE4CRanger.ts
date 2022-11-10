@@ -75,17 +75,18 @@ export function useE4CRangerUnstake(tokenAddress: string) {
  * @param tokenIds
  * @returns
  */
-export function useUpgradeds(tokenAddress: string, tokenIds: string[]): (boolean | undefined)[] {
+export function useUpgradeds(tokenAddress: string | Falsy, tokenIds: string[]): (boolean | undefined)[] {
   const [upgraded, setUpgraded] = useState<(boolean | undefined)[]>([])
 
   const emptyCalls = useMemo(() => [], [])
 
-  const calls =
-    tokenIds?.map((tokenId) => ({
-      contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
-      method: 'upgraded',
-      args: [tokenId],
-    })) ?? []
+  const calls = tokenAddress
+    ? tokenIds?.map((tokenId) => ({
+        contract: new Contract(tokenAddress, E4CRangerHolder__factory.abi),
+        method: 'upgraded',
+        args: [tokenId],
+      })) ?? emptyCalls
+    : emptyCalls
   const results =
     useCalls(calls, {
       chainId: defaultChainId,
@@ -113,17 +114,18 @@ export function useUpgradeds(tokenAddress: string, tokenIds: string[]): (boolean
  * @param tokenIds
  * @returns constants.AddressZero || Address
  */
-export function useOriginalOwners(tokenAddress: string, tokenIds: string[]) {
+export function useOriginalOwners(tokenAddress: string | Falsy, tokenIds: string[]) {
   const [originalOwner, setOriginalOwner] = useState<string[]>([])
 
   const emptyCalls = useMemo(() => [], [])
 
-  const calls =
-    tokenIds?.map((tokenId) => ({
-      contract: new Contract(tokenAddress, E4CRangerHolderFactory.abi),
-      method: 'originalOwner',
-      args: [tokenId],
-    })) ?? []
+  const calls = tokenAddress
+    ? tokenIds?.map((tokenId) => ({
+        contract: new Contract(tokenAddress, E4CRangerHolderFactory.abi),
+        method: 'originalOwner',
+        args: [tokenId],
+      })) ?? emptyCalls
+    : emptyCalls
 
   const results =
     useCalls(calls, {

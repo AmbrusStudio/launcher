@@ -1,3 +1,4 @@
+import { Goerli } from '@usedapp/core'
 import { useMemo } from 'react'
 
 import {
@@ -8,6 +9,7 @@ import {
   ADDRESS_E4CRanger_Rangers_Holder,
   ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
   ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
+  defaultChainId,
 } from '../contracts'
 import { useERC721ImmutableXList, useERC721List, useERC721UltimateEditionList } from './useERC721List'
 
@@ -26,12 +28,12 @@ export function useUserCollections() {
   })
   // The ImmutableX test network address is inconsistent, and additional query is required
   const { nfts: nftsGoldImmutableX, loading: loadingGoldImmutableX } = useERC721List({
-    holderAddress: ADDRESS_E4CRanger_Gold_Holder,
-    tokenAddress: ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
+    holderAddress: defaultChainId === Goerli.chainId ? ADDRESS_E4CRanger_Gold_Holder : undefined,
+    tokenAddress: defaultChainId === Goerli.chainId ? ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition : undefined,
   })
   const { nfts: nftsRangersImmutableX, loading: loadingRangersImmutableX } = useERC721List({
-    holderAddress: ADDRESS_E4CRanger_Rangers_Holder,
-    tokenAddress: ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
+    holderAddress: defaultChainId === Goerli.chainId ? ADDRESS_E4CRanger_Rangers_Holder : undefined,
+    tokenAddress: defaultChainId === Goerli.chainId ? ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition : undefined,
   })
 
   const { nfts: nftsImmutableXGold, loading: loadingImmutableXGold } = useERC721ImmutableXList({
