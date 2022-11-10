@@ -1,4 +1,4 @@
-import { useEthers } from '@usedapp/core'
+import { Falsy, useEthers } from '@usedapp/core'
 import { getAddress } from 'ethers/lib/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -20,8 +20,8 @@ export function useERC721ListState({
   tokenAddress,
   baseURL,
 }: {
-  holderAddress: string
-  tokenAddress: string
+  holderAddress: string | Falsy
+  tokenAddress: string | Falsy
   baseURL: string
 }) {
   const { account } = useEthers()
@@ -56,11 +56,6 @@ export function useERC721ListState({
   }, [account, originalOwner, tokenIdByContract])
 
   const upgradedForContract = useUpgradeds(holderAddress, tokenIdForContract)
-  // console.log('upgraded', upgraded)
-  // console.log('tokenIdByContract', tokenIdByContract)
-  // console.log('originalOwner', originalOwner)
-  // console.log('tokenIdForContract', tokenIdForContract)
-  // console.log('upgradedForContract', upgradedForContract)
 
   const { getMetadataByAddress } = useMetadata()
   const metadata = useMemo(
@@ -70,25 +65,29 @@ export function useERC721ListState({
 
   // NFT metadata for account
   const getNftsForAccount = useCallback(async () => {
-    const list = formatMetadata(tokenAddress, metadata, tokenId, upgraded, [], MetadataStatus.Ethereum)
-    const nfts = await editionPlus(list, baseURL)
+    if (tokenAddress) {
+      const list = formatMetadata(tokenAddress, metadata, tokenId, upgraded, [], MetadataStatus.Ethereum)
+      const nfts = await editionPlus(list, baseURL)
 
-    setNftsForAccount(nfts)
+      setNftsForAccount(nfts)
+    }
   }, [metadata, tokenAddress, tokenId, upgraded, baseURL])
 
   // NFT metadata for contract
   const getNftsForContract = useCallback(async () => {
-    const list = formatMetadata(
-      tokenAddress,
-      metadata,
-      tokenIdForContract,
-      upgradedForContract,
-      originalOwner,
-      MetadataStatus.Ethereum
-    )
-    const nfts = await editionPlus(list, baseURL)
+    if (tokenAddress) {
+      const list = formatMetadata(
+        tokenAddress,
+        metadata,
+        tokenIdForContract,
+        upgradedForContract,
+        originalOwner,
+        MetadataStatus.Ethereum
+      )
+      const nfts = await editionPlus(list, baseURL)
 
-    setNftsForContract(nfts)
+      setNftsForContract(nfts)
+    }
   }, [baseURL, metadata, originalOwner, tokenAddress, tokenIdForContract, upgradedForContract])
 
   const nfts = useMemo<NFTE4CRanger[]>(() => [...nftsForAccount, ...nftsForContract], [nftsForAccount, nftsForContract])
@@ -113,7 +112,13 @@ export function useERC721ListState({
  * @param param
  * @returns
  */
-export function useERC721List({ holderAddress, tokenAddress }: { holderAddress: string; tokenAddress: string }) {
+export function useERC721List({
+  holderAddress,
+  tokenAddress,
+}: {
+  holderAddress: string | Falsy
+  tokenAddress: string | Falsy
+}) {
   const { account } = useEthers()
 
   // TokenId for owner
@@ -150,16 +155,22 @@ export function useERC721List({ holderAddress, tokenAddress }: { holderAddress: 
   )
 
   // NFT metadata for account
-  const nftsForAccount = useMemo<NFTE4CRanger[]>(
-    () => formatMetadata(tokenAddress, metadata, tokenId, [], [], MetadataStatus.Ethereum),
-    [tokenId, tokenAddress, metadata]
-  )
+  const nftsForAccount = useMemo<NFTE4CRanger[]>(() => {
+    if (tokenAddress) {
+      return formatMetadata(tokenAddress, metadata, tokenId, [], [], MetadataStatus.Ethereum)
+    } else {
+      return []
+    }
+  }, [tokenId, tokenAddress, metadata])
 
   // NFT metadata for contract
-  const nftsForContract = useMemo<NFTE4CRanger[]>(
-    () => formatMetadata(tokenAddress, metadata, tokenIdForContract, [], [], MetadataStatus.Ethereum),
-    [tokenIdForContract, tokenAddress, metadata]
-  )
+  const nftsForContract = useMemo<NFTE4CRanger[]>(() => {
+    if (tokenAddress) {
+      return formatMetadata(tokenAddress, metadata, tokenIdForContract, [], [], MetadataStatus.Ethereum)
+    } else {
+      return []
+    }
+  }, [tokenIdForContract, tokenAddress, metadata])
 
   const nfts = useMemo<NFTE4CRanger[]>(() => [...nftsForAccount, ...nftsForContract], [nftsForAccount, nftsForContract])
 
