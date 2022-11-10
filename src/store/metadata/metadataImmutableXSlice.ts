@@ -5,11 +5,11 @@ import axios from 'axios'
 import { getAddress } from 'ethers/lib/utils'
 
 import {
-  ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
-  ADDRESS_ImmutableX_E4C_Ranger_Gold_Editions,
-  ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
-  ADDRESS_ImmutableX_E4C_Ranger_Rangers_Editions,
   defaultChainId,
+  E4CRanger_ImmutableX_GoldEdition,
+  E4CRanger_ImmutableX_GoldEditions,
+  E4CRanger_ImmutableX_RangersEdition,
+  E4CRanger_ImmutableX_RangersEditions,
 } from '../../contracts'
 import { MetadataResponse, TokenMetadata } from '../../types'
 import { parseTokenId } from '../../utils'
@@ -45,7 +45,7 @@ const defaultState: MetadataState = {
       lastTime: 0,
       url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Gold_Edition/E4C_Rangers_Kit.json',
       baseURI: 'https://api.ambrus.studio/e4c-ranger/gold/metadata/',
-      address: ADDRESS_ImmutableX_E4C_Ranger_Gold_Editions[Mainnet.chainId],
+      address: E4CRanger_ImmutableX_GoldEditions[Mainnet.chainId],
       chainId: Mainnet.chainId,
       name: 'E4C Rangers Gold Edition',
       metadata: [],
@@ -54,7 +54,7 @@ const defaultState: MetadataState = {
       lastTime: 0,
       url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Gold_Edition/E4C_Rangers_Kit.json',
       baseURI: 'https://api.ambrus.studio/e4c-ranger/gold/metadata/',
-      address: ADDRESS_ImmutableX_E4C_Ranger_Gold_Editions[Goerli.chainId],
+      address: E4CRanger_ImmutableX_GoldEditions[Goerli.chainId],
       chainId: Goerli.chainId,
       name: 'E4C Rangers Gold Edition',
       metadata: [],
@@ -66,7 +66,7 @@ const defaultState: MetadataState = {
       lastTime: 0,
       url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Rangers_Edition/E4C_Rangers_Kit.json',
       baseURI: 'https://api.ambrus.studio/e4c-ranger/rangers/metadata/',
-      address: ADDRESS_ImmutableX_E4C_Ranger_Rangers_Editions[Mainnet.chainId],
+      address: E4CRanger_ImmutableX_RangersEditions[Mainnet.chainId],
       chainId: Mainnet.chainId,
       name: 'E4C Rangers Rangers Edition',
       metadata: [],
@@ -75,7 +75,7 @@ const defaultState: MetadataState = {
       lastTime: 0,
       url: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Rangers_Edition/E4C_Rangers_Kit.json',
       baseURI: 'https://api.ambrus.studio/e4c-ranger/rangers/metadata/',
-      address: ADDRESS_ImmutableX_E4C_Ranger_Rangers_Editions[Goerli.chainId],
+      address: E4CRanger_ImmutableX_RangersEditions[Goerli.chainId],
       chainId: Goerli.chainId,
       name: 'E4C Rangers Rangers Edition',
       metadata: [],
@@ -165,7 +165,7 @@ export const metadataImmutableXSlice = createSlice({
             name: i.name,
             description: i.description,
             image: i.image,
-            address: getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition),
+            address: getAddress(E4CRanger_ImmutableX_GoldEdition),
             tokenId: parseTokenId(i.name),
             trait: i.attributes,
           }))
@@ -193,7 +193,7 @@ export const metadataImmutableXSlice = createSlice({
             name: i.name,
             description: i.description,
             image: i.image,
-            address: getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition),
+            address: getAddress(E4CRanger_ImmutableX_RangersEdition),
             tokenId: parseTokenId(i.name),
             trait: i.attributes,
           }))
