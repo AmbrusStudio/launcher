@@ -4,12 +4,12 @@ import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import {
-  ADDRESS_E4C_Ranger_Gold_Edition,
-  ADDRESS_E4C_Ranger_Rangers_Edition,
-  ADDRESS_E4C_Ranger_Ultimate_Edition,
   ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition,
   ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition,
   defaultChainId,
+  E4CRanger_GoldEdition,
+  E4CRanger_RangersEdition,
+  E4CRanger_UltimateEdition,
 } from '../contracts'
 import { RootState } from '../store'
 import { MetadataStatus, TokenMetadata } from '../types'
@@ -96,16 +96,16 @@ export function useMetadata() {
 
       if (status === MetadataStatus.Ethereum) {
         if (
-          getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Gold_Edition) ||
+          getAddress(address) === getAddress(E4CRanger_GoldEdition) ||
           getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Gold_Edition)
         ) {
           return metadataGold
         } else if (
-          getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Rangers_Edition) ||
+          getAddress(address) === getAddress(E4CRanger_RangersEdition) ||
           getAddress(address) === getAddress(ADDRESS_ImmutableX_E4C_Ranger_Rangers_Edition)
         ) {
           return metadadaRangers
-        } else if (getAddress(address) === getAddress(ADDRESS_E4C_Ranger_Ultimate_Edition)) {
+        } else if (getAddress(address) === getAddress(E4CRanger_UltimateEdition)) {
           return metadadaUltimateEdition.metadata
         } else {
           console.error(`metadata not found, Ethereum status: ${status}`)
