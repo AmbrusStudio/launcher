@@ -3,7 +3,8 @@ import { useEthers } from '@usedapp/core'
 import classNames from 'classnames'
 import { FC, useCallback, useEffect, useState } from 'react'
 
-// import withdraw from '../../../assets/images/withdraw.png'
+import withdraw from '../../../assets/images/withdraw.png'
+import { ImmutableXWithdraw } from '../../../constants'
 import { E4CRanger_ImmutableX_Holder } from '../../../contracts'
 // import Star from '../../../components/Icon/Star'
 import { useImmutableXERC721AssetTransfers, useImmutableXERC721AssetUnstake, useWeb3Modal } from '../../../hooks'
@@ -176,14 +177,11 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, update }) => {
                 Upgrade
               </button>
             )}
-            {/* {nft.status === MetadataStatus.ImmutableX && (
-              <button
-                className="u-btn max-w-[120px] !bg-[#465358]"
-                onClick={() => window.open('https://market.immutable.com/')}
-              >
+            {nft.status === MetadataStatus.ImmutableX && (
+              <button className="u-btn max-w-[120px] !bg-[#465358]" onClick={() => window.open(ImmutableXWithdraw)}>
                 <img className="w-9 h-9" src={withdraw} alt="imxtools withdrawal" />
               </button>
-            )} */}
+            )}
           </Stack>
         )}
       </div>
