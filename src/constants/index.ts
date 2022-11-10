@@ -20,3 +20,6 @@ export const Blindbox = {
     BlindBoxPictures: 'https://ambrus.s3.amazonaws.com/1667538431877_0.51_blindbox.gif',
   },
 }
+
+// ImmutableX Withdraw
+export const ImmutableXWithdraw = 'https://market.immutable.com/'
