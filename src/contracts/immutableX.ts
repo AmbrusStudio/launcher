@@ -26,3 +26,10 @@ export const E4CRanger_ImmutableX_RangersEditions = {
   [Goerli.chainId]: '0x714a090f35a1f1fc9baa65059b28939dd0f5a196',
 }
 export const E4CRanger_ImmutableX_RangersEdition = E4CRanger_ImmutableX_RangersEditions[defaultChainId]
+
+// ImmutableX Withdraw
+const ImmutableXWithdraws = {
+  [Mainnet.chainId]: 'https://imxtools.io/withdrawal',
+  [Goerli.chainId]: 'https://tools.immutable.com/link-reference/',
+}
+export const ImmutableXWithdraw = ImmutableXWithdraws[defaultChainId]
