@@ -2,7 +2,6 @@ import { shortenIfAddress } from '@usedapp/core'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 
-import AvatarDefault from '../../../assets/images/avatar/avatar-default.png'
 import { AccountMyAccountInfo, AccountMyAvatar, AccountMyWallet } from '../../../components/Account'
 import { AccountCenterPageLayout } from '../../../components/Layout'
 import {
@@ -14,8 +13,6 @@ import {
 } from '../../../hooks'
 import { AccountAvatarInfo, AccountInfoFormData } from '../../../types'
 
-const demoData: AccountAvatarInfo[] = [{ id: 1, image: AvatarDefault }]
-
 export function Settings() {
   const { setValue, reset, handleSubmit } = useFormContext<AccountInfoFormData>()
   const { walletInfo, walletLogin: imxLogin } = useImmutableXWallet()
@@ -25,7 +22,7 @@ export function Settings() {
   const showSnackbar = useSnackbarTR()
 
   const [updateSending, setUpdateSending] = React.useState(false)
-  const [selectedAvatar, setSelectedAvatar] = React.useState<AccountAvatarInfo>()
+  const [selectedAvatar, setSelectedAvatar] = React.useState<AccountAvatarInfo | 'default'>('default')
   const [metamaskBinding, setMetamaskBinding] = React.useState(false)
 
   const handleSaveButtonSubmit = React.useCallback(
@@ -72,17 +69,13 @@ export function Settings() {
     }
   }, [metamaskBinding, showSnackbar, walletUnbind])
 
-  const handleAvatarSelect = React.useCallback(async (avatar: AccountAvatarInfo) => {
+  const handleAvatarSelect = React.useCallback(async (avatar: AccountAvatarInfo | 'default') => {
     console.log('handleAvatarSelect', avatar)
     setSelectedAvatar(avatar)
   }, [])
 
   React.useEffect(() => {
-    if (userInfo?.username) {
-      setValue('username', userInfo.username)
-    }
-    const selectedAvatar = demoData.find((a) => a.id === 1)
-    setSelectedAvatar(selectedAvatar)
+    if (userInfo?.username) setValue('username', userInfo.username)
   }, [setValue, userInfo?.username])
 
   return (
@@ -93,7 +86,7 @@ export function Settings() {
     >
       <div className="flex flex-col-reverse md:grid md:grid-cols-[auto_1fr] gap-24px lg:gap-36px">
         <AccountMyAccountInfo disabled={updateSending} onSaveButtonSubmit={handleSubmit(handleSaveButtonSubmit)} />
-        <AccountMyAvatar data={demoData} selected={selectedAvatar} onAvatarSelect={handleAvatarSelect} />
+        <AccountMyAvatar data={[]} selected={selectedAvatar} onAvatarSelect={handleAvatarSelect} />
       </div>
       <AccountMyWallet
         bindAccount={shortenIfAddress(userInfo?.wallet)}

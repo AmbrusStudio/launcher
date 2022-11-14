@@ -117,3 +117,9 @@ export type TokenMetadata = {
   address: string
   tokenId: string
 } & Metadata
+
+export type E4CRangerNftKind = 'ultimate' | 'gold' | 'rangers'
+
+export type E4CRangerNftKindMap = Record<string, E4CRangerNftKind>
+
+export type E4CRangerNftKindChainMap = Record<number, E4CRangerNftKindMap>

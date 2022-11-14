@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import AvatarDefault from '../../../assets/images/avatar/avatar-default.png'
 import { AccountAvatarInfo } from '../../../types'
 import { classNames } from '../../../utils'
 import { IconTick } from '../../Icon'
@@ -52,9 +53,9 @@ const BoxWithCustomizedScrollbar = styled.div`
 `
 
 type AccountMyAvatarProps = {
-  selected?: AccountAvatarInfo
+  selected: AccountAvatarInfo | 'default'
   data: AccountAvatarInfo[]
-  onAvatarSelect: (avatar: AccountAvatarInfo) => void
+  onAvatarSelect: (avatar: AccountAvatarInfo | 'default') => void
 }
 
 export function AccountMyAvatar(props: AccountMyAvatarProps) {
@@ -65,11 +66,17 @@ export function AccountMyAvatar(props: AccountMyAvatarProps) {
       <div className="mb-12px text-12px leading-16px text-grey-medium font-bold uppercase">Select your Avatar</div>
       <BoxWithCustomizedScrollbar className="flex max-h-550px overflow-y-auto">
         <div className="grid grid-cols-[repeat(auto-fit,_minmax(80px,_1fr))] xl:grid-cols-[repeat(auto-fit,_120px)] gap-16px w-full">
+          <AvatarItem
+            key={`avatar-default`}
+            image={AvatarDefault}
+            selected={selected === 'default'}
+            onItemClick={() => onAvatarSelect('default')}
+          />
           {data.map((avatar, index) => (
             <AvatarItem
               key={`avatar-${avatar.id}-${index}`}
-              image={avatar.image}
-              selected={avatar.id === selected?.id}
+              image={avatar.imageUrl}
+              selected={typeof selected === 'object' && avatar.id === selected.id}
               onItemClick={() => onAvatarSelect(avatar)}
             />
           ))}
