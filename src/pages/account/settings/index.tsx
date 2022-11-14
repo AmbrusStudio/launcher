@@ -5,6 +5,7 @@ import { useFormContext } from 'react-hook-form'
 import { AccountMyAccountInfo, AccountMyAvatar, AccountMyWallet } from '../../../components/Account'
 import { AccountCenterPageLayout } from '../../../components/Layout'
 import {
+  useAccountAvatarInfos,
   useAccountInfo,
   useEmailAccount,
   useImmutableXAccount,
@@ -19,6 +20,7 @@ export function Settings() {
   const { walletBind, walletUnbind } = useImmutableXAccount()
   const { emailUpdatePassword } = useEmailAccount()
   const { account: userInfo } = useAccountInfo()
+  const avatarInfos = useAccountAvatarInfos()
   const showSnackbar = useSnackbarTR()
 
   const [updateSending, setUpdateSending] = React.useState(false)
@@ -86,7 +88,7 @@ export function Settings() {
     >
       <div className="flex flex-col-reverse md:grid md:grid-cols-[auto_1fr] gap-24px lg:gap-36px">
         <AccountMyAccountInfo disabled={updateSending} onSaveButtonSubmit={handleSubmit(handleSaveButtonSubmit)} />
-        <AccountMyAvatar data={[]} selected={selectedAvatar} onAvatarSelect={handleAvatarSelect} />
+        <AccountMyAvatar data={avatarInfos} selected={selectedAvatar} onAvatarSelect={handleAvatarSelect} />
       </div>
       <AccountMyWallet
         bindAccount={shortenIfAddress(userInfo?.wallet)}

@@ -2,6 +2,7 @@ import { Config as DAppConfig, Goerli, Mainnet } from '@usedapp/core'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { Network } from 'alchemy-sdk'
 
+import { E4CRangerNftKindChainMap, E4CRangerNftKindMap } from '../types'
 import { getDefaultChainId, getViteEnv } from '../utils'
 export * from './immutableX'
 
@@ -31,26 +32,47 @@ export const E4CRanger_RangersEdition_Holders = {
 }
 export const E4CRanger_RangersEdition_Holder = E4CRanger_RangersEdition_Holders[defaultChainId]
 
+// E4CRanger UltimateEdition <Rin | Kit>
+export const E4CRanger_UltimateEditions = {
+  [Mainnet.chainId]: '0xeb05CB1c82ACC87Ad8E0bB7927a1dc39Cd300402',
+  [Goerli.chainId]: '0xc5252239C1211D6d8B46F26A107F498B15E129fF',
+}
+export const E4CRanger_UltimateEdition = E4CRanger_UltimateEditions[defaultChainId]
+
 // E4CRanger GoldEdition <Rin | Kit>
 export const E4CRanger_GoldEditions = {
-  [Mainnet.chainId]: '0xba265b93519e6473f34f46ee35f4b23970f41a3f',
-  [Goerli.chainId]: '0x77dc43876D49382863297889dFa238c5f8b74020',
+  [Mainnet.chainId]: '0xbA265B93519E6473F34F46ee35F4B23970F41a3f',
+  [Goerli.chainId]: '0xbF206014a878df4153036d7895188e340527a8f0',
 }
 export const E4CRanger_GoldEdition = E4CRanger_GoldEditions[defaultChainId]
 
 // E4CRanger RangersEdition <Rin | Kit>
 export const E4CRanger_RangersEditions = {
   [Mainnet.chainId]: '0xC17Aa29c43e4cE0c349749C8986a03B2734813fa',
-  [Goerli.chainId]: '0xB6D62797468E7ec16e57229e79501e551970c841',
+  [Goerli.chainId]: '0x714a090F35a1f1fC9BAa65059b28939DD0F5A196',
 }
 export const E4CRanger_RangersEdition = E4CRanger_RangersEditions[defaultChainId]
 
-// E4CRanger UltimateEdition <Rin | Kit>
-export const E4CRanger_UltimateEditions = {
-  [Mainnet.chainId]: '0xeb05CB1c82ACC87Ad8E0bB7927a1dc39Cd300402',
-  [Goerli.chainId]: '0x1243F6c819265d58d7c9424d50DF42d047832fB3',
+// #region For account avatar use
+export const E4CRanger_NftKindMap_Mainnet: E4CRangerNftKindMap = {
+  [E4CRanger_UltimateEditions[Mainnet.chainId]]: 'ultimate',
+  [E4CRanger_GoldEditions[Mainnet.chainId]]: 'gold',
+  [E4CRanger_RangersEditions[Mainnet.chainId]]: 'rangers',
 }
-export const E4CRanger_UltimateEdition = E4CRanger_UltimateEditions[defaultChainId]
+
+export const E4CRanger_NftKindMap_Goerli: E4CRangerNftKindMap = {
+  [E4CRanger_UltimateEditions[Goerli.chainId]]: 'ultimate',
+  [E4CRanger_GoldEditions[Goerli.chainId]]: 'gold',
+  [E4CRanger_RangersEditions[Goerli.chainId]]: 'rangers',
+}
+
+export const E4CRanger_NftKindChainMap: E4CRangerNftKindChainMap = {
+  [Mainnet.chainId]: E4CRanger_NftKindMap_Mainnet,
+  [Goerli.chainId]: E4CRanger_NftKindMap_Goerli,
+}
+
+export const E4CRanger_NftKindMap: E4CRangerNftKindMap = E4CRanger_NftKindChainMap[defaultChainId]
+// #endregion For account avatar use
 
 // Alchemy Network Config
 export const ALCHEMY_NETWORKS = {
