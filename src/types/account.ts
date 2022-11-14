@@ -1,5 +1,6 @@
 import type { JWTPayload } from 'jose'
 
+import { E4CRangerNftKind } from './nft'
 import type { RemoveIndex } from './utils'
 
 export type AccountStepInfo = {
@@ -70,6 +71,7 @@ export enum EmailVerificationTypes {
 }
 
 export type AccountAvatarInfo = {
-  id: number
-  image: string
+  id: string
+  kind: E4CRangerNftKind
+  imageUrl: string
 }
