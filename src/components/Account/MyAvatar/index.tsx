@@ -74,9 +74,9 @@ export function AccountMyAvatar(props: AccountMyAvatarProps) {
           />
           {data.map((avatar, index) => (
             <AvatarItem
-              key={`avatar-${avatar.id}-${index}`}
+              key={`avatar-${avatar.kind}-${avatar.id}-${index}`}
               image={avatar.imageUrl}
-              selected={typeof selected === 'object' && avatar.id === selected.id}
+              selected={typeof selected === 'object' && avatar.kind === selected.kind && avatar.id === selected.id}
               onItemClick={() => onAvatarSelect(avatar)}
             />
           ))}
