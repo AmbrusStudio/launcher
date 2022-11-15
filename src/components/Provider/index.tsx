@@ -8,9 +8,10 @@ import { PersistGate } from 'redux-persist/integration/react'
 import useLocalStorageState from 'use-local-storage-state'
 
 import { LSK_IMX_WALLET_INFO } from '../../constants'
-import { ImmutableXWalletContext, WalletModalContext } from '../../context'
+import { AccountAvatarInfoContext, ImmutableXWalletContext, WalletModalContext } from '../../context'
 import { DAPP_CONFIG } from '../../contracts'
 import { persistor, store } from '../../store/index'
+import { AccountAvatarInfo } from '../../types'
 import { getViteEnv } from '../../utils'
 import WalletModal from '../WalletModal'
 
@@ -70,6 +71,17 @@ function ImmutableXWalletProvider({ children }: ProvidersProps) {
   )
 }
 
+function AccountAvatarInfoProvider({ children }: ProvidersProps) {
+  const [avatarInfo, setAvatarInfo] = React.useState<AccountAvatarInfo | 'default'>('default')
+  const handleSetAvatarInfo = React.useCallback((info: AccountAvatarInfo | 'default') => setAvatarInfo(info), [])
+
+  return (
+    <AccountAvatarInfoContext.Provider value={{ avatarInfo, setAvatarInfo: handleSetAvatarInfo }}>
+      {children}
+    </AccountAvatarInfoContext.Provider>
+  )
+}
+
 export function Provider({ children }: ProvidersProps) {
   const formMethods = useForm()
   return (
@@ -79,7 +91,9 @@ export function Provider({ children }: ProvidersProps) {
           <ReduxProvider store={store}>
             <PersistGate loading={null} persistor={persistor}>
               <ImmutableXWalletProvider>
-                <SnackbarProvider maxSnack={3}>{children}</SnackbarProvider>
+                <AccountAvatarInfoProvider>
+                  <SnackbarProvider maxSnack={3}>{children}</SnackbarProvider>
+                </AccountAvatarInfoProvider>
               </ImmutableXWalletProvider>
             </PersistGate>
           </ReduxProvider>
