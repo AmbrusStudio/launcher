@@ -75,3 +75,7 @@ export type AccountAvatarInfo = {
   kind: E4CRangerNftKind
   imageUrl: string
 }
+
+export type AccountAvatarInfoImageNullable = Omit<AccountAvatarInfo, 'imageUrl'> & {
+  imageUrl: string | null
+}
