@@ -1,4 +1,11 @@
-import { AccountAccessToken, AccountApiResult, EmailVerificationTypes } from '../../types'
+import {
+  AccountAccessToken,
+  AccountApiResult,
+  AccountAvatarInfo,
+  AccountAvatarInfoImageNullable,
+  E4CRangerNftKind,
+  EmailVerificationTypes,
+} from '../../types'
 import { accountBackendRequest } from '../axios'
 
 type AccountResponseError = {
@@ -120,5 +127,36 @@ export async function checkUsername(username: string): Promise<AccountApiResult<
   if (res.status === 201) return { isOk: true, data: res.data, error: null }
   if (res.status === 403) return { isOk: false, data: null, error: new Error('Username contains illegal characters') }
   if (res.status === 409) return { isOk: false, data: null, error: new Error('Username not available') }
+  return { isOk: false, data: null, error: new Error('Unkonwn error') }
+}
+
+export async function getAllAvatars(): Promise<AccountApiResult<AccountAvatarInfoImageNullable[]>> {
+  const res = await accountBackendRequest.get<AccountAvatarInfoImageNullable[]>('/account/nfts')
+  if (res.status === 200) return { isOk: true, data: res.data, error: null }
+  if (res.status === 400) return { isOk: false, data: null, error: new Error('No wallet information') }
+  return { isOk: false, data: null, error: new Error('Unkonwn error') }
+}
+
+type GetAvatar = Pick<AccountAvatarInfo, 'kind' | 'id'>
+
+export async function getAvatar(): Promise<AccountApiResult<GetAvatar | null>> {
+  const res = await accountBackendRequest.get<GetAvatar | null>('/account/avatar')
+  if (res.status === 200) return { isOk: true, data: res.data, error: null }
+  if (res.status === 400) return { isOk: false, data: null, error: new Error('No wallet information') }
+  return { isOk: false, data: null, error: new Error('Unkonwn error') }
+}
+
+export async function updateAvatar(kind: E4CRangerNftKind, id: string): Promise<AccountApiResult<void>> {
+  const res = await accountBackendRequest.put<void>('/account/avatar', { kind, id })
+  if (res.status === 200) return { isOk: true, data: res.data, error: null }
+  if (res.status === 400) return { isOk: false, data: null, error: new Error('No wallet information') }
+  if (res.status === 403) return { isOk: false, data: null, error: new Error('Not nft holder') }
+  return { isOk: false, data: null, error: new Error('Unkonwn error') }
+}
+
+export async function deleteAvatar(): Promise<AccountApiResult<void>> {
+  const res = await accountBackendRequest.delete<void>('/account/avatar')
+  if (res.status === 200) return { isOk: true, data: res.data, error: null }
+  if (res.status === 400) return { isOk: false, data: null, error: new Error('No wallet information') }
   return { isOk: false, data: null, error: new Error('Unkonwn error') }
 }
