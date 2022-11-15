@@ -20,11 +20,10 @@ export function Settings() {
   const { walletBind, walletUnbind } = useImmutableXAccount()
   const { emailUpdatePassword } = useEmailAccount()
   const { account: userInfo } = useAccountInfo()
-  const avatarInfos = useAccountAvatarInfos()
+  const { avatarInfos, avatarInfo, updateAvatarInfo, deleteAvatarInfo } = useAccountAvatarInfos()
   const showSnackbar = useSnackbarTR()
 
   const [updateSending, setUpdateSending] = React.useState(false)
-  const [selectedAvatar, setSelectedAvatar] = React.useState<AccountAvatarInfo | 'default'>('default')
   const [metamaskBinding, setMetamaskBinding] = React.useState(false)
 
   const handleSaveButtonSubmit = React.useCallback(
@@ -71,10 +70,20 @@ export function Settings() {
     }
   }, [metamaskBinding, showSnackbar, walletUnbind])
 
-  const handleAvatarSelect = React.useCallback(async (avatar: AccountAvatarInfo | 'default') => {
-    console.log('handleAvatarSelect', avatar)
-    setSelectedAvatar(avatar)
-  }, [])
+  const handleAvatarSelect = React.useCallback(
+    async (avatar: AccountAvatarInfo | 'default') => {
+      console.debug('Handle avatar select', avatar)
+      if (avatar === 'default') {
+        const res = await deleteAvatarInfo()
+        if (!res.isOk) return showSnackbar(res.error.message, 'error')
+      }
+      if (typeof avatar === 'object') {
+        const res = await updateAvatarInfo(avatar)
+        if (!res.isOk) return showSnackbar(res.error.message, 'error')
+      }
+    },
+    [deleteAvatarInfo, showSnackbar, updateAvatarInfo]
+  )
 
   React.useEffect(() => {
     if (userInfo?.username) setValue('username', userInfo.username)
@@ -88,7 +97,7 @@ export function Settings() {
     >
       <div className="flex flex-col-reverse md:grid md:grid-cols-[auto_1fr] gap-24px lg:gap-36px">
         <AccountMyAccountInfo disabled={updateSending} onSaveButtonSubmit={handleSubmit(handleSaveButtonSubmit)} />
-        <AccountMyAvatar data={avatarInfos} selected={selectedAvatar} onAvatarSelect={handleAvatarSelect} />
+        <AccountMyAvatar data={avatarInfos} selected={avatarInfo} onAvatarSelect={handleAvatarSelect} />
       </div>
       <AccountMyWallet
         bindAccount={shortenIfAddress(userInfo?.wallet)}

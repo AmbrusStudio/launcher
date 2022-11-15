@@ -1,34 +1,33 @@
-import { ImmutableMethodResults } from '@imtbl/imx-sdk'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
-import { getAddress, isAddress } from 'ethers/lib/utils'
+import { isAddress } from 'ethers/lib/utils'
 import React from 'react'
 import useLocalStorageState from 'use-local-storage-state'
 
 import {
   bindMetamaskAddress,
   checkUsername,
+  deleteAvatar,
   doEmailLogin,
   doMetamaskLogin,
+  getAllAvatars,
+  getAvatar,
   getMetamaskCode,
   registerWithEmail,
   resetPassword,
   sendVerifyEmail,
   unbindMetamaskAddress,
+  updateAvatar,
   updatePassword,
   verifyVerificationCode,
 } from '../api'
 import { LSK_ACCESS_TOKEN } from '../constants'
-import {
-  E4CRanger_GoldEdition,
-  E4CRanger_NftKindMap,
-  E4CRanger_RangersEdition,
-  E4CRanger_UltimateEdition,
-} from '../contracts'
+import { AccountAvatarInfoContext } from '../context'
 import {
   AccountAccessToken,
   AccountAccessTokenJWTPayload,
   AccountApiResult,
   AccountAvatarInfo,
+  AccountAvatarInfoImageNullable,
   EmailVerificationTypes,
 } from '../types'
 import { getAccessTokenPayload, getDefaultChainId, isAccountTokenExpired } from '../utils'
@@ -294,85 +293,57 @@ export function useAccountEmail({ email, wallet }: UseAccountEmailParams) {
   return value
 }
 
-type AccountAvatarInfoImageNullable = Omit<AccountAvatarInfo, 'imageUrl'> & {
-  imageUrl: string | null
-}
-
 function avatarInfoImageFilter(info: AccountAvatarInfoImageNullable): info is AccountAvatarInfo {
   return info.imageUrl !== null && info.imageUrl !== undefined && !info.imageUrl.toLowerCase().includes('blindbox')
 }
 
-function assetToAvatarInfo(
-  assets: PromiseSettledResult<ImmutableMethodResults.ImmutableGetAssetsResult['result']>
-): AccountAvatarInfo[] {
-  if (assets.status === 'rejected') return []
-  if (!Array.isArray(assets.value)) return []
-
-  console.debug('Asset to avatar info', 'assets result', assets.value)
-
-  const allAssets = assets.value.map(({ token_address, token_id, image_url }) => ({
-    kind: E4CRanger_NftKindMap[getAddress(token_address)],
-    id: token_id,
-    imageUrl: image_url,
-  }))
-
-  const filtered = allAssets.filter(avatarInfoImageFilter)
-  return filtered
-}
-
 export function useAccountAvatarInfos() {
-  const { imxClient } = useImmutableXWallet()
   const { account } = useAccountInfo()
   const [avatarInfos, setAvatarInfos] = React.useState<AccountAvatarInfo[]>([])
+  const { avatarInfo, setAvatarInfo } = React.useContext(AccountAvatarInfoContext)
 
-  const getUserAllAssets = React.useCallback(
-    async (
-      user: string,
-      collection: string,
-      result: ImmutableMethodResults.ImmutableGetAssetsResult['result'] = [],
-      cursor?: string
-    ) => {
-      if (!imxClient) return []
+  const fetchAccountAvatarInfos = React.useCallback(async () => {
+    const res = await getAllAvatars()
+    if (res.isOk) {
+      const allInfos = res.data
+      console.debug('Fetch account avatar infos', 'all infos', allInfos)
+      const filtered = allInfos.filter(avatarInfoImageFilter)
+      setAvatarInfos(filtered)
+    }
+  }, [])
 
-      const assets = await imxClient.getAssets({ user, collection, cursor })
-      result.push(...assets.result)
-      console.debug(
-        `Get user all assets user ${user} collection ${collection} assets length`,
-        assets.result.length,
-        'remaining',
-        assets.remaining
-      )
+  const fetchAccountAvatarInfo = React.useCallback(async () => {
+    const res = await getAvatar()
+    if (!res.isOk) return
+    const info = res.data
+    console.debug('Fetch account avatar info', info)
+    if (!info) return setAvatarInfo('default')
+    const find = avatarInfos.find((avatar) => avatar.kind === info.kind && avatar.id === info.id)
+    if (find) return setAvatarInfo(find)
+  }, [avatarInfos, setAvatarInfo])
 
-      if (assets.remaining) await getUserAllAssets(user, collection, result, assets.cursor)
-
-      return result
+  const updateAvatarInfo = React.useCallback(
+    async (info: AccountAvatarInfo) => {
+      const res = await updateAvatar(info.kind, info.id)
+      if (res.isOk) setAvatarInfo(info)
+      return res
     },
-    [imxClient]
+    [setAvatarInfo]
   )
 
-  const fetchAccountAvatarInfos = React.useCallback(
-    async (account: string) => {
-      if (!imxClient || !account) return
-
-      const getUserAllEditionsAssetsPromises = [
-        getUserAllAssets(account, E4CRanger_UltimateEdition),
-        getUserAllAssets(account, E4CRanger_GoldEdition),
-        getUserAllAssets(account, E4CRanger_RangersEdition),
-      ]
-      const allResult = await Promise.allSettled(getUserAllEditionsAssetsPromises)
-
-      console.debug('Fetch account avatar infos', 'account', account, 'all result', allResult)
-
-      const allInfos = allResult.flatMap(assetToAvatarInfo)
-
-      setAvatarInfos(allInfos)
-    },
-    [getUserAllAssets, imxClient]
-  )
+  const deleteAvatarInfo = React.useCallback(async () => {
+    const res = await deleteAvatar()
+    if (res.isOk) setAvatarInfo('default')
+    return res
+  }, [setAvatarInfo])
 
   React.useEffect(() => {
-    if (account && account.wallet) fetchAccountAvatarInfos(account.wallet)
+    if (account && account.wallet) fetchAccountAvatarInfos()
   }, [account, fetchAccountAvatarInfos])
 
-  return avatarInfos
+  React.useEffect(() => {
+    if (Array.isArray(avatarInfos) && avatarInfos.length > 0) fetchAccountAvatarInfo()
+  }, [avatarInfos, fetchAccountAvatarInfo])
+
+  return { avatarInfos, avatarInfo, updateAvatarInfo, deleteAvatarInfo }
 }

@@ -8,7 +8,14 @@ import { useFormContext } from 'react-hook-form'
 import { Navigate, useNavigate } from 'react-router-dom'
 
 import AvatarDefault from '../../../assets/images/avatar/avatar-default.png'
-import { useAccountEmail, useAccountInfo, useAccountName, useImmutableXWallet, usePortal } from '../../../hooks'
+import {
+  useAccountAvatarInfos,
+  useAccountEmail,
+  useAccountInfo,
+  useAccountName,
+  useImmutableXWallet,
+  usePortal,
+} from '../../../hooks'
 import { AccountWithdrawModalFormData, ReactButtonProps } from '../../../types'
 import { classNames, getFloatNumbersValidationPattern, getFormErrorMessage } from '../../../utils'
 import { Button, Input } from '../../Forms'
@@ -337,6 +344,13 @@ type AccountInfoProps = AccountMenuProps & {
 export function AccountInfo(props: AccountInfoProps) {
   const { menuOpen, sessionExpiredNavigateTo, onAvatarClick } = props
   const { expired: sessionExpired } = useAccountInfo()
+  const { avatarInfo } = useAccountAvatarInfos()
+
+  const avatarImage = React.useMemo<string>(() => {
+    if (avatarInfo === 'default') return AvatarDefault
+    if (typeof avatarInfo === 'object') return avatarInfo.imageUrl
+    return AvatarDefault
+  }, [avatarInfo])
 
   const handleAvatarClick = React.useCallback<React.MouseEventHandler<HTMLDivElement>>(
     (e) => {
@@ -349,7 +363,7 @@ export function AccountInfo(props: AccountInfoProps) {
   return (
     <div id="account-info-menu" className="flex relative">
       {sessionExpired && <Navigate to={sessionExpiredNavigateTo} replace={true} />}
-      <AvatarItem image={AvatarDefault} onClick={handleAvatarClick} />
+      <AvatarItem image={avatarImage} onClick={handleAvatarClick} />
       <AccountMenu menuOpen={menuOpen} />
     </div>
   )
