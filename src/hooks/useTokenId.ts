@@ -76,8 +76,6 @@ export function useTokenIdByOwner({ tokenAddress }: { tokenAddress: string | Fal
       .filter((item) => getAddress(item.contract.address) === getAddress(tokenAddress))
       .map((item) => item.tokenId)
 
-    // console.log('list', list)
-
     setTokenId(list)
     setLoading(false)
   }, [account, tokenAddress])
