@@ -32,12 +32,6 @@ export type NFTUpgradeInfo = {
   } | null
 }
 
-export enum NFTTagState {
-  Gold = 'Gold',
-  GoldAdd = 'GoldAdd',
-  Ultimate = 'Ultimate',
-}
-
 export enum TraitEdition {
   Gold = 'Gold',
   ColdPlus = 'Gold+',
@@ -66,7 +60,6 @@ export type NFT = {
   description: string
   id: number
   tag: string
-  tagState: NFTTagState
   trait: TraitItem[]
   star: number
   starState: NFTStarState
@@ -97,9 +90,9 @@ export type PERK = {
 export enum NFTEdition {
   Default = '-',
   GoldEdition = 'Gold Edition',
-  GoldPlusEdition = 'Gold Plus Edition',
+  GoldPlusEdition = 'Gold Edition',
   RangersEdition = 'Rangers Edition',
-  RangersPlusEdition = 'Rangers Plus Edition',
+  RangersPlusEdition = 'Rangers Edition',
   UltimateEdition = 'Ultimate Edition',
 }
 

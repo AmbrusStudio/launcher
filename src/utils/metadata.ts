@@ -15,6 +15,7 @@ import {
 } from '../contracts'
 import { stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
 import {
+  Metadata,
   MetadataResponse,
   MetadataStatus,
   NFTE4CRanger,
@@ -274,7 +275,7 @@ export const getBaseURLByAddress = (
  * @param data
  * @returns
  */
-export const getTraitEdition = (data: TokenMetadata): TraitEdition | undefined => {
+export const getTraitEdition = (data: TokenMetadata | NFTE4CRanger | Metadata): TraitEdition | undefined => {
   const findResult = data.trait.find((i) => i.trait_type === Trait.Edition)
   if (findResult) {
     return findResult.value as TraitEdition
