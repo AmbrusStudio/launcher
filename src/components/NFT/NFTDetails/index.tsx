@@ -1,12 +1,14 @@
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import Skeleton from '@mui/material/Skeleton'
-import { FC } from 'react'
+import classNames from 'classnames'
+import { FC, useMemo } from 'react'
 
 import { BlindBoxTrait } from '../../../constants'
-import { NFTE4CRanger } from '../../../types'
-import { getEdition, traitNameOnTop } from '../../../utils'
+import { NFTE4CRanger, Trait, TraitEdition } from '../../../types'
+import { getEdition, getTraitEdition, isPureGold, traitNameOnTop } from '../../../utils'
 import { BlindBoxMode } from '../../../utils/bindbox'
+import { EditionColor, EditionPureGoldColor } from '../../Trait/Edition'
 import NFTTag from '../NFTTag'
 
 const NFTInfoContent = styled.div`
@@ -34,7 +36,6 @@ const NFTInfoIntroductionContent = styled.p`
   font-weight: 700;
   font-size: 16px;
   line-height: 20px;
-  color: #ffffff;
   padding: 0;
   margin: 4px 0 0 0;
 `
@@ -45,6 +46,8 @@ interface NFTDetailsProps {
 }
 
 const NFTDetails: FC<NFTDetailsProps> = ({ nft, tokenId }) => {
+  const edition = useMemo<TraitEdition | undefined>(() => getTraitEdition(nft), [nft])
+
   return (
     <>
       <section className="flex items-start justify-between">
@@ -68,7 +71,7 @@ const NFTDetails: FC<NFTDetailsProps> = ({ nft, tokenId }) => {
             className="w-[100px] lg:w[140px] !h-[40px] !lg:h-[58px]"
           />
         ) : (
-          <NFTTag content={getEdition(nft.upgraded, nft.address)} />
+          <NFTTag content={getEdition(nft.upgraded, nft.address)} edition={edition} />
         )}
       </section>
 
@@ -76,7 +79,18 @@ const NFTDetails: FC<NFTDetailsProps> = ({ nft, tokenId }) => {
         {traitNameOnTop(nft.trait).map((trait, index) => (
           <section key={index}>
             <NFTInfoIntroductionTitle>{trait.trait_type}</NFTInfoIntroductionTitle>
-            <NFTInfoIntroductionContent>
+            <NFTInfoIntroductionContent
+              className={classNames(
+                'inline-block',
+                {
+                  'text-white': trait.trait_type !== Trait.Edition || BlindBoxMode(nft.trait),
+                },
+                trait.trait_type === Trait.Edition && !BlindBoxMode(nft.trait) ? EditionColor(edition) : undefined,
+                trait.trait_type !== Trait.Edition && !BlindBoxMode(nft.trait)
+                  ? EditionPureGoldColor(isPureGold(trait.value))
+                  : undefined
+              )}
+            >
               {!BlindBoxMode(nft.trait) || BlindBoxTrait.includes(trait.trait_type) ? trait.value : 'unknown'}
             </NFTInfoIntroductionContent>
           </section>
