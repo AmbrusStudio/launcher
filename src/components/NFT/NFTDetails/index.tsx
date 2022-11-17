@@ -8,6 +8,7 @@ import { BlindBoxTrait } from '../../../constants'
 import { NFTE4CRanger, Trait, TraitEdition } from '../../../types'
 import { getEdition, getTraitEdition, isPureGold, traitNameOnTop } from '../../../utils'
 import { BlindBoxMode } from '../../../utils/bindbox'
+import TokenLink from '../../TokenLink'
 import { EditionColor, EditionPureGoldColor } from '../../Trait/Edition'
 import NFTTag from '../NFTTag'
 
@@ -96,6 +97,10 @@ const NFTDetails: FC<NFTDetailsProps> = ({ nft, tokenId }) => {
           </section>
         ))}
       </NFTInfoContent>
+
+      <div className="mb-9">
+        <TokenLink nft={nft} />
+      </div>
     </>
   )
 }
