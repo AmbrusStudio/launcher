@@ -1,6 +1,7 @@
 import { Goerli, Mainnet } from '@usedapp/core'
 import { getAddress } from 'ethers/lib/utils'
 
+import { RaribleLink } from '../constants'
 import {
   E4CRanger_GoldEdition,
   E4CRanger_ImmutableX_GoldEdition,
@@ -38,23 +39,23 @@ export const getRaribleLink = (address: string, status: MetadataStatus): string 
       getAddress(address) === getAddress(E4CRanger_GoldEdition) ||
       getAddress(address) === getAddress(E4CRanger_ImmutableX_GoldEdition)
     ) {
-      return 'https://rarible.com/e4cgold'
+      return RaribleLink[MetadataStatus.Ethereum].GoldEdition
     } else if (
       getAddress(address) === getAddress(E4CRanger_RangersEdition) ||
       getAddress(address) === getAddress(E4CRanger_ImmutableX_RangersEdition)
     ) {
-      return 'https://rarible.com/e4crangers'
+      return RaribleLink[MetadataStatus.Ethereum].RangersEdition
     } else if (getAddress(address) === getAddress(E4CRanger_UltimateEdition)) {
-      return 'https://rarible.com/e4c'
+      return RaribleLink[MetadataStatus.Ethereum].UltimateEdition
     } else {
       console.error(`rarible link not found, Ethereum status: ${status}`)
       return ''
     }
   } else if (status === MetadataStatus.ImmutableX) {
     if (getAddress(address) === getAddress(E4CRanger_ImmutableX_GoldEdition)) {
-      return 'https://rarible.com/e4crangersgold'
+      return RaribleLink[MetadataStatus.ImmutableX].GoldEdition
     } else if (getAddress(address) === getAddress(E4CRanger_ImmutableX_RangersEdition)) {
-      return 'https://rarible.com/e4crangersrangers'
+      return RaribleLink[MetadataStatus.ImmutableX].RangersEdition
     } else {
       console.error(`rarible link not found, ImmutableX status: ${status}`)
       return ''
