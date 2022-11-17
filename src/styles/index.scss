@@ -147,8 +147,7 @@ body,
 
 // Trait Edition styles
 .text-gradient-linear {
-  -webkit-background-clip: text;
+  @apply bg-clip-text text-transparent;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
   text-fill-color: transparent;
 }
