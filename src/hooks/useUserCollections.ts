@@ -1,8 +1,6 @@
-import { Goerli } from '@usedapp/core'
 import { useMemo } from 'react'
 
 import {
-  defaultChainId,
   E4CRanger_GoldEdition,
   E4CRanger_GoldEdition_Holder,
   E4CRanger_ImmutableX_GoldEdition,
@@ -26,15 +24,6 @@ export function useUserCollections() {
     holderAddress: E4CRanger_RangersEdition_Holder,
     tokenAddress: E4CRanger_RangersEdition,
   })
-  // The ImmutableX test network address is inconsistent, and additional query is required
-  const { nfts: nftsGoldImmutableX, loading: loadingGoldImmutableX } = useERC721List({
-    holderAddress: defaultChainId === Goerli.chainId ? E4CRanger_GoldEdition_Holder : undefined,
-    tokenAddress: defaultChainId === Goerli.chainId ? E4CRanger_ImmutableX_GoldEdition : undefined,
-  })
-  const { nfts: nftsRangersImmutableX, loading: loadingRangersImmutableX } = useERC721List({
-    holderAddress: defaultChainId === Goerli.chainId ? E4CRanger_RangersEdition_Holder : undefined,
-    tokenAddress: defaultChainId === Goerli.chainId ? E4CRanger_ImmutableX_RangersEdition : undefined,
-  })
 
   const { nfts: nftsImmutableXGold, loading: loadingImmutableXGold } = useERC721ImmutableXList({
     collection: E4CRanger_ImmutableX_GoldEdition,
@@ -44,43 +33,12 @@ export function useUserCollections() {
   })
 
   const nfts = useMemo(
-    () => [
-      ...nftsUltimate,
-      ...nftsGold,
-      ...nftsGoldImmutableX,
-      ...nftsRangers,
-      ...nftsRangersImmutableX,
-      ...nftsImmutableXGold,
-      ...nftsImmutableXRangers,
-    ],
-    [
-      nftsUltimate,
-      nftsGold,
-      nftsGoldImmutableX,
-      nftsRangers,
-      nftsImmutableXGold,
-      nftsRangersImmutableX,
-      nftsImmutableXRangers,
-    ]
+    () => [...nftsUltimate, ...nftsGold, ...nftsRangers, ...nftsImmutableXGold, ...nftsImmutableXRangers],
+    [nftsUltimate, nftsGold, nftsRangers, nftsImmutableXGold, nftsImmutableXRangers]
   )
   const loading = useMemo(
-    () =>
-      loadingGold &&
-      loadingRangers &&
-      loadingGoldImmutableX &&
-      loadingRangersImmutableX &&
-      loadingUltimate &&
-      loadingImmutableXGold &&
-      loadingImmutableXRangers,
-    [
-      loadingGold,
-      loadingRangers,
-      loadingGoldImmutableX,
-      loadingRangersImmutableX,
-      loadingUltimate,
-      loadingImmutableXGold,
-      loadingImmutableXRangers,
-    ]
+    () => loadingGold && loadingRangers && loadingUltimate && loadingImmutableXGold && loadingImmutableXRangers,
+    [loadingGold, loadingRangers, loadingUltimate, loadingImmutableXGold, loadingImmutableXRangers]
   )
 
   return {
