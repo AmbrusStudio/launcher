@@ -127,25 +127,6 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, update }) => {
       <div className="w-[46.5%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0">
         <NFTDetails nft={nft} tokenId={tokenId} />
 
-        {/* <Stack className="mt-9" spacing={4.5} direction="row">
-          <a
-            className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
-            href={'https://rarible.com/token/' + nft.address}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Rarible
-          </a>
-          <a
-            className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
-            href={'https://etherscan.io/token/' + nft.address}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Etherscan
-          </a>
-        </Stack> */}
-
         {nft.upgraded === false && (
           <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
             {/* <button className="u-btn u-btn-primary max-w-[120px]">

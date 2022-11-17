@@ -36,7 +36,7 @@ export function AccountHeader(props: AccountHeaderProps) {
     <header
       id="account-center-header"
       className={classNames(
-        'flex flex-col-reverse gap-24px max-w-1332px z-30 relative',
+        'flex flex-col-reverse gap-24px max-w-1332px z-9 relative',
         'lg:flex-row lg:flex-nowrap lg:items-center lg:justify-between',
         'lg:ml-108px lg:pt-36px lg:px-36px lg:gap-0'
       )}
