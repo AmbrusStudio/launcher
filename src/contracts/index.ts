@@ -21,14 +21,14 @@ if (!SUPPORT_CHAIN_ID[defaultChainId]) {
 // E4CRanger GoldEdition Holder
 export const E4CRanger_GoldEdition_Holders = {
   [Mainnet.chainId]: '0x9c18beA91AE053397918410311dbB89295baE18b',
-  [Goerli.chainId]: '0xE90547570ee95e6929A0DF0434FF9b5fC8050B6E',
+  [Goerli.chainId]: '0x727391e6c9C06ED160C12c11bd766E835105DCa9',
 }
 export const E4CRanger_GoldEdition_Holder = E4CRanger_GoldEdition_Holders[defaultChainId]
 
 // E4CRanger RangersEdition Holder
 export const E4CRanger_RangersEdition_Holders = {
   [Mainnet.chainId]: '0xAdf4343f4E8eB6Faf88c06A97ed6e0c229566E1d',
-  [Goerli.chainId]: '0x5f9f4D516F24b47A6d233f11Be32Ebbfe115Cdb7',
+  [Goerli.chainId]: '0x1D1a84B17ef6316a563C5DbE2311FC1A99854e0a',
 }
 export const E4CRanger_RangersEdition_Holder = E4CRanger_RangersEdition_Holders[defaultChainId]
 

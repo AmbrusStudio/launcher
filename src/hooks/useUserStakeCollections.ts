@@ -1,8 +1,6 @@
-import { Goerli } from '@usedapp/core'
 import { useMemo } from 'react'
 
 import {
-  defaultChainId,
   E4CRanger_GoldEdition,
   E4CRanger_GoldEdition_Holder,
   E4CRanger_ImmutableX_GoldEdition,
@@ -27,19 +25,6 @@ export function useUserStakeCollections() {
     baseURL: metadadaRangersBaseURI,
   })
 
-  // The ImmutableX test network address is inconsistent, and additional query is required
-  // Cannot pledge without holder
-  const { nfts: nftsGoldImmutableX, loading: loadingGoldImmutableX } = useERC721ListState({
-    holderAddress: defaultChainId === Goerli.chainId ? E4CRanger_GoldEdition_Holder : undefined,
-    tokenAddress: defaultChainId === Goerli.chainId ? E4CRanger_ImmutableX_GoldEdition : undefined,
-    baseURL: metadadaGoldBaseURI,
-  })
-  const { nfts: nftsRangersImmutableX, loading: loadingRangersImmutableX } = useERC721ListState({
-    holderAddress: defaultChainId === Goerli.chainId ? E4CRanger_RangersEdition_Holder : undefined,
-    tokenAddress: defaultChainId === Goerli.chainId ? E4CRanger_ImmutableX_RangersEdition : undefined,
-    baseURL: metadadaRangersBaseURI,
-  })
-
   const { nfts: nftsImmutableXGold, loading: loadingImmutableXGold } = useERC721ImmutableXListState({
     collection: E4CRanger_ImmutableX_GoldEdition,
     baseURL: metadadaGoldBaseURI,
@@ -50,33 +35,12 @@ export function useUserStakeCollections() {
   })
 
   const nfts = useMemo(
-    () => [
-      ...nftsGold,
-      ...nftsGoldImmutableX,
-      ...nftsRangers,
-      ...nftsRangersImmutableX,
-      ...nftsImmutableXGold,
-      ...nftsImmutableXRangers,
-    ],
-    [nftsGold, nftsGoldImmutableX, nftsRangers, nftsRangersImmutableX, nftsImmutableXGold, nftsImmutableXRangers]
+    () => [...nftsGold, ...nftsRangers, ...nftsImmutableXGold, ...nftsImmutableXRangers],
+    [nftsGold, nftsRangers, nftsImmutableXGold, nftsImmutableXRangers]
   )
   const loading = useMemo(() => {
-    return (
-      loadingGold &&
-      loadingGoldImmutableX &&
-      loadingRangers &&
-      loadingRangersImmutableX &&
-      loadingImmutableXGold &&
-      loadingImmutableXRangers
-    )
-  }, [
-    loadingGold,
-    loadingGoldImmutableX,
-    loadingRangers,
-    loadingRangersImmutableX,
-    loadingImmutableXGold,
-    loadingImmutableXRangers,
-  ])
+    return loadingGold && loadingRangers && loadingImmutableXGold && loadingImmutableXRangers
+  }, [loadingGold, loadingRangers, loadingImmutableXGold, loadingImmutableXRangers])
 
   return {
     collections: nfts,
