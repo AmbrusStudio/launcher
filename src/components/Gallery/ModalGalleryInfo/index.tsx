@@ -1,12 +1,15 @@
+import { ImmutableAssetStatus } from '@imtbl/imx-sdk'
 import { Box } from '@mui/system'
 import classNames from 'classnames'
 import { Dispatch, FC, SetStateAction, useMemo } from 'react'
 
 import ModalGallery from '../../../components/ModalGallery'
 import { BlindBoxTrait } from '../../../constants'
-import { TokenMetadata, Trait, TraitEdition } from '../../../types'
+import { useImmutableXAsset } from '../../../hooks'
+import { MetadataStatus, TokenMetadata, Trait, TraitEdition } from '../../../types'
 import { getTraitEdition, imageSizeConversion, isPureGold, traitNameOnTop } from '../../../utils'
 import { BlindBoxMode } from '../../../utils/bindbox'
+import TokenLink from '../../TokenLink'
 import TokenMedia from '../../TokenMedia'
 import { EditionColor, EditionPureGoldColor } from '../../Trait/Edition'
 
@@ -18,6 +21,26 @@ interface ModalGalleryInfoProps {
 
 const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ metadata, visible, setVisible }) => {
   const edition = useMemo<TraitEdition | undefined>(() => getTraitEdition(metadata), [metadata])
+  // ERC721 Asset
+  const { immutableXAsset: asset } = useImmutableXAsset({
+    token_address: metadata.address,
+    token_id: metadata.tokenId,
+  })
+
+  // ERC721 Status
+  const status = useMemo(() => {
+    if (asset) {
+      if (asset.status === ImmutableAssetStatus.eth) {
+        return MetadataStatus.Ethereum
+      } else if (asset.status === ImmutableAssetStatus.imx) {
+        return MetadataStatus.ImmutableX
+      } else {
+        return MetadataStatus.Ethereum
+      }
+    } else {
+      return MetadataStatus.Ethereum
+    }
+  }, [asset])
 
   return (
     <ModalGallery
@@ -57,32 +80,9 @@ const ModalGalleryInfo: FC<ModalGalleryInfoProps> = ({ metadata, visible, setVis
             ))}
           </div>
 
-          {/* <Stack className="mt-9" spacing={4.5} direction="row">
-            <a
-              className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
-              href={''}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Opensea
-            </a>
-            <a
-              className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
-              href={''}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Looksrare
-            </a>
-            <a
-              className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
-              href={''}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Etherscan
-            </a>
-          </Stack> */}
+          <div className="mt-[21px]">
+            <TokenLink address={metadata.address} status={status} />
+          </div>
         </div>
       </Box>
     </ModalGallery>
