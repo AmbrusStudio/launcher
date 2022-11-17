@@ -47,7 +47,7 @@ export function AccountCenterPageLayout(props: React.PropsWithChildren<AccountCe
       <PageSidebar />
       <AccountHeader title={title} subtitle={subtitle} sessionExpiredNavigateTo={sessionExpiredNavigateTo} />
       <BasePageLayout
-        className={classNames('lg:ml-108px w-full max-w-1332px px-24px lg:px-36px py-24px lg:py-36px', props.className)}
+        className={classNames('lg:ml-108px max-w-1332px px-24px lg:px-36px py-24px lg:py-36px', props.className)}
       >
         {props.children}
       </BasePageLayout>

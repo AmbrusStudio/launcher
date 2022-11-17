@@ -2,7 +2,7 @@ import { Goerli, Mainnet } from '@usedapp/core'
 
 import { getDefaultChainId } from '../utils'
 
-export const defaultChainId = getDefaultChainId()
+const defaultChainId = getDefaultChainId()
 
 // ImmutableX Goerli.chainId instead of ethNetwork: "goerli"
 
