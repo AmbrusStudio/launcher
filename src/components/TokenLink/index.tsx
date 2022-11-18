@@ -1,19 +1,20 @@
 import { Stack } from '@mui/material'
 import { FC } from 'react'
 
-import { NFTE4CRanger } from '../../types'
+import { MetadataStatus } from '../../types'
 import { getExplorerAddressLink, getRaribleLink } from '../../utils'
 
 interface Props {
-  readonly nft: NFTE4CRanger
+  readonly address: string
+  readonly status: MetadataStatus
 }
 
-const TokenLink: FC<Props> = ({ nft }) => {
+const TokenLink: FC<Props> = ({ address, status }) => {
   return (
     <Stack spacing={4.5} direction="row">
       <a
         className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
-        href={getRaribleLink(nft.address, nft.status)}
+        href={getRaribleLink(address, status)}
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -21,7 +22,7 @@ const TokenLink: FC<Props> = ({ nft }) => {
       </a>
       <a
         className="font-medium text-sm leading-[17px] text-[#0075FF] underline not-italic"
-        href={getExplorerAddressLink(nft.address)}
+        href={getExplorerAddressLink(address)}
         target="_blank"
         rel="noopener noreferrer"
       >
