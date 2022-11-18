@@ -99,7 +99,7 @@ const NFTDetails: FC<NFTDetailsProps> = ({ nft, tokenId }) => {
       </NFTInfoContent>
 
       <div className="mb-9">
-        <TokenLink nft={nft} />
+        <TokenLink address={nft.address} status={nft.status} />
       </div>
     </>
   )

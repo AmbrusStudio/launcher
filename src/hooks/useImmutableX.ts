@@ -69,6 +69,51 @@ export const useImmutableXUserNFTAssets = ({ user, collection }: { user: string;
 }
 
 /**
+ *
+ * @param token_address Address of the ERC721 contract
+ * @param token_id Either ERC721 token ID or internal IMX ID
+ * @returns
+ */
+export const useImmutableXAsset = ({ token_address, token_id }: { token_address: string; token_id: string }) => {
+  const [loading, setLoading] = useState<boolean>(false)
+  const { imxClient } = useImmutableXWallet()
+  const [immutableXAsset, setImmutableXAsset] = useState<ImmutableMethodResults.ImmutableAssetTS>()
+
+  const getAssets = useCallback(async () => {
+    if (!imxClient) {
+      setLoading(false)
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      const assetRequest: ImmutableMethodResults.ImmutableAssetTS = await imxClient.getAsset({
+        address: token_address,
+        id: token_id,
+        include_fees: false,
+      } as ImmutableMethodParams.ImmutableGetAssetParamsTS)
+
+      setImmutableXAsset(assetRequest)
+    } catch (error) {
+      console.error(error)
+      setImmutableXAsset(undefined)
+    } finally {
+      setLoading(false)
+    }
+  }, [imxClient, token_address, token_id])
+
+  useEffect(() => {
+    getAssets()
+  }, [getAssets])
+
+  return {
+    immutableXAsset,
+    loading: loading,
+  }
+}
+
+/**
  * useImmutableXERC721AssetTransfers
  * @param
  * @returns
