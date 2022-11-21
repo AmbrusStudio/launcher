@@ -170,11 +170,22 @@ export const fetchMetadataUltimateEdition = createAsyncThunk<MetadataResponse[]>
       const response = await axios.get<MetadataResponse[]>(defaultState.UltimateEdition[defaultChainId].url, {
         signal: signal,
       })
+      // TODO 等待后续整合
+      const responseKit = await axios.get<MetadataResponse[]>(
+        'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Ultimate_Edition/E4C_Rangers_Kit.json',
+        {
+          signal: signal,
+        }
+      )
+      const list: MetadataResponse[] = []
       if (response.status === 200) {
-        return response.data
-      } else {
-        return []
+        list.push(...response.data)
       }
+      if (responseKit.status === 200) {
+        list.push(...responseKit.data)
+      }
+
+      return list
     } catch (error) {
       const e = `metadata/fetchMetadataUltimateEdition error: ${error}`
       console.log('error', e)
