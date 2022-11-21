@@ -85,6 +85,7 @@ export function useMetadata() {
 
   /**
    * Get Metadata By Address
+   * TODO Obtain on demand through the API interface
    * @param address
    * @returns
    */
