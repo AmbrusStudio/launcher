@@ -170,6 +170,7 @@ export const fetchMetadataUltimateEdition = createAsyncThunk<MetadataResponse[]>
       const response = await axios.get<MetadataResponse[]>(defaultState.UltimateEdition[defaultChainId].url, {
         signal: signal,
       })
+      // TODO 等待后续整合
       const responseKit = await axios.get<MetadataResponse[]>(
         'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Ultimate_Edition/E4C_Rangers_Kit.json',
         {
