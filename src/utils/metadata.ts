@@ -40,40 +40,43 @@ export const parseTokenId = (name: string): string => {
 }
 
 /**
- * formatMetadata
- * @param tokenId
+ * format Metadata
+ * @param address
+ * @param metadata
+ * @param tokenIds
+ * @param upgradeds
+ * @param originalOwners
+ * @param status
  * @returns
  */
 export const formatMetadata = (
   address: string,
-  metadata: TokenMetadata[],
+  metadata: Map<string, TokenMetadata>,
   tokenIds: string[],
   upgradeds: NFTE4CRangerUpgraded[],
   originalOwners: string[],
   status: MetadataStatus
 ): NFTE4CRanger[] => {
-  const result = tokenIds
-    .map((tokenId, index) => {
-      // Start search
-      const findResult = metadata.find((i) => i.tokenId === tokenId)
-      if (findResult) {
-        return {
-          ...findResult,
-          address,
-          tokenId: tokenId,
-          upgraded: upgradeds?.[index],
-          staking: originalOwners?.[index] ? originalOwners[index] !== constants.AddressZero : false,
-          status,
-        }
-      } else {
-        const e = `Metadata data not found. tokenId: ${tokenId}`
-        console.error(e)
-        Sentry.captureException(e)
+  const result: NFTE4CRanger[] = []
 
-        return
-      }
-    })
-    .filter((i) => i) as NFTE4CRanger[]
+  tokenIds.forEach((tokenId, index) => {
+    if (metadata.has(tokenId)) {
+      const data = metadata.get(tokenId)
+
+      result.push({
+        ...data,
+        address,
+        tokenId: tokenId,
+        upgraded: upgradeds?.[index],
+        staking: originalOwners?.[index] ? originalOwners[index] !== constants.AddressZero : false,
+        status,
+      } as NFTE4CRanger)
+    } else {
+      const e = `Metadata data not found. tokenId: ${tokenId}`
+      console.error(e)
+      Sentry.captureException(e)
+    }
+  })
 
   return result
 }
@@ -94,7 +97,7 @@ export const formatMetadataImmutableX = ({
   status,
 }: {
   address: string
-  metadata: TokenMetadata[]
+  metadata: Map<string, TokenMetadata>
   tokenIds: string[]
   upgradeds: boolean[]
   stakings: boolean[]
@@ -102,32 +105,28 @@ export const formatMetadataImmutableX = ({
   owner: string
   status: MetadataStatus
 }): NFTE4CRanger[] => {
-  const result = tokenIds
-    .map((tokenId, index) => {
-      if (owner && originalOwner[index] === owner) {
-        // Start search
-        const findResult = metadata.find((i) => i.tokenId === tokenId)
-        if (findResult) {
-          return {
-            ...findResult,
-            address,
-            tokenId: tokenId,
-            upgraded: upgradeds?.[index],
-            staking: stakings?.[index] || false,
-            status,
-          }
-        } else {
-          const e = `Metadata data not found. tokenId: ${tokenId}`
-          console.error(e)
-          Sentry.captureException(e)
+  const result: NFTE4CRanger[] = []
 
-          return
-        }
+  tokenIds.forEach((tokenId, index) => {
+    if (owner && originalOwner[index] === owner) {
+      if (metadata.has(tokenId)) {
+        const data = metadata.get(tokenId)
+
+        result.push({
+          ...data,
+          address,
+          tokenId: tokenId,
+          upgraded: upgradeds?.[index],
+          staking: stakings?.[index] || false,
+          status,
+        } as NFTE4CRanger)
       } else {
-        return
+        const e = `Metadata data not found. tokenId: ${tokenId}`
+        console.error(e)
+        Sentry.captureException(e)
       }
-    })
-    .filter((i) => i) as NFTE4CRanger[]
+    }
+  })
 
   return result
 }
@@ -141,34 +140,32 @@ export const formatMetadataImmutableXUser = ({
   status,
 }: {
   address: string
-  metadata: TokenMetadata[]
+  metadata: Map<string, TokenMetadata>
   tokenIds: string[]
   upgradeds: boolean[]
   stakings: boolean[]
   status: MetadataStatus
 }): NFTE4CRanger[] => {
-  const result = tokenIds
-    .map((tokenId, index) => {
-      // Start search
-      const findResult: TokenMetadata | undefined = metadata.find((i) => i.tokenId === tokenId)
-      if (findResult) {
-        return {
-          ...findResult,
-          address,
-          tokenId: tokenId,
-          upgraded: upgradeds?.[index],
-          staking: stakings?.[index] || false,
-          status,
-        }
-      } else {
-        const e = `Metadata data not found. tokenId: ${tokenId}`
-        console.error(e)
-        Sentry.captureException(e)
+  const result: NFTE4CRanger[] = []
 
-        return
-      }
-    })
-    .filter((i) => i) as NFTE4CRanger[]
+  tokenIds.forEach((tokenId, index) => {
+    if (metadata.has(tokenId)) {
+      const data = metadata.get(tokenId)
+
+      result.push({
+        ...data,
+        address,
+        tokenId: tokenId,
+        upgraded: upgradeds?.[index],
+        staking: stakings?.[index] || false,
+        status,
+      } as NFTE4CRanger)
+    } else {
+      const e = `Metadata data not found. tokenId: ${tokenId}`
+      console.error(e)
+      Sentry.captureException(e)
+    }
+  })
 
   return result
 }
@@ -339,40 +336,6 @@ export const traitNameOnTop = (trait: TraitItem[]): TraitItem[] => {
 }
 
 /**
- * EditionPlus
- * @param data
- * @param baseURL
- * @returns
- */
-export const editionPlus = async (data: NFTE4CRanger[], baseURL: string): Promise<NFTE4CRanger[]> => {
-  const nfts = cloneDeep(data)
-
-  const promiseAllArray = nfts.map((item) =>
-    metadataApi<MetadataResponse>({
-      url: baseURL,
-      tokenId: item.tokenId,
-    })
-  )
-
-  const response = await Promise.allSettled(promiseAllArray)
-
-  response.forEach((item, index) => {
-    if (item.status === 'fulfilled') {
-      if (item.value.status === 200 && item.value.data.attributes && !BlindBoxMode(nfts[index].trait)) {
-        const findIndexResult = nfts[index].trait.findIndex((i) => i.trait_type === Trait.Edition)
-        const findIndexEditionResult = item.value.data.attributes.findIndex((i) => i.trait_type === Trait.Edition)
-
-        if (~findIndexResult && ~findIndexEditionResult) {
-          nfts[index].trait[findIndexResult].value = item.value.data.attributes[findIndexEditionResult].value
-        }
-      }
-    }
-  })
-
-  return nfts
-}
-
-/**
  * Gallery Edition Plus
  * @param data
  * @param baseURL
@@ -411,4 +374,26 @@ export const galleryEditionPlus = async (
   })
 
   return nfts
+}
+
+/**
+ * buildMetadataInformation
+ * @param metadata
+ * @param address
+ * @param tokenId
+ * @returns
+ */
+export const buildMetadataInformation = (
+  metadata: MetadataResponse,
+  address: string,
+  tokenId: string
+): TokenMetadata => {
+  return {
+    name: metadata.name,
+    description: metadata.description,
+    image: metadata.image,
+    address: address,
+    tokenId: tokenId,
+    trait: metadata.attributes,
+  }
 }

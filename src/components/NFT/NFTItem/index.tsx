@@ -120,7 +120,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, update }) => {
   }, [unstakeState, handleState, update, handleStateImmutableX, unstakeStateImmutableX])
 
   return (
-    <div className="bg-black relative min-h-300px">
+    <div className="bg-black relative h-full">
       <div className="w-[53.5%] overflow-hidden float-left">
         <TokenMedia src={imageSizeConversion(nft.image, 2000)} trait={nft.trait} />
       </div>
