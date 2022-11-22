@@ -12,7 +12,7 @@ import {
   E4CRanger_ImmutableX_RangersEditions,
 } from '../../contracts'
 import { MetadataResponse, TokenMetadata } from '../../types'
-import { parseTokenId } from '../../utils'
+import { buildMetadataInformation, parseTokenId } from '../../utils'
 
 type MetadataEdition = {
   [key: number]: {
@@ -161,14 +161,9 @@ export const metadataImmutableXSlice = createSlice({
 
           state.GoldEdition[defaultChainId].lastTime = time
 
-          state.GoldEdition[defaultChainId].metadata = action.payload.map((i) => ({
-            name: i.name,
-            description: i.description,
-            image: i.image,
-            address: getAddress(E4CRanger_ImmutableX_GoldEdition),
-            tokenId: parseTokenId(i.name),
-            trait: i.attributes,
-          }))
+          state.GoldEdition[defaultChainId].metadata = action.payload.map((i) =>
+            buildMetadataInformation(i, getAddress(E4CRanger_ImmutableX_GoldEdition), parseTokenId(i.name))
+          )
         }
       })
       .addCase(fetchMetadataGoldEdition.rejected, (state) => {
@@ -189,14 +184,9 @@ export const metadataImmutableXSlice = createSlice({
 
           state.RangersEdition[defaultChainId].lastTime = time
 
-          state.RangersEdition[defaultChainId].metadata = action.payload.map((i) => ({
-            name: i.name,
-            description: i.description,
-            image: i.image,
-            address: getAddress(E4CRanger_ImmutableX_RangersEdition),
-            tokenId: parseTokenId(i.name),
-            trait: i.attributes,
-          }))
+          state.RangersEdition[defaultChainId].metadata = action.payload.map((i) =>
+            buildMetadataInformation(i, getAddress(E4CRanger_ImmutableX_RangersEdition), parseTokenId(i.name))
+          )
         }
       })
       .addCase(fetchMetadataRangersEdition.rejected, (state) => {
