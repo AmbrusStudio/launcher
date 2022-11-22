@@ -14,7 +14,7 @@ import {
   E4CRanger_UltimateEditions,
 } from '../../contracts'
 import { MetadataResponse, TokenMetadata } from '../../types'
-import { parseTokenId } from '../../utils'
+import { buildMetadataInformation, parseTokenId } from '../../utils'
 
 type MetadataEdition = {
   [key: number]: {
@@ -225,14 +225,9 @@ export const metadataSlice = createSlice({
 
           state.GoldEdition[defaultChainId].lastTime = time
 
-          state.GoldEdition[defaultChainId].metadata = action.payload.map((i) => ({
-            name: i.name,
-            description: i.description,
-            image: i.image,
-            address: getAddress(E4CRanger_GoldEdition),
-            tokenId: parseTokenId(i.name),
-            trait: i.attributes,
-          }))
+          state.GoldEdition[defaultChainId].metadata = action.payload.map((i) =>
+            buildMetadataInformation(i, getAddress(E4CRanger_GoldEdition), parseTokenId(i.name))
+          )
         }
       })
       .addCase(fetchMetadataGoldEdition.rejected, (state) => {
@@ -253,14 +248,9 @@ export const metadataSlice = createSlice({
 
           state.RangersEdition[defaultChainId].lastTime = time
 
-          state.RangersEdition[defaultChainId].metadata = action.payload.map((i) => ({
-            name: i.name,
-            description: i.description,
-            image: i.image,
-            address: getAddress(E4CRanger_RangersEdition),
-            tokenId: parseTokenId(i.name),
-            trait: i.attributes,
-          }))
+          state.RangersEdition[defaultChainId].metadata = action.payload.map((i) =>
+            buildMetadataInformation(i, getAddress(E4CRanger_RangersEdition), parseTokenId(i.name))
+          )
         }
       })
       .addCase(fetchMetadataRangersEdition.rejected, (state) => {
@@ -280,14 +270,9 @@ export const metadataSlice = createSlice({
 
           state.UltimateEdition[defaultChainId].lastTime = time
 
-          state.UltimateEdition[defaultChainId].metadata = action.payload.map((i, index) => ({
-            name: i.name,
-            description: i.description,
-            image: i.image,
-            address: getAddress(E4CRanger_UltimateEdition),
-            tokenId: String(index + 1),
-            trait: i.attributes,
-          }))
+          state.UltimateEdition[defaultChainId].metadata = action.payload.map((i, index) =>
+            buildMetadataInformation(i, getAddress(E4CRanger_UltimateEdition), String(index + 1))
+          )
         }
       })
       .addCase(fetchMetadataUltimateEdition.rejected, (state) => {

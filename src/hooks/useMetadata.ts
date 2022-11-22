@@ -1,8 +1,10 @@
 import { Falsy } from '@usedapp/core'
+import { useDeepCompareEffect } from 'ahooks'
 import { getAddress } from 'ethers/lib/utils'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import { metadataApi } from '../api/metadata'
 import {
   defaultChainId,
   E4CRanger_GoldEdition,
@@ -12,9 +14,11 @@ import {
   E4CRanger_UltimateEdition,
 } from '../contracts'
 import { RootState } from '../store'
-import { MetadataStatus, TokenMetadata } from '../types'
+import { MetadataResponse, MetadataStatus, TokenMetadata } from '../types'
+import { buildMetadataInformation } from '../utils'
 
 /**
+ * useMetadata
  * metadata
  * ALL Edition
  * Gold Trait 14
@@ -135,5 +139,61 @@ export function useMetadata() {
     metadataAllEdition,
     loading,
     getMetadataByAddress,
+  }
+}
+
+export function useMetadataByTokenIds({
+  address,
+  tokenIds,
+  baseURL,
+}: {
+  address: string | Falsy
+  tokenIds: string[]
+  baseURL: string
+}) {
+  const [metadata, setMetadata] = useState<Map<string, TokenMetadata>>(new Map())
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const getMetadataByTokenIds = useCallback(async (address: string | Falsy, tokenIds: string[], baseURL: string) => {
+    try {
+      setLoading(true)
+      setMetadata(new Map())
+
+      if (!address) {
+        return
+      }
+
+      const promiseAllArray = tokenIds.map((tokenId) =>
+        metadataApi<MetadataResponse>({
+          url: baseURL,
+          tokenId: tokenId,
+        })
+      )
+
+      const response = await Promise.allSettled(promiseAllArray)
+
+      const data = new Map()
+      response.forEach((item, index) => {
+        if (item.status === 'fulfilled' && item.value.status === 200) {
+          data.set(tokenIds[index], buildMetadataInformation(item.value.data, address, tokenIds[index]))
+        }
+      })
+
+      setMetadata(data)
+    } catch (error) {
+      console.error(error)
+      setMetadata(new Map())
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useDeepCompareEffect(() => {
+    getMetadataByTokenIds(address, tokenIds, baseURL)
+  }, [baseURL, tokenIds])
+
+  return {
+    metadata,
+    loading,
   }
 }
