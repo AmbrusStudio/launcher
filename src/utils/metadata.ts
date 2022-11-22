@@ -336,40 +336,6 @@ export const traitNameOnTop = (trait: TraitItem[]): TraitItem[] => {
 }
 
 /**
- * EditionPlus
- * @param data
- * @param baseURL
- * @returns
- */
-export const editionPlus = async (data: NFTE4CRanger[], baseURL: string): Promise<NFTE4CRanger[]> => {
-  const nfts = cloneDeep(data)
-
-  const promiseAllArray = nfts.map((item) =>
-    metadataApi<MetadataResponse>({
-      url: baseURL,
-      tokenId: item.tokenId,
-    })
-  )
-
-  const response = await Promise.allSettled(promiseAllArray)
-
-  response.forEach((item, index) => {
-    if (item.status === 'fulfilled') {
-      if (item.value.status === 200 && item.value.data.attributes && !BlindBoxMode(nfts[index].trait)) {
-        const findIndexResult = nfts[index].trait.findIndex((i) => i.trait_type === Trait.Edition)
-        const findIndexEditionResult = item.value.data.attributes.findIndex((i) => i.trait_type === Trait.Edition)
-
-        if (~findIndexResult && ~findIndexEditionResult) {
-          nfts[index].trait[findIndexResult].value = item.value.data.attributes[findIndexEditionResult].value
-        }
-      }
-    }
-  })
-
-  return nfts
-}
-
-/**
  * Gallery Edition Plus
  * @param data
  * @param baseURL
