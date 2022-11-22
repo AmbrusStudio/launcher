@@ -39,7 +39,17 @@ export const parseTokenId = (name: string): string => {
   return name.split('_')?.[2] || '0'
 }
 
-export const formatMetadataNew = (
+/**
+ * format Metadata
+ * @param address
+ * @param metadata
+ * @param tokenIds
+ * @param upgradeds
+ * @param originalOwners
+ * @param status
+ * @returns
+ */
+export const formatMetadata = (
   address: string,
   metadata: Map<string, TokenMetadata>,
   tokenIds: string[],
@@ -400,6 +410,13 @@ export const galleryEditionPlus = async (
   return nfts
 }
 
+/**
+ * buildMetadataInformation
+ * @param metadata
+ * @param address
+ * @param tokenId
+ * @returns
+ */
 export const buildMetadataInformation = (
   metadata: MetadataResponse,
   address: string,

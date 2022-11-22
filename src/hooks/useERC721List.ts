@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { E4CRanger_ImmutableX_Holder } from '../contracts'
 import { MetadataStatus, NFTE4CRanger } from '../types'
-import { editionPlus, formatMetadataImmutableX, formatMetadataImmutableXUser, formatMetadataNew } from '../utils'
+import { editionPlus, formatMetadata, formatMetadataImmutableX, formatMetadataImmutableXUser } from '../utils'
 import { useOriginalOwners, useUpgradeds } from './useE4CRanger'
 import { useImmutableXStakingStatuses, useImmutableXUserNFTAssets, useImmutableXWallet } from './useImmutableX'
 import { useMetadataByTokenIds } from './useMetadata'
@@ -57,17 +57,16 @@ export function useERC721ListState({
 
   const upgradedForContract = useUpgradeds(holderAddress, tokenIdForContract)
 
-  // NFT metadata for account
+  // NFT metadata for User
   const { metadata: metadataUser } = useMetadataByTokenIds({
     address: tokenAddress,
     tokenIds: tokenId,
     baseURL: baseURL,
   })
-  console.log('metadataUser', metadataUser)
 
   const getNftsForAccount = useCallback(async () => {
     if (tokenAddress) {
-      const list = formatMetadataNew(tokenAddress, metadataUser, tokenId, upgraded, [], MetadataStatus.Ethereum)
+      const list = formatMetadata(tokenAddress, metadataUser, tokenId, upgraded, [], MetadataStatus.Ethereum)
       const nfts = await editionPlus(list, baseURL)
 
       setNftsForAccount(nfts)
@@ -80,11 +79,10 @@ export function useERC721ListState({
     tokenIds: tokenIdForContract,
     baseURL: baseURL,
   })
-  console.log('metadataContract', metadataContract)
 
   const getNftsForContract = useCallback(async () => {
     if (tokenAddress) {
-      const list = formatMetadataNew(
+      const list = formatMetadata(
         tokenAddress,
         metadataContract,
         tokenIdForContract,
@@ -158,33 +156,31 @@ export function useERC721List({
     return list
   }, [account, originalOwner, tokenIdByContract])
 
-  // NFT metadata for user
+  // NFT metadata for User
   const { metadata: metadataUser } = useMetadataByTokenIds({
     address: tokenAddress,
     tokenIds: tokenId,
     baseURL: baseURL,
   })
-  console.log('metadataUser', metadataUser)
 
   const nftsForAccount = useMemo<NFTE4CRanger[]>(() => {
     if (tokenAddress) {
-      return formatMetadataNew(tokenAddress, metadataUser, tokenId, [], [], MetadataStatus.Ethereum)
+      return formatMetadata(tokenAddress, metadataUser, tokenId, [], [], MetadataStatus.Ethereum)
     } else {
       return []
     }
   }, [tokenAddress, metadataUser, tokenId])
 
-  // NFT metadata for contract
+  // NFT metadata for Contract
   const { metadata: metadataContract } = useMetadataByTokenIds({
     address: tokenAddress,
     tokenIds: tokenIdForContract,
     baseURL: baseURL,
   })
-  console.log('metadataContract', metadataContract)
 
   const nftsForContract = useMemo<NFTE4CRanger[]>(() => {
     if (tokenAddress) {
-      return formatMetadataNew(tokenAddress, metadataContract, tokenIdForContract, [], [], MetadataStatus.Ethereum)
+      return formatMetadata(tokenAddress, metadataContract, tokenIdForContract, [], [], MetadataStatus.Ethereum)
     } else {
       return []
     }
@@ -210,16 +206,15 @@ export function useERC721UltimateEditionList({ tokenAddress, baseURL }: { tokenA
     tokenAddress,
   })
 
-  // NFT metadata
+  // NFT metadata for User
   const { metadata: metadataUser } = useMetadataByTokenIds({
     address: tokenAddress,
     tokenIds: tokenId,
     baseURL: baseURL,
   })
-  console.log('metadataUser', metadataUser)
 
   const nftsForAccount = useMemo<NFTE4CRanger[]>(
-    () => formatMetadataNew(tokenAddress, metadataUser, tokenId, [], [], MetadataStatus.Ethereum),
+    () => formatMetadata(tokenAddress, metadataUser, tokenId, [], [], MetadataStatus.Ethereum),
     [tokenAddress, metadataUser, tokenId]
   )
 
@@ -257,13 +252,12 @@ export function useERC721ImmutableXListState({ collection, baseURL }: { collecti
   const stakingStatus = useImmutableXStakingStatuses(collection, tokenId)
   const stakingStatusHolder = useImmutableXStakingStatuses(collection, tokenIdHolder)
 
-  // NFT metadata for user
+  // NFT metadata for User
   const { metadata: metadataUser } = useMetadataByTokenIds({
     address: collection,
     tokenIds: tokenId,
     baseURL: baseURL,
   })
-  console.log('metadataUser', metadataUser)
 
   const getNftsForAccount = useCallback(async () => {
     const list = formatMetadataImmutableXUser({
@@ -279,13 +273,12 @@ export function useERC721ImmutableXListState({ collection, baseURL }: { collecti
     setNftsForAccount(nfts)
   }, [baseURL, collection, metadataUser, stakingStatus, tokenId])
 
-  // NFT metadata for contract
+  // NFT metadata for Contract
   const { metadata: metadataContract } = useMetadataByTokenIds({
     address: collection,
     tokenIds: tokenIdHolder,
     baseURL: baseURL,
   })
-  console.log('metadataContract', metadataContract)
 
   const getNftsForContract = useCallback(async () => {
     const list = formatMetadataImmutableX({
@@ -352,11 +345,10 @@ export function useERC721ImmutableXList({ collection, baseURL }: { collection: s
     tokenIds: tokenId,
     baseURL: baseURL,
   })
-  console.log('metadataUser', metadataUser)
 
   const nftsForAccount = useMemo<NFTE4CRanger[]>(
     () =>
-      formatMetadataNew(
+      formatMetadata(
         collection,
         metadataUser,
         tokenId,
@@ -373,7 +365,6 @@ export function useERC721ImmutableXList({ collection, baseURL }: { collection: s
     tokenIds: tokenIdHolder,
     baseURL: baseURL,
   })
-  console.log('metadataContract', metadataContract)
 
   const nftsForContract = useMemo<NFTE4CRanger[]>(
     () =>
