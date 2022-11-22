@@ -52,6 +52,7 @@ export const formatMetadataNew = (
   tokenIds.forEach((tokenId, index) => {
     if (metadata.has(tokenId)) {
       const data = metadata.get(tokenId)
+
       result.push({
         ...data,
         address,
@@ -86,7 +87,7 @@ export const formatMetadataImmutableX = ({
   status,
 }: {
   address: string
-  metadata: TokenMetadata[]
+  metadata: Map<string, TokenMetadata>
   tokenIds: string[]
   upgradeds: boolean[]
   stakings: boolean[]
@@ -98,11 +99,11 @@ export const formatMetadataImmutableX = ({
 
   tokenIds.forEach((tokenId, index) => {
     if (owner && originalOwner[index] === owner) {
-      // Start search
-      const findResult = metadata.find((i) => i.tokenId === tokenId)
-      if (findResult) {
+      if (metadata.has(tokenId)) {
+        const data = metadata.get(tokenId)
+
         result.push({
-          ...findResult,
+          ...data,
           address,
           tokenId: tokenId,
           upgraded: upgradeds?.[index],
@@ -129,7 +130,7 @@ export const formatMetadataImmutableXUser = ({
   status,
 }: {
   address: string
-  metadata: TokenMetadata[]
+  metadata: Map<string, TokenMetadata>
   tokenIds: string[]
   upgradeds: boolean[]
   stakings: boolean[]
@@ -138,11 +139,11 @@ export const formatMetadataImmutableXUser = ({
   const result: NFTE4CRanger[] = []
 
   tokenIds.forEach((tokenId, index) => {
-    // Start search
-    const findResult: TokenMetadata | undefined = metadata.find((i) => i.tokenId === tokenId)
-    if (findResult) {
+    if (metadata.has(tokenId)) {
+      const data = metadata.get(tokenId)
+
       result.push({
-        ...findResult,
+        ...data,
         address,
         tokenId: tokenId,
         upgraded: upgradeds?.[index],
