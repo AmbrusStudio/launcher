@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/react'
 import { constants } from 'ethers'
 import { getAddress, isAddress } from 'ethers/lib/utils'
 import { cloneDeep } from 'lodash'
@@ -29,7 +28,7 @@ import {
   TraitItem,
   TraitName,
 } from '../types'
-import { BlindBoxMode } from './bindbox'
+import { BlindBoxMode, traitName } from './bindbox'
 
 /**
  * parse tokenId by name
@@ -73,10 +72,6 @@ export const formatMetadata = (
         staking: originalOwners?.[index] ? originalOwners[index] !== constants.AddressZero : false,
         status,
       } as NFTE4CRanger)
-    } else {
-      const e = `Metadata data not found. tokenId: ${tokenId}`
-      console.error(e)
-      Sentry.captureException(e)
     }
   })
 
@@ -122,10 +117,6 @@ export const formatMetadataImmutableX = ({
           staking: stakings?.[index] || false,
           status,
         } as NFTE4CRanger)
-      } else {
-        const e = `Metadata data not found. tokenId: ${tokenId}`
-        console.error(e)
-        Sentry.captureException(e)
       }
     }
   })
@@ -162,10 +153,6 @@ export const formatMetadataImmutableXUser = ({
         staking: stakings?.[index] || false,
         status,
       } as NFTE4CRanger)
-    } else {
-      const e = `Metadata data not found. tokenId: ${tokenId}`
-      console.error(e)
-      Sentry.captureException(e)
     }
   })
 
@@ -201,38 +188,6 @@ export const getEdition = (upgraded: NFTE4CRangerUpgraded, address: string): NFT
     return NFTEdition.UltimateEdition
   } else {
     return NFTEdition.Default
-  }
-}
-
-/**
- * Get Gallery Edition
- * @param upgraded
- * @param address
- * @returns
- */
-export const getGalleryEdition = (upgraded: NFTE4CRangerUpgraded, address: string): string => {
-  if (
-    getAddress(address) === getAddress(E4CRanger_GoldEdition) ||
-    getAddress(address) === getAddress(E4CRanger_ImmutableX_GoldEdition)
-  ) {
-    if (upgraded) {
-      return 'Gold+'
-    } else {
-      return 'Gold'
-    }
-  } else if (
-    getAddress(address) === getAddress(E4CRanger_RangersEdition) ||
-    getAddress(address) === getAddress(E4CRanger_ImmutableX_RangersEdition)
-  ) {
-    if (upgraded) {
-      return 'Rangers+'
-    } else {
-      return 'Rangers'
-    }
-  } else if (getAddress(address) === getAddress(E4CRanger_UltimateEdition)) {
-    return 'Ultimate'
-  } else {
-    return '-'
   }
 }
 
@@ -454,5 +409,24 @@ export const getDefaultMetadataTrait = (address: string, tokenId: string): Trait
     return trait
   } else {
     return []
+  }
+}
+
+/**
+ * getSeries
+ * Rin 1
+ * Kit 2
+ * @param trait
+ * @returns
+ */
+export const getSeries = (trait: TraitItem[]): string => {
+  const name = traitName(trait)
+
+  if (name === TraitName.Rin) {
+    return '1'
+  } else if (name === TraitName.Kit) {
+    return '2'
+  } else {
+    return ''
   }
 }
