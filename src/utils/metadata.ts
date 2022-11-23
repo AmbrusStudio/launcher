@@ -1,9 +1,10 @@
 import * as Sentry from '@sentry/react'
 import { constants } from 'ethers'
-import { getAddress } from 'ethers/lib/utils'
+import { getAddress, isAddress } from 'ethers/lib/utils'
 import { cloneDeep } from 'lodash'
 
 import { metadataApi } from '../api/metadata'
+import { RoleNumber } from '../constants'
 import {
   E4CRanger_GoldEdition,
   E4CRanger_GoldEdition_Holder,
@@ -26,6 +27,7 @@ import {
   Trait,
   TraitEdition,
   TraitItem,
+  TraitName,
 } from '../types'
 import { BlindBoxMode } from './bindbox'
 
@@ -395,5 +397,62 @@ export const buildMetadataInformation = (
     address: address,
     tokenId: tokenId,
     trait: metadata.attributes,
+  }
+}
+
+/**
+ * getDefaultMetadataTrait
+ * @param address
+ * @param tokenId
+ * @returns
+ */
+export const getDefaultMetadataTrait = (address: string, tokenId: string): TraitItem[] => {
+  if (!isAddress(address)) {
+    return []
+  }
+
+  const trait = [
+    {
+      trait_type: Trait.Name,
+      value: '',
+    },
+    {
+      trait_type: Trait.Edition,
+      value: '',
+    },
+  ]
+  const _address = getAddress(address)
+
+  if (_address === getAddress(E4CRanger_GoldEdition) || _address === getAddress(E4CRanger_ImmutableX_GoldEdition)) {
+    trait[1].value = TraitEdition.Gold
+  } else if (
+    _address === getAddress(E4CRanger_RangersEdition) ||
+    _address === getAddress(E4CRanger_ImmutableX_RangersEdition)
+  ) {
+    trait[1].value = TraitEdition.Rangers
+  } else if (_address === getAddress(E4CRanger_UltimateEdition)) {
+    trait[1].value = TraitEdition.Ultimate
+  }
+
+  if (trait[1].value) {
+    const edition = trait[1].value as TraitEdition.Gold | TraitEdition.Rangers | TraitEdition.Ultimate
+
+    const startRin = RoleNumber[edition][TraitName.Rin].start
+    const endRin = RoleNumber[edition][TraitName.Rin].end
+
+    const startKit = RoleNumber[edition][TraitName.Kit].start
+    const endKit = RoleNumber[edition][TraitName.Kit].end
+
+    const _tokenId = Number(tokenId)
+
+    if (_tokenId >= startRin && _tokenId <= endRin) {
+      trait[0].value = TraitName.Rin
+    } else if (_tokenId >= startKit && _tokenId <= endKit) {
+      trait[0].value = TraitName.Kit
+    }
+
+    return trait
+  } else {
+    return []
   }
 }
