@@ -7,7 +7,7 @@ import { metadataApi } from '../api/metadata'
 import { defaultChainId } from '../contracts'
 import { RootState } from '../store'
 import { MetadataResponse, TokenMetadata } from '../types'
-import { buildMetadataInformation } from '../utils'
+import { buildMetadataInformation, getDefaultMetadataTrait } from '../utils'
 
 /**
  * useMetadata
@@ -117,6 +117,10 @@ export function useMetadataByTokenIds({
       const data = new Map()
       response.forEach((item, index) => {
         if (item.status === 'fulfilled' && item.value.status === 200) {
+          // Blind box filling default data
+          if (item.value.data.attributes.length <= 0) {
+            item.value.data.attributes = getDefaultMetadataTrait(address, tokenIds[index])
+          }
           data.set(tokenIds[index], buildMetadataInformation(item.value.data, address, tokenIds[index]))
         }
       })
