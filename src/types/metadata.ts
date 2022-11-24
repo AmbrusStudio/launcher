@@ -3,6 +3,7 @@ export enum Trait {
   Name = 'Name',
   Edition = 'Edition',
   Zodiac = 'Zodiac',
+  OneOfOne = 'One of One',
   Hair = 'Hair',
   Earrings = 'Earrings',
   Eyes = 'Eyes',
@@ -11,11 +12,14 @@ export enum Trait {
   RoboticArms = 'Robotic Arms',
   ShoulderArmor = 'Shoulder Armor',
   Jacket = 'Jacket',
+  Body = 'Body',
+  ArmAccessory = 'Arm Accessory',
+  WristAccessory = 'Wrist Accessory',
   Weapon = 'Weapon',
   WaistAccessory = 'Waist Accessory',
+  Pants = 'Pants',
   Background = 'Background',
   Particles = 'Particles',
-  OneOfOne = 'One of One', // Ultimate
 }
 
 export type TraitItem = { trait_type: Trait; value: string }

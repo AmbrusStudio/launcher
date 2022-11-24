@@ -53,24 +53,30 @@ export function useGalleryFilter(pureGold: boolean) {
     const allTrait = metadatas.flatMap((i) => i.trait)
     const allTraitGroupByType = groupBy(allTrait, 'trait_type')
 
-    return Object.values(Trait).map((i) => {
+    const traitKeys = [...new Set([...Object.values(Trait), ...Object.keys(allTraitGroupByType)])] as Trait[]
+
+    return traitKeys.map((i) => {
       const list: GALLERY_FILTER_LIST[] = []
+
       if (allTraitGroupByType[i]) {
         const propertyGroupByValue = groupBy(allTraitGroupByType[i], 'value')
 
-        for (const key in propertyGroupByValue) {
-          if (Object.prototype.hasOwnProperty.call(propertyGroupByValue, key)) {
-            list.push({
-              label: key,
-              count: propertyGroupByValue[key].length,
-            })
-          }
-        }
-      }
+        Object.entries(propertyGroupByValue).forEach(([key, vallue]) => {
+          list.push({
+            label: key,
+            count: vallue.length,
+          })
+        })
 
-      return {
-        label: i,
-        list: list.sort((a, b) => b.count - a.count),
+        return {
+          label: i,
+          list: list.sort((a, b) => b.count - a.count),
+        }
+      } else {
+        return {
+          label: i,
+          list: [],
+        }
       }
     })
   }, [galleryMetadata])
