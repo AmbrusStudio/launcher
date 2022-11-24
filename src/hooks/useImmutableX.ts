@@ -1,5 +1,6 @@
 import { ERC721TokenType, ImmutableMethodParams, ImmutableMethodResults } from '@imtbl/imx-sdk'
 import * as Sentry from '@sentry/react'
+import { getAddress, isAddress } from 'ethers/lib/utils'
 import React, { useCallback, useEffect, useState } from 'react'
 
 import { getImmutableXStakingStatusApi, immutableXUnstakeApi } from '../api/immutableX'
@@ -294,11 +295,14 @@ export const useImmutableXERC721AssetUnstake = () => {
 }
 
 /**
- * useImmutableXStakingStatuses
+ * useImmutableXStakingStatusesUser
+ * TODO waiting for integration
+ * @param tokenAddress
+ * @param tokenIds
  * @returns
  */
-export const useImmutableXStakingStatuses = (tokenAddress: string, tokenIds: string[]) => {
-  const [stakingStatus, setStakingStatus] = useState<ImmutableXStakingStatus[]>([])
+export const useImmutableXStakingStatusesUser = (tokenAddress: string, tokenIds: string[]) => {
+  const [stakingStatus, setStakingStatus] = useState<Map<string, ImmutableXStakingStatus>>(new Map())
 
   const calls = useCallback(async (tokenAddress: string, tokenIds: string[]): Promise<void> => {
     if (!tokenAddress || !tokenIds[0]) {
@@ -310,19 +314,75 @@ export const useImmutableXStakingStatuses = (tokenAddress: string, tokenIds: str
         getImmutableXStakingStatusApi<ImmutableXStakingStatus>(tokenAddress, tokenId)
       )
 
-      const response = await Promise.all(promiseAllArray)
+      const response = await Promise.allSettled(promiseAllArray)
 
-      response.forEach((item) => {
-        if (item.status !== 200) {
-          throw new Error('status is not 200')
+      const data = new Map()
+      response.forEach((item, index) => {
+        if (item.status === 'fulfilled' && item.value.status === 200) {
+          data.set(tokenIds[index], item.value.data)
         }
       })
 
-      setStakingStatus(response.map((item) => item.data))
+      setStakingStatus(data)
     } catch (error) {
       console.log(error)
     }
   }, [])
+
+  useEffect(() => {
+    calls(tokenAddress, tokenIds)
+  }, [calls, tokenAddress, tokenIds])
+
+  return stakingStatus
+}
+
+/**
+ * useImmutableXStakingStatusesHolder
+ * TODO waiting for integration
+ * @param tokenAddress
+ * @param tokenIds
+ * @returns
+ */
+export const useImmutableXStakingStatusesHolder = (tokenAddress: string, tokenIds: string[]) => {
+  const [stakingStatus, setStakingStatus] = useState<Map<string, ImmutableXStakingStatus>>(new Map())
+  const { walletInfo } = useImmutableXWallet()
+
+  const calls = useCallback(
+    async (tokenAddress: string, tokenIds: string[]): Promise<void> => {
+      if (!walletInfo?.address) {
+        return
+      }
+
+      if (!tokenAddress || !tokenIds[0]) {
+        return
+      }
+
+      try {
+        const promiseAllArray = tokenIds.map((tokenId) =>
+          getImmutableXStakingStatusApi<ImmutableXStakingStatus>(tokenAddress, tokenId)
+        )
+
+        const response = await Promise.allSettled(promiseAllArray)
+
+        const data = new Map()
+        response.forEach((item, index) => {
+          if (
+            item.status === 'fulfilled' &&
+            item.value.status === 200 &&
+            isAddress(item.value.data.originalOwner) &&
+            getAddress(item.value.data.originalOwner) === getAddress(walletInfo.address)
+          ) {
+            data.set(tokenIds[index], item.value.data)
+          }
+        })
+
+        setStakingStatus(data)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [walletInfo]
+  )
 
   useEffect(() => {
     calls(tokenAddress, tokenIds)

@@ -28,6 +28,7 @@ import {
   TraitItem,
   TraitName,
 } from '../types'
+import { ImmutableXStakingStatus } from '../types/immutableX'
 import { BlindBoxMode, traitName } from './bindbox'
 
 /**
@@ -78,70 +79,22 @@ export const formatMetadata = (
   return result
 }
 
-/**
- * FormatMetadata ImmutableX
- * @param param
- * @returns
- */
 export const formatMetadataImmutableX = ({
   address,
   metadata,
   tokenIds,
-  upgradeds,
-  stakings,
-  originalOwner,
-  owner,
+  stakingStatus,
   status,
 }: {
   address: string
   metadata: Map<string, TokenMetadata>
   tokenIds: string[]
-  upgradeds: boolean[]
-  stakings: boolean[]
-  originalOwner: string[]
-  owner: string
+  stakingStatus: Map<string, ImmutableXStakingStatus>
   status: MetadataStatus
 }): NFTE4CRanger[] => {
   const result: NFTE4CRanger[] = []
 
-  tokenIds.forEach((tokenId, index) => {
-    if (owner && originalOwner[index] === owner) {
-      if (metadata.has(tokenId)) {
-        const data = metadata.get(tokenId)
-
-        result.push({
-          ...data,
-          address,
-          tokenId: tokenId,
-          upgraded: upgradeds?.[index],
-          staking: stakings?.[index] || false,
-          status,
-        } as NFTE4CRanger)
-      }
-    }
-  })
-
-  return result
-}
-
-export const formatMetadataImmutableXUser = ({
-  address,
-  metadata,
-  tokenIds,
-  upgradeds,
-  stakings,
-  status,
-}: {
-  address: string
-  metadata: Map<string, TokenMetadata>
-  tokenIds: string[]
-  upgradeds: boolean[]
-  stakings: boolean[]
-  status: MetadataStatus
-}): NFTE4CRanger[] => {
-  const result: NFTE4CRanger[] = []
-
-  tokenIds.forEach((tokenId, index) => {
+  tokenIds.forEach((tokenId) => {
     if (metadata.has(tokenId)) {
       const data = metadata.get(tokenId)
 
@@ -149,8 +102,8 @@ export const formatMetadataImmutableXUser = ({
         ...data,
         address,
         tokenId: tokenId,
-        upgraded: upgradeds?.[index],
-        staking: stakings?.[index] || false,
+        upgraded: stakingStatus.get(tokenId)?.isUpgraded,
+        staking: stakingStatus.get(tokenId)?.isStaking || false,
         status,
       } as NFTE4CRanger)
     }
