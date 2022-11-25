@@ -52,8 +52,8 @@ const TokenActions: FC<Props> = ({ nft, stakeLoading, unstakeLoading, setVisible
             </button>
           )}
           {nft.status === MetadataStatus.ImmutableX && (
-            <button className="u-btn max-w-[120px] !bg-[#465358]" onClick={() => window.open(ImmutableXWithdraw)}>
-              <img className="w-9 h-9" src={withdraw} alt="imxtools withdrawal" />
+            <button className="u-btn max-w-[120px] !bg-[#465358] py-0!" onClick={() => window.open(ImmutableXWithdraw)}>
+              <img className="w-7 lg:w-9 h-7 lg:h-9" src={withdraw} alt="imxtools withdrawal" />
             </button>
           )}
         </Stack>
