@@ -1,6 +1,6 @@
 import { Stack } from '@mui/material'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
-import { useSize, useUpdate } from 'ahooks'
+import { useSize } from 'ahooks'
 import { useMemo, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
@@ -20,7 +20,6 @@ function AccountNFT() {
   const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
 
   const isMd = useMediaQuery({ query: '(min-width: 768px)' })
-  const update = useUpdate()
 
   const { collections } = useUserStakeCollections()
   collections.length && console.log('useUserStakeCollections', collections)
@@ -31,31 +30,33 @@ function AccountNFT() {
   const itemHeight = useMemo(() => (size?.width ? size.width * 0.535 : 0), [size])
 
   return (
-    <AccountCenterPageLayout title="My" subtitle="NFTs">
+    <AccountCenterPageLayout title="My" subtitle="NFTs" className="pl-0 pr-0">
       <div ref={wrapperRef}>
         {!(account && active) ? (
-          <WalletButton
-            connected={!!(account && active)}
-            chainIdMismatch={chainIdMismatch}
-            onConnectClick={() => connect()}
-            onSwitchNetworkClick={switchNetwork}
-          >
-            {shortenIfAddress(account)}
-          </WalletButton>
+          <div className="px-6 lg:px-[inherit]">
+            <WalletButton
+              connected={!!(account && active)}
+              chainIdMismatch={chainIdMismatch}
+              onConnectClick={() => connect()}
+              onSwitchNetworkClick={switchNetwork}
+            >
+              {shortenIfAddress(account)}
+            </WalletButton>
+          </div>
         ) : account && active && !collections.length ? (
-          <div className="text-white">No Data...</div>
+          <div className="text-white px-6 lg:px-[inherit]">No Data...</div>
         ) : (
           <>
             {isMd ? (
               <Stack spacing={3}>
                 {collections.map((nft) => (
                   <div key={`${nft.address}_${nft.tokenId}`} style={{ height: `${itemHeight}px` }}>
-                    <NFTItem nft={nft} tokenId={nft.tokenId} update={update} />
+                    <NFTItem nft={nft} tokenId={nft.tokenId} />
                   </div>
                 ))}
               </Stack>
             ) : (
-              <MobileWrap nfts={collections} update={update} />
+              <MobileWrap nfts={collections} />
             )}
           </>
         )}

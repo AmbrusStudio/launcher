@@ -48,7 +48,7 @@ const SimpleSlider: FC<Props> = ({ nfts, active, setActive }) => {
 
   return (
     <div
-      className="w-full mx-auto my-6"
+      className="w-full mx-auto mb-6"
       style={{
         height: mediaWidth,
       }}
