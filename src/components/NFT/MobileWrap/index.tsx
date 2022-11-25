@@ -74,7 +74,7 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
             images={[
               {
                 src: tokenMedia({
-                  src: imageSizeConversion(nft.image, 2000),
+                  src: imageSizeConversion(nft.image, 800),
                   trait: nft.trait,
                 }),
                 key: `${nft.address}_${nft.tokenId}`,
