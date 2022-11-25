@@ -55,7 +55,7 @@ const SimpleSlider: FC<Props> = ({ nfts, active, setActive }) => {
     >
       <Slider {...settings} ref={sliderRef}>
         {nfts.map((nft, index) => (
-          <div key={index} onClick={handleSlickGoTo}>
+          <div key={`${nft.address}_${nft.tokenId}`} onClick={handleSlickGoTo}>
             <div
               style={{
                 width: mediaWidth,
@@ -67,7 +67,7 @@ const SimpleSlider: FC<Props> = ({ nfts, active, setActive }) => {
                 'opacity-100 border-white': index === active,
               })}
             >
-              <TokenMedia src={imageSizeConversion(nft.image, 2000)} trait={nft.trait} />
+              <TokenMedia src={imageSizeConversion(nft.image, 800)} trait={nft.trait} />
             </div>
           </div>
         ))}

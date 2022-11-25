@@ -4,11 +4,12 @@ import 'react-photo-view/dist/react-photo-view.css'
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import { FC, useMemo, useState } from 'react'
-import { PhotoProvider, PhotoView } from 'react-photo-view'
+import { PhotoSlider } from 'react-photo-view'
 
 import { useStake } from '../../../hooks/useStake'
 import { NFTE4CRanger } from '../../../types'
-import { BlindBoxVideo } from '../../../utils/bindbox'
+import { imageSizeConversion } from '../../../utils'
+import { tokenMedia } from '../../../utils/bindbox'
 import ConfirmUnstakeModal from '../ConfirmUnstakeModal'
 import ConfirmUpgradeModal from '../ConfirmUpgradeModal'
 import NFTDetails from '../NFTDetails'
@@ -29,6 +30,7 @@ interface MobileWrapProps {
 const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
   const [active, setActive] = useState<number>(0)
   const nft = useMemo<NFTE4CRanger>(() => nfts[active], [nfts, active])
+  const [visiblePhotoSlider, setVisiblePhotoSlider] = useState(false)
 
   const [visibleStakeInfoModal, setVisibleStakeInfoModal] = useState<boolean>(false)
   const [visibleStatusCheckModal, setVisibleStatusCheckModal] = useState<boolean>(false)
@@ -45,8 +47,7 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
         active={active}
         setActive={(index) => {
           if (index === active) {
-            const dom = document.querySelector<HTMLButtonElement>('#image-viewer')
-            dom?.click()
+            setVisiblePhotoSlider(true)
           }
 
           setActive(index)
@@ -68,6 +69,20 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
               />
             </Actions>
           </div>
+          <PhotoSlider
+            bannerVisible={false}
+            images={[
+              {
+                src: tokenMedia({
+                  src: imageSizeConversion(nft.image, 2000),
+                  trait: nft.trait,
+                }),
+                key: `${nft.address}_${nft.tokenId}`,
+              },
+            ]}
+            visible={visiblePhotoSlider}
+            onClose={() => setVisiblePhotoSlider(false)}
+          />
         </>
       )}
 
@@ -98,14 +113,6 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
         close={() => setVisibleConfirmUpgrade(false)}
         confirm={() => onUnstake(nft.tokenId)}
       />
-
-      <PhotoProvider>
-        <PhotoView src={BlindBoxVideo(nft.trait)}>
-          <button id="image-viewer" className="text-white fixed left-0 top-0 translate-x-[-100%]">
-            Click
-          </button>
-        </PhotoView>
-      </PhotoProvider>
     </>
   )
 }
