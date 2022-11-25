@@ -40,3 +40,12 @@ export const BlindBoxMode = (trait: TraitItem[]): boolean => {
   const name = traitName(trait)
   return name ? Blindbox[name].BlindBoxMode : false
 }
+
+/**
+ * TokenMedia
+ * @param param
+ * @returns
+ */
+export const tokenMedia = ({ src, trait }: { src: string; trait: TraitItem[] }) => {
+  return BlindBoxMode(trait) ? BlindBoxPictures(trait) : src
+}

@@ -1,123 +1,25 @@
-import { Stack } from '@mui/material'
-import { useEthers } from '@usedapp/core'
-import classNames from 'classnames'
-import { FC, useCallback, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 
-import withdraw from '../../../assets/images/withdraw.png'
-import { E4CRanger_ImmutableX_Holder, ImmutableXWithdraw } from '../../../contracts'
 // import Star from '../../../components/Icon/Star'
-import { useImmutableXERC721AssetTransfers, useImmutableXERC721AssetUnstake, useWeb3Modal } from '../../../hooks'
-import { useE4CRangerUnstake, useERC721SafeTransferFrom } from '../../../hooks/useE4CRanger'
-import { useHandleState, useHandleStateImmutableX } from '../../../hooks/useHandleState'
-import { MetadataStatus, NFTE4CRanger } from '../../../types'
-import { TransactionStateImmutableX } from '../../../types/immutableX'
-import { getHolderByAddress, imageSizeConversion } from '../../../utils'
+import { useStake } from '../../../hooks/useStake'
+import { NFTE4CRanger } from '../../../types'
+import { imageSizeConversion } from '../../../utils'
 import TokenMedia from '../../TokenMedia'
 import NFTDetails from '../NFTDetails'
 import StakeInfo from '../StakeInfo'
 import StatusCheck from '../StatusCheck'
+import TokenActions from '../TokenActions'
 
 interface NFTItemProps {
   readonly nft: NFTE4CRanger
   readonly tokenId: string
-  update: () => void
 }
 
-const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, update }) => {
-  const { account } = useEthers()
-  const { chainIdMismatch, switchNetwork } = useWeb3Modal()
+const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
+  const { stakeLoading, unstakeLoading, onStake, onUnstake } = useStake({ nft })
 
   const [visibleInfo, setVisibleInfo] = useState<boolean>(false)
   const [visibleStatusCheck, setVisibleStatusCheck] = useState<boolean>(false)
-
-  const [stakeLoading, setStakeLoading] = useState<boolean>(false)
-  const [unstakeLoading, setUnstakeLoading] = useState<boolean>(false)
-
-  const { state: stakeState, send: stake } = useERC721SafeTransferFrom(nft.address)
-  const { state: unstakeState, send: unstake } = useE4CRangerUnstake(getHolderByAddress(nft.address))
-
-  const { state: stakeStateImmutableX, send: stakeImmutableX } = useImmutableXERC721AssetTransfers()
-  const { state: unstakeStateImmutableX, send: unstakeImmutableX } = useImmutableXERC721AssetUnstake()
-
-  const handleState = useHandleState()
-  const handleStateImmutableX = useHandleStateImmutableX()
-
-  // handle stake
-  const onStake = useCallback(
-    (tokenId: string) => {
-      if (nft.status === MetadataStatus.Ethereum) {
-        stake(account, getHolderByAddress(nft.address), tokenId)
-      } else if (nft.status === MetadataStatus.ImmutableX) {
-        stakeImmutableX({
-          tokenId: tokenId,
-          tokenAddress: nft.address,
-          toAddress: E4CRanger_ImmutableX_Holder,
-        })
-      } else {
-        console.error('No matching stake method')
-      }
-    },
-    [nft.status, nft.address, stake, account, stakeImmutableX]
-  )
-
-  // handle unstake
-  const onUnstake = useCallback(
-    async (tokenId: string) => {
-      if (nft.status === MetadataStatus.Ethereum) {
-        unstake(tokenId)
-      } else if (nft.status === MetadataStatus.ImmutableX) {
-        unstakeImmutableX({
-          tokenId: tokenId,
-          tokenAddress: nft.address,
-        })
-      } else {
-        console.error('No matching unstake method')
-      }
-    },
-    [nft.address, nft.status, unstake, unstakeImmutableX]
-  )
-
-  // Watch stakeState
-  useEffect(() => {
-    handleState(stakeState)
-    handleStateImmutableX(stakeStateImmutableX)
-
-    if (
-      stakeState.status === 'PendingSignature' ||
-      stakeState.status === 'Mining' ||
-      stakeStateImmutableX.status === 'PendingSignature' ||
-      stakeStateImmutableX.status === 'Mining'
-    ) {
-      setStakeLoading(true)
-    } else {
-      setStakeLoading(false)
-    }
-
-    if (stakeState.status === 'Success' || stakeStateImmutableX.status === TransactionStateImmutableX.Success) {
-      update()
-    }
-  }, [stakeState, handleState, update, handleStateImmutableX, stakeStateImmutableX])
-
-  // Watch unstakeState
-  useEffect(() => {
-    handleState(unstakeState)
-    handleStateImmutableX(unstakeStateImmutableX)
-
-    if (
-      unstakeState.status === 'PendingSignature' ||
-      unstakeState.status === 'Mining' ||
-      unstakeStateImmutableX.status === 'PendingSignature' ||
-      unstakeStateImmutableX.status === 'Mining'
-    ) {
-      setUnstakeLoading(true)
-    } else {
-      setUnstakeLoading(false)
-    }
-
-    if (unstakeState.status === 'Success' || unstakeStateImmutableX.status === TransactionStateImmutableX.Success) {
-      update()
-    }
-  }, [unstakeState, handleState, update, handleStateImmutableX, unstakeStateImmutableX])
 
   return (
     <div className="bg-black relative h-full">
@@ -127,43 +29,13 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId, update }) => {
       <div className="w-[46.5%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0">
         <NFTDetails nft={nft} tokenId={tokenId} />
 
-        {nft.upgraded === false && (
-          <Stack sx={{ marginTop: 'auto' }} direction="row" spacing={1.5}>
-            {/* <button className="u-btn u-btn-primary max-w-[120px]">
-              <Star sx={{ fontSize: '36px' }} />
-            </button> */}
-            {chainIdMismatch ? (
-              <button className={'u-btn u-btn-primary'} onClick={() => switchNetwork()}>
-                Switch Network
-              </button>
-            ) : nft.staking ? (
-              <button
-                disabled={unstakeLoading}
-                className={classNames('u-btn u-btn-primary', {
-                  loading: unstakeLoading,
-                })}
-                onClick={() => setVisibleStatusCheck(!visibleStatusCheck)}
-              >
-                Status Check
-              </button>
-            ) : (
-              <button
-                disabled={stakeLoading}
-                className={classNames('u-btn u-btn-primary', {
-                  loading: stakeLoading,
-                })}
-                onClick={() => setVisibleInfo(!visibleInfo)}
-              >
-                Upgrade
-              </button>
-            )}
-            {nft.status === MetadataStatus.ImmutableX && (
-              <button className="u-btn max-w-[120px] !bg-[#465358]" onClick={() => window.open(ImmutableXWithdraw)}>
-                <img className="w-9 h-9" src={withdraw} alt="imxtools withdrawal" />
-              </button>
-            )}
-          </Stack>
-        )}
+        <TokenActions
+          nft={nft}
+          stakeLoading={stakeLoading}
+          unstakeLoading={unstakeLoading}
+          setVisibleStatusCheck={() => setVisibleStatusCheck(true)}
+          setVisibleInfo={() => setVisibleInfo(true)}
+        />
       </div>
 
       {visibleInfo && (

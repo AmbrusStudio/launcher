@@ -100,10 +100,10 @@ function AccountNavList(props: AccountNavListProps) {
   return (
     <nav
       className={classNames(
-        'flex flex-col items-end gap-16px',
+        'hidden flex-col items-end gap-16px',
         'absolute transition-all h-0 opacity-0',
         'top-full right-0 mt-40px',
-        navOpen && 'h-auto opacity-100'
+        navOpen && 'h-auto opacity-100 flex'
       )}
     >
       <ExternalLink to={getMainSiteLink('/')} title="Official Website">
