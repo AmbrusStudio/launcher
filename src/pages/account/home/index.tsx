@@ -1,4 +1,3 @@
-import CircularProgress from '@mui/material/CircularProgress'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -19,8 +18,8 @@ export function Home() {
   const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
 
   const [games, setGames] = useState<GameInfo[]>([])
-  const { collections, loading } = useUserCollections()
-  collections.length && console.log('collections', collections)
+  const { collections } = useUserCollections()
+  collections.length && console.log('useUserCollections', collections)
 
   const fetchAllGames = useCallback(async (signal: AbortSignal) => {
     const games = await getAllGames(signal)
@@ -67,15 +66,7 @@ export function Home() {
             >
               {shortenIfAddress(account)}
             </WalletButton>
-          ) : account && active && loading ? (
-            <div className="text-center py-6">
-              <CircularProgress
-                sx={{
-                  color: 'white',
-                }}
-              />
-            </div>
-          ) : account && active && !loading && !collections.length ? (
+          ) : account && active && !collections.length ? (
             <span className="text-base text-white">No more data</span>
           ) : (
             <AssetsSlider data={collections} />

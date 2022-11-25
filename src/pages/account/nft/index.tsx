@@ -1,5 +1,4 @@
 import { Stack } from '@mui/material'
-import Skeleton from '@mui/material/Skeleton'
 import { shortenIfAddress, useEthers } from '@usedapp/core'
 import { useSize, useUpdate } from 'ahooks'
 import { useMemo, useRef, useState } from 'react'
@@ -23,15 +22,13 @@ function AccountNFT() {
   const isMd = useMediaQuery({ query: '(min-width: 768px)' })
   const update = useUpdate()
 
-  const { collections, loading } = useUserStakeCollections()
-  collections.length && console.log('collections', collections)
+  const { collections } = useUserStakeCollections()
+  collections.length && console.log('useUserStakeCollections', collections)
 
   const [visiblePerk, setVisiblePerk] = useState<boolean>(false)
   const [visiblePerkModal, setVisiblePerkModal] = useState<boolean>(false)
 
-  const itemHeight = useMemo(() => {
-    return size?.width ? size.width * 0.535 : 0
-  }, [size])
+  const itemHeight = useMemo(() => (size?.width ? size.width * 0.535 : 0), [size])
 
   return (
     <AccountCenterPageLayout title="My" subtitle="NFTs">
@@ -45,13 +42,7 @@ function AccountNFT() {
           >
             {shortenIfAddress(account)}
           </WalletButton>
-        ) : account && active && loading ? (
-          <Stack spacing={3}>
-            <Skeleton sx={{ bgcolor: 'grey.700' }} variant="rectangular" width={'100%'} height={itemHeight} />
-            <Skeleton sx={{ bgcolor: 'grey.700' }} variant="rectangular" width={'100%'} height={itemHeight} />
-            <Skeleton sx={{ bgcolor: 'grey.700' }} variant="rectangular" width={'100%'} height={itemHeight} />
-          </Stack>
-        ) : account && active && !loading && !collections.length ? (
+        ) : account && active && !collections.length ? (
           <div className="text-white">No Data...</div>
         ) : (
           <>
