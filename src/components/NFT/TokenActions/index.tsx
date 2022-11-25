@@ -3,10 +3,10 @@ import classNames from 'classnames'
 import { FC } from 'react'
 
 // import Star from '../../../components/Icon/Star'
-import withdraw from '../../../assets/images/withdraw.png'
 import { ImmutableXWithdraw } from '../../../contracts'
 import { useWeb3Modal } from '../../../hooks'
 import { MetadataStatus, NFTE4CRanger } from '../../../types'
+import { IconWithdraw } from '../../Icon/Withdraw'
 
 interface Props {
   readonly nft: NFTE4CRanger
@@ -53,7 +53,7 @@ const TokenActions: FC<Props> = ({ nft, stakeLoading, unstakeLoading, setVisible
           )}
           {nft.status === MetadataStatus.ImmutableX && (
             <button className="u-btn max-w-[120px] !bg-[#465358] py-0!" onClick={() => window.open(ImmutableXWithdraw)}>
-              <img className="w-7 lg:w-9 h-7 lg:h-9" src={withdraw} alt="imxtools withdrawal" />
+              <IconWithdraw className="w-7 lg:w-9 h-7 lg:h-9" />
             </button>
           )}
         </Stack>
