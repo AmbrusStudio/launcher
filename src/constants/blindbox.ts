@@ -1,8 +1,10 @@
 import { Goerli, Mainnet } from '@usedapp/core'
-import countdown from 'countdown'
+import * as countdown from 'countdown'
 
-import { defaultChainId } from '../contracts'
 import { Trait, TraitName } from '../types'
+import { getDefaultChainId } from '../utils'
+
+const defaultChainId = getDefaultChainId()
 
 // Blind box
 export const BlindBoxTrait = [Trait.Name]
