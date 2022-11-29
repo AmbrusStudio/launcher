@@ -17,7 +17,6 @@ export const BlindBoxTrait = [Trait.Name]
  */
 const showBlindBoxMode = (ms: number) => {
   const time = (countdown as countdown.CountdownStatic)(ms) as countdown.Timespan
-  console.log('time', time)
   if (time.value) {
     return time.value < 0
   }
@@ -31,7 +30,7 @@ const BlindBoxModes = {
   },
   [Goerli.chainId]: {
     [TraitName.Rin]: false,
-    [TraitName.Kit]: showBlindBoxMode(1669704480000),
+    [TraitName.Kit]: showBlindBoxMode(1669708380000),
   },
 }
 
