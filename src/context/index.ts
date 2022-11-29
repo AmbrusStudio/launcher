@@ -3,16 +3,6 @@ import React from 'react'
 
 import { AccountAvatarInfo } from '../types'
 
-type WalletModalContextValue = {
-  openWalletModal: () => void
-  closeWalletModal: () => void
-}
-
-export const WalletModalContext = React.createContext<WalletModalContextValue>({
-  openWalletModal: () => void 0,
-  closeWalletModal: () => void 0,
-})
-
 type ImmutableXWalletContextValue = {
   imxLink: Link | undefined
   imxClient: ImmutableXClient | undefined
