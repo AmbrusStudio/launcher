@@ -5,6 +5,7 @@ import NodeStdLibBrowser from 'node-stdlib-browser'
 import Unocss from 'unocss/vite'
 import { defineConfig } from 'vite'
 import { chunkSplitPlugin } from 'vite-plugin-chunk-split'
+import { compression } from 'vite-plugin-compression2'
 
 const vendor = {
   'vendor-react': [
@@ -47,6 +48,7 @@ export default defineConfig({
       strategy: 'single-vendor',
       customSplitting: vendor,
     }) as unknown as Plugin,
+    compression(),
   ],
   optimizeDeps: {
     include: ['buffer', 'process'],

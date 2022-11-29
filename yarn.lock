@@ -1508,6 +1508,15 @@
     estree-walker "^2.0.2"
     picomatch "^2.3.1"
 
+"@rollup/pluginutils@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-5.0.2.tgz#012b8f53c71e4f6f9cb317e311df1404f56e7a33"
+  integrity sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==
+  dependencies:
+    "@types/estree" "^1.0.0"
+    estree-walker "^2.0.2"
+    picomatch "^2.3.1"
+
 "@sentry/browser@7.16.0":
   version "7.16.0"
   resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-7.16.0.tgz#afd2bac91857d2359272a0d9d2b1ee5ca7d69828"
@@ -3349,11 +3358,6 @@ cosmiconfig@^7.0.0:
     parse-json "^5.0.0"
     path-type "^4.0.0"
     yaml "^1.10.0"
-
-countdown@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/countdown/-/countdown-2.6.0.tgz#677fb8e3a9d4cc4e76415901ba253b518af34177"
-  integrity sha512-96C3ntj6/Q0KiikjRxDTrnw09VHI1x930gDTxBnTN8spEjySAT4ftvPXbM22Wn1pp5X0HvZ9uw6DOIf2d8g7rg==
 
 crc-32@^1.2.0:
   version "1.2.2"
@@ -8390,6 +8394,13 @@ vite-plugin-chunk-split@^0.4.4:
     es-module-lexer "^1.0.3"
     magic-string "^0.26.3"
     vite "3.1.0"
+
+vite-plugin-compression2@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/vite-plugin-compression2/-/vite-plugin-compression2-0.4.1.tgz#e4feed1bc0f9b05093bcf58bc5494c5b92143bbf"
+  integrity sha512-a9lRnJvNWGMSw8zbZQLs5NJy0PVghfnbu5DvvzpfpBQDt8f+Lf5Gv49zK9pQ4Dj8WL+UuvBVc6NuS/h295LXFw==
+  dependencies:
+    "@rollup/pluginutils" "^5.0.2"
 
 vite@3.1.0:
   version "3.1.0"
