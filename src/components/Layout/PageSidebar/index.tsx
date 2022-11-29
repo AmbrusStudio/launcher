@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { useAccountInfo, useImmutableXWallet, useRouterActive } from '../../../hooks'
+import { useAccountInfo, useImmutableXWallet, useRouterActive, useWeb3Modal } from '../../../hooks'
 import { classNames, getMainSiteLink } from '../../../utils'
 import { IconAccount, IconAmbrus2, IconESports, IconExit, IconHome, IconSettings, IconWidgets } from '../../Icon'
 import { ExternalLink } from '../../Link'
@@ -16,12 +16,14 @@ export function PageSidebar(props: PageSidebarProps) {
   const navigate = useNavigate()
   const { remove: removeAccount } = useAccountInfo()
   const { walletLogout } = useImmutableXWallet()
+  const { disconnect } = useWeb3Modal()
 
   const handleSignOutClick = React.useCallback(async () => {
     await walletLogout()
+    await disconnect()
     removeAccount()
     navigate('/account/signin', { replace: true })
-  }, [navigate, removeAccount, walletLogout])
+  }, [navigate, removeAccount, walletLogout, disconnect])
 
   return (
     <header

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { useAccountInfo, useImmutableXWallet } from '../../../hooks'
+import { useAccountInfo, useImmutableXWallet, useWeb3Modal } from '../../../hooks'
 import { classNames, getMainSiteLink } from '../../../utils'
 import { IconAccount, IconAmbrus2, IconESports, IconExit, IconHome, IconSettings, IconWidgets } from '../../Icon'
 import { IconHeaderClose, IconHeaderMenu } from '../../Icon'
@@ -45,7 +45,7 @@ const accountNavItemIconNormalV: Record<AccountNavItemVariants, string> = {
 }
 
 function AccountNavItem(props: React.PropsWithChildren<AccountNavItemProps>) {
-  const { className, children, name, variant = 'nav' } = props
+  const { className, children, name, variant = 'nav', onNavClick } = props
   return (
     <button
       className={classNames(
@@ -55,6 +55,7 @@ function AccountNavItem(props: React.PropsWithChildren<AccountNavItemProps>) {
       )}
       type="button"
       title={name}
+      onClick={onNavClick}
     >
       <div
         className={classNames(
@@ -86,15 +87,17 @@ function AccountNavList(props: AccountNavListProps) {
   const navigate = useNavigate()
   const { remove: removeAccount } = useAccountInfo()
   const { walletLogout } = useImmutableXWallet()
+  const { disconnect } = useWeb3Modal()
 
   const handleSignOutClick = React.useCallback<React.MouseEventHandler<HTMLButtonElement>>(
     async (e) => {
       e.stopPropagation()
       await walletLogout()
+      await disconnect()
       removeAccount()
       navigate('/account/signin', { replace: true })
     },
-    [navigate, removeAccount, walletLogout]
+    [navigate, removeAccount, walletLogout, disconnect]
   )
 
   return (

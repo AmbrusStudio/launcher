@@ -1840,6 +1840,11 @@
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
   integrity sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==
 
+"@types/store@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@types/store/-/store-2.0.2.tgz#6263d4f1aab225032ea55b17d94f3b725a21c943"
+  integrity sha512-ZPHnXkzmGMfk+pHqAGzTSpA9CbsHmJLgkvOl5w52LZ0XTxB1ZIHWZzQ7lEtjTNWScBbsQekg8TjApMXkMe4nkw==
+
 "@types/testing-library__jest-dom@^5.9.1":
   version "5.14.5"
   resolved "https://registry.yarnpkg.com/@types/testing-library__jest-dom/-/testing-library__jest-dom-5.14.5.tgz#d113709c90b3c75fdb127ec338dad7d5f86c974f"
@@ -7784,6 +7789,11 @@ stack-utils@^2.0.3:
   integrity sha512-xrQcmYhOsn/1kX+Vraq+7j4oE2j/6BFscZ0etmYg81xuM8Gq0022Pxb8+IqgOFUIaxHs0KaSb7T1+OegiNrNFA==
   dependencies:
     escape-string-regexp "^2.0.0"
+
+store@^2.0.12:
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/store/-/store-2.0.12.tgz#8c534e2a0b831f72b75fc5f1119857c44ef5d593"
+  integrity sha512-eO9xlzDpXLiMr9W1nQ3Nfp9EzZieIQc10zPPMP5jsVV7bLOziSFFBP0XoDXACEIFtdI+rIz0NwWVA/QVJ8zJtw==
 
 stream-browserify@^3.0.0:
   version "3.0.0"
