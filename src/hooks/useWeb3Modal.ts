@@ -27,6 +27,10 @@ export function useWeb3Modal(): UseWeb3Modal {
   const chainIdMismatch = chainId !== defaultChainId
 
   const connect = async () => {
+    if (web3Modal.cachedProvider === 'walletconnect' && !store.get('walletconnect')) {
+      await web3Modal.clearCachedProvider()
+    }
+
     const provider = await web3Modal.connect()
     await activate(provider)
   }
@@ -49,6 +53,9 @@ export function useWeb3Modal(): UseWeb3Modal {
 
   useMount(() => {
     if (web3Modal.cachedProvider) {
+      if (web3Modal.cachedProvider === 'walletconnect' && !store.get('walletconnect')) {
+        return
+      }
       connect()
     }
   })
