@@ -5,8 +5,8 @@ import NodeStdLibBrowser from 'node-stdlib-browser'
 import Unocss from 'unocss/vite'
 import { defineConfig } from 'vite'
 import { chunkSplitPlugin } from 'vite-plugin-chunk-split'
+import { compression } from 'vite-plugin-compression2'
 
-// hhttps://github.com/vitejs/vite/issues/2906#issuecomment-816797355
 const vendor = {
   'vendor-react': [
     'react',
@@ -17,19 +17,18 @@ const vendor = {
     'redux-persist',
     '@reduxjs/toolkit',
   ],
-  // 'vendor-ui': ['@mui/material', '@emotion/react', '@emotion/styled', '@headlessui/react', 'notistack'],
-  // 'vendor-util': [
-  //   'lodash',
-  //   'ahooks',
-  //   '@ahooksjs/use-url-state',
-  //   'bignumber.js',
-  //   'axios',
-  //   'ethers',
-  //   'numbro',
-  //   '@sentry/react',
-  //   '@sentry/tracing',
-  //   'react-hook-form',
-  // ],
+  'vendor-ui': ['@mui/material', '@emotion/react', '@emotion/styled', '@headlessui/react', 'notistack'],
+  'vendor-util': [
+    'lodash',
+    'ahooks',
+    '@ahooksjs/use-url-state',
+    'bignumber.js',
+    'axios',
+    'ethers',
+    'numbro',
+    'web-vitals',
+  ],
+  'vendor-chain': ['@usedapp/core', 'alchemy-sdk', '@imtbl/core-sdk', '@imtbl/imx-sdk'],
 }
 
 // https://vitejs.dev/config/
@@ -49,6 +48,7 @@ export default defineConfig({
       strategy: 'single-vendor',
       customSplitting: vendor,
     }) as unknown as Plugin,
+    compression(),
   ],
   optimizeDeps: {
     include: ['buffer', 'process'],

@@ -1,8 +1,8 @@
 import { Goerli, Mainnet } from '@usedapp/core'
 
-// import * as countdown from 'countdown'
 import { Trait, TraitName } from '../types'
 import { getDefaultChainId } from '../utils'
+import countdown from '../utils/countdown'
 
 const defaultChainId = getDefaultChainId()
 
@@ -15,13 +15,13 @@ export const BlindBoxTrait = [Trait.Name]
  * @param ms
  * @returns
  */
-// const showBlindBoxMode = (ms: number) => {
-//   const time = countdown(ms) as countdown.Timespan
-//   if (time.value) {
-//     return time.value < 0
-//   }
-//   return false
-// }
+const showBlindBoxMode = (ms: number) => {
+  const time = (countdown as countdown.CountdownStatic)(ms) as countdown.Timespan
+  if (time.value) {
+    return time.value < 0
+  }
+  return false
+}
 
 const BlindBoxModes = {
   [Mainnet.chainId]: {
@@ -30,8 +30,7 @@ const BlindBoxModes = {
   },
   [Goerli.chainId]: {
     [TraitName.Rin]: false,
-    // [TraitName.Kit]: showBlindBoxMode(1669628640000),
-    [TraitName.Kit]: false,
+    [TraitName.Kit]: showBlindBoxMode(1669708380000),
   },
 }
 
