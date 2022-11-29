@@ -30,7 +30,7 @@ const BlindBoxModes = {
   },
   [Goerli.chainId]: {
     [TraitName.Rin]: false,
-    [TraitName.Kit]: showBlindBoxMode(1669708380000),
+    [TraitName.Kit]: showBlindBoxMode(1669722000000),
   },
 }
 
