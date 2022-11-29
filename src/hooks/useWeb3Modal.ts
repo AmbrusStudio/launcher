@@ -16,15 +16,15 @@ type UseWeb3Modal = {
   switchNetwork: () => Promise<void>
 }
 
-const web3Modal = new Web3Modal({
-  cacheProvider: true,
-  providerOptions: web3ModalProviderOptions,
-})
-
 export function useWeb3Modal(): UseWeb3Modal {
   const { chainId, activate, switchNetwork: dappSwitchNetwork, deactivate } = useEthers()
 
   const chainIdMismatch = chainId !== defaultChainId
+
+  const web3Modal = new Web3Modal({
+    cacheProvider: true,
+    providerOptions: web3ModalProviderOptions,
+  })
 
   const connect = async () => {
     const provider = await web3Modal.connect()
