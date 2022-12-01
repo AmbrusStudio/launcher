@@ -19,13 +19,14 @@ export type FilterItem = {
 }
 
 type FilterItemProps = Omit<FilterItem, 'list'> & {
+  className?: string
   index: number
   toggleable: boolean
   onToggleFilterItem: (index: number, open: boolean) => void
 }
 
 function FilterItem(props: FilterItemProps) {
-  const { index, label, toggleable, isOpen, onToggleFilterItem } = props
+  const { className, index, label, toggleable, isOpen, onToggleFilterItem } = props
 
   const handleFilterItemClick = React.useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) => {
@@ -42,7 +43,8 @@ function FilterItem(props: FilterItemProps) {
       className={classNames(
         'flex items-center justify-between',
         'py-4 border-b-1px border-grey-dark',
-        toggleable && 'cursor-pointer'
+        toggleable && 'cursor-pointer',
+        className
       )}
       onClick={(e) => handleFilterItemClick(e, index)}
     >
@@ -96,19 +98,22 @@ function FilterListItem(props: FilterListItemProps) {
 }
 
 type FilterProps = {
+  filterItemClass?: string
+  filterListItemClass?: string
   readonly filter: FilterItem[]
   onToggleFilterItem: (index: number, open: boolean) => void
   onFilterListItemClick: (parentIndex: number, childIndex: number, checked: boolean) => void
 }
 
 export function Filter(props: FilterProps) {
-  const { filter, onToggleFilterItem, onFilterListItemClick } = props
+  const { filter, filterItemClass, filterListItemClass, onToggleFilterItem, onFilterListItemClick } = props
 
   return (
     <ul className={classNames('select-none overflow-auto max-height-category filter-category-scrollbar')}>
       {filter.map((item, parentIndex) => (
         <li key={`filter-item-${parentIndex}`}>
           <FilterItem
+            className={filterItemClass}
             index={parentIndex}
             label={item.label}
             toggleable={!!item.list.length}
@@ -120,6 +125,7 @@ export function Filter(props: FilterProps) {
               {item.list.map((listItem, childIndex) => (
                 <li key={`filter-list-item-${parentIndex}-${childIndex}`}>
                   <FilterListItem
+                    className={filterListItemClass}
                     parentIndex={parentIndex}
                     index={childIndex}
                     label={listItem.label}
