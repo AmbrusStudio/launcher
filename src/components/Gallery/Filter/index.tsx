@@ -27,7 +27,7 @@ const GalleryFilter: FC<GalleryFilterProps> = ({ filter, toggleFilterTab, toggle
             <span className="text-sm leading-[17px] uppercase text-white">{item.label}</span>
             {!!item.list.length && (
               <>
-                {item.is_open ? (
+                {item.isOpen ? (
                   <FilterClose
                     sx={{
                       fontSize: '12px',
@@ -43,7 +43,7 @@ const GalleryFilter: FC<GalleryFilterProps> = ({ filter, toggleFilterTab, toggle
               </>
             )}
           </div>
-          {item.is_open && (
+          {item.isOpen && (
             <ul className="max-h-[252px] overflow-auto filter-category-scrollbar">
               {item.list.map((tab: FilterList, indexJ) => (
                 <li
@@ -59,7 +59,7 @@ const GalleryFilter: FC<GalleryFilterProps> = ({ filter, toggleFilterTab, toggle
                       ({numbro(tab.count).format({ thousandSeparated: true })})
                     </span>
                   </span>
-                  {tab.is_checked && (
+                  {tab.isChecked && (
                     <FilterChecked
                       className="text-rust"
                       sx={{

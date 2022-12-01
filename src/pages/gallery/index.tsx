@@ -89,8 +89,8 @@ function Gallery() {
         if (item.label === Trait.Name) {
           item.list.forEach((itemJ, indexJ) => {
             if (state.name.toLocaleLowerCase() === itemJ.label.toLocaleLowerCase()) {
-              list[index].is_open = true
-              list[index].list[indexJ].is_checked = true
+              list[index].isOpen = true
+              list[index].list[indexJ].isChecked = true
 
               setFilter(list)
             }
@@ -127,7 +127,7 @@ function Gallery() {
 
                     // Only supports Name
                     if (filter[parentIndex].label === Trait.Name) {
-                      if (!filter[parentIndex].list[childrenIndex].is_checked) {
+                      if (!filter[parentIndex].list[childrenIndex].isChecked) {
                         setState({ name: filter[parentIndex].list[childrenIndex].label.toLocaleLowerCase() })
                       } else {
                         setState({ name: undefined })

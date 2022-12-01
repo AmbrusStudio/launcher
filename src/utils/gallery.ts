@@ -12,7 +12,7 @@ import { BlindBoxMode } from './bindbox'
  */
 export const toggleFilterCheckedFn = (filter: Filter[], parentIndex: number, childrenIndex: number): Filter[] => {
   const list = cloneDeep(filter)
-  list[parentIndex].list[childrenIndex].is_checked = !list[parentIndex].list[childrenIndex].is_checked
+  list[parentIndex].list[childrenIndex].isChecked = !list[parentIndex].list[childrenIndex].isChecked
   return list
 }
 
@@ -27,7 +27,7 @@ export const toggleFilterOpenFn = (filter: Filter[], index: number): Filter[] | 
     return
   }
   const list = cloneDeep(filter)
-  list[index].is_open = !list[index].is_open
+  list[index].isOpen = !list[index].isOpen
   return list
 }
 
@@ -37,17 +37,17 @@ export const toggleFilterOpenFn = (filter: Filter[], index: number): Filter[] | 
  * @returns
  */
 export const convertFilterToMap = (filter: Filter[]): Map<Trait, string[]> => {
-  const filterChecked = filter.filter((i) => i.list.some((j: FilterList) => j.is_checked))
+  const filterChecked = filter.filter((i) => i.list.some((j: FilterList) => j.isChecked))
   const filterActiveChecked = filterChecked.map((i) => ({
     ...i,
-    list: i.list.filter((j: FilterList) => j.is_checked),
+    list: i.list.filter((j: FilterList) => j.isChecked),
   }))
 
   const result = new Map<Trait, string[]>()
 
   filterActiveChecked.forEach((item) => {
     const list = item.list.map((i) => i.label)
-    result.set(item.label, list)
+    result.set(item.label as Trait, list)
   })
 
   return result
