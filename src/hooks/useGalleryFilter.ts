@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { compose } from 'redux'
 
 import { TokenMetadata, Trait } from '../types'
-import { Filter, GALLERY_FILTER, GALLERY_FILTER_LIST } from '../types/gallery'
+import { Filter, FilterList } from '../types/gallery'
 import { convertFilterToMap, toggleFilterCheckedFn, toggleFilterOpenFn } from '../utils'
 import { BlindBoxMode } from '../utils/bindbox'
 import { useMetadata } from './useMetadata'
@@ -36,7 +36,7 @@ export function useGalleryFilter(pureGold: boolean) {
     }
   }, [metadataAllEdition, pureGold])
 
-  const galleryFilter = useMemo<GALLERY_FILTER[]>(() => {
+  const galleryFilter = useMemo<Filter[]>(() => {
     // Handle Filter Property
 
     // Handle Hide blindbox trait
@@ -56,7 +56,7 @@ export function useGalleryFilter(pureGold: boolean) {
     const traitKeys = [...new Set([...Object.values(Trait), ...Object.keys(allTraitGroupByType)])] as Trait[]
 
     return traitKeys.map((i) => {
-      const list: GALLERY_FILTER_LIST[] = []
+      const list: FilterList[] = []
 
       if (allTraitGroupByType[i]) {
         const propertyGroupByValue = groupBy(allTraitGroupByType[i], 'value')
@@ -64,17 +64,20 @@ export function useGalleryFilter(pureGold: boolean) {
         Object.entries(propertyGroupByValue).forEach(([key, vallue]) => {
           list.push({
             label: key,
+            isChecked: false,
             count: vallue.length,
           })
         })
 
         return {
           label: i,
+          isOpen: false,
           list: list.sort((a, b) => b.count - a.count),
         }
       } else {
         return {
           label: i,
+          isOpen: false,
           list: [],
         }
       }
