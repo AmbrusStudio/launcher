@@ -1,10 +1,10 @@
 import { Falsy, useEthers } from '@usedapp/core'
 import { useDeepCompareEffect } from 'ahooks'
 import { getAddress } from 'ethers/lib/utils'
-import { isEqual, unionWith } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { E4CRanger_ImmutableX_Holder } from '../contracts'
+import { mergedCollections } from '../tools'
 import { MetadataStatus, NFTE4CRanger } from '../types'
 import { formatMetadata, formatMetadataImmutableX } from '../utils'
 import { useOriginalOwners, useUpgradeds } from './useE4CRanger'
@@ -103,11 +103,11 @@ export function useERC721ListState({
   }, [metadataContract, originalOwner, tokenAddress, tokenIdForContract, upgradedForContract])
 
   useDeepCompareEffect(() => {
-    setCollections((data) => unionWith(data, nftsForAccount, isEqual))
+    setCollections((data) => mergedCollections(data, nftsForAccount))
   }, [nftsForAccount])
 
   useDeepCompareEffect(() => {
-    setCollections((data) => unionWith(data, nftsForContract, isEqual))
+    setCollections((data) => mergedCollections(data, nftsForContract))
   }, [nftsForContract])
 
   useEffect(() => {
@@ -200,11 +200,11 @@ export function useERC721List({
   }, [tokenAddress, metadataContract, tokenIdForContract])
 
   useDeepCompareEffect(() => {
-    setCollections((data) => unionWith(data, nftsForAccount, isEqual))
+    setCollections((data) => mergedCollections(data, nftsForAccount))
   }, [nftsForAccount])
 
   useDeepCompareEffect(() => {
-    setCollections((data) => unionWith(data, nftsForContract, isEqual))
+    setCollections((data) => mergedCollections(data, nftsForContract))
   }, [nftsForContract])
 
   return {
@@ -314,11 +314,11 @@ export function useERC721ImmutableXListState({ collection, baseURL }: { collecti
   const loading = useMemo<boolean>(() => loadingAccount && loadingHolder, [loadingAccount, loadingHolder])
 
   useDeepCompareEffect(() => {
-    setCollections((data) => unionWith(data, nftsForAccount, isEqual))
+    setCollections((data) => mergedCollections(data, nftsForAccount))
   }, [nftsForAccount])
 
   useDeepCompareEffect(() => {
-    setCollections((data) => unionWith(data, nftsForContract, isEqual))
+    setCollections((data) => mergedCollections(data, nftsForContract))
   }, [nftsForContract])
 
   useEffect(() => {
@@ -416,11 +416,11 @@ export function useERC721ImmutableXList({ collection, baseURL }: { collection: s
   const loading = useMemo<boolean>(() => loadingAccount && loadingHolder, [loadingAccount, loadingHolder])
 
   useDeepCompareEffect(() => {
-    setCollections((data) => unionWith(data, nftsForAccount, isEqual))
+    setCollections((data) => mergedCollections(data, nftsForAccount))
   }, [nftsForAccount])
 
   useDeepCompareEffect(() => {
-    setCollections((data) => unionWith(data, nftsForContract, isEqual))
+    setCollections((data) => mergedCollections(data, nftsForContract))
   }, [nftsForContract])
 
   useEffect(() => {
