@@ -1,4 +1,6 @@
-import { useMemo } from 'react'
+import { useDeepCompareEffect } from 'ahooks'
+import { isEqual, unionWith } from 'lodash'
+import { useEffect, useState } from 'react'
 
 import {
   E4CRanger_GoldEdition,
@@ -8,11 +10,14 @@ import {
   E4CRanger_RangersEdition,
   E4CRanger_RangersEdition_Holder,
 } from '../contracts'
+import { NFTE4CRanger } from '../types'
 import { useERC721ImmutableXListState, useERC721ListState } from './useERC721List'
 import { useMetadataBaseURL } from './useMetadataBaseURL'
 
 export function useUserStakeCollections() {
   const { metadadaGoldBaseURI, metadadaRangersBaseURI } = useMetadataBaseURL()
+  const [loading, setLoading] = useState<boolean>(false)
+  const [collections, setCollections] = useState<NFTE4CRanger[]>([])
 
   const { nfts: nftsGold, loading: loadingGold } = useERC721ListState({
     holderAddress: E4CRanger_GoldEdition_Holder,
@@ -34,16 +39,28 @@ export function useUserStakeCollections() {
     baseURL: metadadaRangersBaseURI,
   })
 
-  const nfts = useMemo(
-    () => [...nftsGold, ...nftsRangers, ...nftsImmutableXGold, ...nftsImmutableXRangers],
-    [nftsGold, nftsRangers, nftsImmutableXGold, nftsImmutableXRangers]
-  )
-  const loading = useMemo(() => {
-    return loadingGold && loadingRangers && loadingImmutableXGold && loadingImmutableXRangers
+  useEffect(() => {
+    setLoading(loadingGold && loadingRangers && loadingImmutableXGold && loadingImmutableXRangers)
   }, [loadingGold, loadingRangers, loadingImmutableXGold, loadingImmutableXRangers])
 
+  useDeepCompareEffect(() => {
+    setCollections((data) => unionWith(data, nftsGold, isEqual))
+  }, [nftsGold])
+
+  useDeepCompareEffect(() => {
+    setCollections((data) => unionWith(data, nftsRangers, isEqual))
+  }, [nftsRangers])
+
+  useDeepCompareEffect(() => {
+    setCollections((data) => unionWith(data, nftsImmutableXGold, isEqual))
+  }, [nftsImmutableXGold])
+
+  useDeepCompareEffect(() => {
+    setCollections((data) => unionWith(data, nftsImmutableXRangers, isEqual))
+  }, [nftsImmutableXRangers])
+
   return {
-    collections: nfts,
+    collections,
     loading,
   }
 }
