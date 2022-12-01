@@ -1,5 +1,7 @@
 import { Falsy, useEthers } from '@usedapp/core'
+import { useDeepCompareEffect } from 'ahooks'
 import { getAddress } from 'ethers/lib/utils'
+import { isEqual, unionWith } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { E4CRanger_ImmutableX_Holder } from '../contracts'
@@ -32,6 +34,8 @@ export function useERC721ListState({
   const { account } = useEthers()
   const [nftsForAccount, setNftsForAccount] = useState<NFTE4CRanger[]>([])
   const [nftsForContract, setNftsForContract] = useState<NFTE4CRanger[]>([])
+
+  const [collections, setCollections] = useState<NFTE4CRanger[]>([])
 
   // tokenId for owner
   const { tokenId, loading } = useTokenIdByOwner({ tokenAddress })
@@ -98,7 +102,13 @@ export function useERC721ListState({
     }
   }, [metadataContract, originalOwner, tokenAddress, tokenIdForContract, upgradedForContract])
 
-  const nfts = useMemo<NFTE4CRanger[]>(() => [...nftsForAccount, ...nftsForContract], [nftsForAccount, nftsForContract])
+  useDeepCompareEffect(() => {
+    setCollections((data) => unionWith(data, nftsForAccount, isEqual))
+  }, [nftsForAccount])
+
+  useDeepCompareEffect(() => {
+    setCollections((data) => unionWith(data, nftsForContract, isEqual))
+  }, [nftsForContract])
 
   useEffect(() => {
     getNftsForUser()
@@ -109,7 +119,7 @@ export function useERC721ListState({
   }, [getNftsForContract])
 
   return {
-    nfts,
+    nfts: collections,
     loading,
   }
 }
@@ -130,6 +140,7 @@ export function useERC721List({
   baseURL: string
 }) {
   const { account } = useEthers()
+  const [collections, setCollections] = useState<NFTE4CRanger[]>([])
 
   // TokenId for owner
   const { tokenId, loading } = useTokenIdByOwner({
@@ -188,10 +199,16 @@ export function useERC721List({
     }
   }, [tokenAddress, metadataContract, tokenIdForContract])
 
-  const nfts = useMemo<NFTE4CRanger[]>(() => [...nftsForAccount, ...nftsForContract], [nftsForAccount, nftsForContract])
+  useDeepCompareEffect(() => {
+    setCollections((data) => unionWith(data, nftsForAccount, isEqual))
+  }, [nftsForAccount])
+
+  useDeepCompareEffect(() => {
+    setCollections((data) => unionWith(data, nftsForContract, isEqual))
+  }, [nftsForContract])
 
   return {
-    nfts,
+    nfts: collections,
     loading,
   }
 }
@@ -235,6 +252,8 @@ export function useERC721ImmutableXListState({ collection, baseURL }: { collecti
   const { walletInfo } = useImmutableXWallet()
   const [nftsForAccount, setNftsForAccount] = useState<NFTE4CRanger[]>([])
   const [nftsForContract, setNftsForContract] = useState<NFTE4CRanger[]>([])
+
+  const [collections, setCollections] = useState<NFTE4CRanger[]>([])
 
   // User
   const { immutableXAssets, loading: loadingAccount } = useImmutableXUserNFTAssets({
@@ -292,8 +311,15 @@ export function useERC721ImmutableXListState({ collection, baseURL }: { collecti
     setNftsForContract(list)
   }, [collection, metadataContract, stakingStatusHolder])
 
-  const nfts = useMemo<NFTE4CRanger[]>(() => [...nftsForAccount, ...nftsForContract], [nftsForAccount, nftsForContract])
   const loading = useMemo<boolean>(() => loadingAccount && loadingHolder, [loadingAccount, loadingHolder])
+
+  useDeepCompareEffect(() => {
+    setCollections((data) => unionWith(data, nftsForAccount, isEqual))
+  }, [nftsForAccount])
+
+  useDeepCompareEffect(() => {
+    setCollections((data) => unionWith(data, nftsForContract, isEqual))
+  }, [nftsForContract])
 
   useEffect(() => {
     getNftsForUser()
@@ -304,7 +330,7 @@ export function useERC721ImmutableXListState({ collection, baseURL }: { collecti
   }, [getNftsForContract])
 
   return {
-    nfts,
+    nfts: collections,
     loading,
   }
 }
@@ -318,6 +344,8 @@ export function useERC721ImmutableXList({ collection, baseURL }: { collection: s
   const { walletInfo } = useImmutableXWallet()
   const [nftsForAccount, setNftsForAccount] = useState<NFTE4CRanger[]>([])
   const [nftsForContract, setNftsForContract] = useState<NFTE4CRanger[]>([])
+
+  const [collections, setCollections] = useState<NFTE4CRanger[]>([])
 
   // User
   const { immutableXAssets, loading: loadingAccount } = useImmutableXUserNFTAssets({
@@ -385,8 +413,15 @@ export function useERC721ImmutableXList({ collection, baseURL }: { collection: s
     setNftsForContract(list)
   }, [collection, metadataContract, stakingStatusHolder])
 
-  const nfts = useMemo<NFTE4CRanger[]>(() => [...nftsForAccount, ...nftsForContract], [nftsForAccount, nftsForContract])
   const loading = useMemo<boolean>(() => loadingAccount && loadingHolder, [loadingAccount, loadingHolder])
+
+  useDeepCompareEffect(() => {
+    setCollections((data) => unionWith(data, nftsForAccount, isEqual))
+  }, [nftsForAccount])
+
+  useDeepCompareEffect(() => {
+    setCollections((data) => unionWith(data, nftsForContract, isEqual))
+  }, [nftsForContract])
 
   useEffect(() => {
     getNftsForUser()
@@ -397,7 +432,7 @@ export function useERC721ImmutableXList({ collection, baseURL }: { collection: s
   }, [getNftsForContract])
 
   return {
-    nfts,
+    nfts: collections,
     loading,
   }
 }
