@@ -1,5 +1,4 @@
 import { useDeepCompareEffect } from 'ahooks'
-import { isEqual, unionWith } from 'lodash'
 import { useEffect, useState } from 'react'
 
 import {
@@ -10,6 +9,7 @@ import {
   E4CRanger_RangersEdition,
   E4CRanger_RangersEdition_Holder,
 } from '../contracts'
+import { mergedCollections } from '../tools'
 import { NFTE4CRanger } from '../types'
 import { useERC721ImmutableXListState, useERC721ListState } from './useERC721List'
 import { useMetadataBaseURL } from './useMetadataBaseURL'
@@ -44,19 +44,19 @@ export function useUserStakeCollections() {
   }, [loadingGold, loadingRangers, loadingImmutableXGold, loadingImmutableXRangers])
 
   useDeepCompareEffect(() => {
-    setCollections((data) => unionWith(data, nftsGold, isEqual))
+    setCollections((data) => mergedCollections(data, nftsGold))
   }, [nftsGold])
 
   useDeepCompareEffect(() => {
-    setCollections((data) => unionWith(data, nftsRangers, isEqual))
+    setCollections((data) => mergedCollections(data, nftsRangers))
   }, [nftsRangers])
 
   useDeepCompareEffect(() => {
-    setCollections((data) => unionWith(data, nftsImmutableXGold, isEqual))
+    setCollections((data) => mergedCollections(data, nftsImmutableXGold))
   }, [nftsImmutableXGold])
 
   useDeepCompareEffect(() => {
-    setCollections((data) => unionWith(data, nftsImmutableXRangers, isEqual))
+    setCollections((data) => mergedCollections(data, nftsImmutableXRangers))
   }, [nftsImmutableXRangers])
 
   return {
