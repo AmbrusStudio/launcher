@@ -1,4 +1,6 @@
-import { useMemo } from 'react'
+import { useDeepCompareEffect } from 'ahooks'
+import { isEqual, unionWith } from 'lodash'
+import { useEffect, useState } from 'react'
 
 import {
   E4CRanger_GoldEdition,
@@ -9,11 +11,14 @@ import {
   E4CRanger_RangersEdition_Holder,
   E4CRanger_UltimateEdition,
 } from '../contracts'
+import { NFTE4CRanger } from '../types'
 import { useERC721ImmutableXList, useERC721List, useERC721UltimateEditionList } from './useERC721List'
 import { useMetadataBaseURL } from './useMetadataBaseURL'
 
 export function useUserCollections() {
   const { metadadaGoldBaseURI, metadadaRangersBaseURI, metadadaUltimateBaseURI } = useMetadataBaseURL()
+  const [loading, setLoading] = useState<boolean>(false)
+  const [collections, setCollections] = useState<NFTE4CRanger[]>([])
 
   const { nfts: nftsUltimate, loading: loadingUltimate } = useERC721UltimateEditionList({
     tokenAddress: E4CRanger_UltimateEdition,
@@ -40,17 +45,32 @@ export function useUserCollections() {
     baseURL: metadadaRangersBaseURI,
   })
 
-  const nfts = useMemo(
-    () => [...nftsUltimate, ...nftsGold, ...nftsRangers, ...nftsImmutableXGold, ...nftsImmutableXRangers],
-    [nftsUltimate, nftsGold, nftsRangers, nftsImmutableXGold, nftsImmutableXRangers]
-  )
-  const loading = useMemo(
-    () => loadingGold && loadingRangers && loadingUltimate && loadingImmutableXGold && loadingImmutableXRangers,
-    [loadingGold, loadingRangers, loadingUltimate, loadingImmutableXGold, loadingImmutableXRangers]
-  )
+  useEffect(() => {
+    setLoading(loadingGold && loadingRangers && loadingUltimate && loadingImmutableXGold && loadingImmutableXRangers)
+  }, [loadingGold, loadingRangers, loadingUltimate, loadingImmutableXGold, loadingImmutableXRangers])
+
+  useDeepCompareEffect(() => {
+    setCollections((data) => unionWith(data, nftsGold, isEqual))
+  }, [nftsGold])
+
+  useDeepCompareEffect(() => {
+    setCollections((data) => unionWith(data, nftsRangers, isEqual))
+  }, [nftsRangers])
+
+  useDeepCompareEffect(() => {
+    setCollections((data) => unionWith(data, nftsUltimate, isEqual))
+  }, [nftsUltimate])
+
+  useDeepCompareEffect(() => {
+    setCollections((data) => unionWith(data, nftsImmutableXGold, isEqual))
+  }, [nftsImmutableXGold])
+
+  useDeepCompareEffect(() => {
+    setCollections((data) => unionWith(data, nftsImmutableXRangers, isEqual))
+  }, [nftsImmutableXRangers])
 
   return {
-    collections: nfts,
+    collections,
     loading,
   }
 }
