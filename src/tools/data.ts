@@ -1,6 +1,28 @@
-import { assign, cloneDeep, concat, remove } from 'lodash'
+import { assign, cloneDeep, concat } from 'lodash'
 
 import { NFTE4CRanger } from '../types'
+
+/**
+ * CollectionKey
+ * @param data
+ * @returns
+ */
+const collectionKey = (data: NFTE4CRanger): string => `${data.address}:${data.tokenId}:${data.name}:${data.status}`
+
+/**
+ * CollectionArrayObjectConvertedToMap
+ * @param data
+ * @returns
+ */
+const collectionArrayObjectConvertedToMap = (data: NFTE4CRanger[]): Map<string, NFTE4CRanger> => {
+  const _data = new Map()
+
+  data.forEach((item) => {
+    _data.set(collectionKey(item), item)
+  })
+
+  return _data
+}
 
 /**
  * Merged Collections
@@ -8,23 +30,19 @@ import { NFTE4CRanger } from '../types'
  * @param newData
  * @returns
  */
-export const mergedCollections = (oldData: NFTE4CRanger[], newData: NFTE4CRanger[]) => {
+export const mergedCollections = (oldData: NFTE4CRanger[], newData: NFTE4CRanger[]): NFTE4CRanger[] => {
   const oldDataCloneDeep = cloneDeep(oldData)
-  const newDataCloneDeep = cloneDeep(newData)
+  const newDataMap = collectionArrayObjectConvertedToMap(newData)
 
-  for (let i = 0; i < oldDataCloneDeep.length; i++) {
-    const item = oldDataCloneDeep[i]
-    // console.log('oldDataCloneDeep', oldDataCloneDeep)
-    // console.log('newDataCloneDeep', newDataCloneDeep)
-    const idx = newDataCloneDeep.findIndex(
-      (e) =>
-        item.address === e.address && item.tokenId === e.tokenId && item.name === e.name && item.status === e.status
-    )
-    if (~idx) {
-      oldDataCloneDeep[i] = assign(item, newDataCloneDeep[idx])
-      remove(newDataCloneDeep, (_, index) => idx === index)
+  oldDataCloneDeep.forEach((item) => {
+    const key = collectionKey(item)
+    const result = newDataMap.get(key)
+
+    if (result) {
+      item = assign(item, result)
+      newDataMap.delete(key)
     }
-  }
+  })
 
-  return concat(oldDataCloneDeep, newDataCloneDeep)
+  return concat(oldDataCloneDeep, [...newDataMap.values()])
 }
