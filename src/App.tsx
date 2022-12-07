@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { Route, Routes } from 'react-router-dom'
 
 import MainSiteRoutes from './components/MainSiteRoutes'
+import { Assets } from './pages/account/assets'
 import { Games } from './pages/account/games'
 import { Home } from './pages/account/home'
 import AccountNFT from './pages/account/nft'
@@ -50,6 +51,7 @@ function App() {
       <Route path="/account/settings" element={<Settings />} />
       <Route path="/account/home" element={<Home />} />
       <Route path="/account/games" element={<Games />} />
+      <Route path="/account/assets" element={<Assets />} />
       <Route path="/gallery" element={<Gallery />} />
       <Route path="*" element={<MainSiteRoutes />} />
     </Routes>
