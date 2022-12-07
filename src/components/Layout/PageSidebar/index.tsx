@@ -56,11 +56,14 @@ export function PageSidebar(props: PageSidebarProps) {
               <IconAccount className="w-36px h-36px" />
             </SideNavItem>
           </Link>
-          <Link to="/account/assets">
+          {/* <Link to="/account/assets">
             <SideNavItem name="My Game Assets">
               <IconWidgets className="w-36px h-36px" />
             </SideNavItem>
-          </Link>
+          </Link> */}
+          <SideNavItem name="My Game Assets">
+            <IconWidgets className="w-36px h-36px" />
+          </SideNavItem>
         </div>
         <div className="flex flex-col items-center gap-24px">
           <Link to="/account/settings">
