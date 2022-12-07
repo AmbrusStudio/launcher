@@ -6,16 +6,28 @@ import FilterChecked from '../../Icon/FilterChecked'
 import FilterClose from '../../Icon/FilterClose'
 import FilterOpen from '../../Icon/FilterOpen'
 
-export type FilterListItem = {
+type FilterItemBase = {
   label: string
+}
+
+export type FilterListItem = FilterItemBase & {
   count: number
   isChecked: boolean
 }
 
-export type FilterItem = {
-  label: string
+export type FilterItem = FilterItemBase & {
   isOpen: boolean
   list: FilterListItem[]
+}
+
+type FilterHeadProps = {
+  className?: string
+  title?: string
+}
+
+function FilterHead(props: FilterHeadProps) {
+  const { className, title = 'Filters' } = props
+  return <div className={classNames('border-y-2px py-4 text-5 leading-6 font-bold uppercase', className)}>{title}</div>
 }
 
 type FilterItemProps = Omit<FilterItem, 'list'> & {
@@ -42,7 +54,7 @@ function FilterItem(props: FilterItemProps) {
       id={`filter-item-${index}-${label}`}
       className={classNames(
         'flex items-center justify-between',
-        'py-4 border-b-1px border-grey-dark',
+        'py-4 border-b-1px',
         toggleable && 'cursor-pointer',
         className
       )}
@@ -51,8 +63,8 @@ function FilterItem(props: FilterItemProps) {
       <span className="text-14px leading-18px text-white uppercase">{label}</span>
       {toggleable && (
         <React.Fragment>
-          {isOpen && <FilterClose className="text-12px" />}
-          {!isOpen && <FilterOpen className="text-12px" />}
+          {isOpen && <FilterClose className="!text-12px" />}
+          {!isOpen && <FilterOpen className="!text-12px" />}
         </React.Fragment>
       )}
     </div>
@@ -81,64 +93,67 @@ function FilterListItem(props: FilterListItemProps) {
   return (
     <div
       id={`filter-list-item-${parentIndex}-${index}-${label}`}
-      className={classNames(
-        'flex items-center justify-between p-3',
-        'border-b-1 border-black-bg cursor-pointer',
-        className
-      )}
+      className={classNames('flex items-center justify-between p-3', 'border-b-1 cursor-pointer', className)}
       onClick={(e) => handleFilterListItemClick(e, parentIndex, index)}
     >
       <span className="text-14px leading-18px">
         <span className="text-white">{label}</span>
         <span className="text-white/50 m-l-1">({numbro(count).format({ thousandSeparated: true })})</span>
       </span>
-      {isChecked && <FilterChecked className="text-12px text-rust" />}
+      {isChecked && <FilterChecked className="!text-12px text-rust" />}
     </div>
   )
 }
 
 type FilterProps = {
+  filterWrapperClass?: string
+  filterHeadClass?: string
   filterItemClass?: string
   filterListItemClass?: string
-  readonly filter: FilterItem[]
+  filterTitle?: string
+  readonly filters: FilterItem[]
   onToggleFilterItem: (index: number, open: boolean) => void
   onFilterListItemClick: (parentIndex: number, childIndex: number, checked: boolean) => void
 }
 
 export function Filter(props: FilterProps) {
-  const { filter, filterItemClass, filterListItemClass, onToggleFilterItem, onFilterListItemClick } = props
+  const { filters, onToggleFilterItem, onFilterListItemClick } = props
+  const { filterWrapperClass, filterHeadClass, filterItemClass, filterListItemClass, filterTitle } = props
 
   return (
-    <ul className={classNames('select-none overflow-auto max-height-category filter-category-scrollbar')}>
-      {filter.map((item, parentIndex) => (
-        <li key={`filter-item-${parentIndex}`}>
-          <FilterItem
-            className={filterItemClass}
-            index={parentIndex}
-            label={item.label}
-            toggleable={!!item.list.length}
-            isOpen={item.isOpen}
-            onToggleFilterItem={onToggleFilterItem}
-          />
-          {item.isOpen && (
-            <ul className="max-h-252px overflow-auto filter-category-scrollbar">
-              {item.list.map((listItem, childIndex) => (
-                <li key={`filter-list-item-${parentIndex}-${childIndex}`}>
-                  <FilterListItem
-                    className={filterListItemClass}
-                    parentIndex={parentIndex}
-                    index={childIndex}
-                    label={listItem.label}
-                    count={listItem.count}
-                    isChecked={listItem.isChecked}
-                    onFilterListItemClick={onFilterListItemClick}
-                  />
-                </li>
-              ))}
-            </ul>
-          )}
-        </li>
-      ))}
-    </ul>
+    <div className={filterWrapperClass}>
+      <FilterHead className={filterHeadClass} title={filterTitle} />
+      <ul className={classNames('select-none overflow-auto max-height-category filter-category-scrollbar')}>
+        {filters.map((item, parentIndex) => (
+          <li key={`filter-item-${parentIndex}`}>
+            <FilterItem
+              className={filterItemClass}
+              index={parentIndex}
+              label={item.label}
+              toggleable={!!item.list.length}
+              isOpen={item.isOpen}
+              onToggleFilterItem={onToggleFilterItem}
+            />
+            {item.isOpen && (
+              <ul className="max-h-252px overflow-auto filter-category-scrollbar">
+                {item.list.map((listItem, childIndex) => (
+                  <li key={`filter-list-item-${parentIndex}-${childIndex}`}>
+                    <FilterListItem
+                      className={filterListItemClass}
+                      parentIndex={parentIndex}
+                      index={childIndex}
+                      label={listItem.label}
+                      count={listItem.count}
+                      isChecked={listItem.isChecked}
+                      onFilterListItemClick={onFilterListItemClick}
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
