@@ -129,9 +129,11 @@ function AccountNavList(props: AccountNavListProps) {
           <IconAccount className="w-36px h-36px" />
         </AccountNavItem>
       </Link>
-      <AccountNavItem name="My Game Assets">
-        <IconWidgets className="w-36px h-36px" />
-      </AccountNavItem>
+      <Link to="/account/assets">
+        <AccountNavItem name="My Game Assets">
+          <IconWidgets className="w-36px h-36px" />
+        </AccountNavItem>
+      </Link>
       <Link to="/account/settings">
         <AccountNavItem name="Settings" variant="tool">
           <IconSettings className="w-36px h-36px" />
