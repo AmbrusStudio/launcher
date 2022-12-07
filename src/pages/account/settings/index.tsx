@@ -55,6 +55,7 @@ export function Settings() {
       if (!walletInfo) return await imxLogin()
       const res = await walletBind()
       if (!res.isOk) return showSnackbar(res.error.message, 'error')
+      return true
     } finally {
       setMetamaskBinding(false)
     }
@@ -104,7 +105,7 @@ export function Settings() {
         walletAccount={shortenIfAddress(walletInfo?.address)}
         metamaskButtonDisabled={metamaskBinding}
         disconnectButtonDisabled={metamaskBinding}
-        onMetamaskClick={handleBindWalletClick}
+        onConnectWalletClick={handleBindWalletClick}
         onDisconnectClick={handleUnbindWalletClick}
       />
     </AccountCenterPageLayout>
