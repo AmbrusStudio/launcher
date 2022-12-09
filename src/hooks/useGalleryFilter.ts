@@ -85,12 +85,12 @@ export function useGalleryFilter(pureGold: boolean) {
   }, [galleryMetadata])
 
   const galleryFilterStatus = useMemo<Filter[]>(() => {
-    return galleryFilter.map((i) => ({
+    return galleryFilter.map<Filter>((i) => ({
       ...i,
-      is_open: false,
-      list: i.list.map((j) => ({
+      isOpen: false,
+      list: i.list.map<FilterList>((j) => ({
         ...j,
-        is_checked: false,
+        isChecked: false,
       })),
     }))
   }, [galleryFilter])
