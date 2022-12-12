@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import classNames from 'classnames'
-import { FC, useState } from 'react'
+import { FC, useContext, useState } from 'react'
 
+import { StakeCtx } from '../../../context'
 import { useStatusCheck } from '../../../hooks/useStatusCheck'
-import { NFTE4CRanger, StakeInfoDataType } from '../../../types'
+import { NFTE4CRanger } from '../../../types'
 import { getHolderByAddress } from '../../../utils'
 import CheckCard from '../CheckCard'
 import ConfirmUnstake from '../ConfirmUnstake'
@@ -29,12 +30,11 @@ const Title = styled.h3`
 interface StatusCheckProps {
   readonly unstakeLoading: boolean
   readonly nft: NFTE4CRanger
-  readonly infoData: StakeInfoDataType
   toggle: (value: boolean) => void
   unstake: () => void
 }
 
-const StatusCheckDetail: FC<StatusCheckProps> = ({ unstakeLoading, nft, infoData, toggle, unstake }) => {
+const StatusCheckDetail: FC<StatusCheckProps> = ({ unstakeLoading, nft, toggle, unstake }) => {
   const [visibleUnstake, setVisibleUnstake] = useState<boolean>(false)
   const [visibleUpgrade, setVisibleUpgrade] = useState<boolean>(false)
 
@@ -45,13 +45,15 @@ const StatusCheckDetail: FC<StatusCheckProps> = ({ unstakeLoading, nft, infoData
     nft.address
   )
 
+  const stakeCtx = useContext(StakeCtx)
+
   return (
     <WrapperInfo className="w-[46.5%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0 overflow-auto">
-      <Title>{infoData.title}</Title>
+      <Title>{stakeCtx?.checkAnnouncement.title}</Title>
       {/* TODO ul li style */}
       <p
         className="font-normal text-base leading-[30px] text-white not-italic mt-3 mb-auto"
-        dangerouslySetInnerHTML={{ __html: infoData.description }}
+        dangerouslySetInnerHTML={{ __html: stakeCtx?.checkAnnouncement.description || '' }}
       ></p>
 
       <CheckCard

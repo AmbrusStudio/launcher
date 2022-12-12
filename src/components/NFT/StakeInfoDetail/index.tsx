@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import classNames from 'classnames'
-import { FC } from 'react'
+import { FC, useContext } from 'react'
 
-import { StakeInfoDataType } from '../../../types'
+import { StakeCtx } from '../../../context'
 
 const WrapperInfo = styled.div`
   background: rgba(0, 0, 0, 0.7);
@@ -40,16 +40,17 @@ const Description = styled.div`
 interface StakeInfoProps {
   readonly stakeLoading: boolean
   readonly address: string
-  readonly infoData: StakeInfoDataType
   toggle: (value: boolean) => void
   stake: () => void
 }
 
-const StakeInfoDetail: FC<StakeInfoProps> = ({ stakeLoading, address, infoData, toggle, stake }) => {
+const StakeInfoDetail: FC<StakeInfoProps> = ({ stakeLoading, address, toggle, stake }) => {
+  const stakeCtx = useContext(StakeCtx)
+
   return (
     <WrapperInfo className="w-[46.5%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0 overflow-auto">
-      <Title>{infoData.title}</Title>
-      <Description dangerouslySetInnerHTML={{ __html: infoData.description }}></Description>
+      <Title>{stakeCtx?.upgradeAnnouncement.title}</Title>
+      <Description dangerouslySetInnerHTML={{ __html: stakeCtx?.upgradeAnnouncement.description || '' }}></Description>
       <Stack spacing={1.5} className="mt-6">
         <button
           disabled={stakeLoading}

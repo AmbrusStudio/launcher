@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { FC } from 'react'
 
-import { stakeToUpgrade } from '../../../data'
+import { stakeUpgrade } from '../../../data'
 import { NFTE4CRanger } from '../../../types'
 import Announcements from '../Announcements'
 import Modal from '../Modal'
@@ -16,12 +16,12 @@ interface Props {
 
 const StakeInfoModal: FC<Props> = ({ visible, loading = false, nft, close, stake }) => {
   return (
-    <Modal visible={visible} title={stakeToUpgrade.title} close={close}>
+    <Modal visible={visible} title={stakeUpgrade.title} close={close}>
       <div className="bg-white backdrop-blur-md px-6 pt-6 pb-27 grid gap-y-[36px]">
         <Announcements address={nft.address} />
       </div>
       <div className="bg-black backdrop-blur-md pt-6 pb-27 px-6">
-        <p className="font-normal text-base leading-[30px] text-white not-italic">{stakeToUpgrade.description}</p>
+        <p className="font-normal text-base leading-[30px] text-white not-italic">{stakeUpgrade.description}</p>
       </div>
       <button
         disabled={loading}

@@ -39,9 +39,11 @@ function AccountNFT() {
 
   return (
     <AccountCenterPageLayout title="My" subtitle="NFTs" className="pl-0 pr-0">
-      <div className="flex justify-between">
+      <div className="relative">
         <TabsStake tabPanelStakeValue={tabPanelStakeValue} setTabPanelStakeValue={setTabPanelStakeValue} />
-        <Earned />
+        <div className="absolute top-0 right-0 z-1">
+          <Earned />
+        </div>
       </div>
 
       <>
