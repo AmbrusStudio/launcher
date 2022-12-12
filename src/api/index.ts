@@ -1,3 +1,3 @@
 export * from './account'
+export * from './block'
 export * from './game'
-export * from './layout'

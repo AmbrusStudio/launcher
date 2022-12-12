@@ -1,5 +1,6 @@
 export * from './useAccount'
 export * from './useGameClient'
+export * from './useHeader'
 export * from './useImmutableX'
 export * from './useNumStrState'
 export * from './usePortal'

@@ -28,7 +28,9 @@ export function GameNavButton(props: GameNavButtonProps) {
     <ExternalLink to={href} title={name}>
       <NavContent
         className={classNames(
-          'game-nav-button flex flex-row flex-nowrap items-center xl:px-24px rounded-8px font-bold text-20px leading-60px text-white text-left uppercase cursor-pointer hover:bg-black-bg',
+          'game-nav-button flex flex-row flex-nowrap items-center',
+          'font-bold text-20px leading-60px text-white text-left uppercase',
+          'xl:px-24px rounded-8px cursor-pointer hover:bg-black-bg',
           active && '!bg-black-bg'
         )}
         dangerouslySetInnerHTML={{ __html: cleanupHTML(name) }}

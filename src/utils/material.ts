@@ -1,9 +1,8 @@
+import { BlockInfo } from '../api'
+
 type MaterialData = { type: string; url: string }
 
-type Material = {
-  pc: MaterialData
-  mobole: MaterialData
-}
+type Material = { pc: MaterialData; mobole: MaterialData }
 
 function getMaterialType(url: string): string {
   if (!url) return ''
@@ -34,4 +33,12 @@ export function getResponsiveMaterial(pcUrl: string, moboleUrl: string): Materia
     }
   }
   return material.pc
+}
+
+export type BlockInfoMaterial = { id: number; url: string; img: string }
+
+export function getBlockInfoMaterial(info: BlockInfo): BlockInfoMaterial {
+  const { id, material, material_mob, url } = info
+  const materialData = getResponsiveMaterial(material, material_mob)
+  return { id, url, img: materialData.url }
 }
