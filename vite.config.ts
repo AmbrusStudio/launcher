@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 // Switch from @esbuild-plugins/node-modules-polyfill to node-stdlib-browser because of https://github.com/remorses/esbuild-plugins/issues/14
 import NodeStdLibBrowser from 'node-stdlib-browser'
 import Unocss from 'unocss/vite'
-import { defineConfig } from 'vite'
+import { defineConfig, Plugin } from 'vite'
 import { chunkSplitPlugin } from 'vite-plugin-chunk-split'
 import { compression } from 'vite-plugin-compression2'
 

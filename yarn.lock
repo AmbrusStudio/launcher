@@ -8019,6 +8019,13 @@ swiper@^8.4.3:
     dom7 "^4.0.4"
     ssr-window "^4.0.2"
 
+swr@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-2.0.0.tgz#91d999359e2be92de1a41f6b6711d72be20ffdbd"
+  integrity sha512-IhUx5yPkX+Fut3h0SqZycnaNLXLXsb2ECFq0Y29cxnK7d8r7auY2JWNbCW3IX+EqXUg3rwNJFlhrw5Ye/b6k7w==
+  dependencies:
+    use-sync-external-store "^1.2.0"
+
 text-extensions@^1.0.0:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/text-extensions/-/text-extensions-1.9.0.tgz#1853e45fee39c945ce6f6c36b2d659b5aabc2a26"
@@ -8331,7 +8338,7 @@ use-local-storage-state@^18.1.1:
   resolved "https://registry.yarnpkg.com/use-local-storage-state/-/use-local-storage-state-18.1.1.tgz#40e535aebed7770258e0a3a7b6923a86d9c0c52f"
   integrity sha512-09bl6q3mkSlkEt8KeBPCmdPEWEojWYF70Qbz+7wkfQX1feaFITM9m84+h0Jr6Cnf/IvpahkFh7UbX2VNN3ioTQ==
 
-use-sync-external-store@^1.0.0:
+use-sync-external-store@^1.0.0, use-sync-external-store@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.2.0.tgz#7dbefd6ef3fe4e767a0cf5d7287aacfb5846928a"
   integrity sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==

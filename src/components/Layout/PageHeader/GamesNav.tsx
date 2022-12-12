@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { getHeaderGameInfo, HeaderGameInfo, HeaderGameItem } from '../../../api'
+import { HeaderGameItem, useHeaderGameInfo } from '../../../hooks'
 import { classNames } from '../../../utils'
 import { GameNavButton } from './GameNavButton'
 import { GameNavImage } from './GameNavImage'
@@ -11,18 +11,21 @@ type GamesNavProps = {
 }
 
 export function GamesNav(props: GamesNavProps) {
-  const [gameInfo, setGameInfo] = React.useState<HeaderGameInfo | undefined>()
-  const [gameInfoActive, setGameInfoActive] = React.useState<HeaderGameItem>({ name: '', url: '', img: '' })
-  const handleButtonHover = React.useCallback((info: HeaderGameItem) => setGameInfoActive(info), [])
-  const fetchGameInfoData = React.useCallback(async () => {
-    const info = await getHeaderGameInfo()
-    setGameInfo(info)
-    setGameInfoActive(info.games[0])
+  const { games, exps, isLoading } = useHeaderGameInfo()
+  const [activeInfoId, setActiveInfoId] = React.useState(0)
+  const activeInfo = React.useMemo(() => {
+    const findGameInfo = games?.find((game) => game.id === activeInfoId)
+    const findExpInfo = exps?.find((exp) => exp.id === activeInfoId)
+    return findGameInfo || findExpInfo
+  }, [activeInfoId, exps, games])
+  const handleButtonHover = React.useCallback((event: React.MouseEvent, info: HeaderGameItem) => {
+    event.stopPropagation()
+    setActiveInfoId(info.id)
   }, [])
 
   React.useEffect(() => {
-    fetchGameInfoData()
-  }, [fetchGameInfoData])
+    if (!isLoading && games) setActiveInfoId(games[0].id)
+  }, [games, isLoading])
 
   return (
     <div className={classNames('hidden w-full', props.open && '!block')}>
@@ -30,21 +33,21 @@ export function GamesNav(props: GamesNavProps) {
         <div className="flex flex-col gap-12px">
           <GameNavTitle className="pl-24px hidden xl:block">Games</GameNavTitle>
           <div className="flex-col gap-12px xl:min-w-360px hidden xl:flex">
-            {gameInfo?.games?.map((game, index) => (
+            {games?.map((game, index) => (
               <GameNavButton
-                key={`${game.url}-${index}`}
+                key={`${game.id}-${game.name}-${index}`}
                 to={game.url}
                 name={game.name}
-                active={game.url === gameInfoActive?.url}
+                active={game.id === activeInfo?.id}
                 soon={game.soon}
-                onMouseOver={() => handleButtonHover(game)}
+                onMouseOver={(e) => handleButtonHover(e, game)}
               />
             ))}
           </div>
           <div className="flex flex-col gap-24px mt-32px xl:hidden">
-            {gameInfo?.games?.map((game, index) => (
+            {games?.map((game, index) => (
               <GameNavImage
-                key={`${game.url}-${index}`}
+                key={`${game.id}-${game.name}-${index}`}
                 to={game.url}
                 title={game.name}
                 img={game.img}
@@ -56,25 +59,22 @@ export function GamesNav(props: GamesNavProps) {
         <div className="flex flex-col gap-12px">
           <GameNavTitle className="xl:pl-24px">Gaming Experience</GameNavTitle>
           <div className="flex flex-col gap-12px xl:min-w-300px">
-            {gameInfo?.exp?.map((exp, index) => (
+            {exps?.map((exp, index) => (
               <GameNavButton
-                key={`${exp.url}-${index}`}
+                key={`${exp.id}-${exp.name}-${index}`}
                 to={exp.url}
                 name={exp.name}
-                active={exp.url === gameInfoActive?.url}
+                active={exp.id === activeInfo?.id}
                 soon={exp.soon}
-                onMouseOver={() => handleButtonHover(exp)}
+                onMouseOver={(e) => handleButtonHover(e, exp)}
               />
             ))}
           </div>
         </div>
         <div className="hidden xl:block pt-28px">
-          <GameNavImage
-            to={gameInfoActive?.url}
-            title={gameInfoActive?.name}
-            img={gameInfoActive?.img}
-            soon={gameInfoActive?.soon}
-          />
+          {activeInfo && (
+            <GameNavImage to={activeInfo.url} title={activeInfo.name} img={activeInfo.img} soon={activeInfo.soon} />
+          )}
         </div>
       </nav>
     </div>

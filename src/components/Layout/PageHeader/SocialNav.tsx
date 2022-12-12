@@ -1,6 +1,4 @@
-import React from 'react'
-
-import { getHeaderLinks, HeaderLink } from '../../../api'
+import { useHeaderLinks } from '../../../hooks'
 import { classNames } from '../../../utils'
 import { SocialNavItem } from './SocialNavItem'
 
@@ -9,21 +7,15 @@ type SocialNavProps = {
 }
 
 export function SocialNav(props: SocialNavProps) {
-  const [headers, setHeaders] = React.useState<HeaderLink[]>([])
-  const fetchHeaders = React.useCallback(async () => {
-    const headers = await getHeaderLinks()
-    setHeaders(headers)
-  }, [])
+  const { links } = useHeaderLinks()
 
-  React.useEffect(() => {
-    fetchHeaders()
-  }, [fetchHeaders])
+  if (!links) return null
   return (
     <nav
       className={classNames('flex flex-row flex-nowrap items-center gap-24px text-white', props.className)}
       title="Social Nav"
     >
-      {headers.map((header) => (
+      {links.map((header) => (
         <SocialNavItem to={header.url} img={header.img} key={header.url} title="Social Link" />
       ))}
     </nav>
