@@ -27,10 +27,12 @@ const BlindBoxModes = {
   [Mainnet.chainId]: {
     [TraitName.Rin]: false,
     [TraitName.Kit]: false,
+    [TraitName.Thorn]: false,
   },
   [Goerli.chainId]: {
     [TraitName.Rin]: false,
     [TraitName.Kit]: showBlindBoxMode(1669722000000),
+    [TraitName.Thorn]: showBlindBoxMode(1669722000000),
   },
 }
 
@@ -42,6 +44,11 @@ export const Blindbox = {
   },
   [TraitName.Kit]: {
     BlindBoxMode: BlindBoxModes[defaultChainId][TraitName.Kit],
+    BlindBoxVideo: 'https://ambrus.s3.amazonaws.com/1667537607898_0.88_Blindbox.mp4',
+    BlindBoxPictures: 'https://ambrus.s3.amazonaws.com/1667538431877_0.51_blindbox.gif',
+  },
+  [TraitName.Thorn]: {
+    BlindBoxMode: BlindBoxModes[defaultChainId][TraitName.Thorn],
     BlindBoxVideo: 'https://ambrus.s3.amazonaws.com/1667537607898_0.88_Blindbox.mp4',
     BlindBoxPictures: 'https://ambrus.s3.amazonaws.com/1667538431877_0.51_blindbox.gif',
   },

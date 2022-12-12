@@ -57,7 +57,7 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
       {nft && (
         <>
           <div className="pb-18 px-6 xl:px-2.5]">
-            <NFTDetails nft={nft} tokenId={nft.tokenId} />
+            <NFTDetails nft={nft} />
 
             <Actions className="fixed left-6 bottom-6 right-6">
               <TokenActions

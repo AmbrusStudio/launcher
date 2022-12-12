@@ -13,7 +13,7 @@ import {
   E4CRanger_RangersEdition_Holder,
   E4CRanger_UltimateEdition,
 } from '../contracts'
-import { stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
+import { stakeAnnouncementEarn, stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
 import {
   Metadata,
   MetadataResponse,
@@ -373,6 +373,8 @@ export const getSeries = (trait: TraitItem[]): string => {
     return '1'
   } else if (name === TraitName.Kit) {
     return '2'
+  } else if (name === TraitName.Thorn) {
+    return '3'
   } else {
     return ''
   }

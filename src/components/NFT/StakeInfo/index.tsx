@@ -1,69 +1,30 @@
-import styled from '@emotion/styled'
-import { Stack } from '@mui/material'
-import classNames from 'classnames'
 import { FC } from 'react'
 
-import { stakeToUpgrade } from '../../../data'
-import { NFTE4CRanger } from '../../../types'
+import { NFTE4CRanger, StakeInfoDataType } from '../../../types'
 import Announcements from '../Announcements'
-
-const WrapperInfo = styled.div`
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(12px);
-`
-
-const Title = styled.h3`
-  font-family: 'Montserrat', sans-serif;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 29px;
-  text-transform: uppercase;
-  color: #ffffff;
-  padding: 0;
-  margin: 0;
-`
-const Description = styled.p`
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 30px;
-  color: #ffffff;
-  padding: 0;
-  margin: 12px 0 auto 0;
-`
+import StakeInfoDetail from '../StakeInfoDetail'
 
 interface StakeInfoProps {
   readonly stakeLoading: boolean
   readonly nft: NFTE4CRanger
+  readonly infoData: StakeInfoDataType
   toggle: (value: boolean) => void
   stake: () => void
 }
 
-const StakeInfo: FC<StakeInfoProps> = ({ stakeLoading, nft, toggle, stake }) => {
+const StakeInfo: FC<StakeInfoProps> = ({ stakeLoading, nft, infoData, toggle, stake }) => {
   return (
     <div className="absolute top-0 right-0 bottom-0 left-0 flex">
       <div className="w-[53.5%] overflow-auto float-left bg-white p-6 grid gap-y-20.5">
-        <Announcements address={nft.address} />
+        <Announcements address={'0xabd0857baad28f6c7c3814e9e70e4eb54566f3ae'} />
       </div>
-      <WrapperInfo className="w-[46.5%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0 overflow-auto">
-        <Title>{stakeToUpgrade.title}</Title>
-        <Description>{stakeToUpgrade.description}</Description>
-        <Stack spacing={1.5} className="mt-6">
-          <button
-            disabled={stakeLoading}
-            className={classNames('u-btn u-btn-primary', {
-              loading: stakeLoading,
-            })}
-            onClick={() => stake()}
-          >
-            Start Staking Now
-          </button>
-          <button className="u-btn" onClick={() => toggle(false)}>
-            Cancel
-          </button>
-        </Stack>
-      </WrapperInfo>
+      <StakeInfoDetail
+        infoData={infoData}
+        stakeLoading={stakeLoading}
+        toggle={toggle}
+        stake={stake}
+        address={'0xabd0857baad28f6c7c3814e9e70e4eb54566f3ae'}
+      />
     </div>
   )
 }

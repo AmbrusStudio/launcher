@@ -1,12 +1,11 @@
 import { FC, useState } from 'react'
 
-import { stakeToUpgrade, statusCheckData } from '../../../data'
+import { stakeCheckEarn, stakeUpgradeEarn } from '../../../data'
 // import Star from '../../../components/Icon/Star'
 import { useStake } from '../../../hooks/useStake'
 import { NFTE4CRanger } from '../../../types'
 import { imageSizeConversion } from '../../../utils'
 import TokenMedia from '../../TokenMedia'
-import DetailsEdition from '../DetailsEdition'
 import DetailsName from '../DetailsName'
 import NFTDetails from '../NFTDetails'
 import StakeInfo from '../StakeInfo'
@@ -32,7 +31,6 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
       <div className="w-[46.5%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0">
         <section className="flex items-start justify-between gap-2">
           <DetailsName nft={nft} tokenId={tokenId} />
-          <DetailsEdition nft={nft} />
         </section>
         <NFTDetails nft={nft} />
 
@@ -47,7 +45,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
 
       {visibleInfo && (
         <StakeInfo
-          infoData={stakeToUpgrade}
+          infoData={stakeUpgradeEarn}
           stakeLoading={stakeLoading}
           toggle={(value) => setVisibleInfo(value)}
           stake={() => onStake(tokenId)}
@@ -56,7 +54,7 @@ const NFTItem: FC<NFTItemProps> = ({ nft, tokenId }) => {
       )}
       {visibleStatusCheck && (
         <StatusCheck
-          infoData={statusCheckData}
+          infoData={stakeCheckEarn}
           unstakeLoading={unstakeLoading}
           nft={nft}
           toggle={(value) => setVisibleStatusCheck(value)}

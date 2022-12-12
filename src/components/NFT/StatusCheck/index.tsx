@@ -1,118 +1,30 @@
-import styled from '@emotion/styled'
-import { Stack } from '@mui/material'
-import classNames from 'classnames'
-import { FC, useState } from 'react'
+import { FC } from 'react'
 
-import { statusCheckData } from '../../../data'
-import { useStatusCheck } from '../../../hooks/useStatusCheck'
-import { NFTE4CRanger } from '../../../types'
-import { getHolderByAddress } from '../../../utils'
+import { NFTE4CRanger, StakeInfoDataType } from '../../../types'
 import Announcements from '../Announcements'
-import CheckCard from '../CheckCard'
-import ConfirmUnstake from '../ConfirmUnstake'
-import ConfirmUpgrade from '../ConfirmUpgrade'
-
-const WrapperInfo = styled.div`
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(12px);
-`
-const Title = styled.h3`
-  font-family: 'Montserrat', sans-serif;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 29px;
-  text-transform: uppercase;
-  color: #ffffff;
-  padding: 0;
-  margin: 0;
-`
+import StatusCheckDetail from '../StatusCheckDetail'
 
 interface StatusCheckProps {
   readonly unstakeLoading: boolean
   readonly nft: NFTE4CRanger
+  readonly infoData: StakeInfoDataType
   toggle: (value: boolean) => void
   unstake: () => void
 }
 
-const StatusCheck: FC<StatusCheckProps> = ({ unstakeLoading, nft, toggle, unstake }) => {
-  const [visibleUnstake, setVisibleUnstake] = useState<boolean>(false)
-  const [visibleUpgrade, setVisibleUpgrade] = useState<boolean>(false)
-
-  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(
-    nft.tokenId,
-    getHolderByAddress(nft.address),
-    nft.status,
-    nft.address
-  )
-
+const StatusCheck: FC<StatusCheckProps> = ({ unstakeLoading, nft, infoData, toggle, unstake }) => {
   return (
     <div className="absolute top-0 right-0 bottom-0 left-0 flex">
       <div className="w-[53.5%] overflow-auto float-left bg-white p-6 grid gap-y-20.5">
-        <Announcements address={nft.address} />
+        <Announcements address={'0xabd0857baad28f6c7c3814e9e70e4eb54566f3ae'} />
       </div>
-      <WrapperInfo className="w-[46.5%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0 overflow-auto">
-        <Title>{statusCheckData.title}</Title>
-        <p className="font-normal text-base leading-[30px] text-white not-italic mt-3 mb-auto">
-          {statusCheckData.description}
-        </p>
-
-        <CheckCard
-          duration={duration}
-          timeLeft={timeLeft}
-          stakedPercentage={stakedPercentage}
-          timeStatus={timeStatus}
-          soulboundBadgeStatus={soulboundBadgeStatus}
-        />
-
-        <Stack
-          spacing={1.5}
-          sx={{
-            mt: 3,
-          }}
-        >
-          <button
-            className={classNames('u-btn', {
-              'u-btn-primary': status,
-              'u-btn-disabled': !status,
-              loading: unstakeLoading,
-            })}
-            disabled={!status || unstakeLoading}
-            onClick={() => setVisibleUpgrade(true)}
-          >
-            Upgrade
-          </button>
-          <button
-            disabled={unstakeLoading}
-            className={classNames('u-btn', {
-              loading: unstakeLoading,
-            })}
-            onClick={() => setVisibleUnstake(true)}
-          >
-            Unstake
-          </button>
-          <button className="u-btn" onClick={() => toggle(false)}>
-            Cancel
-          </button>
-        </Stack>
-
-        <ConfirmUnstake
-          visible={visibleUnstake}
-          toggle={setVisibleUnstake}
-          confirm={() => {
-            setVisibleUnstake(false)
-            unstake()
-          }}
-        />
-        <ConfirmUpgrade
-          visible={visibleUpgrade}
-          toggle={setVisibleUpgrade}
-          confirm={() => {
-            setVisibleUpgrade(false)
-            unstake()
-          }}
-        />
-      </WrapperInfo>
+      <StatusCheckDetail
+        infoData={infoData}
+        unstakeLoading={unstakeLoading}
+        nft={nft}
+        toggle={toggle}
+        unstake={unstake}
+      />
     </div>
   )
 }

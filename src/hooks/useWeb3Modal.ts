@@ -30,6 +30,8 @@ export function useWeb3Modal(): UseWeb3Modal {
     if (web3Modal.cachedProvider === 'walletconnect' && !store.get('walletconnect')) {
       await web3Modal.clearCachedProvider()
     }
+    deactivate()
+  }
 
     const provider = await web3Modal.connect()
     await activate(provider)
