@@ -188,9 +188,9 @@ export function useMetadataImmtableXByTokenIds(collections: ImmutableXL2Overall[
             }
             const { name, description, image, attributes } = item.value.data
             data.set(tokenId, {
-              name: name,
-              description: description,
-              image: image,
+              name,
+              description,
+              image,
               trait: attributes,
             })
           }

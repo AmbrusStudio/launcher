@@ -79,6 +79,13 @@ export const formatMetadata = (
   return result
 }
 
+/**
+ * Format Metadata ImmutableX
+ * @param metadata
+ * @param stakingStatus
+ * @param status
+ * @returns
+ */
 export const formatMetadataImmutableX = ({
   metadata,
   stakingStatus,

@@ -25,6 +25,10 @@ export function useMetadataBaseURL() {
     (state: RootState) => state.metadata.UltimateEdition[defaultChainId].baseURI
   )
 
+  /**
+   * Get BaseURL By Address
+   * @param address
+   */
   const getBaseURLByAddress = useCallback(
     (address: string): string | undefined => {
       if (!isAddress(address)) {
