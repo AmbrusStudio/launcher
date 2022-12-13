@@ -4,14 +4,12 @@ import { useEffect, useState } from 'react'
 import {
   E4CRanger_GoldEdition,
   E4CRanger_GoldEdition_Holder,
-  E4CRanger_ImmutableX_GoldEdition,
-  E4CRanger_ImmutableX_RangersEdition,
   E4CRanger_RangersEdition,
   E4CRanger_RangersEdition_Holder,
 } from '../contracts'
 import { mergedCollections } from '../tools'
 import { NFTE4CRanger } from '../types'
-import { useERC721ImmutableXListState, useERC721ListState } from './useERC721List'
+import { useERC721ImmutableXList, useERC721ListState } from './useERC721List'
 import { useMetadataBaseURL } from './useMetadataBaseURL'
 
 export function useUserStakeCollections() {
@@ -30,18 +28,11 @@ export function useUserStakeCollections() {
     baseURL: metadadaRangersBaseURI,
   })
 
-  const { nfts: nftsImmutableXGold, loading: loadingImmutableXGold } = useERC721ImmutableXListState({
-    collection: E4CRanger_ImmutableX_GoldEdition,
-    baseURL: metadadaGoldBaseURI,
-  })
-  const { nfts: nftsImmutableXRangers, loading: loadingImmutableXRangers } = useERC721ImmutableXListState({
-    collection: E4CRanger_ImmutableX_RangersEdition,
-    baseURL: metadadaRangersBaseURI,
-  })
+  const { nfts: nftsImmutableX, loading: loadingImmutableX } = useERC721ImmutableXList()
 
   useEffect(() => {
-    setLoading(loadingGold && loadingRangers && loadingImmutableXGold && loadingImmutableXRangers)
-  }, [loadingGold, loadingRangers, loadingImmutableXGold, loadingImmutableXRangers])
+    setLoading(loadingGold && loadingRangers && loadingImmutableX)
+  }, [loadingGold, loadingRangers, loadingImmutableX])
 
   useDeepCompareEffect(() => {
     setCollections((data) => mergedCollections(data, nftsGold))
@@ -52,12 +43,8 @@ export function useUserStakeCollections() {
   }, [nftsRangers])
 
   useDeepCompareEffect(() => {
-    setCollections((data) => mergedCollections(data, nftsImmutableXGold))
-  }, [nftsImmutableXGold])
-
-  useDeepCompareEffect(() => {
-    setCollections((data) => mergedCollections(data, nftsImmutableXRangers))
-  }, [nftsImmutableXRangers])
+    setCollections((data) => mergedCollections(data, nftsImmutableX))
+  }, [nftsImmutableX])
 
   return {
     collections,

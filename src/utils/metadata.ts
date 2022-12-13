@@ -28,7 +28,7 @@ import {
   TraitItem,
   TraitName,
 } from '../types'
-import { ImmutableXStakingStatus } from '../types/immutableX'
+import { ImmutableXL2Overall } from '../types/immutableX'
 import { BlindBoxMode, traitName } from './bindbox'
 
 /**
@@ -80,30 +80,27 @@ export const formatMetadata = (
 }
 
 export const formatMetadataImmutableX = ({
-  address,
   metadata,
-  tokenIds,
   stakingStatus,
   status,
 }: {
-  address: string
-  metadata: Map<string, TokenMetadata>
-  tokenIds: string[]
-  stakingStatus: Map<string, ImmutableXStakingStatus>
+  metadata: Map<string, Metadata>
+  stakingStatus: ImmutableXL2Overall[]
   status: MetadataStatus
 }): NFTE4CRanger[] => {
   const result: NFTE4CRanger[] = []
 
-  tokenIds.forEach((tokenId) => {
-    if (metadata.has(tokenId)) {
-      const data = metadata.get(tokenId)
+  stakingStatus.forEach((value) => {
+    // Must have metadata information
+    if (metadata.has(value.tokenId)) {
+      const data = metadata.get(value.tokenId)
 
       result.push({
         ...data,
-        address,
-        tokenId: tokenId,
-        upgraded: stakingStatus.get(tokenId)?.isUpgraded,
-        staking: stakingStatus.get(tokenId)?.isStaking || false,
+        address: value.tokenAddress,
+        tokenId: value.tokenId,
+        upgraded: value.isUpgraded,
+        staking: value.isStaking || false,
         status,
       } as NFTE4CRanger)
     }
@@ -160,21 +157,16 @@ export const getBaseURLByAddress = (
     ultimateEditionBaseURL: string
   }
 ): string | undefined => {
-  if (
-    getAddress(address) === getAddress(E4CRanger_GoldEdition) ||
-    getAddress(address) === getAddress(E4CRanger_ImmutableX_GoldEdition)
-  ) {
-    return baseURL.goldEditionBaseURL
-  } else if (
-    getAddress(address) === getAddress(E4CRanger_RangersEdition) ||
-    getAddress(address) === getAddress(E4CRanger_ImmutableX_RangersEdition)
-  ) {
-    return baseURL.rangersEditionBaseURL
-  } else if (getAddress(address) === getAddress(E4CRanger_UltimateEdition)) {
-    return baseURL.ultimateEditionBaseURL
-  } else {
-    return
+  // Duplicate addresses are automatically overwritten
+  const list = {
+    [getAddress(E4CRanger_GoldEdition)]: baseURL.goldEditionBaseURL,
+    [getAddress(E4CRanger_ImmutableX_GoldEdition)]: baseURL.goldEditionBaseURL,
+    [getAddress(E4CRanger_RangersEdition)]: baseURL.rangersEditionBaseURL,
+    [getAddress(E4CRanger_ImmutableX_RangersEdition)]: baseURL.rangersEditionBaseURL,
+    [getAddress(E4CRanger_UltimateEdition)]: baseURL.ultimateEditionBaseURL,
   }
+
+  return list[getAddress(address)]
 }
 
 /**
@@ -195,19 +187,15 @@ export const getTraitEdition = (data: TokenMetadata | NFTE4CRanger | Metadata): 
  * @returns
  */
 export const getStakeAnnouncement = (address: string): StakeAnnouncement[] => {
-  if (
-    getAddress(address) === getAddress(E4CRanger_GoldEdition) ||
-    getAddress(address) === getAddress(E4CRanger_ImmutableX_GoldEdition)
-  ) {
-    return stakeAnnouncementGold
-  } else if (
-    getAddress(address) === getAddress(E4CRanger_RangersEdition) ||
-    getAddress(address) === getAddress(E4CRanger_ImmutableX_RangersEdition)
-  ) {
-    return stakeAnnouncementRangers
-  } else {
-    return []
+  // Duplicate addresses are automatically overwritten
+  const list = {
+    [getAddress(E4CRanger_GoldEdition)]: stakeAnnouncementGold,
+    [getAddress(E4CRanger_ImmutableX_GoldEdition)]: stakeAnnouncementGold,
+    [getAddress(E4CRanger_RangersEdition)]: stakeAnnouncementRangers,
+    [getAddress(E4CRanger_ImmutableX_RangersEdition)]: stakeAnnouncementRangers,
   }
+
+  return list[getAddress(address)] || []
 }
 
 /**
@@ -216,16 +204,17 @@ export const getStakeAnnouncement = (address: string): StakeAnnouncement[] => {
  * @returns
  */
 export const getHolderByAddress = (address: string): string => {
-  if (
-    getAddress(address) === getAddress(E4CRanger_GoldEdition) ||
-    getAddress(address) === getAddress(E4CRanger_ImmutableX_GoldEdition)
-  ) {
-    return E4CRanger_GoldEdition_Holder
-  } else if (
-    getAddress(address) === getAddress(E4CRanger_RangersEdition) ||
-    getAddress(address) === getAddress(E4CRanger_ImmutableX_RangersEdition)
-  ) {
-    return E4CRanger_RangersEdition_Holder
+  // Duplicate addresses are automatically overwritten
+  const list = {
+    [getAddress(E4CRanger_GoldEdition)]: E4CRanger_GoldEdition_Holder,
+    [getAddress(E4CRanger_ImmutableX_GoldEdition)]: E4CRanger_GoldEdition_Holder,
+    [getAddress(E4CRanger_RangersEdition)]: E4CRanger_RangersEdition_Holder,
+    [getAddress(E4CRanger_ImmutableX_RangersEdition)]: E4CRanger_RangersEdition_Holder,
+  }
+
+  const result = list[getAddress(address)]
+  if (result) {
+    return result
   } else {
     throw new Error('holder not found')
   }
@@ -329,18 +318,16 @@ export const getDefaultMetadataTrait = (address: string, tokenId: string): Trait
       value: '',
     },
   ]
-  const _address = getAddress(address)
 
-  if (_address === getAddress(E4CRanger_GoldEdition) || _address === getAddress(E4CRanger_ImmutableX_GoldEdition)) {
-    trait[1].value = TraitEdition.Gold
-  } else if (
-    _address === getAddress(E4CRanger_RangersEdition) ||
-    _address === getAddress(E4CRanger_ImmutableX_RangersEdition)
-  ) {
-    trait[1].value = TraitEdition.Rangers
-  } else if (_address === getAddress(E4CRanger_UltimateEdition)) {
-    trait[1].value = TraitEdition.Ultimate
+  // Duplicate addresses are automatically overwritten
+  const traitList = {
+    [getAddress(E4CRanger_GoldEdition)]: TraitEdition.Gold,
+    [getAddress(E4CRanger_ImmutableX_GoldEdition)]: TraitEdition.Gold,
+    [getAddress(E4CRanger_RangersEdition)]: TraitEdition.Rangers,
+    [getAddress(E4CRanger_ImmutableX_RangersEdition)]: TraitEdition.Rangers,
+    [getAddress(E4CRanger_UltimateEdition)]: TraitEdition.Ultimate,
   }
+  trait[1].value = traitList[getAddress(address)]
 
   if (trait[1].value) {
     const edition = trait[1].value as TraitEdition.Gold | TraitEdition.Rangers | TraitEdition.Ultimate

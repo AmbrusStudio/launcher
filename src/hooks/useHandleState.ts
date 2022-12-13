@@ -26,7 +26,7 @@ export function useHandleState() {
       } else if (state.status === 'Exception') {
         showSnackbar(state.errorMessage || 'Exception', 'error')
       }
-      console.log('state', state)
+      // console.log('state', state)
     },
     [showSnackbar]
   )
@@ -55,7 +55,7 @@ export function useHandleStateImmutableX() {
       } else if (state.status === 'Exception') {
         showSnackbar(state.errorMessage || 'Exception', 'error')
       }
-      console.log('state', state)
+      // console.log('state', state)
     },
     [showSnackbar]
   )
