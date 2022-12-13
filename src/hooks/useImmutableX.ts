@@ -44,7 +44,7 @@ export const useImmutableXUserNFTAssets = ({ user, collection }: { user: string;
           status: 'imx',
           collection,
         } as ImmutableMethodParams.ImmutableGetAssetsParamsTS)
-
+        //TODO: May have preparing_withdrawal, withdrawable status
         console.log('assetRequest', assetRequest)
 
         assets = assets.concat(assetRequest.result)
