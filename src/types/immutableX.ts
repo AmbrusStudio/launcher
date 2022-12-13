@@ -50,3 +50,13 @@ export type ImmutableXUnstake = {
   }
   timestamp: string
 }
+
+export type ImmutableXL2Overall = {
+  tokenAddress: string
+  tokenId: string
+  isStaking: boolean
+  originalOwner: string
+  stakingDuration: number
+  totalStakingTime: number
+  isUpgraded: boolean
+}

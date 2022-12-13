@@ -6,8 +6,10 @@ import { useSelector } from 'react-redux'
 import { metadataApi } from '../api/metadata'
 import { defaultChainId } from '../contracts'
 import { RootState } from '../store'
-import { MetadataResponse, TokenMetadata } from '../types'
+import { Metadata, MetadataResponse, TokenMetadata } from '../types'
+import { ImmutableXL2Overall } from '../types/immutableX'
 import { buildMetadataInformation, getDefaultMetadataTrait } from '../utils'
+import { useMetadataBaseURL } from './useMetadataBaseURL'
 
 /**
  * useMetadata
@@ -137,6 +139,77 @@ export function useMetadataByTokenIds({
   useDeepCompareEffect(() => {
     getMetadataByTokenIds(address, tokenIds, baseURL)
   }, [baseURL, tokenIds])
+
+  return {
+    metadata,
+    loading,
+  }
+}
+
+/**
+ * useMetadataImmtableXByTokenIds
+ * @param collections l2Overall
+ * @returns
+ */
+export function useMetadataImmtableXByTokenIds(collections: ImmutableXL2Overall[]) {
+  const [metadata, setMetadata] = useState<Map<string, Metadata>>(new Map())
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const { getBaseURLByAddress } = useMetadataBaseURL()
+
+  const getMetadataByTokenIds = useCallback(
+    async (collections: ImmutableXL2Overall[]) => {
+      try {
+        setLoading(true)
+        setMetadata(new Map())
+
+        const promiseAllArray = collections.map((collection) => {
+          const url = getBaseURLByAddress(collection.tokenAddress)
+          if (!url) {
+            return Promise.reject(new Error('not baseUrl'))
+          }
+
+          return metadataApi<MetadataResponse>({
+            url,
+            tokenId: collection.tokenId,
+          })
+        })
+
+        const response = await Promise.allSettled(promiseAllArray)
+
+        const data: Map<string, Metadata> = new Map()
+        response.forEach((item, index) => {
+          if (item.status === 'fulfilled' && item.value.status === 200) {
+            const { tokenAddress, tokenId } = collections[index]
+
+            // Blind box filling default data
+            if (item.value.data.attributes.length <= 0) {
+              item.value.data.attributes = getDefaultMetadataTrait(tokenAddress, tokenId)
+            }
+            const { name, description, image, attributes } = item.value.data
+            data.set(tokenId, {
+              name,
+              description,
+              image,
+              trait: attributes,
+            })
+          }
+        })
+
+        setMetadata(data)
+      } catch (error) {
+        console.error(error)
+        setMetadata(new Map())
+      } finally {
+        setLoading(false)
+      }
+    },
+    [getBaseURLByAddress]
+  )
+
+  useDeepCompareEffect(() => {
+    getMetadataByTokenIds(collections)
+  }, [collections])
 
   return {
     metadata,
