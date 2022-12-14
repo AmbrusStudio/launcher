@@ -47,7 +47,13 @@ export function useE4CRanger(tokenAddress: string | Falsy) {
  * @returns
  */
 export function useERC721SafeTransferFrom(tokenAddress: string) {
-  const contract = new Contract(tokenAddress, ERC721__factory.abi)
+  const contract = useMemo<Contract | Falsy>(() => {
+    if (tokenAddress) {
+      return new Contract(tokenAddress, ERC721__factory.abi)
+    } else {
+      return null
+    }
+  }, [tokenAddress])
   const { state, send } = useContractFunction(contract, 'safeTransferFrom', {
     gasLimitBufferPercentage: 10,
   })
@@ -61,7 +67,13 @@ export function useERC721SafeTransferFrom(tokenAddress: string) {
  * @returns
  */
 export function useE4CRangerUnstake(tokenAddress: string) {
-  const contract = new Contract(tokenAddress, E4CRangerHolder__factory.abi)
+  const contract = useMemo<Contract | Falsy>(() => {
+    if (tokenAddress) {
+      return new Contract(tokenAddress, E4CRangerHolder__factory.abi)
+    } else {
+      return null
+    }
+  }, [tokenAddress])
   const { state, send } = useContractFunction(contract, 'unstake', {
     gasLimitBufferPercentage: 10,
   })

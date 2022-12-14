@@ -2,7 +2,11 @@ import { Goerli, Mainnet } from '@usedapp/core'
 
 import { MetadataStatus } from '../types'
 import { E4CRanger_GoldEditions, E4CRanger_RangersEditions, E4CRanger_UltimateEditions } from './ethereum'
-import { E4CRanger_ImmutableX_GoldEditions, E4CRanger_ImmutableX_RangersEditions } from './immutableX'
+import {
+  E4CRanger_ImmutableX_GoldEditions,
+  E4CRanger_ImmutableX_RangersEditions,
+  E4CRangerHive_ImmutableX_Thorns,
+} from './immutableX'
 
 /**
  * Rarible Link
@@ -17,6 +21,7 @@ export const RaribleLink = {
     [MetadataStatus.ImmutableX]: {
       GoldEdition: 'https://rarible.com/e4crangersgold',
       RangersEdition: 'https://rarible.com/e4crangersrangers',
+      Thorn: 'https://rarible.com/collection/immutablex/' + E4CRangerHive_ImmutableX_Thorns[Mainnet.chainId],
     },
   },
   [Goerli.chainId]: {
@@ -30,6 +35,7 @@ export const RaribleLink = {
         'https://testnet.rarible.com/collection/immutablex/' + E4CRanger_ImmutableX_GoldEditions[Goerli.chainId],
       RangersEdition:
         'https://testnet.rarible.com/collection/immutablex/' + E4CRanger_ImmutableX_RangersEditions[Goerli.chainId],
+      Thorn: 'https://testnet.rarible.com/collection/immutablex/' + E4CRangerHive_ImmutableX_Thorns[Goerli.chainId],
     },
   },
 }

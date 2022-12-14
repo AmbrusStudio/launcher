@@ -36,8 +36,8 @@ interface CheckCardProps {
 
 const CheckCardEarnClaimed: FC<CheckCardProps> = ({ soulboundBadgeStatus }) => {
   return (
-    <div className="p-3 py-5 xl:px-6 xl:py-10 gap-3 bg-[#2a2a2a] flex flex-1 flex-col justify-center	items-center flex-grow-0 flex-shrink-1 text-white text-center">
-      <p className="font-normal text-xs xl:text-base leading-5 not-italic">Diamond Hand Badge</p>
+    <div className="p-3 py-5 xl:px-6 xl:py-10 gap-3 bg-[#2a2a2a] flex flex-1 flex-col justify-center	items-center text-white text-center">
+      <p className="font-normal text-xs xl:text-4 leading-5 not-italic">Diamond Hand Badge</p>
       {soulboundBadgeStatus ? (
         <CheckSuccess>
           <SuccessCheck

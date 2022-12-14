@@ -14,7 +14,7 @@ import Perk from '../../../components/NFT/Perk'
 import PerkModal from '../../../components/NFT/PerkModal'
 import TabsStake, { TabPanelStake } from '../../../components/TabsStake'
 import { useWeb3Modal } from '../../../hooks'
-import { useCollectionsHiveStake } from '../../../hooks/useCollectionsHiveStake'
+import { useCollectionsHive } from '../../../hooks/useCollectionsHive'
 import { useUserStakeCollections } from '../../../hooks/useUserStakeCollections'
 
 function AccountNFT() {
@@ -28,8 +28,8 @@ function AccountNFT() {
   const { collections } = useUserStakeCollections()
   collections.length && console.log('useUserStakeCollections', collections)
 
-  const { collections: collectionsHive } = useCollectionsHiveStake()
-  collectionsHive.length && console.log('useCollectionsHiveStake', collectionsHive)
+  const { collections: collectionsHive } = useCollectionsHive()
+  collectionsHive.length && console.log('useCollectionsHive', collectionsHive)
 
   const [visiblePerk, setVisiblePerk] = useState<boolean>(false)
   const [visiblePerkModal, setVisiblePerkModal] = useState<boolean>(false)
@@ -41,9 +41,11 @@ function AccountNFT() {
     <AccountCenterPageLayout title="My" subtitle="NFTs" className="pl-0 pr-0">
       <div className="relative">
         <TabsStake tabPanelStakeValue={tabPanelStakeValue} setTabPanelStakeValue={setTabPanelStakeValue} />
-        <div className="absolute top-0 right-0 z-1">
-          <Earned />
-        </div>
+        {tabPanelStakeValue === 1 && (
+          <div className="absolute top-0 right-0 z-1">
+            <Earned />
+          </div>
+        )}
       </div>
 
       <>

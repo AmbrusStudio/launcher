@@ -17,17 +17,6 @@ const WrapperInfo = styled.div`
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(12px);
 `
-const Title = styled.h3`
-  font-family: 'Montserrat', sans-serif;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 29px;
-  text-transform: uppercase;
-  color: #ffffff;
-  padding: 0;
-  margin: 0;
-`
 
 interface Props {
   readonly unstakeLoading: boolean

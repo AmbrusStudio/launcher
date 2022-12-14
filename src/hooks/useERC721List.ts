@@ -1,7 +1,6 @@
 import { Falsy, useEthers } from '@usedapp/core'
 import { useDeepCompareEffect } from 'ahooks'
 import { getAddress } from 'ethers/lib/utils'
-import { isEqual, unionWith } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
 
@@ -251,7 +250,7 @@ export function useERC721ImmutableXList() {
   const [collections, setCollections] = useState<NFTE4CRanger[]>([])
 
   const { data, error, isLoading } = useSWR<ImmutableXL2Overall[]>(
-    { address: walletInfo?.address || '' },
+    { address: walletInfo?.address || '', cacheKey: 'immutableX' },
     getImmutableXL2OverallApi
   )
 

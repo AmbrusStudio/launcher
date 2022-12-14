@@ -1,4 +1,5 @@
 import {
+  ConfirmModalData,
   ConfirmUnstakeDataType,
   ConfirmUpgradeDataType,
   PERK,
@@ -73,6 +74,7 @@ export const stakeCheckEarn: StakeInfoDataType = {
   description: `The amount of GDC you earned will be recorded in your account information. It will airdrop to your wallet once we launch the token. <a href="#" target="_blank" rel="noopener">Learn more about E4C tokenomics</a>`,
 }
 
+// Stake Confirm Modal
 export const confirmUnstakeData: ConfirmUnstakeDataType = {
   description:
     'Once unstaked, the upgrading status of this NFT will be reset. You can still upgrade this NFT in the future.',
@@ -81,6 +83,18 @@ export const confirmUnstakeData: ConfirmUnstakeDataType = {
 export const confirmUpgradeData: ConfirmUpgradeDataType = {
   description:
     'You’ll earn a lot more benefits after upgrading your NFT. You can only upgrade this NFT whilel it’s still staked.',
+}
+
+export const confirmUnstakeEarnData: ConfirmModalData = {
+  title: 'Are you sure?',
+  description:
+    'You have not earned Diamond Hand badge in our Discord. Once unstaked, all your DGC earned will be lost.',
+}
+
+export const confirmUpgradeEarnData: ConfirmModalData = {
+  title: 'Are you sure?',
+  description:
+    'Your staking progress will be lost once unstaked. The amount of DGC you earned will be recorded in your account information and will be airdropped to your wallet once it’s launched.',
 }
 
 // Announcement

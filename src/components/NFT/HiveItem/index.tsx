@@ -18,7 +18,7 @@ interface Props {
   readonly tokenId: string
 }
 
-const NFTItem: FC<Props> = ({ nft, tokenId }) => {
+const HiveItem: FC<Props> = ({ nft, tokenId }) => {
   const { stakeLoading, unstakeLoading, onStake, onUnstake } = useStake({ nft })
 
   const [visibleInfo, setVisibleInfo] = useState<boolean>(false)
@@ -71,4 +71,4 @@ const NFTItem: FC<Props> = ({ nft, tokenId }) => {
   )
 }
 
-export default NFTItem
+export default HiveItem

@@ -8,6 +8,7 @@ import {
   E4CRanger_ImmutableX_RangersEdition,
   E4CRanger_RangersEdition,
   E4CRanger_UltimateEdition,
+  E4CRangerHive_ImmutableX_Thorn,
   MainnetRaribleCollection,
   RaribleLink,
   TestnetRaribleCollection,
@@ -80,6 +81,8 @@ export const getRaribleLink = (address: string, status: MetadataStatus): string 
       return RaribleLink[defaultChainId][MetadataStatus.ImmutableX].GoldEdition
     } else if (getAddress(address) === getAddress(E4CRanger_ImmutableX_RangersEdition)) {
       return RaribleLink[defaultChainId][MetadataStatus.ImmutableX].RangersEdition
+    } else if (getAddress(address) === getAddress(E4CRangerHive_ImmutableX_Thorn)) {
+      return RaribleLink[defaultChainId][MetadataStatus.ImmutableX].Thorn
     } else {
       console.error(`rarible link not found, ImmutableX status: ${status}`)
       return getRaribleEthereumLink(address)

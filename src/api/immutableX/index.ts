@@ -1,5 +1,7 @@
+import { isAddress } from 'ethers/lib/utils'
+
 import { ImmutableXL2Overall } from '../../types/immutableX'
-import { unstakeBackendRequest } from '../axios'
+import { nftHiveBackendRequest, nftHolderBackendRequest } from '../axios'
 
 /**
  * ImmutableX unstake
@@ -17,7 +19,7 @@ export async function immutableXUnstakeApi<T = unknown>({
   tokenId: string
   signature: string
 }) {
-  return await unstakeBackendRequest.post<T>(`/unstake`, { owner, tokenAddress, tokenId, signature })
+  return await nftHolderBackendRequest.post<T>(`/unstake`, { owner, tokenAddress, tokenId, signature })
 }
 
 /**
@@ -27,7 +29,7 @@ export async function immutableXUnstakeApi<T = unknown>({
  * @returns
  */
 export async function getImmutableXStakingStatusApi<T = unknown>(tokenAddress: string, tokenId: string) {
-  return await unstakeBackendRequest.get<T>(`/stakingStatus`, {
+  return await nftHolderBackendRequest.get<T>(`/stakingStatus`, {
     params: {
       tokenAddress,
       tokenId,
@@ -46,11 +48,69 @@ export async function getImmutableXL2OverallApi<T = ImmutableXL2Overall[]>({ add
     return []
   }
 
-  const result = await unstakeBackendRequest.get<T>(`/l2Overall`, {
+  if (!isAddress(address)) {
+    console.error('not a valid address')
+    return []
+  }
+
+  const result = await nftHolderBackendRequest.get<T>(`/l2Overall`, {
     params: {
       address,
     },
   })
 
   return result.data
+}
+
+/**
+ * Get ImmutableX L2 Overall Hive
+ * @param param assress: wallet address
+ * @returns
+ */
+export async function getImmutableXL2OverallHiveApi<T = ImmutableXL2Overall[]>({ address }: { address: string }) {
+  if (!address) {
+    console.error('address is required')
+    return []
+  }
+
+  if (!isAddress(address)) {
+    console.error('not a valid address')
+    return []
+  }
+
+  const result = await nftHiveBackendRequest.get<T>(`/l2Overall`, {
+    params: {
+      address,
+    },
+  })
+
+  return [
+    {
+      tokenAddress: '0x2b79919a89ffa96d98ac126ff244a662f77fdc19',
+      tokenId: '3',
+      isStaking: false,
+      originalOwner: '',
+      stakingDuration: 0,
+      totalStakingTime: 3024000000,
+      isUpgraded: false,
+    },
+    {
+      tokenAddress: '0x2b79919a89ffa96d98ac126ff244a662f77fdc19',
+      tokenId: '4',
+      isStaking: true,
+      originalOwner: '',
+      stakingDuration: 0,
+      totalStakingTime: 3024000000,
+      isUpgraded: false,
+    },
+    {
+      tokenAddress: '0x2b79919a89ffa96d98ac126ff244a662f77fdc19',
+      tokenId: '5',
+      isStaking: true,
+      originalOwner: '',
+      stakingDuration: 0,
+      totalStakingTime: 3024000000,
+      isUpgraded: true,
+    },
+  ]
 }

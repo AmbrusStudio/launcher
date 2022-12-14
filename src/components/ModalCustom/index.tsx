@@ -1,26 +1,7 @@
-import styled from '@emotion/styled'
 import Dialog from '@mui/material/Dialog'
 import { FC, ReactNode } from 'react'
 
 import Close from '../Icon/Close'
-
-const Head = styled.div`
-  width: 100%;
-  background: rgba(42, 42, 42, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 24px;
-  color: #ffffff;
-  span {
-    font-family: 'Montserrat', sans-serif;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 36px;
-    line-height: 44px;
-    text-transform: uppercase;
-  }
-`
 
 interface ModalCustomProps {
   readonly visible: boolean
@@ -50,8 +31,8 @@ const ModalCustom: FC<ModalCustomProps> = ({ visible, title, toggle, close = tru
         },
       }}
     >
-      <Head>
-        <span>{title}</span>
+      <div className="flex items-center justify-between px-4 py-6 text-white bg-[#2a2a2a]/80">
+        <span className="font-bold text-4xl not-italic uppercase leading-44px">{title}</span>
         {close && (
           <Close
             onClick={() => toggle(false)}
@@ -61,7 +42,7 @@ const ModalCustom: FC<ModalCustomProps> = ({ visible, title, toggle, close = tru
             }}
           />
         )}
-      </Head>
+      </div>
       {children}
     </Dialog>
   )

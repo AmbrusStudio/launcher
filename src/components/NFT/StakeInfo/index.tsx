@@ -26,7 +26,7 @@ const StakeInfo: FC<StakeInfoProps> = ({ stakeLoading, nft, toggle, stake }) => 
   return (
     <div className="absolute top-0 right-0 bottom-0 left-0 flex">
       <div className="w-[47.6%] overflow-auto float-left bg-white p-6 grid gap-y-20.5">
-        <Announcements address={'0xabd0857baad28f6c7c3814e9e70e4eb54566f3ae'} />
+        <Announcements address={nft.address} />
       </div>
 
       <WrapperInfo className="w-[52.4%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0 overflow-auto">

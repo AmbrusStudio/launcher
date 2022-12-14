@@ -18,8 +18,12 @@ export function useStake({ nft }: Props) {
   const [stakeLoading, setStakeLoading] = useState<boolean>(false)
   const [unstakeLoading, setUnstakeLoading] = useState<boolean>(false)
 
-  const { state: stakeState, send: stake } = useERC721SafeTransferFrom(nft.address)
-  const { state: unstakeState, send: unstake } = useE4CRangerUnstake(getHolderByAddress(nft.address))
+  const { state: stakeState, send: stake } = useERC721SafeTransferFrom(
+    nft.status === MetadataStatus.Ethereum ? nft.address : ''
+  )
+  const { state: unstakeState, send: unstake } = useE4CRangerUnstake(
+    nft.status === MetadataStatus.Ethereum ? getHolderByAddress(nft.address) : ''
+  )
 
   const { state: stakeStateImmutableX, send: stakeImmutableX } = useImmutableXERC721AssetTransfers()
   const { state: unstakeStateImmutableX, send: unstakeImmutableX } = useImmutableXERC721AssetUnstake()

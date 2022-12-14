@@ -27,6 +27,13 @@ export const E4CRanger_ImmutableX_RangersEditions = {
 }
 export const E4CRanger_ImmutableX_RangersEdition = E4CRanger_ImmutableX_RangersEditions[defaultChainId]
 
+// E4CRanger Hive <Thorn> - ImmutableX
+export const E4CRangerHive_ImmutableX_Thorns = {
+  [Mainnet.chainId]: '',
+  [Goerli.chainId]: '0x2B79919A89fFA96d98Ac126Ff244A662F77FDC19',
+}
+export const E4CRangerHive_ImmutableX_Thorn = E4CRangerHive_ImmutableX_Thorns[defaultChainId]
+
 // ImmutableX Withdraw
 const ImmutableXWithdraws = {
   [Mainnet.chainId]: 'https://imxtools.io/withdrawal',

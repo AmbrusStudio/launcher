@@ -12,6 +12,7 @@ import {
   E4CRanger_RangersEdition,
   E4CRanger_RangersEdition_Holder,
   E4CRanger_UltimateEdition,
+  E4CRangerHive_ImmutableX_Thorn,
 } from '../contracts'
 import { stakeAnnouncementEarn, stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
 import {
@@ -200,6 +201,7 @@ export const getStakeAnnouncement = (address: string): StakeAnnouncement[] => {
     [getAddress(E4CRanger_ImmutableX_GoldEdition)]: stakeAnnouncementGold,
     [getAddress(E4CRanger_RangersEdition)]: stakeAnnouncementRangers,
     [getAddress(E4CRanger_ImmutableX_RangersEdition)]: stakeAnnouncementRangers,
+    [getAddress(E4CRangerHive_ImmutableX_Thorn)]: stakeAnnouncementEarn,
   }
 
   return list[getAddress(address)] || []
@@ -223,7 +225,8 @@ export const getHolderByAddress = (address: string): string => {
   if (result) {
     return result
   } else {
-    throw new Error('holder not found')
+    console.error('holder not found')
+    return ''
   }
 }
 

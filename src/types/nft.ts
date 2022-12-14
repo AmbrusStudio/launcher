@@ -21,6 +21,11 @@ export type ConfirmUpgradeDataType = {
   description: string
 }
 
+export type ConfirmModalData = {
+  title: string
+  description: string
+}
+
 export type NFTUpgradeInfo = {
   upgradingStatusInfo: {
     stakeStatus: boolean
