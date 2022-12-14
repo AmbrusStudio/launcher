@@ -1,7 +1,7 @@
 import { cloneDeep } from 'lodash'
 
-import { TokenMetadata, Trait, TraitItem } from '../types'
-import { Filter, FilterList, GALLERY_MAP } from '../types/gallery'
+import { TokenMetadata, Trait } from '../types'
+import { Filter, FilterList } from '../types/gallery'
 import { BlindBoxMode } from './bindbox'
 /**
  * modify filter checked
@@ -38,7 +38,7 @@ export const toggleFilterOpenFn = (filter: Filter[], index: number): Filter[] | 
  */
 export const convertFilterToMap = (filter: Filter[]): Map<Trait, string[]> => {
   const filterChecked = filter.filter((i) => i.list.some((j: FilterList) => j.isChecked))
-  const filterActiveChecked = filterChecked.map((i) => ({
+  const filterActiveChecked = filterChecked.map<Filter>((i) => ({
     ...i,
     list: i.list.filter((j: FilterList) => j.isChecked),
   }))
@@ -54,55 +54,13 @@ export const convertFilterToMap = (filter: Filter[]): Map<Trait, string[]> => {
 }
 
 /**
- * Convert Trait To Map Format
- * @param data
- * @returns
- */
-const convertTraitToMap = (data: TokenMetadata[]): GALLERY_MAP[] => {
-  return data.map((token) => {
-    const traitMap = new Map<Trait, string>()
-
-    token.trait.forEach((trait) => {
-      traitMap.set(trait.trait_type, trait.value)
-    })
-
-    return {
-      ...token,
-      trait: traitMap,
-    }
-  })
-}
-
-/**
- * Convert Trait To Array Format
- * @param data
- * @returns
- */
-const convertTraitToArray = (data: GALLERY_MAP[]): TokenMetadata[] => {
-  return data.map((item) => {
-    const traitArr: TraitItem[] = []
-    item.trait.forEach((val, key) => {
-      traitArr.push({
-        trait_type: key,
-        value: val,
-      })
-    })
-
-    return {
-      ...item,
-      trait: traitArr,
-    }
-  })
-}
-
-/**
  * handle filter
  * @param filter
  * @param searchId
  * @returns
  */
 export const handleFilterFn = (
-  traitFilter: Map<Trait, string[]>,
+  selectedTrait: Map<Trait, string[]>,
   searchId: string,
   tokens: TokenMetadata[],
   pureGold: boolean
@@ -121,29 +79,21 @@ export const handleFilterFn = (
     })
   }
 
-  if (!traitFilter.size) {
-    return gallery
-  }
+  if (!selectedTrait.size) return gallery
 
-  const galleryMap = convertTraitToMap(gallery)
-
-  const galleryArray = galleryMap.filter((item) => {
-    let flag = true
-
-    traitFilter.forEach((value, key) => {
-      const traitVal = item.trait.get(key)
-
-      if (!(traitVal && value.includes(traitVal))) {
-        flag = false
-      }
+  const selectedTraitKeys = [...selectedTrait.keys()]
+  const filteredGalleryBySelectedTrait = gallery.filter((item) => {
+    const allSelectedTaritMatched = selectedTraitKeys.map((key) => {
+      const selectedTraitValue = selectedTrait.get(key)
+      const matchedTrait = item.trait.find((trait) => {
+        return trait.trait_type === key && selectedTraitValue?.includes(trait.value)
+      })
+      return !!matchedTrait
     })
-
-    return flag
+    return allSelectedTaritMatched.every(Boolean)
   })
 
-  const result = convertTraitToArray(galleryArray)
-
-  return result
+  return filteredGalleryBySelectedTrait
 }
 
 /**

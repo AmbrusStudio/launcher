@@ -1,7 +1,6 @@
 import { useDeepCompareEffect } from 'ahooks'
 import { groupBy } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { compose } from 'redux'
 
 import { TokenMetadata, Trait } from '../types'
 import { Filter, FilterList } from '../types/gallery'
@@ -23,12 +22,9 @@ export function useGalleryFilter(pureGold: boolean) {
   const galleryMetadata = useMemo<TokenMetadata[]>(() => {
     if (pureGold) {
       // Handle Pure Gold
-      const reg = /(^|\s)Gold(\s|$)/g
-
+      const reg = /(^|\s)Gold(\s|$)/
       return metadataAllEdition.filter((metadata) => {
         const findResult = metadata.trait.find((i) => i.trait_type !== Trait.Edition && reg.test(i.value))
-        reg.lastIndex = 0
-
         return !!findResult && !BlindBoxMode(metadata.trait)
       })
     } else {
@@ -36,56 +32,38 @@ export function useGalleryFilter(pureGold: boolean) {
     }
   }, [metadataAllEdition, pureGold])
 
-  const galleryFilter = useMemo<Filter[]>(() => {
-    // Handle Filter Property
+  const galleryFilters = useMemo<Filter[]>(() => {
+    const metadatas = galleryMetadata.map<TokenMetadata>((metadata) => {
+      return {
+        ...metadata,
+        // Hide blind box trait
+        trait: metadata.trait.filter((trait) => trait.trait_type === Trait.Name || !BlindBoxMode(metadata.trait)),
+      }
+    })
 
-    // Handle Hide blindbox trait
-    const handleBlindboxTrait = (data: TokenMetadata[]) =>
-      data.map((metadata) => {
-        return {
-          ...metadata,
-          trait: metadata.trait.filter((trait) => trait.trait_type === Trait.Name || !BlindBoxMode(metadata.trait)),
-        }
-      })
+    const allTrait = metadatas.flatMap((metadata) => metadata.trait)
 
-    const metadatas = compose(handleBlindboxTrait)(galleryMetadata)
-
-    const allTrait = metadatas.flatMap((i) => i.trait)
     const allTraitGroupByType = groupBy(allTrait, 'trait_type')
 
     const traitKeys = [...new Set([...Object.values(Trait), ...Object.keys(allTraitGroupByType)])] as Trait[]
 
-    return traitKeys.map((i) => {
-      const list: FilterList[] = []
+    const filters = traitKeys.map<Filter>((traitKey) => {
+      const oneTraitGroupByValue = groupBy(allTraitGroupByType[traitKey], 'value')
 
-      if (allTraitGroupByType[i]) {
-        const propertyGroupByValue = groupBy(allTraitGroupByType[i], 'value')
+      const list = Object.entries(oneTraitGroupByValue).map<FilterList>(([label, vallue]) => ({
+        label,
+        isChecked: false,
+        count: vallue.length,
+      }))
 
-        Object.entries(propertyGroupByValue).forEach(([key, vallue]) => {
-          list.push({
-            label: key,
-            isChecked: false,
-            count: vallue.length,
-          })
-        })
-
-        return {
-          label: i,
-          isOpen: false,
-          list: list.sort((a, b) => b.count - a.count),
-        }
-      } else {
-        return {
-          label: i,
-          isOpen: false,
-          list: [],
-        }
-      }
+      return { label: traitKey, isOpen: false, list: list.sort((a, b) => b.count - a.count) }
     })
+
+    return filters
   }, [galleryMetadata])
 
   const galleryFilterStatus = useMemo<Filter[]>(() => {
-    return galleryFilter.map<Filter>((i) => ({
+    return galleryFilters.map<Filter>((i) => ({
       ...i,
       isOpen: false,
       list: i.list.map<FilterList>((j) => ({
@@ -93,7 +71,7 @@ export function useGalleryFilter(pureGold: boolean) {
         isChecked: false,
       })),
     }))
-  }, [galleryFilter])
+  }, [galleryFilters])
 
   // Filter menu expand
   const toggleFilterTab = useCallback(
