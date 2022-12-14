@@ -74,6 +74,75 @@ export function useCollectionsHiveStake() {
       staking: false,
       status: MetadataStatus.ImmutableX,
     },
+    {
+      name: 'E4C_Rangers_653',
+      description:
+        'E4C Rangers consists of avatars derived from 7 champions in the E4Cverse. Holders have special utilities, including the partial in-game IP ownership of the corresponding character and game assets airdrops, such as champions and skins. For more info, please refer to our website https://www.ambrus.studio/',
+      image: 'https://cdn.ambrus.studio/NFTs/E4C_Rangers/Rangers_Edition/Images/E4C_Rangers_653.png',
+      address: '0x714a090f35a1f1fc9baa65059b28939dd0f5a196',
+      tokenId: '653',
+      trait: [
+        {
+          trait_type: 'Arm Accessory',
+          value: 'Arm Bag Orange',
+        },
+        {
+          trait_type: 'Background',
+          value: 'Orange',
+        },
+        {
+          trait_type: 'Body',
+          value: 'Fur 3 Orange',
+        },
+        {
+          trait_type: 'Earrings',
+          value: 'Metal Earring 1',
+        },
+        {
+          trait_type: 'Eyes',
+          value: 'Eyes Blue',
+        },
+        {
+          trait_type: 'Hair',
+          value: 'Bosozoku Scarlet',
+        },
+        {
+          trait_type: 'Jacket',
+          value: 'Coat Scarlet',
+        },
+        {
+          trait_type: 'Pants',
+          value: 'Pants Scarlet',
+        },
+        {
+          trait_type: 'Waist Accessory',
+          value: 'Waistband Orange',
+        },
+        {
+          trait_type: 'Weapon',
+          value: 'Mecha Blade Scarlet',
+        },
+        {
+          trait_type: 'Wrist Accessory',
+          value: 'Leather Glove Scarlet',
+        },
+        {
+          trait_type: 'Edition',
+          value: 'Rangers',
+        },
+        {
+          trait_type: 'Zodiac',
+          value: 'Gemini',
+        },
+        {
+          trait_type: 'Name',
+          value: 'Kit',
+        },
+      ],
+      upgraded: false,
+      staking: true,
+      status: 'ImmutableX',
+    },
   ] as any[])
 
   return {

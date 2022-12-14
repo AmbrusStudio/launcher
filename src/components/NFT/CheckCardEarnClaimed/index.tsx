@@ -1,17 +1,9 @@
 import styled from '@emotion/styled'
-import { Box, Stack } from '@mui/material'
+import { Box } from '@mui/material'
 import { FC } from 'react'
 
 import CloseCheck from '../../Icon/CloseCheck'
 import SuccessCheck from '../../Icon/SuccessCheck'
-
-const Card = styled(Stack)`
-  background: #2a2a2a;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`
 
 const CheckFail = styled(Box)`
   width: 108px;
@@ -44,8 +36,8 @@ interface CheckCardProps {
 
 const CheckCardEarnClaimed: FC<CheckCardProps> = ({ soulboundBadgeStatus }) => {
   return (
-    <Card spacing={1.5} className="p-3 xl:p-6">
-      <p className="font-normal text-xs xl:text-base leading-5 text-center text-white not-italic">Diamond Hand Badge</p>
+    <div className="p-3 py-5 xl:px-6 xl:py-10 gap-3 bg-[#2a2a2a] flex flex-1 flex-col justify-center	items-center flex-grow-0 flex-shrink-1 text-white text-center">
+      <p className="font-normal text-xs xl:text-base leading-5 not-italic">Diamond Hand Badge</p>
       {soulboundBadgeStatus ? (
         <CheckSuccess>
           <SuccessCheck
@@ -63,7 +55,7 @@ const CheckCardEarnClaimed: FC<CheckCardProps> = ({ soulboundBadgeStatus }) => {
           />
         </CheckFail>
       )}
-    </Card>
+    </div>
   )
 }
 

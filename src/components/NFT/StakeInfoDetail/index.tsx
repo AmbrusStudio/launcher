@@ -1,14 +1,5 @@
 import styled from '@emotion/styled'
-import { Stack } from '@mui/material'
-import classNames from 'classnames'
-import { FC, useContext } from 'react'
-
-import { StakeCtx } from '../../../context'
-
-const WrapperInfo = styled.div`
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(12px);
-`
+import { FC } from 'react'
 
 const Title = styled.h3`
   font-family: 'Montserrat', sans-serif;
@@ -35,37 +26,22 @@ const Description = styled.div`
     margin-left: 1.5rem;
     list-style-type: disc;
   }
+  a {
+    text-decoration: underline;
+  }
 `
 
 interface StakeInfoProps {
-  readonly stakeLoading: boolean
-  readonly address: string
-  toggle: (value: boolean) => void
-  stake: () => void
+  readonly title: string
+  readonly description: string
 }
 
-const StakeInfoDetail: FC<StakeInfoProps> = ({ stakeLoading, address, toggle, stake }) => {
-  const stakeCtx = useContext(StakeCtx)
-
+const StakeInfoDetail: FC<StakeInfoProps> = ({ title, description }) => {
   return (
-    <WrapperInfo className="w-[46.5%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0 overflow-auto">
-      <Title>{stakeCtx?.upgradeAnnouncement.title}</Title>
-      <Description dangerouslySetInnerHTML={{ __html: stakeCtx?.upgradeAnnouncement.description || '' }}></Description>
-      <Stack spacing={1.5} className="mt-6">
-        <button
-          disabled={stakeLoading}
-          className={classNames('u-btn u-btn-primary', {
-            loading: stakeLoading,
-          })}
-          onClick={() => stake()}
-        >
-          Start Staking Now
-        </button>
-        <button className="u-btn" onClick={() => toggle(false)}>
-          Cancel
-        </button>
-      </Stack>
-    </WrapperInfo>
+    <div>
+      <Title>{title}</Title>
+      <Description dangerouslySetInnerHTML={{ __html: description }}></Description>
+    </div>
   )
 }
 

@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
-import classNames from 'classnames'
 import { FC, useContext, useState } from 'react'
 
 import { StakeCtx } from '../../../context'
@@ -8,7 +7,7 @@ import { useStatusCheck } from '../../../hooks/useStatusCheck'
 import { NFTE4CRanger } from '../../../types'
 import { getHolderByAddress } from '../../../utils'
 import Announcements from '../Announcements'
-import CheckCard from '../CheckCard'
+import CheckCardEarn from '../CheckCardEarn'
 import ConfirmUnstake from '../ConfirmUnstake'
 import ConfirmUpgrade from '../ConfirmUpgrade'
 import StakeInfoDetail from '../StakeInfoDetail'
@@ -16,17 +15,6 @@ import StakeInfoDetail from '../StakeInfoDetail'
 const WrapperInfo = styled.div`
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(12px);
-`
-const Title = styled.h3`
-  font-family: 'Montserrat', sans-serif;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 29px;
-  text-transform: uppercase;
-  color: #ffffff;
-  padding: 0;
-  margin: 0;
 `
 
 interface Props {
@@ -36,7 +24,7 @@ interface Props {
   unstake: () => void
 }
 
-const StatusCheck: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) => {
+const StatusCheckEarn: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) => {
   const [visibleUnstake, setVisibleUnstake] = useState<boolean>(false)
   const [visibleUpgrade, setVisibleUpgrade] = useState<boolean>(false)
 
@@ -51,22 +39,24 @@ const StatusCheck: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) => {
 
   return (
     <div className="absolute top-0 right-0 bottom-0 left-0 flex">
-      <div className="w-[53.5%] overflow-auto float-left bg-white p-6 grid gap-y-20.5">
+      <div className="w-[47.6%] overflow-auto float-left bg-white p-6 grid gap-y-20.5">
         <Announcements address={'0xabd0857baad28f6c7c3814e9e70e4eb54566f3ae'} />
       </div>
-      <WrapperInfo className="w-[46.5%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0 overflow-auto">
+      <WrapperInfo className="w-[52.4%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0 overflow-auto">
         <StakeInfoDetail
           title={stakeCtx?.checkAnnouncement.title || ''}
           description={stakeCtx?.checkAnnouncement.description || ''}
         />
 
-        <CheckCard
-          duration={duration}
-          timeLeft={timeLeft}
-          stakedPercentage={stakedPercentage}
-          timeStatus={timeStatus}
-          soulboundBadgeStatus={soulboundBadgeStatus}
-        />
+        <div className="mt-auto">
+          <CheckCardEarn
+            duration={duration}
+            timeLeft={timeLeft}
+            stakedPercentage={stakedPercentage}
+            timeStatus={timeStatus}
+            soulboundBadgeStatus={soulboundBadgeStatus}
+          />
+        </div>
 
         <Stack
           spacing={1.5}
@@ -74,29 +64,8 @@ const StatusCheck: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) => {
             mt: 3,
           }}
         >
-          <button
-            className={classNames('u-btn', {
-              'u-btn-primary': status,
-              'u-btn-disabled': !status,
-              loading: unstakeLoading,
-            })}
-            disabled={!status || unstakeLoading}
-            onClick={() => setVisibleUpgrade(true)}
-          >
-            Upgrade
-          </button>
-          <button
-            disabled={unstakeLoading}
-            className={classNames('u-btn', {
-              loading: unstakeLoading,
-            })}
-            onClick={() => setVisibleUnstake(true)}
-          >
-            Unstake
-          </button>
-          <button className="u-btn" onClick={() => toggle(false)}>
-            Cancel
-          </button>
+          <button className="u-btn">Unstake</button>
+          <button className="u-btn">Cancel</button>
         </Stack>
 
         <ConfirmUnstake
@@ -120,4 +89,4 @@ const StatusCheck: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) => {
   )
 }
 
-export default StatusCheck
+export default StatusCheckEarn

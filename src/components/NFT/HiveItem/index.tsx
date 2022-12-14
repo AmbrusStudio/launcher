@@ -10,7 +10,7 @@ import TokenMedia from '../../TokenMedia'
 import DetailsName from '../DetailsName'
 import NFTDetails from '../NFTDetails'
 import StakeInfo from '../StakeInfo'
-import StatusCheck from '../StatusCheck'
+import StatusCheckEarn from '../StatusCheckEarn'
 import TokenActions from '../TokenActions'
 
 interface Props {
@@ -59,7 +59,7 @@ const NFTItem: FC<Props> = ({ nft, tokenId }) => {
           />
         )}
         {visibleStatusCheck && (
-          <StatusCheck
+          <StatusCheckEarn
             unstakeLoading={unstakeLoading}
             nft={nft}
             toggle={(value) => setVisibleStatusCheck(value)}
