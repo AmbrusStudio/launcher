@@ -35,6 +35,8 @@ function AccountNFT() {
   const [visiblePerkModal, setVisiblePerkModal] = useState<boolean>(false)
 
   const itemHeight = useMemo(() => (size?.width ? size.width * 0.535 : 0), [size])
+  const itemHiveHeight = useMemo(() => (size?.width ? size.width * 0.4762 : 0), [size])
+
   const [tabPanelStakeValue, setTabPanelStakeValue] = useState(1)
 
   return (
@@ -92,7 +94,7 @@ function AccountNFT() {
               {isMd ? (
                 <Stack spacing={3}>
                   {collectionsHive.map((nft) => (
-                    <div key={`${nft.address}_${nft.tokenId}`} style={{ height: `${itemHeight}px` }}>
+                    <div key={`${nft.address}_${nft.tokenId}`} style={{ height: `${itemHiveHeight}px` }}>
                       <HiveItem nft={nft} tokenId={nft.tokenId} />
                     </div>
                   ))}

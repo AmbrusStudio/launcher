@@ -32,10 +32,10 @@ const HiveItem: FC<Props> = ({ nft, tokenId }) => {
       }}
     >
       <div className="bg-black relative h-full">
-        <div className="w-[53.5%] overflow-hidden float-left">
+        <div className="w-[47.62%] overflow-hidden float-left">
           <TokenMedia src={imageSizeConversion(nft.image, 2000)} trait={nft.trait} />
         </div>
-        <div className="w-[46.5%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0">
+        <div className="w-[52.38%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0">
           <section className="flex items-start justify-between gap-2">
             <DetailsName nft={nft} tokenId={tokenId} />
           </section>

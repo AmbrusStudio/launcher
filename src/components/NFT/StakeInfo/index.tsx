@@ -25,11 +25,11 @@ const StakeInfo: FC<StakeInfoProps> = ({ stakeLoading, nft, toggle, stake }) => 
 
   return (
     <div className="absolute top-0 right-0 bottom-0 left-0 flex">
-      <div className="w-[47.6%] overflow-auto float-left bg-white p-6 grid gap-y-20.5">
+      <div className="w-[47.62%] overflow-auto float-left bg-white p-6 grid gap-y-20.5">
         <Announcements address={nft.address} />
       </div>
 
-      <WrapperInfo className="w-[52.4%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0 overflow-auto">
+      <WrapperInfo className="w-[52.38%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0 overflow-auto">
         <StakeInfoDetail
           title={stakeCtx?.upgradeAnnouncement.title || ''}
           description={stakeCtx?.upgradeAnnouncement.description || ''}
