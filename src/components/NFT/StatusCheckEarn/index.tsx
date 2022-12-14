@@ -5,8 +5,7 @@ import { FC, useContext, useState } from 'react'
 import { StakeCtx } from '../../../context'
 import { confirmUnstakeEarnData } from '../../../data'
 import { useStatusCheck } from '../../../hooks/useStatusCheck'
-import { NFTE4CRanger } from '../../../types'
-import { getHolderByAddress } from '../../../utils'
+import { NFTE4CRanger, NFTImmutableX } from '../../../types'
 import ConfirmModal from '../../ConfirmModal'
 import Announcements from '../Announcements'
 import CheckCardEarn from '../CheckCardEarn'
@@ -19,7 +18,7 @@ const WrapperInfo = styled.div`
 
 interface Props {
   readonly unstakeLoading: boolean
-  readonly nft: NFTE4CRanger
+  readonly nft: NFTE4CRanger | NFTImmutableX
   toggle: (value: boolean) => void
   unstake: () => void
 }
@@ -28,12 +27,7 @@ const StatusCheckEarn: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) =>
   const [visibleUnstake, setVisibleUnstake] = useState<boolean>(false)
   const [visibleUpgrade, setVisibleUpgrade] = useState<boolean>(false)
 
-  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(
-    nft.tokenId,
-    getHolderByAddress(nft.address),
-    nft.status,
-    nft.address
-  )
+  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(nft)
 
   const stakeCtx = useContext(StakeCtx)
 
@@ -66,7 +60,7 @@ const StatusCheckEarn: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) =>
             }}
           >
             <button className="u-btn" onClick={() => setVisibleUnstake(true)}>
-              Unstake
+              {status ? 'Unstake' : 'Unstake & Earn'}
             </button>
             <button className="u-btn" onClick={() => toggle(false)}>
               Cancel

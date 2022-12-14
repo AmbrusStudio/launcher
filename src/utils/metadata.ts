@@ -22,6 +22,7 @@ import {
   NFTE4CRanger,
   NFTE4CRangerUpgraded,
   NFTEdition,
+  NFTImmutableX,
   StakeAnnouncement,
   TokenMetadata,
   Trait,
@@ -95,8 +96,8 @@ export const formatMetadataImmutableX = ({
   metadata: Map<string, Metadata>
   stakingStatus: ImmutableXL2Overall[]
   status: MetadataStatus
-}): NFTE4CRanger[] => {
-  const result: NFTE4CRanger[] = []
+}): NFTImmutableX[] => {
+  const result: NFTImmutableX[] = []
 
   stakingStatus.forEach((value) => {
     // Must have metadata information
@@ -110,7 +111,8 @@ export const formatMetadataImmutableX = ({
         upgraded: value.isUpgraded,
         staking: value.isStaking || false,
         status,
-      } as NFTE4CRanger)
+        l2Overall: value,
+      } as NFTImmutableX)
     }
   })
 

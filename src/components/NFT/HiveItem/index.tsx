@@ -4,7 +4,7 @@ import { StakeCtx } from '../../../context'
 import { stakeCheckEarn, stakeUpgradeEarn } from '../../../data'
 // import Star from '../../../components/Icon/Star'
 import { useStake } from '../../../hooks/useStake'
-import { NFTE4CRanger } from '../../../types'
+import { NFTE4CRanger, NFTImmutableX } from '../../../types'
 import { imageSizeConversion } from '../../../utils'
 import TokenMedia from '../../TokenMedia'
 import DetailsName from '../DetailsName'
@@ -14,7 +14,7 @@ import StatusCheckEarn from '../StatusCheckEarn'
 import TokenActions from '../TokenActions'
 
 interface Props {
-  readonly nft: NFTE4CRanger
+  readonly nft: NFTE4CRanger | NFTImmutableX
   readonly tokenId: string
 }
 

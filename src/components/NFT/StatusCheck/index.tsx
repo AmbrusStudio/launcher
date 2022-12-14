@@ -5,8 +5,7 @@ import { FC, useContext, useState } from 'react'
 
 import { StakeCtx } from '../../../context'
 import { useStatusCheck } from '../../../hooks/useStatusCheck'
-import { NFTE4CRanger } from '../../../types'
-import { getHolderByAddress } from '../../../utils'
+import { NFTImmutableX } from '../../../types'
 import Announcements from '../Announcements'
 import CheckCard from '../CheckCard'
 import ConfirmUnstake from '../ConfirmUnstake'
@@ -20,7 +19,7 @@ const WrapperInfo = styled.div`
 
 interface Props {
   readonly unstakeLoading: boolean
-  readonly nft: NFTE4CRanger
+  readonly nft: NFTImmutableX
   toggle: (value: boolean) => void
   unstake: () => void
 }
@@ -29,12 +28,7 @@ const StatusCheck: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) => {
   const [visibleUnstake, setVisibleUnstake] = useState<boolean>(false)
   const [visibleUpgrade, setVisibleUpgrade] = useState<boolean>(false)
 
-  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(
-    nft.tokenId,
-    getHolderByAddress(nft.address),
-    nft.status,
-    nft.address
-  )
+  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(nft)
 
   const stakeCtx = useContext(StakeCtx)
 

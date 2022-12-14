@@ -4,8 +4,7 @@ import { FC, useState } from 'react'
 
 import { statusCheckData } from '../../../data'
 import { useStatusCheck } from '../../../hooks/useStatusCheck'
-import { NFTE4CRanger } from '../../../types'
-import { getHolderByAddress } from '../../../utils'
+import { NFTImmutableX } from '../../../types'
 import { ArrowUp } from '../../Icon'
 import Announcements from '../Announcements'
 import CheckCard from '../CheckCard'
@@ -14,7 +13,7 @@ import Modal from '../Modal'
 interface Props {
   readonly visible: boolean
   readonly loading?: boolean
-  readonly nft: NFTE4CRanger
+  readonly nft: NFTImmutableX
   close: () => void
   upgrade: () => void
   unstake: () => void
@@ -22,12 +21,7 @@ interface Props {
 
 const StatusCheckModal: FC<Props> = ({ visible, loading = false, nft, close, upgrade, unstake }) => {
   const [drawer, setDrawer] = useState<boolean>(false)
-  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(
-    nft.tokenId,
-    getHolderByAddress(nft.address),
-    nft.status,
-    nft.address
-  )
+  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(nft)
 
   return (
     <Modal visible={visible} title={statusCheckData.title} close={close}>

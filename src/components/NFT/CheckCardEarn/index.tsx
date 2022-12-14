@@ -15,8 +15,8 @@ interface Props {
 const CheckCardEarn: FC<Props> = ({ duration, timeLeft, stakedPercentage, timeStatus, soulboundBadgeStatus }) => {
   return (
     <div className="flex flex-row gap-2.5">
-      <CheckCardStakedDay soulboundBadgeStatus={soulboundBadgeStatus} />
-      <CheckCardEarnAmount soulboundBadgeStatus={soulboundBadgeStatus} />
+      <CheckCardStakedDay timeLeft={timeLeft} />
+      <CheckCardEarnAmount amount={'0'} />
       <CheckCardEarnClaimed soulboundBadgeStatus={soulboundBadgeStatus} />
     </div>
   )
