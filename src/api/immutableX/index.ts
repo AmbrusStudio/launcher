@@ -1,6 +1,7 @@
 import { isAddress } from 'ethers/lib/utils'
+import { DateTime } from 'luxon'
 
-import { EarnedItem, ImmutableXL2Overall } from '../../types/immutableX'
+import { EarnedHistory, ImmutableXL2Overall } from '../../types/immutableX'
 import { sleep } from '../../utils'
 import { nftHiveBackendRequest, nftHolderBackendRequest } from '../axios'
 
@@ -138,42 +139,43 @@ export async function getImmutableXL2OverallHiveApi<T = ImmutableXL2Overall[]>({
 export async function getEarnedApi<T>() {
   const history = [
     {
-      time: '05/08/2022 12:45PM',
-      amount: '26.9',
-      id: '8888',
+      time: new Date(2022, 11, 16, 12, 1, 1),
+      earnedDgc: '6.9',
+      nftId: '8888',
     },
     {
-      time: '05/08/2022 12:45PM',
-      amount: '26.9',
-      id: '8999',
+      time: new Date(2022, 11, 15),
+      earnedDgc: '2.987654',
+      nftId: '8999',
     },
     {
-      time: '05/08/2022 12:45PM',
-      amount: '26.9',
-      id: '9999',
+      time: new Date(2022, 11, 11),
+      earnedDgc: '16.9',
+      nftId: '9999',
     },
     {
-      time: '05/08/2022 12:45PM',
-      amount: '26.9',
-      id: '8888',
+      time: new Date(2022, 11, 5),
+      earnedDgc: '86.9876543212345678',
+      nftId: '8888',
     },
     {
-      time: '05/08/2022 12:45PM',
-      amount: '26.9',
-      id: '8999',
+      time: new Date(2022, 11, 1),
+      earnedDgc: '86.9',
+      nftId: '8999',
     },
     {
-      time: '05/08/2022 12:45PM',
-      amount: '26.9',
-      id: '9999',
+      time: new Date(2022, 11, 8),
+      earnedDgc: '8.9',
+      nftId: '9999',
     },
-  ] as EarnedItem[]
+  ] as EarnedHistory[]
 
   await sleep(3000)
 
-  return {
-    history: history,
-    amount: '0',
-    symbol: 'DGC',
-  } as T
+  return history.sort((a, b) => {
+    const aDt = DateTime.fromJSDate(a.time)
+    const bDt = DateTime.fromJSDate(b.time)
+
+    return aDt > bDt ? -1 : 1
+  }) as T
 }
