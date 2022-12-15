@@ -94,6 +94,7 @@ export async function getImmutableXL2OverallHiveApi<T = ImmutableXL2Overall[]>({
       stakingDuration: 0,
       totalStakingTime: 3024000000,
       isUpgraded: false,
+      earnedDgc: '0',
     },
     {
       tokenAddress: '0x2b79919a89ffa96d98ac126ff244a662f77fdc19',
@@ -103,6 +104,7 @@ export async function getImmutableXL2OverallHiveApi<T = ImmutableXL2Overall[]>({
       stakingDuration: 1709940710,
       totalStakingTime: 3024000000,
       isUpgraded: false,
+      earnedDgc: '0',
     },
     {
       tokenAddress: '0x2b79919a89ffa96d98ac126ff244a662f77fdc19',
@@ -112,6 +114,7 @@ export async function getImmutableXL2OverallHiveApi<T = ImmutableXL2Overall[]>({
       stakingDuration: 3024000000,
       totalStakingTime: 3024000000,
       isUpgraded: false,
+      earnedDgc: '10',
     },
     {
       tokenAddress: '0x2b79919a89ffa96d98ac126ff244a662f77fdc19',
@@ -121,10 +124,11 @@ export async function getImmutableXL2OverallHiveApi<T = ImmutableXL2Overall[]>({
       stakingDuration: 3024000000,
       totalStakingTime: 3024000000,
       isUpgraded: true,
+      earnedDgc: '100',
     },
   ]
 
-  return response.data
+  return mockData
 }
 
 /**
@@ -168,7 +172,7 @@ export async function getEarnedApi<T>() {
   await sleep(3000)
 
   return {
-    history: [],
+    history: history,
     amount: '0',
     symbol: 'DGC',
   } as T

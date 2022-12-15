@@ -31,13 +31,10 @@ const StatusCheckEarn: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) =>
   const [visibleUpgrade, setVisibleUpgrade] = useState<boolean>(false)
 
   const { soulboundBadgeStatus, status } = useStatusCheckHive(nft)
-  const earnAmount = useMemo<string>(() => {
-    return '0'
-  }, [])
 
   const unstakeAndEarnState = useMemo<boolean>(() => {
-    return status && Number(earnAmount) > 0
-  }, [earnAmount, status])
+    return status && Number(nft?.l2Overall?.earnedDgc || 0) > 0
+  }, [nft?.l2Overall?.earnedDgc, status])
 
   const stakeCtx = useContext(StakeCtx)
 
@@ -57,7 +54,7 @@ const StatusCheckEarn: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) =>
             <CheckCardStakedDay
               time={(nft?.l2Overall?.stakingDuration && nft?.l2Overall?.stakingDuration / 1000) || 0}
             />
-            <CheckCardEarnAmount amount={earnAmount} />
+            <CheckCardEarnAmount amount={nft?.l2Overall?.earnedDgc || '0'} />
             <CheckCardEarnClaimed soulboundBadgeStatus={soulboundBadgeStatus} />
           </div>
 

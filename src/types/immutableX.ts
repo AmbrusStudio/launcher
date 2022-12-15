@@ -59,6 +59,7 @@ export type ImmutableXL2Overall = {
   stakingDuration: number
   totalStakingTime: number
   isUpgraded: boolean
+  earnedDgc: string
 }
 
 export type EarnedItem = {
