@@ -2,7 +2,6 @@ import { isAddress } from 'ethers/lib/utils'
 import { DateTime } from 'luxon'
 
 import { EarnedHistory, ImmutableXL2Overall } from '../../types/immutableX'
-import { sleep } from '../../utils'
 import { nftHiveBackendRequest, nftHolderBackendRequest } from '../axios'
 
 /**
@@ -147,7 +146,7 @@ export async function getImmutableXL2OverallHiveApi<T = ImmutableXL2Overall[]>({
     },
   ]
 
-  return mockData
+  return response.data
 }
 
 /**
@@ -205,12 +204,17 @@ export async function getEarnedApi<T>({ address }: { address: string }) {
     },
   ] as EarnedHistory[]
 
-  await sleep(3000)
+  const list: EarnedHistory[] = (response.data as EarnedHistory[]) || []
 
-  return history.sort((a, b) => {
-    const aDt = DateTime.fromJSDate(a.time)
-    const bDt = DateTime.fromJSDate(b.time)
+  return list.sort((a, b) => {
+    try {
+      const aDt = DateTime.fromJSDate(a.time)
+      const bDt = DateTime.fromJSDate(b.time)
 
-    return aDt > bDt ? -1 : 1
+      return aDt > bDt ? -1 : 1
+    } catch (error) {
+      console.log('dgcHistory sort error', error)
+      return 0
+    }
   }) as T
 }

@@ -1,4 +1,5 @@
 import { shortenIfAddress, useEthers } from '@usedapp/core'
+import { useDeepCompareEffect } from 'ahooks'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -9,8 +10,10 @@ import { GameBanner } from '../../../components/Game'
 import { AccountCenterPageLayout } from '../../../components/Layout'
 import { WalletButton } from '../../../components/Layout/WalletButton'
 import { useWeb3Modal } from '../../../hooks'
+import { useCollectionsHive } from '../../../hooks/useCollectionsHive'
 import { useUserCollections } from '../../../hooks/useUserCollections'
-import { GameInfo } from '../../../types'
+import { mergedCollections } from '../../../tools'
+import { GameInfo, NFTE4CRanger } from '../../../types'
 
 export function Home() {
   const navigate = useNavigate()
@@ -18,8 +21,21 @@ export function Home() {
   const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
 
   const [games, setGames] = useState<GameInfo[]>([])
+  const [nfts, setNfts] = useState<NFTE4CRanger[]>([])
+
   const { collections } = useUserCollections()
   collections.length && console.log('useUserCollections', collections)
+
+  const { collections: collectionsHive } = useCollectionsHive()
+  collectionsHive.length && console.log('useCollectionsHive', collectionsHive)
+
+  useDeepCompareEffect(() => {
+    setNfts((data) => mergedCollections(data, collections))
+  }, [collections])
+
+  useDeepCompareEffect(() => {
+    setNfts((data) => mergedCollections(data, collectionsHive))
+  }, [collectionsHive])
 
   const fetchAllGames = useCallback(async (signal: AbortSignal) => {
     const games = await getAllGames(signal)
@@ -66,10 +82,10 @@ export function Home() {
             >
               {shortenIfAddress(account)}
             </WalletButton>
-          ) : account && active && !collections.length ? (
+          ) : account && active && !nfts.length ? (
             <span className="text-base text-white">No more data</span>
           ) : (
-            <AssetsSlider data={collections} />
+            <AssetsSlider data={nfts} />
           )}
         </AccountBlock>
       </div>
