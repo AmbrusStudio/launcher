@@ -41,6 +41,7 @@ export type MetadataResponse = {
 export enum TraitName {
   Rin = 'Rin',
   Kit = 'Kit',
+  Thorn = 'Thorn',
 }
 
 // reference status https://docs.x.immutable.com/docs/how-to-get-data#get-details-about-a-collection

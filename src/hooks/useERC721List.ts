@@ -250,7 +250,7 @@ export function useERC721ImmutableXList() {
   const [collections, setCollections] = useState<NFTE4CRanger[]>([])
 
   const { data, error, isLoading } = useSWR<ImmutableXL2Overall[]>(
-    { address: walletInfo?.address || '' },
+    { address: walletInfo?.address || '', cacheKey: 'immutableX' },
     getImmutableXL2OverallApi
   )
 

@@ -12,8 +12,9 @@ import {
   E4CRanger_RangersEdition,
   E4CRanger_RangersEdition_Holder,
   E4CRanger_UltimateEdition,
+  E4CRangerHive_ImmutableX_Thorn,
 } from '../contracts'
-import { stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
+import { stakeAnnouncementEarn, stakeAnnouncementGold, stakeAnnouncementRangers } from '../data'
 import {
   Metadata,
   MetadataResponse,
@@ -21,6 +22,7 @@ import {
   NFTE4CRanger,
   NFTE4CRangerUpgraded,
   NFTEdition,
+  NFTImmutableX,
   StakeAnnouncement,
   TokenMetadata,
   Trait,
@@ -94,8 +96,8 @@ export const formatMetadataImmutableX = ({
   metadata: Map<string, Metadata>
   stakingStatus: ImmutableXL2Overall[]
   status: MetadataStatus
-}): NFTE4CRanger[] => {
-  const result: NFTE4CRanger[] = []
+}): NFTImmutableX[] => {
+  const result: NFTImmutableX[] = []
 
   stakingStatus.forEach((value) => {
     // Must have metadata information
@@ -109,7 +111,8 @@ export const formatMetadataImmutableX = ({
         upgraded: value.isUpgraded,
         staking: value.isStaking || false,
         status,
-      } as NFTE4CRanger)
+        l2Overall: value,
+      } as NFTImmutableX)
     }
   })
 
@@ -200,6 +203,7 @@ export const getStakeAnnouncement = (address: string): StakeAnnouncement[] => {
     [getAddress(E4CRanger_ImmutableX_GoldEdition)]: stakeAnnouncementGold,
     [getAddress(E4CRanger_RangersEdition)]: stakeAnnouncementRangers,
     [getAddress(E4CRanger_ImmutableX_RangersEdition)]: stakeAnnouncementRangers,
+    [getAddress(E4CRangerHive_ImmutableX_Thorn)]: stakeAnnouncementEarn,
   }
 
   return list[getAddress(address)] || []
@@ -223,7 +227,8 @@ export const getHolderByAddress = (address: string): string => {
   if (result) {
     return result
   } else {
-    throw new Error('holder not found')
+    console.error('holder not found')
+    return ''
   }
 }
 
@@ -315,6 +320,15 @@ export const getDefaultMetadataTrait = (address: string, tokenId: string): Trait
     return []
   }
 
+  if (getAddress(address) === getAddress(E4CRangerHive_ImmutableX_Thorn)) {
+    return [
+      {
+        trait_type: Trait.Name,
+        value: 'Thorn',
+      },
+    ]
+  }
+
   const trait = [
     {
       trait_type: Trait.Name,
@@ -369,11 +383,27 @@ export const getDefaultMetadataTrait = (address: string, tokenId: string): Trait
 export const getSeries = (trait: TraitItem[]): string => {
   const name = traitName(trait)
 
-  if (name === TraitName.Rin) {
-    return '1'
-  } else if (name === TraitName.Kit) {
-    return '2'
-  } else {
-    return ''
+  const list = {
+    [TraitName.Rin]: '1',
+    [TraitName.Kit]: '2',
+    [TraitName.Thorn]: '3',
   }
+  return (name && list[name]) || ''
+}
+
+/**
+ * Get Name
+ * @param trait
+ * @returns
+ */
+export const getName = (trait: TraitItem[]): string => {
+  const name = traitName(trait)
+
+  const list = {
+    [TraitName.Rin]: 'E4C RANGERS',
+    [TraitName.Kit]: 'E4C RANGERS',
+    [TraitName.Thorn]: 'E4C RANGERS HIVE',
+  }
+
+  return (name && list[name]) || ''
 }

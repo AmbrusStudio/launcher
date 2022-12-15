@@ -9,6 +9,7 @@ import {
   E4CRanger_ImmutableX_RangersEdition,
   E4CRanger_RangersEdition,
   E4CRanger_UltimateEdition,
+  E4CRangerHive_ImmutableX_Thorn,
 } from '../contracts'
 import { RootState } from '../store'
 
@@ -23,6 +24,11 @@ export function useMetadataBaseURL() {
   )
   const metadadaUltimateBaseURI = useSelector(
     (state: RootState) => state.metadata.UltimateEdition[defaultChainId].baseURI
+  )
+
+  // Hive <Thorn>
+  const metadadaHiveThornBaseURI = useSelector(
+    (state: RootState) => state.metadataImmutableXHive.Thorn[defaultChainId].baseURI
   )
 
   /**
@@ -42,11 +48,12 @@ export function useMetadataBaseURL() {
         [getAddress(E4CRanger_RangersEdition)]: metadadaRangersBaseURI,
         [getAddress(E4CRanger_ImmutableX_RangersEdition)]: metadadaRangersBaseURI,
         [getAddress(E4CRanger_UltimateEdition)]: metadadaUltimateBaseURI,
+        [getAddress(E4CRangerHive_ImmutableX_Thorn)]: metadadaHiveThornBaseURI,
       }
 
       return list[getAddress(address)]
     },
-    [metadadaGoldBaseURI, metadadaRangersBaseURI, metadadaUltimateBaseURI]
+    [metadadaGoldBaseURI, metadadaHiveThornBaseURI, metadadaRangersBaseURI, metadadaUltimateBaseURI]
   )
 
   return {

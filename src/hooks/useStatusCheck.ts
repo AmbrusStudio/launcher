@@ -1,54 +1,49 @@
 import BigNumber from 'bignumber.js'
 import { useMemo } from 'react'
 
-import { MetadataStatus } from '../types'
+import { MetadataStatus, NFTImmutableX } from '../types'
 import { useE4CRangerTotalStakingTime, useE4CRangerUpgradeDuration } from './useE4CRanger'
-import { useImmutableXStakingStatus } from './useImmutableX'
 import { useOwnedDiamondHandSBT } from './useOwnedDiamondHandSBT'
 
 /**
  * Staking status
- * @param tokenId
  * @returns
  */
-export function useStatusCheck(tokenId: string, address: string, metadataStatus: MetadataStatus, tokenAddress: string) {
-  // upgradeDuration
-  const upgradeDurationEthereum = useE4CRangerUpgradeDuration(address)
+export function useStatusCheck(nft: NFTImmutableX) {
+  // Ethereum upgradeDuration
+  const upgradeDurationEthereum = useE4CRangerUpgradeDuration(nft.status === MetadataStatus.Ethereum ? nft.address : '')
 
-  // totalStakingTime
-  const totalStakingTimeEthereum = useE4CRangerTotalStakingTime(address, tokenId)
-
-  // ImmutableX StakingStatus
-  const stakingStatus = useImmutableXStakingStatus(
-    metadataStatus === MetadataStatus.ImmutableX ? tokenAddress : '',
-    tokenId
+  // Ethereum totalStakingTime
+  const totalStakingTimeEthereum = useE4CRangerTotalStakingTime(
+    nft.status === MetadataStatus.Ethereum ? nft.address : '',
+    nft.tokenId
   )
 
+  // Calculate upgradeDuration
   const upgradeDuration = useMemo(() => {
-    if (metadataStatus === MetadataStatus.Ethereum) {
-      return upgradeDurationEthereum
-    } else if (metadataStatus === MetadataStatus.ImmutableX) {
-      return stakingStatus?.stakingDuration ? stakingStatus?.stakingDuration / 1000 : 0
-    } else {
-      return 0
+    const time = {
+      [MetadataStatus.Ethereum]: upgradeDurationEthereum,
+      [MetadataStatus.ImmutableX]: nft?.l2Overall?.stakingDuration ? nft.l2Overall.stakingDuration / 1000 : 0,
     }
-  }, [metadataStatus, upgradeDurationEthereum, stakingStatus?.stakingDuration])
 
+    return time[nft.status] || 0
+  }, [upgradeDurationEthereum, nft?.l2Overall?.stakingDuration, nft.status])
+
+  // Calculate totalStakingTime
   const totalStakingTime = useMemo(() => {
-    if (metadataStatus === MetadataStatus.Ethereum) {
-      return totalStakingTimeEthereum
-    } else if (metadataStatus === MetadataStatus.ImmutableX) {
-      return stakingStatus?.totalStakingTime ? stakingStatus?.totalStakingTime / 1000 : 0
-    } else {
-      return 0
+    const time = {
+      [MetadataStatus.Ethereum]: totalStakingTimeEthereum,
+      [MetadataStatus.ImmutableX]: nft?.l2Overall?.totalStakingTime ? nft.l2Overall.totalStakingTime / 1000 : 0,
     }
-  }, [metadataStatus, totalStakingTimeEthereum, stakingStatus?.totalStakingTime])
 
+    return time[nft.status] || 0
+  }, [totalStakingTimeEthereum, nft?.l2Overall?.totalStakingTime, nft.status])
+
+  // stakingTime
   const stakingTime = useMemo<BigNumber>(
     () => (totalStakingTime ? new BigNumber(totalStakingTime.toString()) : new BigNumber(0)),
     [totalStakingTime]
   )
-  // console.log('stakingTime', stakingTime)
 
   // Staking time percentage
   const stakedPercentage = useMemo<number>(() => {
@@ -61,7 +56,6 @@ export function useStatusCheck(tokenId: string, address: string, metadataStatus:
       return Math.round(result * 10000) / 100.0
     }
   }, [upgradeDuration, stakingTime])
-  // console.log('stakedPercentage', stakedPercentage)
 
   // Total duration
   const duration = useMemo<string>(() => (upgradeDuration ? upgradeDuration.toString() : '0'), [upgradeDuration])

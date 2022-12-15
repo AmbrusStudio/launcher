@@ -1,3 +1,4 @@
+import { ImmutableXL2Overall } from './immutableX'
 import { Metadata, MetadataStatus, TraitItem } from './metadata'
 
 export type StakeAnnouncement = {
@@ -18,6 +19,11 @@ export type ConfirmUnstakeDataType = {
 }
 
 export type ConfirmUpgradeDataType = {
+  description: string
+}
+
+export type ConfirmModalData = {
+  title: string
   description: string
 }
 
@@ -104,6 +110,15 @@ export type NFTE4CRanger = {
   upgraded: NFTE4CRangerUpgraded
   staking: boolean
   status: MetadataStatus
+} & Metadata
+
+export type NFTImmutableX = {
+  address: string
+  tokenId: string
+  upgraded: NFTE4CRangerUpgraded
+  staking: boolean
+  status: MetadataStatus
+  l2Overall?: ImmutableXL2Overall
 } & Metadata
 
 export type TokenMetadata = {

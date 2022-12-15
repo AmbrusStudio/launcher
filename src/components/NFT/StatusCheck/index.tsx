@@ -1,50 +1,37 @@
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import classNames from 'classnames'
-import { FC, useState } from 'react'
+import { FC, useContext, useState } from 'react'
 
-import { statusCheckData } from '../../../data'
+import { StakeCtx } from '../../../context'
 import { useStatusCheck } from '../../../hooks/useStatusCheck'
-import { NFTE4CRanger } from '../../../types'
-import { getHolderByAddress } from '../../../utils'
+import { NFTImmutableX } from '../../../types'
 import Announcements from '../Announcements'
-import CheckCard from '../CheckCard'
+import CheckCardClaimed from '../CheckCardClaimed'
+import CheckCardCountdown from '../CheckCardCountdown'
 import ConfirmUnstake from '../ConfirmUnstake'
 import ConfirmUpgrade from '../ConfirmUpgrade'
+import StakeInfoDetail from '../StakeInfoDetail'
 
 const WrapperInfo = styled.div`
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(12px);
 `
-const Title = styled.h3`
-  font-family: 'Montserrat', sans-serif;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 29px;
-  text-transform: uppercase;
-  color: #ffffff;
-  padding: 0;
-  margin: 0;
-`
 
-interface StatusCheckProps {
+interface Props {
   readonly unstakeLoading: boolean
-  readonly nft: NFTE4CRanger
+  readonly nft: NFTImmutableX
   toggle: (value: boolean) => void
   unstake: () => void
 }
 
-const StatusCheck: FC<StatusCheckProps> = ({ unstakeLoading, nft, toggle, unstake }) => {
+const StatusCheck: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) => {
   const [visibleUnstake, setVisibleUnstake] = useState<boolean>(false)
   const [visibleUpgrade, setVisibleUpgrade] = useState<boolean>(false)
 
-  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(
-    nft.tokenId,
-    getHolderByAddress(nft.address),
-    nft.status,
-    nft.address
-  )
+  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(nft)
+
+  const stakeCtx = useContext(StakeCtx)
 
   return (
     <div className="absolute top-0 right-0 bottom-0 left-0 flex">
@@ -52,18 +39,20 @@ const StatusCheck: FC<StatusCheckProps> = ({ unstakeLoading, nft, toggle, unstak
         <Announcements address={nft.address} />
       </div>
       <WrapperInfo className="w-[46.5%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0 overflow-auto">
-        <Title>{statusCheckData.title}</Title>
-        <p className="font-normal text-base leading-[30px] text-white not-italic mt-3 mb-auto">
-          {statusCheckData.description}
-        </p>
-
-        <CheckCard
-          duration={duration}
-          timeLeft={timeLeft}
-          stakedPercentage={stakedPercentage}
-          timeStatus={timeStatus}
-          soulboundBadgeStatus={soulboundBadgeStatus}
+        <StakeInfoDetail
+          title={stakeCtx?.checkAnnouncement.title || ''}
+          description={stakeCtx?.checkAnnouncement.description || ''}
         />
+
+        <Stack spacing={1.5} direction="row" className="mt-auto">
+          <CheckCardCountdown
+            duration={duration}
+            timeLeft={timeLeft}
+            stakedPercentage={stakedPercentage}
+            timeStatus={timeStatus}
+          />
+          <CheckCardClaimed soulboundBadgeStatus={soulboundBadgeStatus} />
+        </Stack>
 
         <Stack
           spacing={1.5}
