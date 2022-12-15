@@ -60,3 +60,15 @@ export type ImmutableXL2Overall = {
   totalStakingTime: number
   isUpgraded: boolean
 }
+
+export type EarnedItem = {
+  time: string
+  amount: string
+  id: string
+}
+
+export type EarnedHistory = {
+  history: EarnedItem[]
+  amount: string
+  symbol: string
+}

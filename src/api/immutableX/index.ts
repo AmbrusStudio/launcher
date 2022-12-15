@@ -1,6 +1,7 @@
 import { isAddress } from 'ethers/lib/utils'
 
-import { ImmutableXL2Overall } from '../../types/immutableX'
+import { EarnedItem, ImmutableXL2Overall } from '../../types/immutableX'
+import { sleep } from '../../utils'
 import { nftHiveBackendRequest, nftHolderBackendRequest } from '../axios'
 
 /**
@@ -122,4 +123,51 @@ export async function getImmutableXL2OverallHiveApi<T = ImmutableXL2Overall[]>({
       isUpgraded: true,
     },
   ]
+}
+
+/**
+ * Get DGC Earned
+ * @returns
+ */
+export async function getEarnedApi<T>() {
+  const history = [
+    {
+      time: '05/08/2022 12:45PM',
+      amount: '26.9',
+      id: '8888',
+    },
+    {
+      time: '05/08/2022 12:45PM',
+      amount: '26.9',
+      id: '8999',
+    },
+    {
+      time: '05/08/2022 12:45PM',
+      amount: '26.9',
+      id: '9999',
+    },
+    {
+      time: '05/08/2022 12:45PM',
+      amount: '26.9',
+      id: '8888',
+    },
+    {
+      time: '05/08/2022 12:45PM',
+      amount: '26.9',
+      id: '8999',
+    },
+    {
+      time: '05/08/2022 12:45PM',
+      amount: '26.9',
+      id: '9999',
+    },
+  ] as EarnedItem[]
+
+  await sleep(3000)
+
+  return {
+    history: [],
+    amount: '0',
+    symbol: 'DGC',
+  } as T
 }

@@ -1,42 +1,15 @@
+import CircularProgress from '@mui/material/CircularProgress'
 import { useBoolean } from 'ahooks'
 import classNames from 'classnames'
 import numbro from 'numbro'
-import { useState } from 'react'
+import useSWR from 'swr'
+
+import { getEarnedApi } from '../../api/immutableX'
+import { EarnedHistory } from '../../types/immutableX'
 
 const Earned = () => {
   const [visible, { toggle: visibleToggle }] = useBoolean(false)
-  const [earnList, setEarnList] = useState([
-    {
-      time: '05/08/2022 12:45PM',
-      amount: '26.9',
-      id: '8888',
-    },
-    {
-      time: '05/08/2022 12:45PM',
-      amount: '26.9',
-      id: '8999',
-    },
-    {
-      time: '05/08/2022 12:45PM',
-      amount: '26.9',
-      id: '9999',
-    },
-    {
-      time: '05/08/2022 12:45PM',
-      amount: '26.9',
-      id: '8888',
-    },
-    {
-      time: '05/08/2022 12:45PM',
-      amount: '26.9',
-      id: '8999',
-    },
-    {
-      time: '05/08/2022 12:45PM',
-      amount: '26.9',
-      id: '9999',
-    },
-  ])
+  const { data, isLoading } = useSWR<EarnedHistory>({ cacheKey: 'earnedHistory' }, getEarnedApi)
 
   return (
     <div
@@ -55,7 +28,7 @@ const Earned = () => {
           onClickCapture={visibleToggle}
         >
           <p className="flex-grow-0 flex-shrink-0 text-base font-bold text-right text-white leading-30px">
-            DGC Earned: 580.7
+            DGC Earned: {data?.amount || '0'}
           </p>
           <svg
             width={24}
@@ -73,22 +46,29 @@ const Earned = () => {
             />
           </svg>
         </div>
-        {visible && (
+
+        {visible && isLoading && (
+          <div className="text-center py-6 w-full">
+            <CircularProgress className="w-6! h-6! text-white!" />
+          </div>
+        )}
+
+        {visible && !isLoading && (
           <>
-            {earnList.length ? (
-              <table className="border-separate border-spacing-2.5 border-spacing-y-2.5 table-auto">
-                <thead>
+            {data && data.history.length ? (
+              <table className="border-separate border-spacing-2.5 border-spacing-y-2.5 table-auto max-w-560px">
+                <thead className="table table-auto	w-full">
                   <tr>
                     <th className="p-3 text-sm font-semibold leading-24px text-left">Time</th>
-                    <th className="p-3 text-sm font-semibold leading-24px text-right">DGC Earned</th>
+                    <th className="p-3 text-sm font-semibold leading-24px text-right w-120px">DGC Earned</th>
                     <th className="p-3 text-sm font-semibold leading-24px text-right">NFT ID</th>
                   </tr>
                 </thead>
-                <tbody>
-                  {earnList.map((item, index) => (
-                    <tr key={index}>
+                <tbody className="block h-75 overflow-y-auto">
+                  {data.history.map((item, index) => (
+                    <tr key={index} className="table table-auto w-full">
                       <td className="p-3 text-sm leading-24px text-left">{item.time}</td>
-                      <td className="p-3 text-sm leading-24px text-right">{item.amount}</td>
+                      <td className="p-3 text-sm leading-24px text-right w-120px">{item.amount}</td>
                       <td className="p-3 text-sm leading-24px text-right">
                         E4C Rangers Hive #{numbro(item.id).format({ thousandSeparated: true })}
                       </td>
@@ -100,7 +80,9 @@ const Earned = () => {
               <div className="px-10 py-7.5">
                 <p className="text-base text-center text-white leading-7.5">
                   <p>Stake E4C Rangers Hive NFTs to earn DGC tokens.</p>
-                  <a className="underline">Learn more about our tokenomics</a>
+                  <a className="underline" href="#" target="_blank" rel="noopener">
+                    Learn more about our tokenomics
+                  </a>
                 </p>
               </div>
             )}
