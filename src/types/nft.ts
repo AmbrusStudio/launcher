@@ -14,14 +14,6 @@ export type StakeInfoDataType = {
   description: string
 }
 
-export type ConfirmUnstakeDataType = {
-  description: string
-}
-
-export type ConfirmUpgradeDataType = {
-  description: string
-}
-
 export type ConfirmModalData = {
   title: string
   description: string

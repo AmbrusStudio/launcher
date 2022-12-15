@@ -1,14 +1,5 @@
 import { TokenomicsLink } from '../constants'
-import {
-  ConfirmModalData,
-  ConfirmUnstakeDataType,
-  ConfirmUpgradeDataType,
-  PERK,
-  PERKState,
-  PERKTag,
-  StakeAnnouncement,
-  StakeInfoDataType,
-} from '../types'
+import { ConfirmModalData, PERK, PERKState, PERKTag, StakeAnnouncement, StakeInfoDataType } from '../types'
 
 export const PERKS: PERK[] = [
   {
@@ -76,12 +67,14 @@ export const stakeCheckEarn: StakeInfoDataType = {
 }
 
 // Stake Confirm Modal
-export const confirmUnstakeData: ConfirmUnstakeDataType = {
+export const confirmUnstakeData: ConfirmModalData = {
+  title: 'Are you sure?',
   description:
     'Once unstaked, the upgrading status of this NFT will be reset. You can still upgrade this NFT in the future.',
 }
 
-export const confirmUpgradeData: ConfirmUpgradeDataType = {
+export const confirmUpgradeData: ConfirmModalData = {
+  title: 'Upgrade your NFT?',
   description:
     'You’ll earn a lot more benefits after upgrading your NFT. You can only upgrade this NFT whilel it’s still staked.',
 }
