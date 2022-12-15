@@ -2,7 +2,6 @@ import { ImmutableXClient, Link, LinkResults } from '@imtbl/imx-sdk'
 import React from 'react'
 
 import { AccountAvatarInfo } from '../types'
-export * from './stake'
 
 type ImmutableXWalletContextValue = {
   imxLink: Link | undefined

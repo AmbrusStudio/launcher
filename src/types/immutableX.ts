@@ -62,14 +62,8 @@ export type ImmutableXL2Overall = {
   earnedDgc: string
 }
 
-export type EarnedItem = {
-  time: string
-  amount: string
-  id: string
-}
-
 export type EarnedHistory = {
-  history: EarnedItem[]
-  amount: string
-  symbol: string
+  time: Date
+  nftId: string
+  earnedDgc: string
 }

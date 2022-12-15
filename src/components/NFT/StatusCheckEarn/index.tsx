@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import classNames from 'classnames'
-import { FC, useContext, useMemo, useState } from 'react'
+import { FC, useMemo, useState } from 'react'
 
-import { StakeCtx } from '../../../context'
-import { confirmUnstakeEarnData, confirmUpgradeEarnData } from '../../../data'
+import { confirmUnstakeEarnData, confirmUpgradeEarnData, stakeCheckEarn } from '../../../data'
 import { useStatusCheckHive } from '../../../hooks/useStatusCheckHive'
 import { NFTImmutableX } from '../../../types'
 import ConfirmModal from '../../ConfirmModal'
@@ -36,8 +35,6 @@ const StatusCheckEarn: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) =>
     return status && Number(nft?.l2Overall?.earnedDgc || 0) > 0
   }, [nft?.l2Overall?.earnedDgc, status])
 
-  const stakeCtx = useContext(StakeCtx)
-
   return (
     <>
       <div className="absolute top-0 right-0 bottom-0 left-0 flex">
@@ -45,10 +42,7 @@ const StatusCheckEarn: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) =>
           <Announcements address={nft.address} />
         </div>
         <WrapperInfo className="w-[52.38%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0 overflow-auto">
-          <StakeInfoDetail
-            title={stakeCtx?.checkAnnouncement.title || ''}
-            description={stakeCtx?.checkAnnouncement.description || ''}
-          />
+          <StakeInfoDetail title={stakeCheckEarn.title || ''} description={stakeCheckEarn.description || ''} />
 
           <div className="flex flex-row gap-2.5 mt-auto">
             <CheckCardStakedDay

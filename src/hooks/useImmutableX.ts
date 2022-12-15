@@ -3,8 +3,18 @@ import * as Sentry from '@sentry/react'
 import { getAddress, isAddress } from 'ethers/lib/utils'
 import React, { useCallback, useEffect, useState } from 'react'
 
-import { getImmutableXStakingStatusApi, immutableXUnstakeApi } from '../api/immutableX'
+import {
+  getImmutableXStakingStatusApi,
+  immutableXTransferConfirmApi,
+  immutableXTransferConfirmHiveApi,
+  immutableXUnstakeApi,
+} from '../api/immutableX'
 import { ImmutableXWalletContext } from '../context'
+import {
+  E4CRanger_ImmutableX_GoldEdition,
+  E4CRanger_ImmutableX_RangersEdition,
+  E4CRangerHive_ImmutableX_Thorn,
+} from '../contracts'
 import {
   ImmutableXStakingStatus,
   ImmutableXUnstake,
@@ -149,14 +159,36 @@ export const useImmutableXERC721AssetTransfers = () => {
             toAddress,
           },
         ])
-        console.log(response)
+        console.log('transfer response', response)
 
         setState({ status: TransactionStateImmutableX.Mining })
 
         const { status } = response.result[0]
 
         if (status === 'success') {
-          setState({ status: TransactionStateImmutableX.Success })
+          // transfer confirm
+          const listApi = {
+            [E4CRanger_ImmutableX_GoldEdition]: immutableXTransferConfirmApi,
+            [E4CRanger_ImmutableX_RangersEdition]: immutableXTransferConfirmApi,
+            [E4CRangerHive_ImmutableX_Thorn]: immutableXTransferConfirmHiveApi,
+          }
+          const transferConfirmApi = listApi[tokenAddress]
+
+          if (transferConfirmApi) {
+            const responseTransferConfirm = await transferConfirmApi({ id: response.result[0].txId })
+            console.log('responseTransferConfirm response', responseTransferConfirm)
+
+            if (responseTransferConfirm.status === 200) {
+              setState({ status: TransactionStateImmutableX.Success })
+            } else {
+              setState({ status: TransactionStateImmutableX.Fail, errorMessage: 'TransferConfirm Fail' })
+            }
+          } else {
+            const e = 'Transfer confirmm api not available'
+
+            console.error(e)
+            setState({ status: TransactionStateImmutableX.Fail, errorMessage: e })
+          }
         } else if (status === 'error') {
           setState({ status: TransactionStateImmutableX.Fail, errorMessage: response.result[0].message })
         } else {

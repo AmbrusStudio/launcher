@@ -1,16 +1,34 @@
 import CircularProgress from '@mui/material/CircularProgress'
 import { useBoolean } from 'ahooks'
+import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
+import { DateTime } from 'luxon'
 import numbro from 'numbro'
+import { useMemo } from 'react'
 import useSWR from 'swr'
 
 import { getEarnedApi } from '../../api/immutableX'
 import { TokenomicsLink } from '../../constants'
+import { useImmutableXWallet } from '../../hooks/useImmutableX'
 import { EarnedHistory } from '../../types/immutableX'
+import { balanceDecimal } from '../../utils'
 
 const Earned = () => {
+  const { walletInfo } = useImmutableXWallet()
+
   const [visible, { toggle: visibleToggle }] = useBoolean(false)
-  const { data, isLoading } = useSWR<EarnedHistory>({ cacheKey: 'earnedHistory' }, getEarnedApi)
+  const { data, isLoading } = useSWR<EarnedHistory[]>(
+    { address: walletInfo?.address || '', cacheKey: 'earnedHistory' },
+    getEarnedApi
+  )
+
+  const totalAmount = useMemo<BigNumber>(() => {
+    return (
+      data?.reduce((accumulator, currentValue) => {
+        return accumulator.plus(currentValue.earnedDgc)
+      }, new BigNumber(0)) || new BigNumber(0)
+    )
+  }, [data])
 
   return (
     <div
@@ -29,7 +47,7 @@ const Earned = () => {
           onClickCapture={visibleToggle}
         >
           <p className="flex-grow-0 flex-shrink-0 text-base font-bold text-right text-white leading-30px">
-            DGC Earned: {data?.amount || '0'}
+            DGC Earned: {balanceDecimal(totalAmount.toString(), 6) || '0'}
           </p>
           <svg
             width={24}
@@ -56,7 +74,7 @@ const Earned = () => {
 
         {visible && !isLoading && (
           <>
-            {data && data.history.length ? (
+            {data && data.length ? (
               <table className="border-separate border-spacing-2.5 border-spacing-y-2.5 table-auto max-w-560px">
                 <thead className="table table-auto	w-full">
                   <tr>
@@ -66,12 +84,16 @@ const Earned = () => {
                   </tr>
                 </thead>
                 <tbody className="block h-75 overflow-y-auto">
-                  {data.history.map((item, index) => (
+                  {data.map((item, index) => (
                     <tr key={index} className="table table-auto w-full">
-                      <td className="p-3 text-sm leading-24px text-left">{item.time}</td>
-                      <td className="p-3 text-sm leading-24px text-right w-120px">{item.amount}</td>
+                      <td className="p-3 text-sm leading-24px text-left">
+                        {DateTime.fromJSDate(item.time).toFormat('f')}
+                      </td>
+                      <td className="p-3 text-sm leading-24px text-right w-120px">
+                        {balanceDecimal(item.earnedDgc, 6)}
+                      </td>
                       <td className="p-3 text-sm leading-24px text-right">
-                        E4C Rangers Hive #{numbro(item.id).format({ thousandSeparated: true })}
+                        E4C Rangers Hive #{numbro(item.nftId).format({ thousandSeparated: true })}
                       </td>
                     </tr>
                   ))}

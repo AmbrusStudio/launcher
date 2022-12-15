@@ -19,3 +19,20 @@ export function getDefaultChainId(): number {
 export const preCheckCurrentChain = (chainId: number | undefined): boolean => {
   return chainId === getDefaultChainId()
 }
+
+/**
+ * balance decimal
+ * @param amount
+ * @param decimal
+ * @returns
+ */
+export const balanceDecimal = (amount: string, decimal = 6): string => {
+  // utils.formatUnits 0.0
+  if (amount === '0.0') return '0'
+
+  const point = amount.indexOf('.')
+  if (~point) {
+    return amount.slice(0, point + 1 + decimal)
+  }
+  return amount
+}

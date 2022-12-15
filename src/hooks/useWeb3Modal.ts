@@ -1,7 +1,7 @@
 import { useEthers } from '@usedapp/core'
 import { useMount } from 'ahooks'
 import React from 'react'
-import store from 'store'
+import useLocalStorageState from 'use-local-storage-state'
 import Web3Modal from 'web3modal'
 
 import { web3ModalProviderOptions } from '../contracts'
@@ -22,12 +22,15 @@ const web3Modal = new Web3Modal({
 })
 
 export function useWeb3Modal(): UseWeb3Modal {
+  const [storeWalletconnect, , { removeItem: storeWalletconnectRemoveItem }] =
+    useLocalStorageState<string>('walletconnect')
+
   const { chainId, activate, switchNetwork: dappSwitchNetwork, deactivate } = useEthers()
 
   const chainIdMismatch = chainId !== defaultChainId
 
   const connect = async () => {
-    if (web3Modal.cachedProvider === 'walletconnect' && !store.get('walletconnect')) {
+    if (web3Modal.cachedProvider === 'walletconnect' && !storeWalletconnect) {
       await web3Modal.clearCachedProvider()
     }
 
@@ -38,7 +41,7 @@ export function useWeb3Modal(): UseWeb3Modal {
   const disconnect = async () => {
     if (web3Modal.cachedProvider) {
       if (web3Modal.cachedProvider === 'walletconnect') {
-        store.remove('walletconnect')
+        storeWalletconnectRemoveItem()
       }
       await web3Modal.clearCachedProvider()
     }
@@ -53,7 +56,7 @@ export function useWeb3Modal(): UseWeb3Modal {
 
   useMount(() => {
     if (web3Modal.cachedProvider) {
-      if (web3Modal.cachedProvider === 'walletconnect' && !store.get('walletconnect')) {
+      if (web3Modal.cachedProvider === 'walletconnect' && !storeWalletconnect) {
         return
       }
       connect()

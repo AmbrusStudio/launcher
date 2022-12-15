@@ -1,6 +1,7 @@
 import { isAddress } from 'ethers/lib/utils'
+import { DateTime } from 'luxon'
 
-import { EarnedItem, ImmutableXL2Overall } from '../../types/immutableX'
+import { EarnedHistory, ImmutableXL2Overall } from '../../types/immutableX'
 import { sleep } from '../../utils'
 import { nftHiveBackendRequest, nftHolderBackendRequest } from '../axios'
 
@@ -21,6 +22,24 @@ export async function immutableXUnstakeApi<T = unknown>({
   signature: string
 }) {
   return await nftHolderBackendRequest.post<T>(`/unstake`, { owner, tokenAddress, tokenId, signature })
+}
+
+/**
+ * ImmutableX Transfer Confirm
+ * @param param id: number
+ * @returns
+ */
+export async function immutableXTransferConfirmApi<T = unknown>({ id }: { id: number }) {
+  return await nftHolderBackendRequest.post<T>(`/transferConfirm`, { id })
+}
+
+/**
+ * ImmutableX Transfer Confirm Hive
+ * @param param id: number
+ * @returns
+ */
+export async function immutableXTransferConfirmHiveApi<T = unknown>({ id }: { id: number }) {
+  return await nftHiveBackendRequest.post<T>(`/transferConfirm`, { id })
 }
 
 /**
@@ -133,47 +152,65 @@ export async function getImmutableXL2OverallHiveApi<T = ImmutableXL2Overall[]>({
 
 /**
  * Get DGC Earned
+ * @param param assress: wallet address
  * @returns
  */
-export async function getEarnedApi<T>() {
+export async function getEarnedApi<T>({ address }: { address: string }) {
+  if (!address) {
+    console.error('address is required')
+    return []
+  }
+
+  if (!isAddress(address)) {
+    console.error('not a valid address')
+    return []
+  }
+
+  const response = await nftHiveBackendRequest.get<T>(`/dgcHistory`, {
+    params: {
+      address,
+    },
+  })
+
   const history = [
     {
-      time: '05/08/2022 12:45PM',
-      amount: '26.9',
-      id: '8888',
+      time: new Date(2022, 11, 16, 12, 1, 1),
+      earnedDgc: '6.9',
+      nftId: '8888',
     },
     {
-      time: '05/08/2022 12:45PM',
-      amount: '26.9',
-      id: '8999',
+      time: new Date(2022, 11, 15),
+      earnedDgc: '2.987654',
+      nftId: '8999',
     },
     {
-      time: '05/08/2022 12:45PM',
-      amount: '26.9',
-      id: '9999',
+      time: new Date(2022, 11, 11),
+      earnedDgc: '16.9',
+      nftId: '9999',
     },
     {
-      time: '05/08/2022 12:45PM',
-      amount: '26.9',
-      id: '8888',
+      time: new Date(2022, 11, 5),
+      earnedDgc: '86.9876543212345678',
+      nftId: '8888',
     },
     {
-      time: '05/08/2022 12:45PM',
-      amount: '26.9',
-      id: '8999',
+      time: new Date(2022, 11, 1),
+      earnedDgc: '86.9',
+      nftId: '8999',
     },
     {
-      time: '05/08/2022 12:45PM',
-      amount: '26.9',
-      id: '9999',
+      time: new Date(2022, 11, 8),
+      earnedDgc: '8.9',
+      nftId: '9999',
     },
-  ] as EarnedItem[]
+  ] as EarnedHistory[]
 
   await sleep(3000)
 
-  return {
-    history: history,
-    amount: '0',
-    symbol: 'DGC',
-  } as T
+  return history.sort((a, b) => {
+    const aDt = DateTime.fromJSDate(a.time)
+    const bDt = DateTime.fromJSDate(b.time)
+
+    return aDt > bDt ? -1 : 1
+  }) as T
 }

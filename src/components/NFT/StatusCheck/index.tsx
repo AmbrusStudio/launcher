@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import classNames from 'classnames'
-import { FC, useContext, useState } from 'react'
+import { FC, useState } from 'react'
 
-import { StakeCtx } from '../../../context'
-import { confirmUnstakeData, confirmUpgradeData } from '../../../data'
+import { confirmUnstakeData, confirmUpgradeData, statusCheckData } from '../../../data'
 import { useStatusCheck } from '../../../hooks/useStatusCheck'
 import { NFTImmutableX } from '../../../types'
 import ConfirmModal from '../../ConfirmModal'
@@ -31,8 +30,6 @@ const StatusCheck: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) => {
 
   const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(nft)
 
-  const stakeCtx = useContext(StakeCtx)
-
   return (
     <>
       <div className="absolute top-0 right-0 bottom-0 left-0 flex">
@@ -40,10 +37,7 @@ const StatusCheck: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) => {
           <Announcements address={nft.address} />
         </div>
         <WrapperInfo className="w-[46.5%] text-white p-[24px] flex flex-col absolute top-0 right-0 bottom-0 overflow-auto">
-          <StakeInfoDetail
-            title={stakeCtx?.checkAnnouncement.title || ''}
-            description={stakeCtx?.checkAnnouncement.description || ''}
-          />
+          <StakeInfoDetail title={statusCheckData.title || ''} description={statusCheckData.description || ''} />
 
           <Stack spacing={1.5} direction="row" className="mt-auto">
             <CheckCardCountdown
