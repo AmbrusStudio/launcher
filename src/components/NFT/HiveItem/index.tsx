@@ -2,7 +2,7 @@ import { FC, useState } from 'react'
 
 // import Star from '../../../components/Icon/Star'
 import { useStake } from '../../../hooks/useStake'
-import { NFTE4CRanger, NFTImmutableX } from '../../../types'
+import { NFTImmutableX } from '../../../types'
 import { imageSizeConversion } from '../../../utils'
 import TokenMedia from '../../TokenMedia'
 import DetailsName from '../DetailsName'
@@ -12,7 +12,7 @@ import StatusCheckEarn from '../StatusCheckEarn'
 import TokenActions from '../TokenActions'
 
 interface Props {
-  readonly nft: NFTE4CRanger | NFTImmutableX
+  readonly nft: NFTImmutableX
   readonly tokenId: string
 }
 
