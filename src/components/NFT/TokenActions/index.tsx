@@ -1,4 +1,5 @@
 import { Stack } from '@mui/material'
+import { useEthers } from '@usedapp/core'
 import classNames from 'classnames'
 import { FC } from 'react'
 
@@ -17,7 +18,8 @@ interface Props {
 }
 
 const TokenActions: FC<Props> = ({ nft, stakeLoading, unstakeLoading, setVisibleStatusCheck, setVisibleInfo }) => {
-  const { chainIdMismatch, switchNetwork } = useWeb3Modal()
+  const { chainIdMismatch, connect, switchNetwork } = useWeb3Modal()
+  const { account, active } = useEthers()
 
   return (
     <>
@@ -27,7 +29,11 @@ const TokenActions: FC<Props> = ({ nft, stakeLoading, unstakeLoading, setVisible
             {/* <button className="u-btn u-btn-primary max-w-[120px]">
               <Star sx={{ fontSize: '36px' }} />
             </button> */}
-            {chainIdMismatch ? (
+            {!(account && active) ? (
+              <button className={'u-btn u-btn-primary'} onClick={() => connect()}>
+                Connect Wallet
+              </button>
+            ) : chainIdMismatch ? (
               <button className={'u-btn u-btn-primary'} onClick={() => switchNetwork()}>
                 Switch Network
               </button>
