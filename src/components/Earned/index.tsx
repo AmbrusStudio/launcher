@@ -5,6 +5,7 @@ import numbro from 'numbro'
 import useSWR from 'swr'
 
 import { getEarnedApi } from '../../api/immutableX'
+import { TokenomicsLink } from '../../constants'
 import { EarnedHistory } from '../../types/immutableX'
 
 const Earned = () => {
@@ -80,7 +81,7 @@ const Earned = () => {
               <div className="px-10 py-7.5">
                 <p className="text-base text-center text-white leading-7.5">
                   <p>Stake E4C Rangers Hive NFTs to earn DGC tokens.</p>
-                  <a className="underline" href="#" target="_blank" rel="noopener">
+                  <a className="underline" href={TokenomicsLink} target="_blank" rel="noopener noreferrer">
                     Learn more about our tokenomics
                   </a>
                 </p>

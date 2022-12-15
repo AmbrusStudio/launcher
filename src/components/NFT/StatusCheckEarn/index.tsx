@@ -8,7 +8,9 @@ import { useStatusCheck } from '../../../hooks/useStatusCheck'
 import { NFTE4CRanger, NFTImmutableX } from '../../../types'
 import ConfirmModal from '../../ConfirmModal'
 import Announcements from '../Announcements'
-import CheckCardEarn from '../CheckCardEarn'
+import CheckCardEarnAmount from '../CheckCardEarnAmount'
+import CheckCardEarnClaimed from '../CheckCardEarnClaimed'
+import CheckCardStakedDay from '../CheckCardStakedDay'
 import StakeInfoDetail from '../StakeInfoDetail'
 
 const WrapperInfo = styled.div`
@@ -43,14 +45,10 @@ const StatusCheckEarn: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) =>
             description={stakeCtx?.checkAnnouncement.description || ''}
           />
 
-          <div className="mt-auto">
-            <CheckCardEarn
-              duration={duration}
-              timeLeft={timeLeft}
-              stakedPercentage={stakedPercentage}
-              timeStatus={timeStatus}
-              soulboundBadgeStatus={soulboundBadgeStatus}
-            />
+          <div className="flex flex-row gap-2.5 mt-auto">
+            <CheckCardStakedDay timeLeft={timeLeft} />
+            <CheckCardEarnAmount amount={'0'} />
+            <CheckCardEarnClaimed soulboundBadgeStatus={soulboundBadgeStatus} />
           </div>
 
           <Stack

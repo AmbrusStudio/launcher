@@ -1,3 +1,4 @@
+import { TokenomicsLink } from '../constants'
 import {
   ConfirmModalData,
   ConfirmUnstakeDataType,
@@ -71,7 +72,7 @@ export const stakeUpgradeEarn: StakeInfoDataType = {
 
 export const stakeCheckEarn: StakeInfoDataType = {
   title: 'Status Check',
-  description: `The amount of GDC you earned will be recorded in your account information. It will airdrop to your wallet once we launch the token. <a href="#" target="_blank" rel="noopener">Learn more about E4C tokenomics</a>`,
+  description: `The amount of GDC you earned will be recorded in your account information. It will airdrop to your wallet once we launch the token. <a href="${TokenomicsLink}" target="_blank" rel="noopener">Learn more about E4C tokenomics</a>`,
 }
 
 // Stake Confirm Modal

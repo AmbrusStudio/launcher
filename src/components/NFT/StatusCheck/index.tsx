@@ -7,7 +7,8 @@ import { StakeCtx } from '../../../context'
 import { useStatusCheck } from '../../../hooks/useStatusCheck'
 import { NFTImmutableX } from '../../../types'
 import Announcements from '../Announcements'
-import CheckCard from '../CheckCard'
+import CheckCardClaimed from '../CheckCardClaimed'
+import CheckCardCountdown from '../CheckCardCountdown'
 import ConfirmUnstake from '../ConfirmUnstake'
 import ConfirmUpgrade from '../ConfirmUpgrade'
 import StakeInfoDetail from '../StakeInfoDetail'
@@ -43,13 +44,15 @@ const StatusCheck: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) => {
           description={stakeCtx?.checkAnnouncement.description || ''}
         />
 
-        <CheckCard
-          duration={duration}
-          timeLeft={timeLeft}
-          stakedPercentage={stakedPercentage}
-          timeStatus={timeStatus}
-          soulboundBadgeStatus={soulboundBadgeStatus}
-        />
+        <Stack spacing={1.5} direction="row">
+          <CheckCardCountdown
+            duration={duration}
+            timeLeft={timeLeft}
+            stakedPercentage={stakedPercentage}
+            timeStatus={timeStatus}
+          />
+          <CheckCardClaimed soulboundBadgeStatus={soulboundBadgeStatus} />
+        </Stack>
 
         <Stack
           spacing={1.5}

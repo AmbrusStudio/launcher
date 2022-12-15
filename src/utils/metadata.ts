@@ -374,13 +374,27 @@ export const getDefaultMetadataTrait = (address: string, tokenId: string): Trait
 export const getSeries = (trait: TraitItem[]): string => {
   const name = traitName(trait)
 
-  if (name === TraitName.Rin) {
-    return '1'
-  } else if (name === TraitName.Kit) {
-    return '2'
-  } else if (name === TraitName.Thorn) {
-    return '3'
-  } else {
-    return ''
+  const list = {
+    [TraitName.Rin]: '1',
+    [TraitName.Kit]: '2',
+    [TraitName.Thorn]: '3',
   }
+  return (name && list[name]) || ''
+}
+
+/**
+ * Get Name
+ * @param trait
+ * @returns
+ */
+export const getName = (trait: TraitItem[]): string => {
+  const name = traitName(trait)
+
+  const list = {
+    [TraitName.Rin]: 'E4C RANGERS',
+    [TraitName.Kit]: 'E4C RANGERS',
+    [TraitName.Thorn]: 'E4C RANGERS HIVE',
+  }
+
+  return (name && list[name]) || ''
 }

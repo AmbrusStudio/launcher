@@ -7,7 +7,8 @@ import { useStatusCheck } from '../../../hooks/useStatusCheck'
 import { NFTImmutableX } from '../../../types'
 import { ArrowUp } from '../../Icon'
 import Announcements from '../Announcements'
-import CheckCard from '../CheckCard'
+import CheckCardClaimed from '../CheckCardClaimed'
+import CheckCardCountdown from '../CheckCardCountdown'
 import Modal from '../Modal'
 
 interface Props {
@@ -48,13 +49,17 @@ const StatusCheckModal: FC<Props> = ({ visible, loading = false, nft, close, upg
             <p className="font-normal text-base leading-[24px] text-white not-italic mb-3">
               {statusCheckData.description}
             </p>
-            <CheckCard
-              duration={duration}
-              timeLeft={timeLeft}
-              stakedPercentage={stakedPercentage}
-              timeStatus={timeStatus}
-              soulboundBadgeStatus={soulboundBadgeStatus}
-            />
+
+            <Stack spacing={1.5} direction="row">
+              <CheckCardCountdown
+                duration={duration}
+                timeLeft={timeLeft}
+                stakedPercentage={stakedPercentage}
+                timeStatus={timeStatus}
+              />
+              <CheckCardClaimed soulboundBadgeStatus={soulboundBadgeStatus} />
+            </Stack>
+
             <Stack spacing={1.5} className="mt-3">
               <button
                 className={classNames('u-btn', {

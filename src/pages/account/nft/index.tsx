@@ -90,19 +90,13 @@ function AccountNFT() {
           {!collectionsHive.length ? (
             <div className="text-white py-6 lg:py-[inherit]">No Data...</div>
           ) : (
-            <>
-              {isMd ? (
-                <Stack spacing={3}>
-                  {collectionsHive.map((nft) => (
-                    <div key={`${nft.address}_${nft.tokenId}`} style={{ height: `${itemHiveHeight}px` }}>
-                      <HiveItem nft={nft} tokenId={nft.tokenId} />
-                    </div>
-                  ))}
-                </Stack>
-              ) : (
-                <MobileWrap nfts={collectionsHive} />
-              )}
-            </>
+            <Stack spacing={3}>
+              {collectionsHive.map((nft) => (
+                <div key={`${nft.address}_${nft.tokenId}`} style={{ height: `${itemHiveHeight}px` }}>
+                  <HiveItem nft={nft} tokenId={nft.tokenId} />
+                </div>
+              ))}
+            </Stack>
           )}
         </TabPanelStake>
       </div>
