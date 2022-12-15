@@ -9,12 +9,18 @@ import useSWR from 'swr'
 
 import { getEarnedApi } from '../../api/immutableX'
 import { TokenomicsLink } from '../../constants'
+import { useImmutableXWallet } from '../../hooks/useImmutableX'
 import { EarnedHistory } from '../../types/immutableX'
 import { balanceDecimal } from '../../utils'
 
 const Earned = () => {
+  const { walletInfo } = useImmutableXWallet()
+
   const [visible, { toggle: visibleToggle }] = useBoolean(false)
-  const { data, isLoading } = useSWR<EarnedHistory[]>({ cacheKey: 'earnedHistory' }, getEarnedApi)
+  const { data, isLoading } = useSWR<EarnedHistory[]>(
+    { address: walletInfo?.address || '', cacheKey: 'earnedHistory' },
+    getEarnedApi
+  )
 
   const totalAmount = useMemo<BigNumber>(() => {
     return (

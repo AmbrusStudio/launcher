@@ -134,9 +134,26 @@ export async function getImmutableXL2OverallHiveApi<T = ImmutableXL2Overall[]>({
 
 /**
  * Get DGC Earned
+ * @param param assress: wallet address
  * @returns
  */
-export async function getEarnedApi<T>() {
+export async function getEarnedApi<T>({ address }: { address: string }) {
+  if (!address) {
+    console.error('address is required')
+    return []
+  }
+
+  if (!isAddress(address)) {
+    console.error('not a valid address')
+    return []
+  }
+
+  const response = await nftHiveBackendRequest.get<T>(`/dgcHistory`, {
+    params: {
+      address,
+    },
+  })
+
   const history = [
     {
       time: new Date(2022, 11, 16, 12, 1, 1),
