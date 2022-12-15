@@ -25,6 +25,24 @@ export async function immutableXUnstakeApi<T = unknown>({
 }
 
 /**
+ * ImmutableX Transfer Confirm
+ * @param param id: number
+ * @returns
+ */
+export async function immutableXTransferConfirmApi<T = unknown>({ id }: { id: number }) {
+  return await nftHolderBackendRequest.post<T>(`/transferConfirm`, { id })
+}
+
+/**
+ * ImmutableX Transfer Confirm Hive
+ * @param param id: number
+ * @returns
+ */
+export async function immutableXTransferConfirmHiveApi<T = unknown>({ id }: { id: number }) {
+  return await nftHiveBackendRequest.post<T>(`/transferConfirm`, { id })
+}
+
+/**
  * Get ImmutableX StakingStatus Api
  * @param tokenAddress
  * @param tokenId
