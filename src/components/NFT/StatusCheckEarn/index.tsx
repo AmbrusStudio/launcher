@@ -1,11 +1,12 @@
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
-import { FC, useContext, useState } from 'react'
+import classNames from 'classnames'
+import { FC, useContext, useMemo, useState } from 'react'
 
 import { StakeCtx } from '../../../context'
-import { confirmUnstakeEarnData } from '../../../data'
-import { useStatusCheck } from '../../../hooks/useStatusCheck'
-import { NFTE4CRanger, NFTImmutableX } from '../../../types'
+import { confirmUnstakeEarnData, confirmUpgradeEarnData } from '../../../data'
+import { useStatusCheckHive } from '../../../hooks/useStatusCheckHive'
+import { NFTImmutableX } from '../../../types'
 import ConfirmModal from '../../ConfirmModal'
 import Announcements from '../Announcements'
 import CheckCardEarnAmount from '../CheckCardEarnAmount'
@@ -20,7 +21,7 @@ const WrapperInfo = styled.div`
 
 interface Props {
   readonly unstakeLoading: boolean
-  readonly nft: NFTE4CRanger | NFTImmutableX
+  readonly nft: NFTImmutableX
   toggle: (value: boolean) => void
   unstake: () => void
 }
@@ -29,7 +30,14 @@ const StatusCheckEarn: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) =>
   const [visibleUnstake, setVisibleUnstake] = useState<boolean>(false)
   const [visibleUpgrade, setVisibleUpgrade] = useState<boolean>(false)
 
-  const { timeLeft, stakedPercentage, duration, timeStatus, soulboundBadgeStatus, status } = useStatusCheck(nft)
+  const { soulboundBadgeStatus, status } = useStatusCheckHive(nft)
+  const earnAmount = useMemo<string>(() => {
+    return '0'
+  }, [])
+
+  const unstakeAndEarnState = useMemo<boolean>(() => {
+    return status && Number(earnAmount) > 0
+  }, [earnAmount, status])
 
   const stakeCtx = useContext(StakeCtx)
 
@@ -46,8 +54,10 @@ const StatusCheckEarn: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) =>
           />
 
           <div className="flex flex-row gap-2.5 mt-auto">
-            <CheckCardStakedDay timeLeft={timeLeft} />
-            <CheckCardEarnAmount amount={'0'} />
+            <CheckCardStakedDay
+              time={(nft?.l2Overall?.stakingDuration && nft?.l2Overall?.stakingDuration / 1000) || 0}
+            />
+            <CheckCardEarnAmount amount={earnAmount} />
             <CheckCardEarnClaimed soulboundBadgeStatus={soulboundBadgeStatus} />
           </div>
 
@@ -57,8 +67,20 @@ const StatusCheckEarn: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) =>
               mt: 3,
             }}
           >
-            <button className="u-btn" onClick={() => setVisibleUnstake(true)}>
-              {status ? 'Unstake' : 'Unstake & Earn'}
+            <button
+              disabled={unstakeLoading}
+              className={classNames('u-btn', {
+                loading: unstakeLoading,
+              })}
+              onClick={() => {
+                if (unstakeAndEarnState) {
+                  setVisibleUpgrade(true)
+                } else {
+                  setVisibleUnstake(true)
+                }
+              }}
+            >
+              {unstakeAndEarnState ? 'Unstake & Earn' : 'Unstake'}
             </button>
             <button className="u-btn" onClick={() => toggle(false)}>
               Cancel
@@ -80,8 +102,8 @@ const StatusCheckEarn: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) =>
         }}
       />
       <ConfirmModal
-        title={confirmUnstakeEarnData.title}
-        description={confirmUnstakeEarnData.description}
+        title={confirmUpgradeEarnData.title}
+        description={confirmUpgradeEarnData.description}
         visible={visibleUpgrade}
         okText="Yes, I understand"
         onCancel={() => {

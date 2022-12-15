@@ -27,7 +27,7 @@ const BlindBoxModes = {
   [Mainnet.chainId]: {
     [TraitName.Rin]: false,
     [TraitName.Kit]: false,
-    [TraitName.Thorn]: false,
+    [TraitName.Thorn]: true,
   },
   [Goerli.chainId]: {
     [TraitName.Rin]: false,
@@ -49,7 +49,9 @@ export const Blindbox = {
   },
   [TraitName.Thorn]: {
     BlindBoxMode: BlindBoxModes[defaultChainId][TraitName.Thorn],
-    BlindBoxVideo: 'https://ambrus.s3.amazonaws.com/1667537607898_0.88_Blindbox.mp4',
-    BlindBoxPictures: 'https://ambrus.s3.amazonaws.com/1667538431877_0.51_blindbox.gif',
+    BlindBoxVideo:
+      'https://res.cloudinary.com/xiaotian-cloudinary/video/upload/v1671097085/E4C%20Rangers/Blindbox_Test007_d5jbrh.mp4',
+    BlindBoxPictures:
+      'https://res.cloudinary.com/xiaotian-cloudinary/image/upload/v1671097064/E4C%20Rangers/blindbox_dg9mx9.jpg',
   },
 }

@@ -7524,6 +7524,11 @@ scrypt-js@3.0.1, scrypt-js@^3.0.0, scrypt-js@^3.0.1:
   resolved "https://registry.npmmirror.com/scrypt-js/-/scrypt-js-3.0.1.tgz#d314a57c2aef69d1ad98a138a21fe9eafa9ee312"
   integrity sha512-cdwTTnqPu0Hyvf5in5asVdZocVDTNRmR7XEcJuIzMjJeSHybHl7vpB66AzwTaIg6CLSbtjcxc8fqcySfnTkccA==
 
+seconds-formater@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/seconds-formater/-/seconds-formater-2.0.3.tgz#34ec02e910403c0174c3ef89a9fb36c5577525fa"
+  integrity sha512-HkE4CLztNKVRvzyzoHxL2MrZBy0537rjks6T5oAtM2OfnWTV6j3UIpVg5TTn42A0mXg0vVPg1fTZ/safzoQ4/g==
+
 secp256k1@^4.0.1:
   version "4.0.3"
   resolved "https://registry.npmmirror.com/secp256k1/-/secp256k1-4.0.3.tgz#c4559ecd1b8d3c1827ed2d1b94190d69ce267303"

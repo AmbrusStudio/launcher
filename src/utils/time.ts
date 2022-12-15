@@ -1,9 +1,11 @@
+import sf from 'seconds-formater'
+
 /**
- * formatted seconds
- * @param value
- * @returns formatted string
+ * format seconds
+ * @param value seconds
+ * @returns format string
  */
-export function formatSeconds(value: string) {
+export function formatSeconds(value: string): string {
   let theTime = parseInt(value) // Time seconds to convert
   let theTimeMinute = 0 // minute
   let theTimeHour = 0 // hour
@@ -37,6 +39,11 @@ export function formatSeconds(value: string) {
   return result
 }
 
-export function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
-}
+/**
+ * format Day
+ * @param value seconds
+ * @returns
+ */
+export const formatDay = (value: number): string => sf.convert(value).format('D')
+
+export const sleep = (ms: number): Promise<unknown> => new Promise((resolve) => setTimeout(resolve, ms))

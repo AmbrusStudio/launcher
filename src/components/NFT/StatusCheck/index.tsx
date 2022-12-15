@@ -44,7 +44,7 @@ const StatusCheck: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) => {
           description={stakeCtx?.checkAnnouncement.description || ''}
         />
 
-        <Stack spacing={1.5} direction="row">
+        <Stack spacing={1.5} direction="row" className="mt-auto">
           <CheckCardCountdown
             duration={duration}
             timeLeft={timeLeft}

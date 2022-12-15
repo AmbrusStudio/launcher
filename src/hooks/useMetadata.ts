@@ -183,7 +183,7 @@ export function useMetadataImmtableXByTokenIds(collections: ImmutableXL2Overall[
             const { tokenAddress, tokenId } = collections[index]
 
             // Blind box filling default data
-            if (item.value.data.attributes.length <= 0) {
+            if (!item.value.data?.attributes || item.value.data.attributes.length <= 0) {
               item.value.data.attributes = getDefaultMetadataTrait(tokenAddress, tokenId)
             }
             const { name, description, image, attributes } = item.value.data
@@ -191,7 +191,7 @@ export function useMetadataImmtableXByTokenIds(collections: ImmutableXL2Overall[
               name,
               description,
               image,
-              trait: attributes,
+              trait: attributes || [],
             })
           }
         })

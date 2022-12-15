@@ -79,13 +79,13 @@ export async function getImmutableXL2OverallHiveApi<T = ImmutableXL2Overall[]>({
     return []
   }
 
-  const result = await nftHiveBackendRequest.get<T>(`/l2Overall`, {
+  const response = await nftHiveBackendRequest.get<T>(`/l2Overall`, {
     params: {
       address,
     },
   })
 
-  return [
+  const mockData = [
     {
       tokenAddress: '0x2b79919a89ffa96d98ac126ff244a662f77fdc19',
       tokenId: '3',
@@ -123,6 +123,8 @@ export async function getImmutableXL2OverallHiveApi<T = ImmutableXL2Overall[]>({
       isUpgraded: true,
     },
   ]
+
+  return response.data
 }
 
 /**

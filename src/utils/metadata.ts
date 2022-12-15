@@ -320,6 +320,15 @@ export const getDefaultMetadataTrait = (address: string, tokenId: string): Trait
     return []
   }
 
+  if (getAddress(address) === getAddress(E4CRangerHive_ImmutableX_Thorn)) {
+    return [
+      {
+        trait_type: Trait.Name,
+        value: 'Thorn',
+      },
+    ]
+  }
+
   const trait = [
     {
       trait_type: Trait.Name,
