@@ -1,4 +1,4 @@
 export * from './blindbox'
-export * from './link'
+export * from './hive'
 export * from './localStorage'
 export * from './role'
