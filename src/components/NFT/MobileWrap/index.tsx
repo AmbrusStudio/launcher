@@ -16,7 +16,7 @@ import NFTDetails from '../NFTDetails'
 import Slider from '../Slider'
 import StakeInfoModal from '../StakeInfoModal'
 import StatusCheckModal from '../StatusCheckModal'
-import TokenActions from '../TokenActions'
+import TokenActions, { StakeButton, UnstakeButton } from '../TokenActions'
 
 const Actions = styled(Stack)`
   padding-bottom: constant(safe-area-inset-bottom);
@@ -62,10 +62,10 @@ const MobileWrap: FC<MobileWrapProps> = ({ nfts }) => {
             <Actions className="fixed left-6 bottom-6 right-6">
               <TokenActions
                 nft={nft}
-                stakeLoading={stakeLoading}
-                unstakeLoading={unstakeLoading}
-                setVisibleStatusCheck={() => setVisibleStatusCheckModal(true)}
-                setVisibleInfo={() => setVisibleStakeInfoModal(true)}
+                stakeButton={<StakeButton loading={stakeLoading} onClick={() => setVisibleStakeInfoModal(true)} />}
+                unstakeButton={
+                  <UnstakeButton loading={unstakeLoading} onClick={() => setVisibleStatusCheckModal(true)} />
+                }
               />
             </Actions>
           </div>

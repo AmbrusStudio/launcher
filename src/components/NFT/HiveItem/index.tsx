@@ -9,7 +9,7 @@ import DetailsName from '../DetailsName'
 import NFTDetails from '../NFTDetails'
 import StakeInfoEarn from '../StakeInfoEarn'
 import StatusCheckEarn from '../StatusCheckEarn'
-import TokenActions from '../TokenActions'
+import TokenActions, { StakeButton, UnstakeButton } from '../TokenActions'
 
 interface Props {
   readonly nft: NFTImmutableX
@@ -35,10 +35,12 @@ const HiveItem: FC<Props> = ({ nft, tokenId }) => {
 
         <TokenActions
           nft={nft}
-          stakeLoading={stakeLoading}
-          unstakeLoading={unstakeLoading}
-          setVisibleStatusCheck={() => setVisibleStatusCheck(true)}
-          setVisibleInfo={() => setVisibleInfo(true)}
+          stakeButton={
+            <StakeButton loading={stakeLoading} onClick={() => setVisibleInfo(true)}>
+              Stake
+            </StakeButton>
+          }
+          unstakeButton={<UnstakeButton loading={unstakeLoading} onClick={() => setVisibleStatusCheck(true)} />}
         />
       </div>
 

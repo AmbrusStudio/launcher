@@ -10,7 +10,7 @@ import DetailsName from '../DetailsName'
 import NFTDetails from '../NFTDetails'
 import StakeInfo from '../StakeInfo'
 import StatusCheck from '../StatusCheck'
-import TokenActions from '../TokenActions'
+import TokenActions, { StakeButton, UnstakeButton } from '../TokenActions'
 
 interface Props {
   readonly nft: NFTE4CRanger | NFTImmutableX
@@ -37,10 +37,8 @@ const NFTItem: FC<Props> = ({ nft, tokenId }) => {
 
         <TokenActions
           nft={nft}
-          stakeLoading={stakeLoading}
-          unstakeLoading={unstakeLoading}
-          setVisibleStatusCheck={() => setVisibleStatusCheck(true)}
-          setVisibleInfo={() => setVisibleInfo(true)}
+          stakeButton={<StakeButton loading={stakeLoading} onClick={() => setVisibleInfo(true)} />}
+          unstakeButton={<UnstakeButton loading={unstakeLoading} onClick={() => setVisibleStatusCheck(true)} />}
         />
       </div>
 
