@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
 
+import { cleanupHTML } from '../../../utils'
+
 const Title = styled.h3`
   font-family: 'Montserrat', sans-serif;
   font-style: normal;
@@ -40,7 +42,7 @@ const StakeInfoDetail: FC<StakeInfoProps> = ({ title, description }) => {
   return (
     <div>
       <Title>{title}</Title>
-      <Description dangerouslySetInnerHTML={{ __html: description }}></Description>
+      <Description dangerouslySetInnerHTML={{ __html: cleanupHTML(description) }}></Description>
     </div>
   )
 }
