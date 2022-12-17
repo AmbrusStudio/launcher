@@ -54,10 +54,10 @@ export const statusCheckData: StakeInfoDataType = {
 
 export const stakeUpgradeEarn: StakeInfoDataType = {
   title: 'Stake to Upgrade',
-  description: `<p>Holders can stake their NFT to get future DGC token. Holders need to:</p>
+  description: `<p>To claim the $DGC yield, holders are supposed to:</p>
   <ul>
-    <li>Stake NFT to get future DGC. The more time holders stake, the more DGC they will receive</li>
-    <li>Finish community task to get 1 special badge: Diamond Hand</li>
+    <li>Stake the NFT for at least 24 hours. If the total staking duration is less than 24 hours, holders are not available to receive any $DGC token.</li>
+    <li>Finish the community task in E4C's Discord to get 1 SBT badge: Diamond Hand</li>
   </ul>`,
 }
 
@@ -178,14 +178,17 @@ export const stakeAnnouncementRangers: StakeAnnouncement[] = [
 
 export const stakeAnnouncementEarn: StakeAnnouncement[] = [
   {
-    title: 'Stake Longer',
-    description: 'Earn More',
+    title: 'Stake your NFT and receive $DGC tokens.',
+    description: 'Stake longer, receive more.',
     list: [
       {
-        text: 'Stake to earn DGC in the amount in the following table:',
+        text: 'Holders of Thorn are able to stake their NFT to accumulate $DGC tokens as staking yield. The amount of $DGC token is positively correlated to the staking duration (learn more about the <a href="#" target="_blank" rel="noopener">Table of $DGC Yield</a>).',
       },
       {
-        text: `Staking time Staking Rewards for unit time Total Rewards(DGC) 1-10 1.0 10 11-20 1.1 21 21-30 1.2 33 31-40 1.3 46 41-50 1.4 60 51-60 1.6 76 61-70 1.8 94 71-80 2.0 114 81-90 2.2 136 91-100 2.4 160 101-110 2.7 187 111-120 3.0 217 121-130 3.5 252 131-140 4.0 292 141-150 5.0 342 151-160 6.0 402\\`,
+        text: 'Before the TGE of the $DGC token, staking NFT holders are considered to acquiescently agree to receive the future tokens and can claim their tokens at TGE only, details of which will be revealed when announcing the TGE of the $DGC token.',
+      },
+      {
+        text: 'The $DGC yield is subject to a <strong>3-month cliff period</strong> before it can be withdrawn.',
       },
     ],
   },
