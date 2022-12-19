@@ -201,7 +201,7 @@ export const useImmutableXERC721AssetTransfers = () => {
         }
       } catch (error) {
         const e = `Error encountered calling 'link.transfer' on ${error}. parameters: tokenId: ${tokenId}, tokenAddress: ${tokenAddress}, toAddress: ${toAddress}`
-        console.error(e)
+        console.error('useImmutableXERC721AssetTransfers', e)
         Sentry.captureException(e)
 
         const err = toErrorWithMessage(error)

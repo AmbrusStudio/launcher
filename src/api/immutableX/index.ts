@@ -62,6 +62,7 @@ export async function immutableXTransferConfirmHiveApi<T = unknown>({ id }: { id
 
 /**
  * Get ImmutableX StakingStatus Api
+ * discard do not use
  * @param tokenAddress
  * @param tokenId
  * @returns
