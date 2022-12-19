@@ -24,6 +24,25 @@ export async function immutableXUnstakeApi<T = unknown>({
 }
 
 /**
+ * ImmutableX unstake Hive
+ * @param param
+ * @returns
+ */
+export async function immutableXUnstakeHiveApi<T = unknown>({
+  owner,
+  tokenAddress,
+  tokenId,
+  signature,
+}: {
+  owner: string
+  tokenAddress: string
+  tokenId: string
+  signature: string
+}) {
+  return await nftHiveBackendRequest.post<T>(`/unstake`, { owner, tokenAddress, tokenId, signature })
+}
+
+/**
  * ImmutableX Transfer Confirm
  * @param param id: number
  * @returns
@@ -103,49 +122,6 @@ export async function getImmutableXL2OverallHiveApi<T = ImmutableXL2Overall[]>({
     },
   })
 
-  const mockData = [
-    {
-      tokenAddress: '0x2b79919a89ffa96d98ac126ff244a662f77fdc19',
-      tokenId: '3',
-      isStaking: false,
-      originalOwner: '',
-      stakingDuration: 0,
-      totalStakingTime: 3024000000,
-      isUpgraded: false,
-      earnedDgc: '0',
-    },
-    {
-      tokenAddress: '0x2b79919a89ffa96d98ac126ff244a662f77fdc19',
-      tokenId: '4',
-      isStaking: true,
-      originalOwner: '',
-      stakingDuration: 1709940710,
-      totalStakingTime: 3024000000,
-      isUpgraded: false,
-      earnedDgc: '0',
-    },
-    {
-      tokenAddress: '0x2b79919a89ffa96d98ac126ff244a662f77fdc19',
-      tokenId: '5',
-      isStaking: true,
-      originalOwner: '',
-      stakingDuration: 3024000000,
-      totalStakingTime: 3024000000,
-      isUpgraded: false,
-      earnedDgc: '10',
-    },
-    {
-      tokenAddress: '0x2b79919a89ffa96d98ac126ff244a662f77fdc19',
-      tokenId: '6',
-      isStaking: true,
-      originalOwner: '',
-      stakingDuration: 3024000000,
-      totalStakingTime: 3024000000,
-      isUpgraded: true,
-      earnedDgc: '100',
-    },
-  ]
-
   return response.data
 }
 
@@ -171,45 +147,12 @@ export async function getEarnedApi<T>({ address }: { address: string }) {
     },
   })
 
-  const history = [
-    {
-      time: new Date(2022, 11, 16, 12, 1, 1),
-      earnedDgc: '6.9',
-      nftId: '8888',
-    },
-    {
-      time: new Date(2022, 11, 15),
-      earnedDgc: '2.987654',
-      nftId: '8999',
-    },
-    {
-      time: new Date(2022, 11, 11),
-      earnedDgc: '16.9',
-      nftId: '9999',
-    },
-    {
-      time: new Date(2022, 11, 5),
-      earnedDgc: '86.9876543212345678',
-      nftId: '8888',
-    },
-    {
-      time: new Date(2022, 11, 1),
-      earnedDgc: '86.9',
-      nftId: '8999',
-    },
-    {
-      time: new Date(2022, 11, 8),
-      earnedDgc: '8.9',
-      nftId: '9999',
-    },
-  ] as EarnedHistory[]
-
   const list: EarnedHistory[] = (response.data as EarnedHistory[]) || []
 
   return list.sort((a, b) => {
     try {
-      const aDt = DateTime.fromJSDate(a.time)
-      const bDt = DateTime.fromJSDate(b.time)
+      const aDt = DateTime.fromISO(a.time)
+      const bDt = DateTime.fromISO(b.time)
 
       return aDt > bDt ? -1 : 1
     } catch (error) {

@@ -87,7 +87,7 @@ const Earned = () => {
                   {data.map((item, index) => (
                     <tr key={index} className="table table-auto w-full">
                       <td className="p-3 text-sm leading-24px text-left">
-                        {DateTime.fromJSDate(item.time).toFormat('f')}
+                        {DateTime.fromISO(item.time).toFormat('f')}
                       </td>
                       <td className="p-3 text-sm leading-24px text-right w-120px">
                         {balanceDecimal(item.earnedDgc, 6)}

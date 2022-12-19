@@ -8,6 +8,7 @@ import {
   immutableXTransferConfirmApi,
   immutableXTransferConfirmHiveApi,
   immutableXUnstakeApi,
+  immutableXUnstakeHiveApi,
 } from '../api/immutableX'
 import { ImmutableXWalletContext } from '../context'
 import {
@@ -21,6 +22,7 @@ import {
   TransactionStateImmutableX,
   TransactionStatusImmutableX,
 } from '../types/immutableX'
+import { sleep } from '../utils'
 import { toErrorWithMessage } from '../utils/error'
 
 type ImmutableGetAssetsResultCodec = ImmutableMethodResults.ImmutableGetAssetsResult['result']
@@ -162,6 +164,8 @@ export const useImmutableXERC721AssetTransfers = () => {
 
         console.log('transfer response', response)
 
+        await sleep(3000)
+
         setState({ status: TransactionStateImmutableX.Mining })
 
         const { status } = response.result[0]
@@ -188,7 +192,7 @@ export const useImmutableXERC721AssetTransfers = () => {
             const e = 'Transfer confirmm api not available'
 
             console.error(e)
-            setState({ status: TransactionStateImmutableX.Fail, errorMessage: e })
+            setState({ status: TransactionStateImmutableX.Exception, errorMessage: e })
           }
         } else if (status === 'error') {
           setState({ status: TransactionStateImmutableX.Fail, errorMessage: response.result[0].message })
@@ -282,7 +286,19 @@ export const useImmutableXERC721AssetUnstake = () => {
       }
 
       try {
-        const response = await immutableXUnstakeApi<ImmutableXUnstake>({
+        const listApi = {
+          [getAddress(E4CRanger_ImmutableX_GoldEdition)]: immutableXUnstakeApi,
+          [getAddress(E4CRanger_ImmutableX_RangersEdition)]: immutableXUnstakeApi,
+          [getAddress(E4CRangerHive_ImmutableX_Thorn)]: immutableXUnstakeHiveApi,
+        }
+        const unStakeApi = listApi[getAddress(tokenAddress)]
+
+        if (!unStakeApi) {
+          setState({ status: TransactionStateImmutableX.Exception, errorMessage: `unStake api not available` })
+          return
+        }
+
+        const response = await unStakeApi<ImmutableXUnstake>({
           owner: walletInfo.address,
           tokenAddress,
           tokenId,
