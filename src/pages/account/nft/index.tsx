@@ -37,7 +37,7 @@ function AccountNFT() {
   const itemHeight = useMemo(() => (size?.width ? size.width * 0.535 : 0), [size])
   const itemHiveHeight = useMemo(() => (size?.width ? size.width * 0.4762 : 0), [size])
 
-  const [tabPanelStakeValue, setTabPanelStakeValue] = useState(0)
+  const [tabPanelStakeValue, setTabPanelStakeValue] = useState(1)
 
   return (
     <AccountCenterPageLayout title="My" subtitle="NFTs" className="pl-0 pr-0">

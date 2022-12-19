@@ -46,7 +46,7 @@ const StatusCheckEarn: FC<Props> = ({ unstakeLoading, nft, toggle, unstake }) =>
 
           <div className="flex flex-row gap-2.5 mt-auto">
             <CheckCardStakedDay
-              time={(nft?.l2Overall?.stakingDuration && nft?.l2Overall?.stakingDuration / 1000) || 0}
+              time={(nft?.l2Overall?.totalStakingTime && nft?.l2Overall?.totalStakingTime / 1000) || 0}
             />
             <CheckCardEarnAmount amount={nft?.l2Overall?.earnedDgc || '0'} />
             <CheckCardEarnClaimed soulboundBadgeStatus={soulboundBadgeStatus} />

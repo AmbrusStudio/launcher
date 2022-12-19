@@ -159,6 +159,7 @@ export const useImmutableXERC721AssetTransfers = () => {
             toAddress,
           },
         ])
+
         console.log('transfer response', response)
 
         setState({ status: TransactionStateImmutableX.Mining })
@@ -168,11 +169,11 @@ export const useImmutableXERC721AssetTransfers = () => {
         if (status === 'success') {
           // transfer confirm
           const listApi = {
-            [E4CRanger_ImmutableX_GoldEdition]: immutableXTransferConfirmApi,
-            [E4CRanger_ImmutableX_RangersEdition]: immutableXTransferConfirmApi,
-            [E4CRangerHive_ImmutableX_Thorn]: immutableXTransferConfirmHiveApi,
+            [getAddress(E4CRanger_ImmutableX_GoldEdition)]: immutableXTransferConfirmApi,
+            [getAddress(E4CRanger_ImmutableX_RangersEdition)]: immutableXTransferConfirmApi,
+            [getAddress(E4CRangerHive_ImmutableX_Thorn)]: immutableXTransferConfirmHiveApi,
           }
-          const transferConfirmApi = listApi[tokenAddress]
+          const transferConfirmApi = listApi[getAddress(tokenAddress)]
 
           if (transferConfirmApi) {
             const responseTransferConfirm = await transferConfirmApi({ id: response.result[0].txId })
