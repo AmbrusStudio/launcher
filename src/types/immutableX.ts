@@ -63,7 +63,7 @@ export type ImmutableXL2Overall = {
 }
 
 export type EarnedHistory = {
-  time: Date
+  time: string
   nftId: string
   earnedDgc: string
 }

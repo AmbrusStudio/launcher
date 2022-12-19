@@ -8,6 +8,7 @@ import {
   immutableXTransferConfirmApi,
   immutableXTransferConfirmHiveApi,
   immutableXUnstakeApi,
+  immutableXUnstakeHiveApi,
 } from '../api/immutableX'
 import { ImmutableXWalletContext } from '../context'
 import {
@@ -21,6 +22,7 @@ import {
   TransactionStateImmutableX,
   TransactionStatusImmutableX,
 } from '../types/immutableX'
+import { sleep } from '../utils'
 import { toErrorWithMessage } from '../utils/error'
 
 type ImmutableGetAssetsResultCodec = ImmutableMethodResults.ImmutableGetAssetsResult['result']
@@ -159,7 +161,10 @@ export const useImmutableXERC721AssetTransfers = () => {
             toAddress,
           },
         ])
+
         console.log('transfer response', response)
+
+        await sleep(3000)
 
         setState({ status: TransactionStateImmutableX.Mining })
 
@@ -168,11 +173,11 @@ export const useImmutableXERC721AssetTransfers = () => {
         if (status === 'success') {
           // transfer confirm
           const listApi = {
-            [E4CRanger_ImmutableX_GoldEdition]: immutableXTransferConfirmApi,
-            [E4CRanger_ImmutableX_RangersEdition]: immutableXTransferConfirmApi,
-            [E4CRangerHive_ImmutableX_Thorn]: immutableXTransferConfirmHiveApi,
+            [getAddress(E4CRanger_ImmutableX_GoldEdition)]: immutableXTransferConfirmApi,
+            [getAddress(E4CRanger_ImmutableX_RangersEdition)]: immutableXTransferConfirmApi,
+            [getAddress(E4CRangerHive_ImmutableX_Thorn)]: immutableXTransferConfirmHiveApi,
           }
-          const transferConfirmApi = listApi[tokenAddress]
+          const transferConfirmApi = listApi[getAddress(tokenAddress)]
 
           if (transferConfirmApi) {
             const responseTransferConfirm = await transferConfirmApi({ id: response.result[0].txId })
@@ -187,7 +192,7 @@ export const useImmutableXERC721AssetTransfers = () => {
             const e = 'Transfer confirmm api not available'
 
             console.error(e)
-            setState({ status: TransactionStateImmutableX.Fail, errorMessage: e })
+            setState({ status: TransactionStateImmutableX.Exception, errorMessage: e })
           }
         } else if (status === 'error') {
           setState({ status: TransactionStateImmutableX.Fail, errorMessage: response.result[0].message })
@@ -196,7 +201,7 @@ export const useImmutableXERC721AssetTransfers = () => {
         }
       } catch (error) {
         const e = `Error encountered calling 'link.transfer' on ${error}. parameters: tokenId: ${tokenId}, tokenAddress: ${tokenAddress}, toAddress: ${toAddress}`
-        console.error(e)
+        console.error('useImmutableXERC721AssetTransfers', e)
         Sentry.captureException(e)
 
         const err = toErrorWithMessage(error)
@@ -281,7 +286,19 @@ export const useImmutableXERC721AssetUnstake = () => {
       }
 
       try {
-        const response = await immutableXUnstakeApi<ImmutableXUnstake>({
+        const listApi = {
+          [getAddress(E4CRanger_ImmutableX_GoldEdition)]: immutableXUnstakeApi,
+          [getAddress(E4CRanger_ImmutableX_RangersEdition)]: immutableXUnstakeApi,
+          [getAddress(E4CRangerHive_ImmutableX_Thorn)]: immutableXUnstakeHiveApi,
+        }
+        const unStakeApi = listApi[getAddress(tokenAddress)]
+
+        if (!unStakeApi) {
+          setState({ status: TransactionStateImmutableX.Exception, errorMessage: `unStake api not available` })
+          return
+        }
+
+        const response = await unStakeApi<ImmutableXUnstake>({
           owner: walletInfo.address,
           tokenAddress,
           tokenId,
