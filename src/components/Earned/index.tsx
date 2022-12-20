@@ -47,7 +47,7 @@ const Earned = () => {
           onClickCapture={visibleToggle}
         >
           <p className="flex-grow-0 flex-shrink-0 text-base font-bold text-right text-white leading-30px">
-            DGC Earned: {balanceDecimal(totalAmount.toString(), 6) || '0'}
+            $DGC Earned: {balanceDecimal(totalAmount.toString(), 6) || '0'}
           </p>
           <svg
             width={24}
@@ -79,7 +79,7 @@ const Earned = () => {
                 <thead className="table table-auto	w-full">
                   <tr>
                     <th className="p-3 text-sm font-semibold leading-24px text-left">Time</th>
-                    <th className="p-3 text-sm font-semibold leading-24px text-right w-120px">DGC Earned</th>
+                    <th className="p-3 text-sm font-semibold leading-24px text-right w-120px">$DGC Earned</th>
                     <th className="p-3 text-sm font-semibold leading-24px text-right">NFT ID</th>
                   </tr>
                 </thead>
@@ -102,7 +102,7 @@ const Earned = () => {
             ) : (
               <div className="px-10 py-7.5">
                 <p className="text-base text-center text-white leading-7.5">
-                  <p>Stake E4C Rangers Hive NFTs to earn DGC tokens.</p>
+                  <p>Stake E4C Rangers Hive NFTs to earn $DGC tokens.</p>
                   <a className="underline" href={TokenomicsLink} target="_blank" rel="noopener noreferrer">
                     Learn more about our tokenomics
                   </a>
